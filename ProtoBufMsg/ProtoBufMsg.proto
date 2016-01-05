@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+enum MsgType {
+  TYPE_MARKETUPDATE = 0;
+  TYPE_DATAREQUEST = 1;
+}
+
+message MessageBase {
+  MsgType type = 1;
+  bytes msg = 2;
+}
+
+message MarketUpdate {
+  string code = 1;
+  string symbol = 2;
+  string exchange = 3;
+
+  double open_price = 4;
+  double last_price = 5;
+  double highest_price = 6;
+  double lowest_price = 7;
+  double high_limit_price = 8;
+  double low_limit_price = 9;
+  int32 open_interest = 10;
+  double turnover = 11;
+  int32 volume = 12;
+
+  //HHMMSSmmm
+  string exchange_timestamp = 13;
+  string recv_timestamp = 14;
+
+  repeated double bid_price = 15;
+  repeated int32 bid_volume = 16;
+  repeated double ask_price = 17;
+  repeated int32 ask_volume = 18;
+}
+
+message DataRequest {
+  string code = 1;
+  string symbol = 2;
+  string exchange = 3;
+  string data_type = 4;
+}

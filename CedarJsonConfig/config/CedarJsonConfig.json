@@ -1,0 +1,29 @@
+{
+  "Mode":"BackTest",
+  "Value":"File",
+  "Ticker": [
+    {"symbol":"IF1507", "Exchange":"Test1"},
+    {"symbol":"IF1508", "Exchange":"Test2"}
+  ],
+  "TestTag": [
+    "apple", "banana", "pear"
+  ],
+  "tt":{
+    "tag1":"value1",
+    "deepArray":{
+      "ttt":[
+        {"tag":"deep1", "value":"value1"},
+        {"tag":"deep2", "value":"value2"},
+        {"tag":"deep3", "value":"value3"}
+      ],
+      "hello":"world"
+    }
+  },
+  "MsgHub": {
+    "Port":"15213",
+    "Subscribe":[
+      {"name":"IF1512", "hostPort":"127.0.0.1:15213"},
+      {"name":"ManualOrder", "hostPort":"127.0.0.1:51233"}
+    ]
+  }
+}
