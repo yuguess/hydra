@@ -1,107 +1,219 @@
+#include "TDFAPI.h"
 #include "ProtoBufMsgHub.h"
+#include "WindMarket.h"
 
-WindMarket::WindMarket() {
-  TDF_OPEN_SETTING settings = {0};
-  closeFlag = false;
+const char* svr_ip = "114.80.154.34";
+int svr_port = 6221;
 
-  ProtoBufHelper::setupProtoBufMsgHub(msgHub);
-  msgHub.registerCallback(onMsg);
+void RecvData(THANDLE hTdf, TDF_MSG* pMsgHead);
+
+void RecvSys(THANDLE hTdf, TDF_MSG* pSysMsg);
+
+void DumpScreenMarket(TDF_MARKET_DATA* pMarket, int nItems);
+void DumpScreenFuture(THANDLE hTdf,TDF_FUTURE_DATA* pFuture, int nItems);
+void DumpScreenIndex(TDF_INDEX_DATA* pIndex, int nItems);
+void DumpScreenTransaction(TDF_TRANSACTION* pTransaction, int nItems);
+void DumpScreenOrder(TDF_ORDER* pOrder, int nItems);
+void DumpScreenOrderQueue(TDF_ORDER_QUEUE* pOrderQueue, int nItems);
+
+#define ELEM_COUNT(arr) (sizeof(arr)/sizeof(arr[0]))
+#define SAFE_STR(str) ((str)?(str):"")
+#define SAFE_CHAR(ch) ((ch) ? (ch) : ' ')
+
+char* chararr2str(char* szBuf, int nBufLen, char arr[], int n) {
+  int nOffset = 0;
+  for (int i=0; i<n; i++) {
+    nOffset += snprintf(szBuf+nOffset, nBufLen-nOffset, "%d(%c) ", 
+        arr[i], SAFE_CHAR(arr[i]));
+  }
+  return szBuf;
 }
 
-WindMarket::~WindMarket() {
-  if (!closeFlag)
-    close();
+char* intarr2str(char* szBuf, int nBufLen, int arr[], int n) {
+  int nOffset = 0;
+  for (int i=0; i<n; i++) {
+    nOffset += snprintf(szBuf+nOffset, nBufLen-nOffset, "%d ", arr[i]);
+  }
+  return szBuf;
 }
 
-int WindMarket::start() {
-  strcpy(settings.szIp, svr_ip);
-  sprintf(settings.szPort, "%d", svr_port);
-  strcpy(settings.szUser, "TD1000961001");
-  strcpy(settings.szPwd,  "41376499");
-
-  //settings.nReconnectCount = 99999999;
-  //settings.nReconnectGap = 5;
-
-  //set data callback func
-  settings.pfnMsgHandler = RecvData; 
-  //set system msg callback func
-  settings.pfnSysMsgNotify = RecvSys;
-
-  //settings.nProtocol = 0;
-  //éœ€è¦è®¢é˜…çš„å¸‚åœºåˆ—è¡¨
-  settings.szMarkets = "SZ-2;";
-  //settings.szMarkets = "SZ;SH";
-
-  //"600030.SH"; 600030.SH;104174.SH;103493.SH";
-  //éœ€è¦è®¢é˜…çš„è‚¡ç¥¨,ä¸ºç©ºåˆ™è®¢é˜…å…¨å¸‚åœº
-  settings.szSubScriptions = "000001.SZ;000002.SH";
-
-  //è¯·æ±‚çš„æ—¥æœŸï¼Œæ ¼å¼YYMMDDï¼Œä¸º0åˆ™è¯·æ±‚ä»Šå¤©
-  //è¯·æ±‚çš„æ—¶é—´ï¼Œæ ¼å¼HHMMSSï¼Œä¸º0åˆ™è¯·æ±‚å®žæ—¶è¡Œæƒ…ï¼Œä¸º0xffffffffä»Žå¤´è¯·æ±‚
-  //settings.nDate = 0;
-  settings.nTime = -1;
-
-  //è¯·æ±‚çš„å“ç§ã€‚DATA_TYPE_ALLè¯·æ±‚æ‰€æœ‰å“ç§
-  settings.nTypeFlags = DATA_TYPE_NONE; 
-  TDF_ERR nErr = TDF_ERR_SUCCESS;
-  THANDLE hTDF = NULL;
-
-  hTDF = TDF_OpenExt(&settings, &nErr);
-
-  if (hTDF == NULL)
-    LOG(ERROR) << "TDF_Open return error: " << nErr;
+int onMsg(MessageBase msg) {
+  LOG(INFO) << "onMsg";
+  if (msg.type() == TYPE_MARKETUPDATE)
+    MarketUpdate mktUpdt = ProtoBufHelper::unwrapMsg<MarketUpdate>(msg);
   else
-    LOG(INFO) << " Open Success!";
+    LOG(WARNING) << "Recv invalid msg " << msg.type();
 
   return 0;
 }
 
-int WindMarket::close() {
-  return 0;
-}
+#define GETRECORD(pBase, TYPE, nIndex) ((TYPE*)((char*)(pBase) + sizeof(TYPE)*(nIndex)))
+#define PRINTNUM  1
+static int recordNum = 0;
+void RecvData(THANDLE hTdf, TDF_MSG* pMsgHead) {
+  if (!pMsgHead->pData) {
+    assert(0);
+    return ;
+  }
 
-int boardcastMsgData() {
-  //called market data 
-  return 0;
-}
+  unsigned int nItemCount = pMsgHead->pAppHead->nItemCount;
+  unsigned int nItemSize = pMsgHead->pAppHead->nItemSize;
+  if (!nItemCount) {
+    //assert(0);
+    return ;
+  }
 
-int onMsg() {
-  //register new market data in interface
-  return 0;
+  recordNum++;
+  switch (pMsgHead->nDataType) {
+
+    case MSG_DATA_MARKET: {
+      assert(nItemSize == sizeof(TDF_MARKET_DATA));
+      if (recordNum > PRINTNUM){
+        recordNum = 0;
+        DumpScreenMarket((TDF_MARKET_DATA*)pMsgHead->pData, nItemCount);
+      }
+    }
+    break;
+
+    case MSG_DATA_FUTURE: {
+      assert(nItemSize == sizeof(TDF_FUTURE_DATA));
+      if (recordNum > PRINTNUM) {
+        recordNum = 0;
+        DumpScreenFuture(hTdf,(TDF_FUTURE_DATA*)pMsgHead->pData, nItemCount);
+      }
+      TDF_FUTURE_DATA* pLastFuture = GETRECORD(pMsgHead->pData, 
+          TDF_FUTURE_DATA, nItemCount-1);
+      printf( "½ÓÊÕµ½ÆÚ»õÐÐÇé¼ÇÂ¼:´úÂë£º%s, ÒµÎñ·¢ÉúÈÕ:%d, Ê±¼ä:%d, ×îÐÂ¼Û:%d, \
+         ³Ö²Ö×ÜÁ¿:%lld \n", pLastFuture->szWindCode, pLastFuture->nActionDay, 
+         pLastFuture->nTime, pLastFuture->nMatch, pLastFuture->iOpenInterest);
+    }
+    break;
+
+    case MSG_DATA_INDEX: {
+      if (recordNum > PRINTNUM){
+        recordNum = 0;
+        DumpScreenIndex((TDF_INDEX_DATA*)pMsgHead->pData, nItemCount);
+      }
+
+      TDF_INDEX_DATA* pLastIndex = GETRECORD(pMsgHead->pData,TDF_INDEX_DATA,
+          nItemCount - 1);
+      printf( "½ÓÊÕµ½Ö¸Êý¼ÇÂ¼:´úÂë£º%s, ÒµÎñ·¢ÉúÈÕ:%d, Ê±¼ä:%d, ×îÐÂÖ¸Êý:%d, \
+          ³É½»×ÜÁ¿:%lld \n", pLastIndex->szWindCode, pLastIndex->nActionDay, 
+          pLastIndex->nTime, pLastIndex->nLastIndex, pLastIndex->iTotalVolume);
+    }
+    break;
+
+    case MSG_DATA_TRANSACTION: {
+      if (recordNum > PRINTNUM) {
+        recordNum = 0;
+        DumpScreenTransaction((TDF_TRANSACTION*)pMsgHead->pData, nItemCount);
+      }
+      TDF_TRANSACTION* pLastTransaction = GETRECORD(pMsgHead->pData,
+          TDF_TRANSACTION, nItemCount-1);
+      printf( "½ÓÊÕµ½Öð±Ê³É½»¼ÇÂ¼:´úÂë£º%s, ÒµÎñ·¢ÉúÈÕ:%d, Ê±¼ä:%d, \
+          ³É½»¼Û¸ñ:%d, ³É½»ÊýÁ¿:%d \n", pLastTransaction->szWindCode,
+        pLastTransaction->nActionDay, pLastTransaction->nTime, 
+        pLastTransaction->nPrice, pLastTransaction->nVolume);
+    }
+    break;
+
+    case MSG_DATA_ORDERQUEUE: {
+      if (recordNum > PRINTNUM){
+        recordNum = 0;
+        DumpScreenOrderQueue((TDF_ORDER_QUEUE*)pMsgHead->pData, nItemCount);
+      }
+
+      TDF_ORDER_QUEUE* pLastOrderQueue = GETRECORD(pMsgHead->pData,
+          TDF_ORDER_QUEUE, nItemCount-1);
+      printf( "½ÓÊÕµ½Î¯ÍÐ¶ÓÁÐ¼ÇÂ¼:´úÂë£º%s, ÒµÎñ·¢ÉúÈÕ:%d, Ê±¼ä:%d, \
+        Î¯ÍÐ¼Û¸ñ:%d, ¶©µ¥ÊýÁ¿:%d \n", pLastOrderQueue->szWindCode, 
+        pLastOrderQueue->nActionDay, pLastOrderQueue->nTime, 
+        pLastOrderQueue->nPrice, pLastOrderQueue->nOrders);
+    }
+    break;
+
+    case MSG_DATA_ORDER: {
+      if (recordNum > PRINTNUM){
+        recordNum = 0;
+        DumpScreenOrder((TDF_ORDER*)pMsgHead->pData, nItemCount);
+      }
+
+#if 0
+      for (int i=0; i<pMsgHead->pAppHead->nItemCount; i++) {
+        TDF_ORDER* pOrder = GETRECORD(pMsgHead->pData, TDF_ORDER, i);
+
+        if (strcmp(pOrder->szWindCode, "000001.SZ")==0) {
+          if (pOrder->nPrice<0) {
+            int j = 1;
+          }
+          static int last_time = 0;
+          static int index = 0;
+
+          if (last_time/1000==pOrder->nTime/1000)
+            index++;
+          else 
+            index = 1;
+
+          last_time = pOrder->nTime;
+          index++;
+
+          printf("Öð±ÊÎ¯ÍÐ: %s %d %d %d %d %d \n", pOrder->szWindCode,
+            pOrder->nActionDay, pOrder->nTime, index, pOrder->nPrice, 
+            pOrder->nVolume);
+        }
+      }
+#endif
+
+      TDF_ORDER* pLastOrder = 
+        GETRECORD(pMsgHead->pData, TDF_ORDER, nItemCount-1);
+
+      printf("½ÓÊÕµ½ÖðÍÐ¼Ç´úÂë£º%s, ÒµÎñ·¢ÉúÈÕ:%d, Ê±¼ä:%d, Î¯ÍÐ¼Û¸ñ:%d,\
+        Î¯ÍÐÊýÁ¿:%d \n", pLastOrder->szWindCode, pLastOrder->nActionDay, 
+      pLastOrder->nTime, pLastOrder->nPrice, pLastOrder->nVolume);
+    }
+    break;
+
+    default:
+    assert(0);
+    break;
+
+  }
 }
 
 void RecvSys(THANDLE hTdf, TDF_MSG* pSysMsg) {
-  if (!pSysMsg || !hTdf) {
+  if (!pSysMsg ||! hTdf) {
     return;
   }
 
   switch (pSysMsg->nDataType) {
   case MSG_SYS_DISCONNECT_NETWORK:
-    LOG(INFO) << "MSG_SYS_DISCONNECT_NETWORK";
+    printf("MSG_SYS_DISCONNECT_NETWORK\n");
     break;
 
   case MSG_SYS_CONNECT_RESULT: {
     TDF_CONNECT_RESULT* pConnResult = (TDF_CONNECT_RESULT*)pSysMsg->pData;
     if (pConnResult && pConnResult->nConnResult)
-      LOG(INFO) << "connect: " << pConnResult->szIp << ":" 
-        << pConnResult->szPort << " user:%s" << pConnResult->szUser << "suc!";
+      printf("connect: %s:%s user:%s, password:%s suc!\n", pConnResult->szIp, 
+          pConnResult->szPort, pConnResult->szUser, pConnResult->szPwd);
     else
-      LOG(ERROR) << "connect: " << pConnResult->szIp << ":" 
-        << pConnResult->szPort << " user:%s" << pConnResult->szUser << "fail !";
+      printf("connect: %s:%s user:%s, password:%s fail!\n", pConnResult->szIp, 
+          pConnResult->szPort, pConnResult->szUser, pConnResult->szPwd);
   }
   break;
 
   case MSG_SYS_LOGIN_RESULT: {
     TDF_LOGIN_RESULT* pLoginResult = (TDF_LOGIN_RESULT*)pSysMsg->pData;
     if (pLoginResult && pLoginResult->nLoginResult) {
-      LOG(INFO) << "login suc:info:" << pLoginResult->szInfo
-        << " nMarkets " << pLoginResult->nMarkets;
+      printf("login suc:info:%s, nMarkets:%d\n", pLoginResult->szInfo, 
+          pLoginResult->nMarkets);
       for (int i=0; i<pLoginResult->nMarkets; i++) {
         printf("market:%s, dyn_date:%d\n", pLoginResult->szMarket[i], 
             pLoginResult->nDynDate[i]);
       }
+
     } else
-      LOG(ERROR) << "login fail: " <<  pLoginResult->szInfo;
+      printf("login fail:%s\n", pLoginResult->szInfo);
+
   }
   break;
 
@@ -162,3 +274,295 @@ void RecvSys(THANDLE hTdf, TDF_MSG* pSysMsg) {
     break;
   }
 }
+
+void DumpScreenMarket(TDF_MARKET_DATA* pMarket, int nItems) {
+
+  printf("-------- Market, Count:%d --------\n", nItems);
+  char szBuf1[512];
+  char szBuf2[512];
+  char szBuf3[512];
+  char szBuf4[512];
+  char szBufSmall[64];
+
+  for (int i=0; i<nItems; i++) {
+    const TDF_MARKET_DATA& marketData = pMarket[i];
+    printf("szWindCode: %s\n", marketData.szWindCode);
+    printf("szCode: %s\n", marketData.szCode);
+    printf("nActionDay: %d\n", marketData.nActionDay);
+    printf("nTradingDay: %d\n", marketData.nTradingDay);
+    printf("nTime: %d\n", marketData.nTime );
+    printf("nStatus: %d(%c)\n", marketData.nStatus, 
+        SAFE_CHAR(marketData.nStatus));
+    printf("nPreClose: %d\n", marketData.nPreClose);
+    printf("nOpen: %d\n", marketData.nOpen);
+    printf("nHigh: %d\n", marketData.nHigh);
+    printf("nLow: %d\n", marketData.nLow);
+    printf("nMatch: %d\n", marketData.nMatch);
+    printf("nAskPrice: %s \n", 
+      intarr2str(szBuf1, sizeof(szBuf1), (int*)marketData.nAskPrice, 
+      ELEM_COUNT(marketData.nAskPrice)));
+
+    printf("nAskVol: %s \n", intarr2str(szBuf2, sizeof(szBuf2), 
+          (int*)marketData.nAskVol, ELEM_COUNT(marketData.nAskVol)));
+    printf("nBidPrice: %s \n", intarr2str(szBuf3, sizeof(szBuf3), 
+          (int*)marketData.nBidPrice, ELEM_COUNT(marketData.nBidPrice)));
+    printf("nBidVol: %s \n", intarr2str(szBuf4, sizeof(szBuf4), 
+          (int*)marketData.nBidVol, ELEM_COUNT(marketData.nBidVol)));
+    printf("nNumTrades: %d\n", marketData.nNumTrades);
+
+    printf("iVolume: %lld\n", marketData.iVolume);
+    printf("iTurnover: %lld\n", marketData.iTurnover);
+    printf("nTotalBidVol: %lld\n", marketData.nTotalBidVol);
+    printf("nTotalAskVol: %lld\n", marketData.nTotalAskVol);
+
+    printf("nWeightedAvgBidPrice: %u\n", marketData.nWeightedAvgBidPrice);
+    printf("nWeightedAvgAskPrice: %u\n", marketData.nWeightedAvgAskPrice);
+
+    printf("nIOPV: %d\n",  marketData.nIOPV);
+    printf("nYieldToMaturity: %d\n", marketData.nYieldToMaturity);
+    printf("nHighLimited: %d\n", marketData.nHighLimited);
+    printf("nLowLimited: %d\n", marketData.nLowLimited);
+    printf("chPrefix: %s\n", chararr2str(szBufSmall, sizeof(szBufSmall), 
+          (char*)marketData.chPrefix, ELEM_COUNT(marketData.chPrefix)));
+    if (nItems>1)
+      printf("\n");
+  }
+
+  printf("\n");
+}
+
+void DumpScreenFuture(THANDLE hTdf,TDF_FUTURE_DATA* pFuture, int nItems) {
+  printf("-------- Future, Count:%d --------\n", nItems);
+  char szBuf1[256];
+  char szBuf2[256];
+  char szBuf3[256];
+  char szBuf4[256];
+
+  for (int i=0; i<nItems; i++) {
+    const TDF_FUTURE_DATA& futureData = pFuture[i];
+    TDF_OPTION_CODE codeInfo;
+    int ret = TDF_GetOptionCodeInfo(hTdf,futureData.szWindCode,&codeInfo);
+    if (ret == TDF_ERR_SUCCESS)
+      printf("**************************%s\n",codeInfo.szUnderlyingSecurityID);
+    else
+      printf("**********%d\n", ret);
+
+    printf("ÍòµÃ´úÂë szWindCode: %s\n", futureData.szWindCode);
+    printf("Ô­Ê¼´úÂë szCode: %s\n", futureData.szCode);
+    printf("ÒµÎñ·¢ÉúÈÕ(×ÔÈ»ÈÕ) nActionDay: %d\n", futureData.nActionDay);
+    printf("½»Ò×ÈÕ nTradingDay: %d\n", futureData.nTradingDay);
+    printf("Ê±¼ä(HHMMSSmmm) nTime: %d\n", futureData.nTime);
+    printf("×´Ì¬ nStatus: %d(%c)\n", futureData.nStatus, 
+        SAFE_CHAR(futureData.nStatus));
+
+    printf("×ò³Ö²Ö iPreOpenInterest: %lld\n", futureData.iPreOpenInterest);
+    printf("×òÊÕÅÌ¼Û nPreClose: %d\n", futureData.nPreClose);
+    printf("×ò½áËã nPreSettlePrice: %d\n", futureData.nPreSettlePrice);
+    printf("¿ªÅÌ¼Û nOpen: %d\n", futureData.nOpen);
+    printf("×î¸ß¼Û nHigh: %d\n", futureData.nHigh);
+    printf("×îµÍ¼Û nLow: %d\n", futureData.nLow);
+    printf("×îÐÂ¼Û nMatch: %d\n", futureData.nMatch);
+    printf("³É½»×ÜÁ¿ iVolume: %lld\n", futureData.iVolume);
+    printf("³É½»×Ü½ð¶î iTurnover: %lldd\n", futureData.iTurnover);
+    printf("³Ö²Ö×ÜÁ¿ iOpenInterest: %lld\n", futureData.iOpenInterest);
+    printf("½ñÊÕÅÌ nClose: %u\n", futureData.nClose);
+    printf("½ñ½áËã nSettlePrice: %u\n", futureData.nSettlePrice);
+    printf("ÕÇÍ£¼Û nHighLimited: %u\n", futureData.nHighLimited);
+    printf("µøÍ£¼Û nLowLimited: %u\n", futureData.nLowLimited);
+    printf("×òÐéÊµ¶È nPreDelta: %d\n", futureData.nPreDelta);
+    printf("½ñÐéÊµ¶È nCurrDelta: %d\n", futureData.nCurrDelta);
+
+    printf("ÉêÂô¼Û nAskPrice: %s\n", intarr2str(szBuf1, sizeof(szBuf1), 
+          (int*)futureData.nAskPrice, ELEM_COUNT(futureData.nAskPrice)));
+    printf("ÉêÂôÁ¿ nAskVol: %s\n", intarr2str(szBuf2, sizeof(szBuf2),
+          (int*)futureData.nAskVol, ELEM_COUNT(futureData.nAskVol)));
+    printf("ÉêÂò¼Û nBidPrice: %s\n", intarr2str(szBuf3, sizeof(szBuf3),
+          (int*)futureData.nBidPrice, ELEM_COUNT(futureData.nBidPrice)));
+    printf("ÉêÂòÁ¿ nBidVol: %s\n", intarr2str(szBuf4, sizeof(szBuf4),
+          (int*)futureData.nBidVol, ELEM_COUNT(futureData.nBidVol)));
+
+    if (nItems > 1)
+      printf("\n");
+  }
+
+  printf("\n");
+}
+
+void DumpScreenIndex(TDF_INDEX_DATA* pIndex, int nItems) {
+  printf("-------- Index, Count:%d --------\n", nItems);
+
+  for (int i=0; i<nItems; i++) {
+    const TDF_INDEX_DATA& indexData = pIndex[i];
+    printf("ÍòµÃ´úÂë szWindCode: %s\n", indexData.szWindCode);
+    printf("Ô­Ê¼´úÂë szCode: %s\n", indexData.szCode);
+    printf("ÒµÎñ·¢ÉúÈÕ(×ÔÈ»ÈÕ) nActionDay: %d\n", indexData.nActionDay);
+    printf("½»Ò×ÈÕ nTradingDay: %d\n", indexData.nTradingDay);
+    printf("Ê±¼ä(HHMMSSmmm) nTime: %d\n", indexData.nTime);
+
+    printf("½ñ¿ªÅÌÖ¸Êý nOpenIndex: %d\n", indexData.nOpenIndex);
+    printf("×î¸ßÖ¸Êý nHighIndex: %d\n", indexData.nHighIndex);
+    printf("×îµÍÖ¸Êý nLowIndex: %d\n", indexData.nLowIndex);
+    printf("×îÐÂÖ¸Êý nLastIndex: %d\n", indexData.nLastIndex);
+    printf("³É½»×ÜÁ¿ iTotalVolume: %lld\n", indexData.iTotalVolume);
+    printf("³É½»×Ü½ð¶î iTurnover: %lld\n", indexData.iTurnover);
+    printf("Ç°ÅÌÖ¸Êý nPreCloseIndex: %d\n", indexData.nPreCloseIndex);
+
+    if (nItems>1)
+      printf("\n");
+  }
+
+  printf("\n");
+}
+
+void DumpScreenTransaction(TDF_TRANSACTION* pTransaction, int nItems) {
+  printf("-------- Transaction, Count:%d --------\n", nItems);
+
+  for (int i=0; i<nItems; i++) {
+    const TDF_TRANSACTION& transaction = pTransaction[i];
+    printf("ÍòµÃ´úÂë szWindCode: %s\n", transaction.szWindCode);
+    printf("Ô­Ê¼´úÂë szCode: %s\n", transaction.szCode);
+    printf("ÒµÎñ·¢ÉúÈÕ(×ÔÈ»ÈÕ) nActionDay: %d\n", transaction.nActionDay);
+    printf("Ê±¼ä(HHMMSSmmm) nTime: %d\n", transaction.nTime);
+    printf("³É½»±àºÅ nIndex: %d\n", transaction.nIndex);
+    printf("³É½»¼Û¸ñ nPrice: %d\n", transaction.nPrice);
+    printf("³É½»ÊýÁ¿ nVolume: %d\n", transaction.nVolume);
+    printf("³É½»½ð¶î nTurnover: %d\n", transaction.nTurnover);
+    printf("ÂòÂô·½Ïò nBSFlag: %d(%c)\n", transaction.nBSFlag, 
+        SAFE_CHAR(transaction.nBSFlag));
+    printf("³É½»Àà±ð chOrderKind: %d(%c)\n", transaction.chOrderKind, 
+        SAFE_CHAR(transaction.chOrderKind));
+    printf("³É½»´úÂë chFunctionCode: %d(%c)\n", transaction.chFunctionCode, 
+        SAFE_CHAR(transaction.chFunctionCode));
+    printf("½ÐÂô·½Î¯ÍÐÐòºÅ nAskOrder: %d\n", transaction.nAskOrder);
+    printf("½ÐÂò·½Î¯ÍÐÐòºÅ nBidOrder: %d\n", transaction.nBidOrder);
+
+    if (nItems>1)
+      printf("\n");
+  }
+
+  printf("\n");
+}
+
+void DumpScreenOrder(TDF_ORDER* pOrder, int nItems) {
+  printf("-------- Order, Count:%d --------\n", nItems);
+
+  for (int i=0; i<nItems; i++) {
+    if (strcmp(pOrder[i].szWindCode, "000001.SZ")) continue;
+
+    const TDF_ORDER& order = pOrder[i];
+    printf("ÍòµÃ´úÂë szWindCode: %s\n", order.szWindCode);
+    printf("Ô­Ê¼´úÂë szCode: %s\n", order.szCode);
+    printf("ÒµÎñ·¢ÉúÈÕ(×ÔÈ»ÈÕ) nActionDay: %d\n", order.nActionDay);
+    printf("Ê±¼ä(HHMMSSmmm) nTime: %d\n", order.nTime);
+    printf("Î¯ÍÐºÅ nOrder: %d\n", order.nOrder);
+    printf("Î¯ÍÐ¼Û¸ñ nPrice: %d\n", order.nPrice);
+    printf("Î¯ÍÐÊýÁ¿ nVolume: %d\n", order.nVolume);
+    printf("Î¯ÍÐÀà±ð chOrderKind: %d(%c)\n", order.chOrderKind, 
+        SAFE_CHAR(order.chOrderKind));
+    printf("Î¯ÍÐ´úÂë chFunctionCode: %d(%c)\n", order.chFunctionCode, 
+        SAFE_CHAR(order.chFunctionCode));
+
+    if (nItems>1)
+      printf("\n");
+  }
+
+  printf("\n");
+}
+
+void DumpScreenOrderQueue(TDF_ORDER_QUEUE* pOrderQueue, int nItems) {
+  printf("-------- Order, Count:%d --------\n", nItems);
+  char szBuf[3200];
+
+  for (int i=0; i<nItems; i++) {
+    if (strcmp(pOrderQueue[i].szWindCode, "000001.SZ")) continue;
+
+    const TDF_ORDER_QUEUE& orderQueue = pOrderQueue[i];
+    printf("ÍòµÃ´úÂë szWindCode: %s\n", orderQueue.szWindCode);
+    printf("Ô­Ê¼´úÂë szCode: %s\n", orderQueue.szCode);
+    printf("ÒµÎñ·¢ÉúÈÕ(×ÔÈ»ÈÕ) nActionDay: %d\n", orderQueue.nActionDay);
+    printf("Ê±¼ä(HHMMSSmmm) nTime: %d\n", orderQueue.nTime);
+
+    printf("ÂòÂô·½Ïò nSide: %d(%c)\n", orderQueue.nSide, 
+        SAFE_CHAR(orderQueue.nSide));
+    printf("Î¯ÍÐ¼Û¸ñ nPrice: %d\n", orderQueue.nPrice);
+    printf("¶©µ¥ÊýÁ¿ nOrders: %d\n", orderQueue.nOrders);
+    printf("Ã÷Ï¸¸öÊý nOrder: %d\n", orderQueue.nABItems);
+
+    printf("¶©µ¥Ã÷Ï¸ nVolume: %s\n", intarr2str(szBuf,sizeof(szBuf), 
+      (int*)orderQueue.nABVolume, MIN(ELEM_COUNT(orderQueue.nABVolume),
+        orderQueue.nABItems)));
+
+    if (nItems>1)
+      printf("\n");
+
+  }
+  printf("\n");
+}
+
+WindMarket::WindMarket() {
+  TDF_OPEN_SETTING settings = {0};
+  closeFlag = false;
+
+  ProtoBufHelper::setupProtoBufMsgHub(msgHub);
+  msgHub.registerCallback(onMsg);
+}
+
+WindMarket::~WindMarket() {
+  if (!closeFlag)
+    close();
+}
+
+int WindMarket::start() {
+
+  //strcpy(settings.szIp, svr_ip);
+  //(settings.szPort, ", svr_port);
+  //strcpy(settings.szUser, "");
+  //strcpy(settings.szPwd,  "");
+
+  //settings.nReconnectCount = 99999999;
+  //settings.nReconnectGap = 5;
+
+  //set data callback func
+  settings.pfnMsgHandler = RecvData; 
+  //set system msg callback func
+  settings.pfnSysMsgNotify = RecvSys;
+
+  //settings.nProtocol = 0;
+  //ÐèÒª¶©ÔÄµÄÊÐ³¡ÁÐ±í
+  settings.szMarkets = "SZ-2;";
+  //settings.szMarkets = "SZ;SH";
+
+  //"600030.SH"; 600030.SH;104174.SH;103493.SH";
+  //ÐèÒª¶©ÔÄµÄ¹ÉÆ±,Îª¿ÕÔò¶©ÔÄÈ«ÊÐ³¡
+  settings.szSubScriptions = "000001.SZ;000002.SH";
+
+  //ÇëÇóµÄÈÕÆÚ£¬¸ñÊ½YYMMDD£¬Îª0ÔòÇëÇó½ñÌì
+  //ÇëÇóµÄÊ±¼ä£¬¸ñÊ½HHMMSS£¬Îª0ÔòÇëÇóÊµÊ±ÐÐÇé£¬Îª0xffffffff´ÓÍ·ÇëÇó
+  //settings.nDate = 0;
+  settings.nTime = -1;
+
+  //ÇëÇóµÄÆ·ÖÖ¡£DATA_TYPE_ALLÇëÇóËùÓÐÆ·ÖÖ
+  settings.nTypeFlags = DATA_TYPE_NONE; 
+  TDF_ERR nErr = TDF_ERR_SUCCESS;
+  THANDLE hTDF = NULL;
+
+  hTDF = TDF_OpenExt(&settings, &nErr);
+
+  if (hTDF == NULL)
+    LOG(ERROR) << "TDF_Open return error: " << nErr;
+  else
+    LOG(INFO) << " Open Success!";
+
+  return 0;
+}
+
+int WindMarket::close() {
+  return 0;
+}
+
+int boardcastMsgData() {
+  //called market data 
+  return 0;
+}
+
+

@@ -10,15 +10,6 @@
 
 //################################
 
-int onMsg(MessageBase msg) {
-  LOG(INFO) << "onMsg";
-  if (msg.type() == TYPE_MARKETUPDATE)
-    MarketUpdate mktUpdt = ProtoBufHelper::unwrapMsg<MarketUpdate>(msg);
-  else
-    LOG(WARNING) << "Recv invalid msg " << msg.type();
-
-  return 0;
-}
 
 int main() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
