@@ -1,10 +1,13 @@
+#include <map>
+
 #include "CPlusPlusCode/ProtoBufMsg.pb.h"
 #include "CedarHelper.h"
 #include "CedarJsonConfig.h"
 #include "ProtoBufMsgHub.h"
 #include "StockProcessor.h"
 
-int initMap(map<std::string, StockProcessor> &map) {
+
+int initMap(std::map<std::string, StockProcessor> &map) {
   std::vector<std::string> codes;
   CedarJsonConfig::getInstance().getStringArrayWithTag(codes, "Ticker", "code");
 
@@ -18,7 +21,7 @@ int initMap(map<std::string, StockProcessor> &map) {
 }
 
 int onMsg(MessageBase msg) {
-  static map<std::string, StockProcessor> codeToProcessor;
+  static std::map<std::string, StockProcessor> codeToProcessor;
   static bool initFlag = true;
   if (initFlag) {
     initMap(codeToProcessor);
@@ -26,14 +29,8 @@ int onMsg(MessageBase msg) {
     LOG(INFO) << "run ";
   }
 
-  if (msg.type() == TYPE_MARKETUPDATE) {
-    MarketUpdate mktUpdt = ProtoBufHelper::unwrapMsg<MarketUpdate>(msg);
-    if (codeToProcessor.find(mktUpdt.code()) == codeToProcessor.end()) {
-      LOG(WARNING) << "Processor recv an invalid code " << mktUpdt.code();
-      return -1;
-    }
-    codeToProcessor[mktUpdt.code()].onMarketUpdate(mktUpdt);
-
+  if (msg.type() == TYPE_DATAREQUEST) {
+    DataRequest dataRequest = ProtoBufHelper::unwrapMsg<DataRequest>(msg);
   } else
     LOG(WARNING) << "Recv invalid msg with type " << msg.type();
 
@@ -51,12 +48,15 @@ int main() {
   msgHub.registerCallback(onMsg);
 
   //send data subscribeRequest
+  std::string pushAddr;
   std::vector<std::string> codes;
   std::vector<std::string> exchanges;
   CedarJsonConfig::getInstance().getStringArrayWithTag(codes, "Ticker", "code");
   CedarJsonConfig::getInstance().getStringArrayWithTag(exchanges,
       "Ticker", "exchange");
-  std::string pushAddr = "127.0.0.1:15216";
+  CedarJsonConfig::getInstance().getStringByPath("DataServer", pushAddr);
+
+  LOG(INFO) << "data req push addr" << pushAddr;
 
   for (int i = 0; i < codes.size(); i++) {
     DataRequest mdReq;

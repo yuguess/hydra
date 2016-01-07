@@ -37,11 +37,12 @@ char* intarr2str(char* szBuf, int nBufLen, int arr[], int n) {
   return szBuf;
 }
 
-int onMsg(MessageBase msg) {
+int WindMarket::onMsg(MessageBase msg) {
   LOG(INFO) << "onMsg";
-  if (msg.type() == TYPE_MARKETUPDATE)
-    MarketUpdate mktUpdt = ProtoBufHelper::unwrapMsg<MarketUpdate>(msg);
-  else
+  if (msg.type() == TYPE_DATAREQUEST) {
+    DataRequest dtRqst = ProtoBufHelper::unwrapMsg<DataRequest>(msg);
+    addDataSubscription(dtRqst);
+  } else
     LOG(WARNING) << "Recv invalid msg " << msg.type();
 
   return 0;
@@ -499,12 +500,20 @@ void DumpScreenOrderQueue(TDF_ORDER_QUEUE* pOrderQueue, int nItems) {
   printf("\n");
 }
 
+int WindMarket::addDataSubscription(DataRequest dtRqst) {
+  std::string windTicker = dtRqst.code() + "." + dtRqst.exchange();
+  if (TDF_SetSubscription(nTDF, windTicker.c_str(), SUBSCRIPTION_ADD) != 0)
+    LOG(WARNING) << "subscribe " << windTicker << " failed";
+
+  return 0;
+}
+
 WindMarket::WindMarket() {
-  TDF_OPEN_SETTING settings = {0};
   closeFlag = false;
 
   ProtoBufHelper::setupProtoBufMsgHub(msgHub);
-  msgHub.registerCallback(onMsg);
+  msgHub.registerCallback(std::bind(&WindMarket::onMsg,
+          this, std::placeholders::_1));
 }
 
 WindMarket::~WindMarket() {
@@ -513,11 +522,21 @@ WindMarket::~WindMarket() {
 }
 
 int WindMarket::start() {
+  std::string srvrIp, srvrPrt, usr, psswrd; 
 
-  //strcpy(settings.szIp, svr_ip);
-  //(settings.szPort, ", svr_port);
-  //strcpy(settings.szUser, "");
-  //strcpy(settings.szPwd,  "");
+  CedarJsonConfig::getInstance().getStringByPath("WindAccount.ServerIP", 
+      srvrIp);
+  CedarJsonConfig::getInstance().getStringByPath("WindAccount.ServerPort", 
+      srvrPrt);
+  CedarJsonConfig::getInstance().getStringByPath("WindAccount.User",
+      usr);
+  CedarJsonConfig::getInstance().getStringByPath("WindAccount.Password",
+      psswrd);
+
+  strcpy(settings.szIp, srvrIp.c_str());
+  strcpy(settings.szPort, srvrPrt.c_str());
+  strcpy(settings.szUser, usr.c_str());
+  strcpy(settings.szPwd,  psswrd.c_str());
 
   //settings.nReconnectCount = 99999999;
   //settings.nReconnectGap = 5;
@@ -543,12 +562,9 @@ int WindMarket::start() {
 
   //请求的品种。DATA_TYPE_ALL请求所有品种
   settings.nTypeFlags = DATA_TYPE_NONE; 
-  TDF_ERR nErr = TDF_ERR_SUCCESS;
-  THANDLE hTDF = NULL;
+  nErr = TDF_ERR_SUCCESS;
 
-  hTDF = TDF_OpenExt(&settings, &nErr);
-
-  if (hTDF == NULL)
+  if ((nTDF = TDF_Open(&settings, &nErr)) == NULL)
     LOG(ERROR) << "TDF_Open return error: " << nErr;
   else
     LOG(INFO) << " Open Success!";

@@ -2,6 +2,7 @@
 #define WIND_MARKET_H
 
 #include "TDFAPI.h"
+#include "CPlusPlusCode/ProtoBufMsg.pb.h"
 
 class WindMarket {
 
@@ -12,10 +13,12 @@ public:
   int close();
 
 private:
-  TDF_OPEN_SETTING_EXT settings;
+  int addDataSubscription(DataRequest);
+  int onMsg(MessageBase);
+
+  TDF_OPEN_SETTING settings;
   TDF_ERR nErr;
   THANDLE nTDF;
-
   bool closeFlag;
 
   ProtoBufMsgHub msgHub;

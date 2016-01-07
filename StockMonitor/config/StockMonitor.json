@@ -5,10 +5,11 @@
     {"code":"000003", "exchange":"SH", "code_type":"stock"},
     {"code":"000004", "exchange":"SZ", "code_type":"index"}
   ],
+
+  "DataServer":"127.0.0.1:15210",
+
   "MsgHub": {
-    "Port":"15231",
-    "Subscribe":[
-      {"name":"MarketReplayer", "hostPort":"127.0.0.1:15230"}
-    ]
+    "PullPort":"15217",
+    "PublishPort":"15218"
   }
 }

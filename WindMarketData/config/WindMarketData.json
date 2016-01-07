@@ -1,8 +1,10 @@
 {
-  "ServerIP":"114.80.154.34",
-  "ServerPort":"6221",
-  "User":"TD1000961001",
-  "Passwrd":"41376499",
+  "WindAccount": {
+    "ServerIP":"114.80.154.34",
+    "ServerPort":"6221",
+    "User":"TD1000961001",
+    "Password":"41376499"
+  },
 
   "Ticker": [
     {"symbol":"IF1507", "Exchange":"Test1"},
@@ -22,8 +24,9 @@
       "hello":"world"
     }
   },
+
   "MsgHub": {
-    "PublishPort":"15213",
-    "PullPort":"15214"
+    "PublishPort":"15219",
+    "PullPort":"15210"
   }
 }
