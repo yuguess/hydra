@@ -2,11 +2,9 @@
 #include "ProtoBufMsgHub.h"
 #include "WindMarket.h"
 
-const char* svr_ip = "114.80.154.34";
-int svr_port = 6221;
+extern WindMarket winMarket;
 
 void RecvData(THANDLE hTdf, TDF_MSG* pMsgHead);
-
 void RecvSys(THANDLE hTdf, TDF_MSG* pSysMsg);
 
 void DumpScreenMarket(TDF_MARKET_DATA* pMarket, int nItems);
@@ -72,6 +70,7 @@ void RecvData(THANDLE hTdf, TDF_MSG* pMsgHead) {
       if (recordNum > PRINTNUM){
         recordNum = 0;
         DumpScreenMarket((TDF_MARKET_DATA*)pMsgHead->pData, nItemCount);
+
       }
     }
     break;
@@ -177,7 +176,6 @@ void RecvData(THANDLE hTdf, TDF_MSG* pMsgHead) {
     default:
     assert(0);
     break;
-
   }
 }
 
@@ -502,18 +500,16 @@ void DumpScreenOrderQueue(TDF_ORDER_QUEUE* pOrderQueue, int nItems) {
 
 int WindMarket::addDataSubscription(DataRequest dtRqst) {
   std::string windTicker = dtRqst.code() + "." + dtRqst.exchange();
-  if (TDF_SetSubscription(nTDF, windTicker.c_str(), SUBSCRIPTION_ADD) != 0)
+  if (TDF_SetSubscription(nTDF, windTicker.c_str(), SUBSCRIPTION_ADD) != 0) {
     LOG(WARNING) << "subscribe " << windTicker << " failed";
+    return -1;
+  }
 
   return 0;
 }
 
 WindMarket::WindMarket() {
   closeFlag = false;
-
-  ProtoBufHelper::setupProtoBufMsgHub(msgHub);
-  msgHub.registerCallback(std::bind(&WindMarket::onMsg,
-          this, std::placeholders::_1));
 }
 
 WindMarket::~WindMarket() {
@@ -522,6 +518,11 @@ WindMarket::~WindMarket() {
 }
 
 int WindMarket::start() {
+  ProtoBufHelper::setupProtoBufMsgHub(msgHub);
+  msgHub.registerCallback(std::bind(&WindMarket::onMsg,
+          this, std::placeholders::_1));
+
+
   std::string srvrIp, srvrPrt, usr, psswrd; 
 
   CedarJsonConfig::getInstance().getStringByPath("WindAccount.ServerIP", 
@@ -551,7 +552,6 @@ int WindMarket::start() {
   settings.szMarkets = "SZ-2;";
   //settings.szMarkets = "SZ;SH";
 
-  //"600030.SH"; 600030.SH;104174.SH;103493.SH";
   //需要订阅的股票,为空则订阅全市场
   settings.szSubScriptions = "000001.SZ;000002.SH";
 
@@ -573,12 +573,8 @@ int WindMarket::start() {
 }
 
 int WindMarket::close() {
+  closeFlag = true;
+  TDF_Close(nTDF);
+
   return 0;
 }
-
-int boardcastMsgData() {
-  //called market data 
-  return 0;
-}
-
-
