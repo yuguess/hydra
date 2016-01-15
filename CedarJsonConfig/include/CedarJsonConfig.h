@@ -8,7 +8,11 @@
 #include <boost/algorithm/string.hpp>
 #include <vector>
 #include "CedarHelper.h"
-#include "json/reader.h"
+#ifdef __linux
+	#include "json/reader.h"
+#elif  _WIN32
+	#include "json/json.h"	
+#endif
 
 class CedarJsonConfig {
 
@@ -25,6 +29,8 @@ public:
     if (!reader.parse(fileStream, root))
       LOG(FATAL) << "Parse config file " << path << " error, "
         << "check your path or config file format";
+
+	return 0;
   }
 
   int getStringByPath(std::string path, std::string &result) {
@@ -37,7 +43,7 @@ public:
 
     return 0;
   }
-
+  //arrayPath is the 
   int getStringArrayWithTag(std::vector<std::string> &results, 
       std::string arrayPath, std::string tagName = "") {
 
