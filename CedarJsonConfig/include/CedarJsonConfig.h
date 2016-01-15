@@ -47,7 +47,7 @@ public:
     if (!val.isArray())
       LOG(FATAL) << "Get array failed, check your array path" << arrayPath;
 
-    for (int i = 0; i < val.size(); i++) {
+    for (unsigned int i = 0; i < val.size(); i++) {
       std::string tmp; 
       if (tagName == "") {
         if (val[i].isString()) 
@@ -85,7 +85,7 @@ public:
       return val;
 
     //for nested path only
-    for (int i = 1; i < strs.size() - 1; i++) {
+    for (unsigned int i = 1; i < strs.size() - 1; i++) {
       if ((val = val[strs[i]]) == Json::nullValue)
         LOG(FATAL) << "Tag " << strs[i] << " has error !";
     }
