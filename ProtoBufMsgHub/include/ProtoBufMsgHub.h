@@ -8,11 +8,12 @@
 #include <functional>
 #include <unordered_map>
 #include <memory>
-#include <glog/logging.h>
-#include "CPlusPlusCode/ProtoBufMsg.pb.h"
-#include "CedarJsonConfig.h"
 
 #define GLOG_NO_ABBREVIATED_SEVERITIES
+#include <glog/logging.h>
+
+#include "CPlusPlusCode/ProtoBufMsg.pb.h"
+#include "CedarJsonConfig.h"
 
 class ProtoBufMsgHub {
 
@@ -46,7 +47,7 @@ public:
        LOG(FATAL) << "zmq_socket error: " << std::string(zmq_strerror(errno));
     if ((subSock = zmq_socket(zmqCtx, ZMQ_SUB)) == NULL)
       LOG(FATAL) << "zmq_socket error: " << std::string(zmq_strerror(errno));
-    if ((pullSock = zmq_socket(zmqCtx, ZMQ_PULL)) == NULL) 
+    if ((pullSock = zmq_socket(zmqCtx, ZMQ_PULL)) == NULL)
       LOG(FATAL) << "zmq_socket error: " << std::string(zmq_strerror(errno));
 
     int optval = 1;
@@ -73,7 +74,7 @@ public:
 
   int boardcastMsg(std::string channel, std::string str) {
     str = channel + "|" + str;
-    if (zmq_send(pubSock, str.c_str(), str.size(), ZMQ_DONTWAIT) 
+    if (zmq_send(pubSock, str.c_str(), str.size(), ZMQ_DONTWAIT)
         != str.size()) {
       //if (errno == EAGAIN)
       //  LOG(ERROR) << "zmq_send EAGAIN" << std::endl;
@@ -91,7 +92,7 @@ public:
          return -1;
       }
       publisherAddrs[addr] = true;
-    } 
+    }
   //send data request
 
     zmq_setsockopt(subSock, ZMQ_SUBSCRIBE, channel.c_str(), channel.size());
@@ -105,7 +106,7 @@ public:
     //  int optval = 1;
     //  zmq_setsockopt(pubSock, ZMQ_TCP_KEEPALIVE, &optval, 4);
     //  if (zmq_connect(subSock, pushAddr.c_str()) != 0) {
-    //     LOG(ERROR) << "zmq_connect error:" 
+    //     LOG(ERROR) << "zmq_connect error:"
     //       << std::string(zmq_strerror(errno)) << std::endl;
     //  }
 
@@ -121,7 +122,7 @@ public:
     std::shared_ptr<void> pushSock;
 
     if (pullerAddrs.find(addr) == pullerAddrs.end()) {
-      if ((pushSockPtr = zmq_socket(zmqCtx, ZMQ_PUSH)) == NULL) 
+      if ((pushSockPtr = zmq_socket(zmqCtx, ZMQ_PUSH)) == NULL)
         LOG(ERROR) << "zmq_socket error: " << std::string(zmq_strerror(errno));
       std::string pullerAddr = "tcp://" + addr;
       if (zmq_connect(pushSockPtr, pullerAddr.c_str()) != 0) {
@@ -130,7 +131,7 @@ public:
       }
 
       pushSock = std::shared_ptr<void>(pushSockPtr);
-      pullerAddrs[addr] = pushSock; 
+      pullerAddrs[addr] = pushSock;
 
       LOG(INFO) << "init new sock";
 
@@ -202,7 +203,7 @@ private:
         msgCallback(msgBase);
       } catch (const std::bad_function_call &e) {
         LOG(ERROR) << "recv msg but msghub doesn't have register callback";
-        LOG(ERROR) << e.what(); 
+        LOG(ERROR) << e.what();
       } catch (...) {
         LOG(ERROR) << "Msghub callback function error !";
       }
@@ -229,7 +230,7 @@ private:
       LOG(INFO) << "block on zmq_poll1";
       if (zmq_poll(items, itemSize, -1) == -1) {
         if (errno == ETERM) {
-          LOG(INFO) << "pool return for one sock become invalid"; 
+          LOG(INFO) << "pool return for one sock become invalid";
         } else {
           LOG(ERROR) << zmq_strerror(errno);
         }
@@ -291,7 +292,7 @@ public:
     return baseMsgStr;
   }
 
-  //need to call loadConfig to use this func usually in the beginning of 
+  //need to call loadConfig to use this func usually in the beginning of
   //the main function
   static int setupProtoBufMsgHub(ProtoBufMsgHub &msgHub) {
     std::string pubPort;
