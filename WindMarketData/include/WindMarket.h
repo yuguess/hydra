@@ -9,7 +9,6 @@ class WindMarket {
 public:
   WindMarket();
   ~WindMarket();
-  int init();
   int start();
   int close();
   
