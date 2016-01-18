@@ -1,0 +1,16 @@
+Log file created at: 2016/01/15 09:20:11
+Running on machine: spike
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0115 09:20:11.616312 10980 ProtoBufMsgHub.h:229] block on zmq_poll1
+I0115 09:20:11.616369 10977 ProtoBufMsgHub.h:135] init new sock
+I0115 09:20:11.616765 10977 ProtoBufMsgHub.h:147] PushMsg complete
+I0115 09:20:11.616849 10977 Main.cpp:50] add subscription 127.0.0.1:15215 000001
+I0115 09:20:11.616880 10977 Main.cpp:52] suspend
+I0115 09:20:16.989351 10980 ProtoBufMsgHub.h:245] subSock get event
+I0115 09:20:16.989408 10980 Main.cpp:8] onMsg
+I0115 09:20:17.989465 10980 Main.cpp:8] onMsg
+I0115 09:20:18.989585 10980 Main.cpp:8] onMsg
+I0115 09:20:19.989696 10980 Main.cpp:8] onMsg
+I0115 09:20:20.989809 10980 Main.cpp:8] onMsg
+I0115 09:20:21.989920 10980 Main.cpp:8] onMsg
+I0115 09:20:25.704279 10980 ProtoBufMsgHub.h:184] ETERM, receiving thread exit

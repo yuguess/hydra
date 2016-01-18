@@ -4,20 +4,22 @@
 #include "CedarJsonConfig.h"
 #include "CedarHelper.h"
 #include "WindMarket.h"
+//#include "easylogging++.h"
 
 //####ALL GLOBAL VARIABLE HERE####
 //this is bad practice, but I have no better way
-WindMarket winMarket;
+WindMarket windMarket;
 //################################
 
+INITIALIZE_EASYLOGGINGPP
 
 int main() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   CedarHelper::initGlog("WindMarket");
-  CedarJsonConfig::getInstance().loadConfigFile("config/WindMarketData.json");
+  CedarJsonConfig::getInstance().loadConfigFile("../config/WindMarketData.json");
 
-  winMarket.start();
+  windMarket.start();
 
   //std::string pushAddr = "127.0.0.1:15216";
   //std::string pullAddr = "127.0.0.1:15215";

@@ -1,0 +1,16 @@
+Log file created at: 2016/01/15 16:56:59
+Running on machine: spike
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0115 16:56:59.374704 18139 OpenInstance.cpp:66] SysManagerThread 线程开始！
+I0115 16:56:59.374696 18135 OpenManager.h:62] 创建一个Open实例：0x1fc1ba0
+I0115 16:56:59.375578 18135 TDFAPI.cpp:40] API版本：TDFAPI3.1.1
+I0115 16:56:59.375603 18135 TDFAPI.cpp:56] 调用TDF_Open! szMarkets:SZ-2; szSubScriptions:000001.SZ;000002.SH nTypeFlags:0 nConnectionID:0
+I0115 16:56:59.375618 18135 TDFAPI.cpp:61] nServerNum0:114.80.154.34 6221 TD1000961001 41376499
+I0115 16:56:59.375777 18135 ConnectionInstance.cpp:320] 创建一个ConnectionInstance
+I0115 16:56:59.375877 18140 ConnectionInstance.cpp:189] 开始尝试连接服务器！
+I0115 16:57:00.376695 18140 HHNetFrameProcessor_TDFAPI.cpp:39] CHHNetFrameProcessor_TDFAPI 退出
+W0115 16:57:00.376777 18140 ConnectionInstance.cpp:201] 连接服务器失败！
+I0115 16:57:00.395366 18135 ConnectionInstance.cpp:332] 销毁一个ConnectionInstance
+W0115 16:57:00.395414 18135 TDFAPI.cpp:85] 连接失败！
+I0115 16:57:00.395452 18135 OpenManager.h:70] 删除一个Open实例：0x1fc1ba0
+I0115 16:57:00.395468 18135 OpenInstance.cpp:43] 释放一个OpenInstance：0x1fc1ba0

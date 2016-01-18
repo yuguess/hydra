@@ -1,0 +1,12 @@
+Log file created at: 2016/01/15 15:35:09
+Running on machine: spike
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0115 15:35:09.828526 15929 ProtoBufMsgHub.h:135] init new sock
+I0115 15:35:09.828495 15932 ProtoBufMsgHub.h:229] block on zmq_poll1
+I0115 15:35:09.829128 15929 ProtoBufMsgHub.h:147] PushMsg complete
+I0115 15:35:09.829180 15932 ProtoBufMsgHub.h:240] pullSock get event
+I0115 15:35:09.829232 15929 testStrtgy.cpp:58] add subscription127.0.0.1:15219 000001
+I0115 15:35:09.829236 15932 testStrtgy.cpp:8] onMsg
+W0115 15:35:09.829308 15932 testStrtgy.cpp:33] Recv invalid msg1
+I0115 15:35:09.829282 15929 testStrtgy.cpp:60] suspend
+I0115 15:35:33.503489 15932 ProtoBufMsgHub.h:184] ETERM, receiving thread exit

@@ -12,7 +12,9 @@ public:
   int init();
   int start();
   int close();
-  
+  static void RecvData(THANDLE hTdf, TDF_MSG* pMsgHead);
+  static void RecvSys(THANDLE hTdf, TDF_MSG* pSysMsg);
+  void RelayMarket(TDF_MARKET_DATA* pMarket, int nItems); 
 
 private:
   int addDataSubscription(DataRequest);

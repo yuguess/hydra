@@ -1,0 +1,20 @@
+Log file created at: 2016/01/14 13:51:59
+Running on machine: spike
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0114 13:51:59.186113 30367 OpenManager.h:62] 创建一个Open实例：0xca2ba0
+I0114 13:51:59.187139 30367 TDFAPI.cpp:40] API版本：TDFAPI3.1.1
+I0114 13:51:59.187161 30367 TDFAPI.cpp:56] 调用TDF_Open! szMarkets:SZ-2; szSubScriptions:000001.SZ;000002.SH nTypeFlags:0 nConnectionID:0
+I0114 13:51:59.187175 30367 TDFAPI.cpp:61] nServerNum0:114.80.154.34 6221 TD1000961001 41376499
+I0114 13:51:59.187350 30367 ConnectionInstance.cpp:320] 创建一个ConnectionInstance
+I0114 13:51:59.219624 30371 OpenInstance.cpp:66] SysManagerThread 线程开始！
+I0114 13:51:59.219666 30372 ConnectionInstance.cpp:189] 开始尝试连接服务器！
+I0114 13:51:59.228354 30372 ConnectionInstance.cpp:205] 连接服务器成功，开始登陆和取代码表！
+I0114 13:51:59.228452 30372 HHNetFrameProcessor_TDFAPI.cpp:429] 正在注册...
+I0114 13:51:59.274485 30373 HHNetFrameProcessor_TDFAPI.cpp:87] 收到登陆响应！
+I0114 13:51:59.274544 30373 HHNetFrameProcessor_TDFAPI.cpp:191] 登录失败：超出授权日期!
+W0114 13:51:59.278661 30372 ConnectionInstance.cpp:222] open失败!
+I0114 13:51:59.279026 30372 HHNetFrameProcessor_TDFAPI.cpp:39] CHHNetFrameProcessor_TDFAPI 退出
+I0114 13:51:59.287535 30367 ConnectionInstance.cpp:332] 销毁一个ConnectionInstance
+W0114 13:51:59.287577 30367 TDFAPI.cpp:85] 连接失败！
+I0114 13:51:59.287613 30367 OpenManager.h:70] 删除一个Open实例：0xca2ba0
+I0114 13:51:59.287629 30367 OpenInstance.cpp:43] 释放一个OpenInstance：0xca2ba0

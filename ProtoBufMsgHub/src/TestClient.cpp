@@ -5,13 +5,13 @@
 #include "CedarJsonConfig.h"
 #include "ProtoBufMsgHub.h"
 
-inline int genRandom(int min, int max) {
+inline double genRandom(int min, int max) {
   if (max < min)
     LOG(FATAL) << "Max " << max << " is less than min " << min;
   else if (max == min)
     return min;
 
-  return rand() % (max - min);
+  return static_cast<double>(rand() % (max - min));
 }
 
 class Tester {
@@ -54,10 +54,12 @@ public:
 
       std::string code = codes[genRandom(0, codes.size() - 1)];
       mktUpdt.set_code(code);
-      mktUpdt.add_bid_price(genRandom(1, 10));
-      mktUpdt.add_bid_volume(genRandom(1, 10));
-      mktUpdt.add_ask_price(genRandom(1, 10));
-      mktUpdt.add_ask_volume(genRandom(1, 10));
+      for (int index = 0; index < 10; index++) {
+	mktUpdt.add_bid_price(genRandom(1, 10));
+	mktUpdt.add_bid_volume(genRandom(1, 10));
+	mktUpdt.add_ask_price(genRandom(1, 10));
+	mktUpdt.add_ask_volume(genRandom(1, 10));
+      }
       std::string res = 
         ProtoBufHelper::wrapMsg<MarketUpdate>(TYPE_MARKETUPDATE, mktUpdt);
       msgHub.boardcastMsg(code, res);
@@ -78,7 +80,7 @@ int main() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
   CedarHelper::initGlog("TestClient");
 
-  CedarJsonConfig::getInstance().loadConfigFile("config/TestClient.json");
+  CedarJsonConfig::getInstance().loadConfigFile("../config/TestClient.json");
 
   Tester tester;
 

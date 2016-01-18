@@ -1,0 +1,4 @@
+Log file created at: 2016/01/15 15:42:00
+Running on machine: spike
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+E0115 15:42:00.162943 16118 ProtoBufMsgHub.h:234] Socket operation on non-socket
