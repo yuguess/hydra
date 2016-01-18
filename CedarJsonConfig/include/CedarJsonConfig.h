@@ -23,7 +23,7 @@ public:
   }
 
   int loadConfigFile(std::string path) {
-    std::ifstream fileStream(path, std::ifstream::binary); 
+    std::ifstream fileStream(path, std::ifstream::binary);
 
     Json::Reader reader;
     if (!reader.parse(fileStream, root))

@@ -5,18 +5,11 @@ int main() {
 	GOOGLE_PROTOBUF_VERIFY_VERSION;
 	
 	CedarHelper::initGlog("CatsMktUpdt");
-	CedarJsonConfig::getInstance().loadConfigFile("./CatsMktUpdt.json");
+	CedarJsonConfig::getInstance().loadConfigFile("CatsMktUpdt.json");
 
 	//sub Market data
 	CatsMktUpdt mdu;
-
-	//const libconfig::Setting& Symbols = ConfigGetSetting("Symbols");
-	//for (unsigned i = 0; i < Symbols.getLength(); i++) {
-	//	const char *s = Symbols[i];
-	//	LOG(INFO) << "init subscribe: " << s;
-	//	mdu.subSingleSymbol(s);
-	//}
-
+	LOG(INFO) << "CatsMktUpdt ctor complete";
 	std::vector<std::string> codes;
 	std::vector<std::string> exchanges;
 	CedarJsonConfig::getInstance().getStringArrayWithTag(codes, "Ticker", "Symbol");

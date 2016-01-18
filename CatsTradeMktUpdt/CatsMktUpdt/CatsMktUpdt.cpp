@@ -54,11 +54,12 @@ void CatsMktUpdt::BizSubCommonCallback(void* pArg) {
 	}
 
 	delete pArg;
-	LOG(WARNING) << "[bizSubCommonCallback] sub Market data: " << symbol << " succeeded";
+	LOG(WARNING) << "[bizSubCommonCallback] sub Market data: " << symbol << " succeeded !";
 }
 
 #define INT_TO_DOUBLE(x)  (static_cast<double>(x) / 10000)
 void CatsMktUpdt::PubMarketDataCallback(void* pArg) {
+
 	CatsMktUpdt* pMktUpdt = static_cast<CatsMktUpdt*>(pArg);
 	CATSAPI_Fetch_MarketDataResult(pMktUpdt->csm.g_hHandle);
 
@@ -71,79 +72,67 @@ void CatsMktUpdt::PubMarketDataCallback(void* pArg) {
 
 		//increment publish, empty if market data remain the same
 		STRealMarketData_Depth *pRealMarketData = (STRealMarketData_Depth *)pBuf;
-		//MarketUpdate mrk;
-		//mrk.security = pRealMarketData->symbol;
-		//mrk.askPrice.push_back(static_cast<double>(pRealMarketData->askPrice1) / 10000);
-		//mrk.askPrice.push_back(static_cast<double>(pRealMarketData->askPrice2) / 10000);
-		//mrk.askPrice.push_back(static_cast<double>(pRealMarketData->askPrice3) / 10000);
-		//mrk.askPrice.push_back(static_cast<double>(pRealMarketData->askPrice4) / 10000);
-		//mrk.askPrice.push_back(static_cast<double>(pRealMarketData->askPrice5) / 10000);
-		//mrk.bidPrice.push_back(static_cast<double>(pRealMarketData->bidPrice1) / 10000);
-		//mrk.bidPrice.push_back(static_cast<double>(pRealMarketData->bidPrice2) / 10000);
-		//mrk.bidPrice.push_back(static_cast<double>(pRealMarketData->bidPrice3) / 10000);
-		//mrk.bidPrice.push_back(static_cast<double>(pRealMarketData->bidPrice4) / 10000);
-		//mrk.bidPrice.push_back(static_cast<double>(pRealMarketData->bidPrice5) / 10000);
-		//mrk.askVolume.push_back(pRealMarketData->askVol1);
-		//mrk.askVolume.push_back(pRealMarketData->askVol2);
-		//mrk.askVolume.push_back(pRealMarketData->askVol3);
-		//mrk.askVolume.push_back(pRealMarketData->askVol4);
-		//mrk.askVolume.push_back(pRealMarketData->askVol5);
-		//mrk.bidVolume.push_back(pRealMarketData->bidVol1);
-		//mrk.bidVolume.push_back(pRealMarketData->bidVol2);
-		//mrk.bidVolume.push_back(pRealMarketData->bidVol3);
-		//mrk.bidVolume.push_back(pRealMarketData->bidVol4);
-		//mrk.bidVolume.push_back(pRealMarketData->bidVol5);
 
-		//mrk.openPrice = INT_TO_DOUBLE(pRealMarketData->openPrice);
-		//mrk.lastPrice = INT_TO_DOUBLE(pRealMarketData->lastPrice);
-		//mrk.highestPrice = INT_TO_DOUBLE(pRealMarketData->highPrice);
-		//mrk.lowestPrice = INT_TO_DOUBLE(pRealMarketData->lowPrice);
-		//mrk.highLimitPrice = INT_TO_DOUBLE(pRealMarketData->highLimited);
-		//mrk.lowLimitPrice = INT_TO_DOUBLE(pRealMarketData->lowLimited);
-		//mrk.openInterest = INT_TO_DOUBLE(pRealMarketData->openInterest);
+		MarketUpdate mktUpdt;
+		//symbol is like 600000.SH use '.' to split
+		std::string symb = pRealMarketData->symbol;
+		mktUpdt.set_code(symb.substr(0, 6));
+		mktUpdt.set_exchange(symb.substr(7, 2));
 
-		//mrk.turnover = INT_TO_DOUBLE(pRealMarketData->turnOver);
-		//mrk.volume = pRealMarketData->volume;
-		//mrk.tradingDay = std::to_string(pRealMarketData->date);
-		//mrk.exchangeTimestamp = std::to_string(pRealMarketData->time);
-		//mrk.recvTimestamp = CedarHelper::getCurTimeStamp(); //HHMMSSmmm
+		mktUpdt.add_bid_price(INT_TO_DOUBLE(pRealMarketData->bidPrice1));
+		mktUpdt.add_bid_price(INT_TO_DOUBLE(pRealMarketData->bidPrice2));
+		mktUpdt.add_bid_price(INT_TO_DOUBLE(pRealMarketData->bidPrice3));
+		mktUpdt.add_bid_price(INT_TO_DOUBLE(pRealMarketData->bidPrice4));
+		mktUpdt.add_bid_price(INT_TO_DOUBLE(pRealMarketData->bidPrice5));
 
-		//std::vector<std::string> strs;
-		//std::string symb = pRealMarketData->symbol;
-		////symbol is like 600000.SH use '.' to split
-		//CedarHelper::stringSplit(symb, '.', strs);
-		//mrk.security = strs[0];
-		//mrk.exchange = strs[1];
+		mktUpdt.add_bid_volume(pRealMarketData->bidVol1);
+		mktUpdt.add_bid_volume(pRealMarketData->bidVol2);
+		mktUpdt.add_bid_volume(pRealMarketData->bidVol3);
+		mktUpdt.add_bid_volume(pRealMarketData->bidVol4);
+		mktUpdt.add_bid_volume(pRealMarketData->bidVol5);
 
-		//std::string msg = mrk.serialize();
-		//std::string chan = C_ReturnMkt;
-		//pMktUpdt->msgHub.send(chan, msg);
+		mktUpdt.add_ask_price(INT_TO_DOUBLE(pRealMarketData->askPrice1));
+		mktUpdt.add_ask_price(INT_TO_DOUBLE(pRealMarketData->askPrice2));
+		mktUpdt.add_ask_price(INT_TO_DOUBLE(pRealMarketData->askPrice3));
+		mktUpdt.add_ask_price(INT_TO_DOUBLE(pRealMarketData->askPrice4));
+		mktUpdt.add_ask_price(INT_TO_DOUBLE(pRealMarketData->askPrice5));
 
-		LOG(INFO) << "[pubMarketDataCallback][MsgHub Chan|Msg]";
+		mktUpdt.add_ask_volume(pRealMarketData->askVol1);
+		mktUpdt.add_ask_volume(pRealMarketData->askVol2);
+		mktUpdt.add_ask_volume(pRealMarketData->askVol3);
+		mktUpdt.add_ask_volume(pRealMarketData->askVol4);
+		mktUpdt.add_ask_volume(pRealMarketData->askVol5);
+
+		mktUpdt.set_open_price(INT_TO_DOUBLE(pRealMarketData->openPrice));
+		mktUpdt.set_last_price(INT_TO_DOUBLE(pRealMarketData->lastPrice));
+		mktUpdt.set_highest_price(INT_TO_DOUBLE(pRealMarketData->highPrice));
+
+		mktUpdt.set_lowest_price(INT_TO_DOUBLE(pRealMarketData->lowPrice));
+		mktUpdt.set_high_limit_price(INT_TO_DOUBLE(pRealMarketData->highLimited));
+		mktUpdt.set_low_limit_price(INT_TO_DOUBLE(pRealMarketData->lowLimited));
+		mktUpdt.set_open_interest(pRealMarketData->openInterest);
+		
+		mktUpdt.set_turnover(INT_TO_DOUBLE(pRealMarketData->turnOver));
+		mktUpdt.set_volume(pRealMarketData->volume);
+		mktUpdt.set_exchange_timestamp(std::to_string(pRealMarketData->time));
+		mktUpdt.set_recv_timestamp(CedarHelper::getCurTimeStamp());
+
+		std::string res = ProtoBufHelper::wrapMsg<MarketUpdate>(TYPE_MARKETUPDATE, mktUpdt);
+		pMktUpdt->msgHub.boardcastMsg(symb, res);
+		
+		LOG(INFO) << "boardcast " << res;
 	}
 }
 
 //MsgHub callback fucntion on every msg
 int CatsMktUpdt::onMsg(MessageBase msg) {
-	//LOG(INFO) << "[onMsg] recv: " << msg << "|" << msg;
-	//if (subChanlNames.find(chan) != subChanlNames.end()) {
-	//	CmdRequest cmdRequest;
-	//	cmdRequest.deserializeOverwrite(msg);
-	//	std::vector<std::string> symbols;
-
-	//	if (cmdRequest.cmd == CMD_SubscribeMarketData) {
-	//		CedarHelper::stringSplit(cmdRequest.args[0], ',', symbols);
-	//	}
-
-	//	for (int i = 0; i < symbols.size(); i++) {
-	//		LOG(INFO) << "[onMsg] dynamic subscribe: " << symbols[i];
-	//		subSingleSymbol(symbols[i]);
-	//	}
-
-	//} else {
-	//	LOG(ERROR) << "[onMsg] undefined channel";
-	//	return -1;
-	//}
+	if (msg.type() == TYPE_DATAREQUEST) {
+		DataRequest dataReq = ProtoBufHelper::unwrapMsg<DataRequest>(msg);
+		subSingleSymbol(dataReq.symbol());
+		LOG(INFO) << "subscribe " << dataReq.code();
+	} else {
+		LOG(WARNING) << "Recv invalid msg type " << msg.type();
+	}
 
 	return 0;
 }
