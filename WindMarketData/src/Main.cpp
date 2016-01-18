@@ -11,7 +11,7 @@
 WindMarket windMarket;
 //################################
 
-INITIALIZE_EASYLOGGINGPP
+//INITIALIZE_EASYLOGGINGPP
 
 int main() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
