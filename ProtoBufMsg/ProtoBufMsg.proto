@@ -11,6 +11,28 @@ message MessageBase {
 }
 
 message MarketUpdate {
+  string szWindCode;
+  string szCode;
+  int32 nActionDay;
+  int32 nTradingDay;
+  int32 nTime;
+  int32 nStatus;
+
+  double preClose;
+  double nOpen;
+  double nHigh;
+  double nLow;
+  double Match;
+  
+  repeated double nAskPrice;
+  repeated int32 nAskVol;
+  repeated double nBidPrice;
+  repeated int32 nBidVol;
+  int32 nNumTrades;
+  int64 iVolume;
+  
+
+
   string code = 1;
   string symbol = 2;
   string exchange = 3;

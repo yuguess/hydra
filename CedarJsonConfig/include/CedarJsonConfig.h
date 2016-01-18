@@ -19,6 +19,7 @@ public:
   }
 
   int loadConfigFile(std::string path) {
+    /// path wrong checked 1.14
     std::ifstream fileStream(path, std::ifstream::binary); 
 
     Json::Reader reader;
