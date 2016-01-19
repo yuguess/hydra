@@ -9,7 +9,6 @@ class WindMarket {
 public:
   WindMarket();
   ~WindMarket();
-  int init();
   int start();
   int close();
   static void RecvData(THANDLE hTdf, TDF_MSG* pMsgHead);
