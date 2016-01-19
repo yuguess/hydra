@@ -68,7 +68,7 @@ void WindMarket::RecvData(THANDLE hTdf, TDF_MSG* pMsgHead) {
       assert(nItemSize == sizeof(TDF_MARKET_DATA));
       if (recordNum > PRINTNUM){
         recordNum = 0;
-    	RelayMarket((TDF_MARKET_DATA*)pMsgHead->pData, nItemCount);
+        RelayMarket((TDF_MARKET_DATA*)pMsgHead->pData, nItemCount);
         //DumpScreenMarket((TDF_MARKET_DATA*)pMsgHead->pData, nItemCount);
       }
     }
@@ -254,7 +254,7 @@ void WindMarket::RelayMarket(TDF_MARKET_DATA* pMarket, int nItems) {
     mktUpdt.set_exchange_timestamp(std::to_string(marketData.nTime));
     mktUpdt.set_recv_timestamp("1024"); //???
 
-    for (int j = 0; j < 10; j++) {
+    for (int j = 0; j < priceLevel; j++) {
       mktUpdt.add_bid_price(marketData.nBidPrice[j]);
       mktUpdt.add_bid_volume(marketData.nBidVol[j]);
       mktUpdt.add_ask_price(marketData.nAskPrice[j]);
@@ -350,6 +350,7 @@ int WindMarket::start() {
   //settings.nProtocol = 0;
   //需要订阅的市场列表
   settings.szMarkets = "SZ-2;";
+  //settings.szMarkets = "SZ-2;SH-2";
   //settings.szMarkets = "SZ;SH";
 
   //需要订阅的股票,为空则订阅全市场

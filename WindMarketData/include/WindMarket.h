@@ -26,6 +26,8 @@ private:
   bool closeFlag;
 
   static ProtoBufMsgHub msgHub;
+
+  const static int priceLevel = 10;
 };
 
 #endif
