@@ -3,7 +3,7 @@
 #include "ProtoBufMsgHub.h"
 #include "CedarJsonConfig.h"
 #include "CedarHelper.h"
-//#include "easylogging++.h"
+#include "easylogging++.h"
 
 int onMsg(MessageBase msg) {
   LOG(INFO) << "onMsg";
@@ -35,6 +35,8 @@ int onMsg(MessageBase msg) {
 
   return 0;
 }
+
+INITIALIZE_EASYLOGGINGPP
 
 int main() {
   GOOGLE_PROTOBUF_VERIFY_VERSION; 

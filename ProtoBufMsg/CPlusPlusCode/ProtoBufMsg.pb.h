@@ -38,16 +38,18 @@ void protobuf_ShutdownFile_ProtoBufMsg_2eproto();
 class DataRequest;
 class MarketUpdate;
 class MessageBase;
+class Transaction;
 
 enum MsgType {
-  TYPE_MARKETUPDATE = 0,
-  TYPE_DATAREQUEST = 1,
+  TYPE_DATAREQUEST = 0,
+  TYPE_MARKETUPDATE = 1,
+  TYPE_TRANSACTION = 2,
   MsgType_INT_MIN_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32min,
   MsgType_INT_MAX_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32max
 };
 bool MsgType_IsValid(int value);
-const MsgType MsgType_MIN = TYPE_MARKETUPDATE;
-const MsgType MsgType_MAX = TYPE_DATAREQUEST;
+const MsgType MsgType_MIN = TYPE_DATAREQUEST;
+const MsgType MsgType_MAX = TYPE_TRANSACTION;
 const int MsgType_ARRAYSIZE = MsgType_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* MsgType_descriptor();
@@ -241,63 +243,129 @@ class MarketUpdate : public ::google::protobuf::Message {
   ::std::string* release_exchange();
   void set_allocated_exchange(::std::string* exchange);
 
-  // optional double open_price = 4;
+  // optional int32 status = 4;
+  void clear_status();
+  static const int kStatusFieldNumber = 4;
+  ::google::protobuf::int32 status() const;
+  void set_status(::google::protobuf::int32 value);
+
+  // optional int32 pre_close = 5;
+  void clear_pre_close();
+  static const int kPreCloseFieldNumber = 5;
+  ::google::protobuf::int32 pre_close() const;
+  void set_pre_close(::google::protobuf::int32 value);
+
+  // optional double open_price = 6;
   void clear_open_price();
-  static const int kOpenPriceFieldNumber = 4;
+  static const int kOpenPriceFieldNumber = 6;
   double open_price() const;
   void set_open_price(double value);
 
-  // optional double last_price = 5;
+  // optional double last_price = 7;
   void clear_last_price();
-  static const int kLastPriceFieldNumber = 5;
+  static const int kLastPriceFieldNumber = 7;
   double last_price() const;
   void set_last_price(double value);
 
-  // optional double highest_price = 6;
+  // optional double highest_price = 8;
   void clear_highest_price();
-  static const int kHighestPriceFieldNumber = 6;
+  static const int kHighestPriceFieldNumber = 8;
   double highest_price() const;
   void set_highest_price(double value);
 
-  // optional double lowest_price = 7;
+  // optional double lowest_price = 9;
   void clear_lowest_price();
-  static const int kLowestPriceFieldNumber = 7;
+  static const int kLowestPriceFieldNumber = 9;
   double lowest_price() const;
   void set_lowest_price(double value);
 
-  // optional double high_limit_price = 8;
+  // optional double high_limit_price = 10;
   void clear_high_limit_price();
-  static const int kHighLimitPriceFieldNumber = 8;
+  static const int kHighLimitPriceFieldNumber = 10;
   double high_limit_price() const;
   void set_high_limit_price(double value);
 
-  // optional double low_limit_price = 9;
+  // optional double low_limit_price = 11;
   void clear_low_limit_price();
-  static const int kLowLimitPriceFieldNumber = 9;
+  static const int kLowLimitPriceFieldNumber = 11;
   double low_limit_price() const;
   void set_low_limit_price(double value);
 
-  // optional int32 open_interest = 10;
+  // optional int32 open_interest = 12;
   void clear_open_interest();
-  static const int kOpenInterestFieldNumber = 10;
+  static const int kOpenInterestFieldNumber = 12;
   ::google::protobuf::int32 open_interest() const;
   void set_open_interest(::google::protobuf::int32 value);
 
-  // optional double turnover = 11;
+  // optional double latest_price = 13;
+  void clear_latest_price();
+  static const int kLatestPriceFieldNumber = 13;
+  double latest_price() const;
+  void set_latest_price(double value);
+
+  // optional int32 num_trades = 14;
+  void clear_num_trades();
+  static const int kNumTradesFieldNumber = 14;
+  ::google::protobuf::int32 num_trades() const;
+  void set_num_trades(::google::protobuf::int32 value);
+
+  // optional double turnover = 15;
   void clear_turnover();
-  static const int kTurnoverFieldNumber = 11;
+  static const int kTurnoverFieldNumber = 15;
   double turnover() const;
   void set_turnover(double value);
 
-  // optional int32 volume = 12;
+  // optional int64 volume = 16;
   void clear_volume();
-  static const int kVolumeFieldNumber = 12;
-  ::google::protobuf::int32 volume() const;
-  void set_volume(::google::protobuf::int32 value);
+  static const int kVolumeFieldNumber = 16;
+  ::google::protobuf::int64 volume() const;
+  void set_volume(::google::protobuf::int64 value);
 
-  // optional string exchange_timestamp = 13;
+  // optional int64 total_bid_vol = 17;
+  void clear_total_bid_vol();
+  static const int kTotalBidVolFieldNumber = 17;
+  ::google::protobuf::int64 total_bid_vol() const;
+  void set_total_bid_vol(::google::protobuf::int64 value);
+
+  // optional int64 total_ask_vol = 18;
+  void clear_total_ask_vol();
+  static const int kTotalAskVolFieldNumber = 18;
+  ::google::protobuf::int64 total_ask_vol() const;
+  void set_total_ask_vol(::google::protobuf::int64 value);
+
+  // optional int32 weighted_avg_bid_price = 19;
+  void clear_weighted_avg_bid_price();
+  static const int kWeightedAvgBidPriceFieldNumber = 19;
+  ::google::protobuf::int32 weighted_avg_bid_price() const;
+  void set_weighted_avg_bid_price(::google::protobuf::int32 value);
+
+  // optional int32 weighted_avg_ask_price = 20;
+  void clear_weighted_avg_ask_price();
+  static const int kWeightedAvgAskPriceFieldNumber = 20;
+  ::google::protobuf::int32 weighted_avg_ask_price() const;
+  void set_weighted_avg_ask_price(::google::protobuf::int32 value);
+
+  // optional int32 iopv = 21;
+  void clear_iopv();
+  static const int kIopvFieldNumber = 21;
+  ::google::protobuf::int32 iopv() const;
+  void set_iopv(::google::protobuf::int32 value);
+
+  // optional int32 yield_to_maturity = 22;
+  void clear_yield_to_maturity();
+  static const int kYieldToMaturityFieldNumber = 22;
+  ::google::protobuf::int32 yield_to_maturity() const;
+  void set_yield_to_maturity(::google::protobuf::int32 value);
+
+  // optional int32 action_day = 23;
+  void clear_action_day();
+  static const int kActionDayFieldNumber = 23;
+  ::google::protobuf::int32 action_day() const;
+  void set_action_day(::google::protobuf::int32 value);
+
+  // optional string exchange_timestamp = 24;
   void clear_exchange_timestamp();
-  static const int kExchangeTimestampFieldNumber = 13;
+  static const int kExchangeTimestampFieldNumber = 24;
   const ::std::string& exchange_timestamp() const;
   void set_exchange_timestamp(const ::std::string& value);
   void set_exchange_timestamp(const char* value);
@@ -306,9 +374,9 @@ class MarketUpdate : public ::google::protobuf::Message {
   ::std::string* release_exchange_timestamp();
   void set_allocated_exchange_timestamp(::std::string* exchange_timestamp);
 
-  // optional string recv_timestamp = 14;
+  // optional string recv_timestamp = 25;
   void clear_recv_timestamp();
-  static const int kRecvTimestampFieldNumber = 14;
+  static const int kRecvTimestampFieldNumber = 25;
   const ::std::string& recv_timestamp() const;
   void set_recv_timestamp(const ::std::string& value);
   void set_recv_timestamp(const char* value);
@@ -317,10 +385,10 @@ class MarketUpdate : public ::google::protobuf::Message {
   ::std::string* release_recv_timestamp();
   void set_allocated_recv_timestamp(::std::string* recv_timestamp);
 
-  // repeated double bid_price = 15;
+  // repeated double bid_price = 26;
   int bid_price_size() const;
   void clear_bid_price();
-  static const int kBidPriceFieldNumber = 15;
+  static const int kBidPriceFieldNumber = 26;
   double bid_price(int index) const;
   void set_bid_price(int index, double value);
   void add_bid_price(double value);
@@ -329,10 +397,10 @@ class MarketUpdate : public ::google::protobuf::Message {
   ::google::protobuf::RepeatedField< double >*
       mutable_bid_price();
 
-  // repeated int32 bid_volume = 16;
+  // repeated int32 bid_volume = 27;
   int bid_volume_size() const;
   void clear_bid_volume();
-  static const int kBidVolumeFieldNumber = 16;
+  static const int kBidVolumeFieldNumber = 27;
   ::google::protobuf::int32 bid_volume(int index) const;
   void set_bid_volume(int index, ::google::protobuf::int32 value);
   void add_bid_volume(::google::protobuf::int32 value);
@@ -341,10 +409,10 @@ class MarketUpdate : public ::google::protobuf::Message {
   ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
       mutable_bid_volume();
 
-  // repeated double ask_price = 17;
+  // repeated double ask_price = 28;
   int ask_price_size() const;
   void clear_ask_price();
-  static const int kAskPriceFieldNumber = 17;
+  static const int kAskPriceFieldNumber = 28;
   double ask_price(int index) const;
   void set_ask_price(int index, double value);
   void add_ask_price(double value);
@@ -353,10 +421,10 @@ class MarketUpdate : public ::google::protobuf::Message {
   ::google::protobuf::RepeatedField< double >*
       mutable_ask_price();
 
-  // repeated int32 ask_volume = 18;
+  // repeated int32 ask_volume = 29;
   int ask_volume_size() const;
   void clear_ask_volume();
-  static const int kAskVolumeFieldNumber = 18;
+  static const int kAskVolumeFieldNumber = 29;
   ::google::protobuf::int32 ask_volume(int index) const;
   void set_ask_volume(int index, ::google::protobuf::int32 value);
   void add_ask_volume(::google::protobuf::int32 value);
@@ -373,15 +441,25 @@ class MarketUpdate : public ::google::protobuf::Message {
   ::google::protobuf::internal::ArenaStringPtr code_;
   ::google::protobuf::internal::ArenaStringPtr symbol_;
   ::google::protobuf::internal::ArenaStringPtr exchange_;
+  ::google::protobuf::int32 status_;
+  ::google::protobuf::int32 pre_close_;
   double open_price_;
   double last_price_;
   double highest_price_;
   double lowest_price_;
   double high_limit_price_;
   double low_limit_price_;
-  double turnover_;
+  double latest_price_;
   ::google::protobuf::int32 open_interest_;
-  ::google::protobuf::int32 volume_;
+  ::google::protobuf::int32 num_trades_;
+  double turnover_;
+  ::google::protobuf::int64 volume_;
+  ::google::protobuf::int64 total_bid_vol_;
+  ::google::protobuf::int64 total_ask_vol_;
+  ::google::protobuf::int32 weighted_avg_bid_price_;
+  ::google::protobuf::int32 weighted_avg_ask_price_;
+  ::google::protobuf::int32 iopv_;
+  ::google::protobuf::int32 yield_to_maturity_;
   ::google::protobuf::internal::ArenaStringPtr exchange_timestamp_;
   ::google::protobuf::internal::ArenaStringPtr recv_timestamp_;
   ::google::protobuf::RepeatedField< double > bid_price_;
@@ -392,6 +470,7 @@ class MarketUpdate : public ::google::protobuf::Message {
   mutable int _ask_price_cached_byte_size_;
   ::google::protobuf::RepeatedField< ::google::protobuf::int32 > ask_volume_;
   mutable int _ask_volume_cached_byte_size_;
+  ::google::protobuf::int32 action_day_;
   mutable int _cached_size_;
   friend void  protobuf_AddDesc_ProtoBufMsg_2eproto();
   friend void protobuf_AssignDesc_ProtoBufMsg_2eproto();
@@ -399,6 +478,200 @@ class MarketUpdate : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static MarketUpdate* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Transaction : public ::google::protobuf::Message {
+ public:
+  Transaction();
+  virtual ~Transaction();
+
+  Transaction(const Transaction& from);
+
+  inline Transaction& operator=(const Transaction& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Transaction& default_instance();
+
+  void Swap(Transaction* other);
+
+  // implements Message ----------------------------------------------
+
+  inline Transaction* New() const { return New(NULL); }
+
+  Transaction* New(::google::protobuf::Arena* arena) const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Transaction& from);
+  void MergeFrom(const Transaction& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  void InternalSwap(Transaction* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return _internal_metadata_.arena();
+  }
+  inline void* MaybeArenaPtr() const {
+    return _internal_metadata_.raw_arena_ptr();
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string code = 1;
+  void clear_code();
+  static const int kCodeFieldNumber = 1;
+  const ::std::string& code() const;
+  void set_code(const ::std::string& value);
+  void set_code(const char* value);
+  void set_code(const char* value, size_t size);
+  ::std::string* mutable_code();
+  ::std::string* release_code();
+  void set_allocated_code(::std::string* code);
+
+  // optional string symbol = 2;
+  void clear_symbol();
+  static const int kSymbolFieldNumber = 2;
+  const ::std::string& symbol() const;
+  void set_symbol(const ::std::string& value);
+  void set_symbol(const char* value);
+  void set_symbol(const char* value, size_t size);
+  ::std::string* mutable_symbol();
+  ::std::string* release_symbol();
+  void set_allocated_symbol(::std::string* symbol);
+
+  // optional string exchange = 3;
+  void clear_exchange();
+  static const int kExchangeFieldNumber = 3;
+  const ::std::string& exchange() const;
+  void set_exchange(const ::std::string& value);
+  void set_exchange(const char* value);
+  void set_exchange(const char* value, size_t size);
+  ::std::string* mutable_exchange();
+  ::std::string* release_exchange();
+  void set_allocated_exchange(::std::string* exchange);
+
+  // optional int32 action_day = 4;
+  void clear_action_day();
+  static const int kActionDayFieldNumber = 4;
+  ::google::protobuf::int32 action_day() const;
+  void set_action_day(::google::protobuf::int32 value);
+
+  // optional int32 time = 5;
+  void clear_time();
+  static const int kTimeFieldNumber = 5;
+  ::google::protobuf::int32 time() const;
+  void set_time(::google::protobuf::int32 value);
+
+  // optional int32 index = 6;
+  void clear_index();
+  static const int kIndexFieldNumber = 6;
+  ::google::protobuf::int32 index() const;
+  void set_index(::google::protobuf::int32 value);
+
+  // optional int32 price = 7;
+  void clear_price();
+  static const int kPriceFieldNumber = 7;
+  ::google::protobuf::int32 price() const;
+  void set_price(::google::protobuf::int32 value);
+
+  // optional int32 volume = 8;
+  void clear_volume();
+  static const int kVolumeFieldNumber = 8;
+  ::google::protobuf::int32 volume() const;
+  void set_volume(::google::protobuf::int32 value);
+
+  // optional int32 turnover = 9;
+  void clear_turnover();
+  static const int kTurnoverFieldNumber = 9;
+  ::google::protobuf::int32 turnover() const;
+  void set_turnover(::google::protobuf::int32 value);
+
+  // optional int32 bsflag = 10;
+  void clear_bsflag();
+  static const int kBsflagFieldNumber = 10;
+  ::google::protobuf::int32 bsflag() const;
+  void set_bsflag(::google::protobuf::int32 value);
+
+  // optional string ch_order_kind = 11;
+  void clear_ch_order_kind();
+  static const int kChOrderKindFieldNumber = 11;
+  const ::std::string& ch_order_kind() const;
+  void set_ch_order_kind(const ::std::string& value);
+  void set_ch_order_kind(const char* value);
+  void set_ch_order_kind(const char* value, size_t size);
+  ::std::string* mutable_ch_order_kind();
+  ::std::string* release_ch_order_kind();
+  void set_allocated_ch_order_kind(::std::string* ch_order_kind);
+
+  // optional string ch_function_code = 12;
+  void clear_ch_function_code();
+  static const int kChFunctionCodeFieldNumber = 12;
+  const ::std::string& ch_function_code() const;
+  void set_ch_function_code(const ::std::string& value);
+  void set_ch_function_code(const char* value);
+  void set_ch_function_code(const char* value, size_t size);
+  ::std::string* mutable_ch_function_code();
+  ::std::string* release_ch_function_code();
+  void set_allocated_ch_function_code(::std::string* ch_function_code);
+
+  // optional int32 ask_order = 13;
+  void clear_ask_order();
+  static const int kAskOrderFieldNumber = 13;
+  ::google::protobuf::int32 ask_order() const;
+  void set_ask_order(::google::protobuf::int32 value);
+
+  // optional int32 bid_order = 14;
+  void clear_bid_order();
+  static const int kBidOrderFieldNumber = 14;
+  ::google::protobuf::int32 bid_order() const;
+  void set_bid_order(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:Transaction)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  bool _is_default_instance_;
+  ::google::protobuf::internal::ArenaStringPtr code_;
+  ::google::protobuf::internal::ArenaStringPtr symbol_;
+  ::google::protobuf::internal::ArenaStringPtr exchange_;
+  ::google::protobuf::int32 action_day_;
+  ::google::protobuf::int32 time_;
+  ::google::protobuf::int32 index_;
+  ::google::protobuf::int32 price_;
+  ::google::protobuf::int32 volume_;
+  ::google::protobuf::int32 turnover_;
+  ::google::protobuf::internal::ArenaStringPtr ch_order_kind_;
+  ::google::protobuf::int32 bsflag_;
+  ::google::protobuf::int32 ask_order_;
+  ::google::protobuf::internal::ArenaStringPtr ch_function_code_;
+  ::google::protobuf::int32 bid_order_;
+  mutable int _cached_size_;
+  friend void  protobuf_AddDesc_ProtoBufMsg_2eproto();
+  friend void protobuf_AssignDesc_ProtoBufMsg_2eproto();
+  friend void protobuf_ShutdownFile_ProtoBufMsg_2eproto();
+
+  void InitAsDefaultInstance();
+  static Transaction* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -717,7 +990,35 @@ inline void MarketUpdate::set_allocated_exchange(::std::string* exchange) {
   // @@protoc_insertion_point(field_set_allocated:MarketUpdate.exchange)
 }
 
-// optional double open_price = 4;
+// optional int32 status = 4;
+inline void MarketUpdate::clear_status() {
+  status_ = 0;
+}
+inline ::google::protobuf::int32 MarketUpdate::status() const {
+  // @@protoc_insertion_point(field_get:MarketUpdate.status)
+  return status_;
+}
+inline void MarketUpdate::set_status(::google::protobuf::int32 value) {
+  
+  status_ = value;
+  // @@protoc_insertion_point(field_set:MarketUpdate.status)
+}
+
+// optional int32 pre_close = 5;
+inline void MarketUpdate::clear_pre_close() {
+  pre_close_ = 0;
+}
+inline ::google::protobuf::int32 MarketUpdate::pre_close() const {
+  // @@protoc_insertion_point(field_get:MarketUpdate.pre_close)
+  return pre_close_;
+}
+inline void MarketUpdate::set_pre_close(::google::protobuf::int32 value) {
+  
+  pre_close_ = value;
+  // @@protoc_insertion_point(field_set:MarketUpdate.pre_close)
+}
+
+// optional double open_price = 6;
 inline void MarketUpdate::clear_open_price() {
   open_price_ = 0;
 }
@@ -731,7 +1032,7 @@ inline void MarketUpdate::set_open_price(double value) {
   // @@protoc_insertion_point(field_set:MarketUpdate.open_price)
 }
 
-// optional double last_price = 5;
+// optional double last_price = 7;
 inline void MarketUpdate::clear_last_price() {
   last_price_ = 0;
 }
@@ -745,7 +1046,7 @@ inline void MarketUpdate::set_last_price(double value) {
   // @@protoc_insertion_point(field_set:MarketUpdate.last_price)
 }
 
-// optional double highest_price = 6;
+// optional double highest_price = 8;
 inline void MarketUpdate::clear_highest_price() {
   highest_price_ = 0;
 }
@@ -759,7 +1060,7 @@ inline void MarketUpdate::set_highest_price(double value) {
   // @@protoc_insertion_point(field_set:MarketUpdate.highest_price)
 }
 
-// optional double lowest_price = 7;
+// optional double lowest_price = 9;
 inline void MarketUpdate::clear_lowest_price() {
   lowest_price_ = 0;
 }
@@ -773,7 +1074,7 @@ inline void MarketUpdate::set_lowest_price(double value) {
   // @@protoc_insertion_point(field_set:MarketUpdate.lowest_price)
 }
 
-// optional double high_limit_price = 8;
+// optional double high_limit_price = 10;
 inline void MarketUpdate::clear_high_limit_price() {
   high_limit_price_ = 0;
 }
@@ -787,7 +1088,7 @@ inline void MarketUpdate::set_high_limit_price(double value) {
   // @@protoc_insertion_point(field_set:MarketUpdate.high_limit_price)
 }
 
-// optional double low_limit_price = 9;
+// optional double low_limit_price = 11;
 inline void MarketUpdate::clear_low_limit_price() {
   low_limit_price_ = 0;
 }
@@ -801,7 +1102,7 @@ inline void MarketUpdate::set_low_limit_price(double value) {
   // @@protoc_insertion_point(field_set:MarketUpdate.low_limit_price)
 }
 
-// optional int32 open_interest = 10;
+// optional int32 open_interest = 12;
 inline void MarketUpdate::clear_open_interest() {
   open_interest_ = 0;
 }
@@ -815,7 +1116,35 @@ inline void MarketUpdate::set_open_interest(::google::protobuf::int32 value) {
   // @@protoc_insertion_point(field_set:MarketUpdate.open_interest)
 }
 
-// optional double turnover = 11;
+// optional double latest_price = 13;
+inline void MarketUpdate::clear_latest_price() {
+  latest_price_ = 0;
+}
+inline double MarketUpdate::latest_price() const {
+  // @@protoc_insertion_point(field_get:MarketUpdate.latest_price)
+  return latest_price_;
+}
+inline void MarketUpdate::set_latest_price(double value) {
+  
+  latest_price_ = value;
+  // @@protoc_insertion_point(field_set:MarketUpdate.latest_price)
+}
+
+// optional int32 num_trades = 14;
+inline void MarketUpdate::clear_num_trades() {
+  num_trades_ = 0;
+}
+inline ::google::protobuf::int32 MarketUpdate::num_trades() const {
+  // @@protoc_insertion_point(field_get:MarketUpdate.num_trades)
+  return num_trades_;
+}
+inline void MarketUpdate::set_num_trades(::google::protobuf::int32 value) {
+  
+  num_trades_ = value;
+  // @@protoc_insertion_point(field_set:MarketUpdate.num_trades)
+}
+
+// optional double turnover = 15;
 inline void MarketUpdate::clear_turnover() {
   turnover_ = 0;
 }
@@ -829,21 +1158,119 @@ inline void MarketUpdate::set_turnover(double value) {
   // @@protoc_insertion_point(field_set:MarketUpdate.turnover)
 }
 
-// optional int32 volume = 12;
+// optional int64 volume = 16;
 inline void MarketUpdate::clear_volume() {
-  volume_ = 0;
+  volume_ = GOOGLE_LONGLONG(0);
 }
-inline ::google::protobuf::int32 MarketUpdate::volume() const {
+inline ::google::protobuf::int64 MarketUpdate::volume() const {
   // @@protoc_insertion_point(field_get:MarketUpdate.volume)
   return volume_;
 }
-inline void MarketUpdate::set_volume(::google::protobuf::int32 value) {
+inline void MarketUpdate::set_volume(::google::protobuf::int64 value) {
   
   volume_ = value;
   // @@protoc_insertion_point(field_set:MarketUpdate.volume)
 }
 
-// optional string exchange_timestamp = 13;
+// optional int64 total_bid_vol = 17;
+inline void MarketUpdate::clear_total_bid_vol() {
+  total_bid_vol_ = GOOGLE_LONGLONG(0);
+}
+inline ::google::protobuf::int64 MarketUpdate::total_bid_vol() const {
+  // @@protoc_insertion_point(field_get:MarketUpdate.total_bid_vol)
+  return total_bid_vol_;
+}
+inline void MarketUpdate::set_total_bid_vol(::google::protobuf::int64 value) {
+  
+  total_bid_vol_ = value;
+  // @@protoc_insertion_point(field_set:MarketUpdate.total_bid_vol)
+}
+
+// optional int64 total_ask_vol = 18;
+inline void MarketUpdate::clear_total_ask_vol() {
+  total_ask_vol_ = GOOGLE_LONGLONG(0);
+}
+inline ::google::protobuf::int64 MarketUpdate::total_ask_vol() const {
+  // @@protoc_insertion_point(field_get:MarketUpdate.total_ask_vol)
+  return total_ask_vol_;
+}
+inline void MarketUpdate::set_total_ask_vol(::google::protobuf::int64 value) {
+  
+  total_ask_vol_ = value;
+  // @@protoc_insertion_point(field_set:MarketUpdate.total_ask_vol)
+}
+
+// optional int32 weighted_avg_bid_price = 19;
+inline void MarketUpdate::clear_weighted_avg_bid_price() {
+  weighted_avg_bid_price_ = 0;
+}
+inline ::google::protobuf::int32 MarketUpdate::weighted_avg_bid_price() const {
+  // @@protoc_insertion_point(field_get:MarketUpdate.weighted_avg_bid_price)
+  return weighted_avg_bid_price_;
+}
+inline void MarketUpdate::set_weighted_avg_bid_price(::google::protobuf::int32 value) {
+  
+  weighted_avg_bid_price_ = value;
+  // @@protoc_insertion_point(field_set:MarketUpdate.weighted_avg_bid_price)
+}
+
+// optional int32 weighted_avg_ask_price = 20;
+inline void MarketUpdate::clear_weighted_avg_ask_price() {
+  weighted_avg_ask_price_ = 0;
+}
+inline ::google::protobuf::int32 MarketUpdate::weighted_avg_ask_price() const {
+  // @@protoc_insertion_point(field_get:MarketUpdate.weighted_avg_ask_price)
+  return weighted_avg_ask_price_;
+}
+inline void MarketUpdate::set_weighted_avg_ask_price(::google::protobuf::int32 value) {
+  
+  weighted_avg_ask_price_ = value;
+  // @@protoc_insertion_point(field_set:MarketUpdate.weighted_avg_ask_price)
+}
+
+// optional int32 iopv = 21;
+inline void MarketUpdate::clear_iopv() {
+  iopv_ = 0;
+}
+inline ::google::protobuf::int32 MarketUpdate::iopv() const {
+  // @@protoc_insertion_point(field_get:MarketUpdate.iopv)
+  return iopv_;
+}
+inline void MarketUpdate::set_iopv(::google::protobuf::int32 value) {
+  
+  iopv_ = value;
+  // @@protoc_insertion_point(field_set:MarketUpdate.iopv)
+}
+
+// optional int32 yield_to_maturity = 22;
+inline void MarketUpdate::clear_yield_to_maturity() {
+  yield_to_maturity_ = 0;
+}
+inline ::google::protobuf::int32 MarketUpdate::yield_to_maturity() const {
+  // @@protoc_insertion_point(field_get:MarketUpdate.yield_to_maturity)
+  return yield_to_maturity_;
+}
+inline void MarketUpdate::set_yield_to_maturity(::google::protobuf::int32 value) {
+  
+  yield_to_maturity_ = value;
+  // @@protoc_insertion_point(field_set:MarketUpdate.yield_to_maturity)
+}
+
+// optional int32 action_day = 23;
+inline void MarketUpdate::clear_action_day() {
+  action_day_ = 0;
+}
+inline ::google::protobuf::int32 MarketUpdate::action_day() const {
+  // @@protoc_insertion_point(field_get:MarketUpdate.action_day)
+  return action_day_;
+}
+inline void MarketUpdate::set_action_day(::google::protobuf::int32 value) {
+  
+  action_day_ = value;
+  // @@protoc_insertion_point(field_set:MarketUpdate.action_day)
+}
+
+// optional string exchange_timestamp = 24;
 inline void MarketUpdate::clear_exchange_timestamp() {
   exchange_timestamp_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -886,7 +1313,7 @@ inline void MarketUpdate::set_allocated_exchange_timestamp(::std::string* exchan
   // @@protoc_insertion_point(field_set_allocated:MarketUpdate.exchange_timestamp)
 }
 
-// optional string recv_timestamp = 14;
+// optional string recv_timestamp = 25;
 inline void MarketUpdate::clear_recv_timestamp() {
   recv_timestamp_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -929,7 +1356,7 @@ inline void MarketUpdate::set_allocated_recv_timestamp(::std::string* recv_times
   // @@protoc_insertion_point(field_set_allocated:MarketUpdate.recv_timestamp)
 }
 
-// repeated double bid_price = 15;
+// repeated double bid_price = 26;
 inline int MarketUpdate::bid_price_size() const {
   return bid_price_.size();
 }
@@ -959,7 +1386,7 @@ MarketUpdate::mutable_bid_price() {
   return &bid_price_;
 }
 
-// repeated int32 bid_volume = 16;
+// repeated int32 bid_volume = 27;
 inline int MarketUpdate::bid_volume_size() const {
   return bid_volume_.size();
 }
@@ -989,7 +1416,7 @@ MarketUpdate::mutable_bid_volume() {
   return &bid_volume_;
 }
 
-// repeated double ask_price = 17;
+// repeated double ask_price = 28;
 inline int MarketUpdate::ask_price_size() const {
   return ask_price_.size();
 }
@@ -1019,7 +1446,7 @@ MarketUpdate::mutable_ask_price() {
   return &ask_price_;
 }
 
-// repeated int32 ask_volume = 18;
+// repeated int32 ask_volume = 29;
 inline int MarketUpdate::ask_volume_size() const {
   return ask_volume_.size();
 }
@@ -1047,6 +1474,351 @@ inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
 MarketUpdate::mutable_ask_volume() {
   // @@protoc_insertion_point(field_mutable_list:MarketUpdate.ask_volume)
   return &ask_volume_;
+}
+
+// -------------------------------------------------------------------
+
+// Transaction
+
+// optional string code = 1;
+inline void Transaction::clear_code() {
+  code_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& Transaction::code() const {
+  // @@protoc_insertion_point(field_get:Transaction.code)
+  return code_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Transaction::set_code(const ::std::string& value) {
+  
+  code_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:Transaction.code)
+}
+inline void Transaction::set_code(const char* value) {
+  
+  code_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:Transaction.code)
+}
+inline void Transaction::set_code(const char* value, size_t size) {
+  
+  code_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:Transaction.code)
+}
+inline ::std::string* Transaction::mutable_code() {
+  
+  // @@protoc_insertion_point(field_mutable:Transaction.code)
+  return code_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* Transaction::release_code() {
+  
+  return code_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Transaction::set_allocated_code(::std::string* code) {
+  if (code != NULL) {
+    
+  } else {
+    
+  }
+  code_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), code);
+  // @@protoc_insertion_point(field_set_allocated:Transaction.code)
+}
+
+// optional string symbol = 2;
+inline void Transaction::clear_symbol() {
+  symbol_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& Transaction::symbol() const {
+  // @@protoc_insertion_point(field_get:Transaction.symbol)
+  return symbol_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Transaction::set_symbol(const ::std::string& value) {
+  
+  symbol_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:Transaction.symbol)
+}
+inline void Transaction::set_symbol(const char* value) {
+  
+  symbol_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:Transaction.symbol)
+}
+inline void Transaction::set_symbol(const char* value, size_t size) {
+  
+  symbol_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:Transaction.symbol)
+}
+inline ::std::string* Transaction::mutable_symbol() {
+  
+  // @@protoc_insertion_point(field_mutable:Transaction.symbol)
+  return symbol_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* Transaction::release_symbol() {
+  
+  return symbol_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Transaction::set_allocated_symbol(::std::string* symbol) {
+  if (symbol != NULL) {
+    
+  } else {
+    
+  }
+  symbol_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), symbol);
+  // @@protoc_insertion_point(field_set_allocated:Transaction.symbol)
+}
+
+// optional string exchange = 3;
+inline void Transaction::clear_exchange() {
+  exchange_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& Transaction::exchange() const {
+  // @@protoc_insertion_point(field_get:Transaction.exchange)
+  return exchange_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Transaction::set_exchange(const ::std::string& value) {
+  
+  exchange_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:Transaction.exchange)
+}
+inline void Transaction::set_exchange(const char* value) {
+  
+  exchange_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:Transaction.exchange)
+}
+inline void Transaction::set_exchange(const char* value, size_t size) {
+  
+  exchange_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:Transaction.exchange)
+}
+inline ::std::string* Transaction::mutable_exchange() {
+  
+  // @@protoc_insertion_point(field_mutable:Transaction.exchange)
+  return exchange_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* Transaction::release_exchange() {
+  
+  return exchange_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Transaction::set_allocated_exchange(::std::string* exchange) {
+  if (exchange != NULL) {
+    
+  } else {
+    
+  }
+  exchange_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), exchange);
+  // @@protoc_insertion_point(field_set_allocated:Transaction.exchange)
+}
+
+// optional int32 action_day = 4;
+inline void Transaction::clear_action_day() {
+  action_day_ = 0;
+}
+inline ::google::protobuf::int32 Transaction::action_day() const {
+  // @@protoc_insertion_point(field_get:Transaction.action_day)
+  return action_day_;
+}
+inline void Transaction::set_action_day(::google::protobuf::int32 value) {
+  
+  action_day_ = value;
+  // @@protoc_insertion_point(field_set:Transaction.action_day)
+}
+
+// optional int32 time = 5;
+inline void Transaction::clear_time() {
+  time_ = 0;
+}
+inline ::google::protobuf::int32 Transaction::time() const {
+  // @@protoc_insertion_point(field_get:Transaction.time)
+  return time_;
+}
+inline void Transaction::set_time(::google::protobuf::int32 value) {
+  
+  time_ = value;
+  // @@protoc_insertion_point(field_set:Transaction.time)
+}
+
+// optional int32 index = 6;
+inline void Transaction::clear_index() {
+  index_ = 0;
+}
+inline ::google::protobuf::int32 Transaction::index() const {
+  // @@protoc_insertion_point(field_get:Transaction.index)
+  return index_;
+}
+inline void Transaction::set_index(::google::protobuf::int32 value) {
+  
+  index_ = value;
+  // @@protoc_insertion_point(field_set:Transaction.index)
+}
+
+// optional int32 price = 7;
+inline void Transaction::clear_price() {
+  price_ = 0;
+}
+inline ::google::protobuf::int32 Transaction::price() const {
+  // @@protoc_insertion_point(field_get:Transaction.price)
+  return price_;
+}
+inline void Transaction::set_price(::google::protobuf::int32 value) {
+  
+  price_ = value;
+  // @@protoc_insertion_point(field_set:Transaction.price)
+}
+
+// optional int32 volume = 8;
+inline void Transaction::clear_volume() {
+  volume_ = 0;
+}
+inline ::google::protobuf::int32 Transaction::volume() const {
+  // @@protoc_insertion_point(field_get:Transaction.volume)
+  return volume_;
+}
+inline void Transaction::set_volume(::google::protobuf::int32 value) {
+  
+  volume_ = value;
+  // @@protoc_insertion_point(field_set:Transaction.volume)
+}
+
+// optional int32 turnover = 9;
+inline void Transaction::clear_turnover() {
+  turnover_ = 0;
+}
+inline ::google::protobuf::int32 Transaction::turnover() const {
+  // @@protoc_insertion_point(field_get:Transaction.turnover)
+  return turnover_;
+}
+inline void Transaction::set_turnover(::google::protobuf::int32 value) {
+  
+  turnover_ = value;
+  // @@protoc_insertion_point(field_set:Transaction.turnover)
+}
+
+// optional int32 bsflag = 10;
+inline void Transaction::clear_bsflag() {
+  bsflag_ = 0;
+}
+inline ::google::protobuf::int32 Transaction::bsflag() const {
+  // @@protoc_insertion_point(field_get:Transaction.bsflag)
+  return bsflag_;
+}
+inline void Transaction::set_bsflag(::google::protobuf::int32 value) {
+  
+  bsflag_ = value;
+  // @@protoc_insertion_point(field_set:Transaction.bsflag)
+}
+
+// optional string ch_order_kind = 11;
+inline void Transaction::clear_ch_order_kind() {
+  ch_order_kind_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& Transaction::ch_order_kind() const {
+  // @@protoc_insertion_point(field_get:Transaction.ch_order_kind)
+  return ch_order_kind_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Transaction::set_ch_order_kind(const ::std::string& value) {
+  
+  ch_order_kind_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:Transaction.ch_order_kind)
+}
+inline void Transaction::set_ch_order_kind(const char* value) {
+  
+  ch_order_kind_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:Transaction.ch_order_kind)
+}
+inline void Transaction::set_ch_order_kind(const char* value, size_t size) {
+  
+  ch_order_kind_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:Transaction.ch_order_kind)
+}
+inline ::std::string* Transaction::mutable_ch_order_kind() {
+  
+  // @@protoc_insertion_point(field_mutable:Transaction.ch_order_kind)
+  return ch_order_kind_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* Transaction::release_ch_order_kind() {
+  
+  return ch_order_kind_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Transaction::set_allocated_ch_order_kind(::std::string* ch_order_kind) {
+  if (ch_order_kind != NULL) {
+    
+  } else {
+    
+  }
+  ch_order_kind_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ch_order_kind);
+  // @@protoc_insertion_point(field_set_allocated:Transaction.ch_order_kind)
+}
+
+// optional string ch_function_code = 12;
+inline void Transaction::clear_ch_function_code() {
+  ch_function_code_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& Transaction::ch_function_code() const {
+  // @@protoc_insertion_point(field_get:Transaction.ch_function_code)
+  return ch_function_code_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Transaction::set_ch_function_code(const ::std::string& value) {
+  
+  ch_function_code_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:Transaction.ch_function_code)
+}
+inline void Transaction::set_ch_function_code(const char* value) {
+  
+  ch_function_code_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:Transaction.ch_function_code)
+}
+inline void Transaction::set_ch_function_code(const char* value, size_t size) {
+  
+  ch_function_code_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:Transaction.ch_function_code)
+}
+inline ::std::string* Transaction::mutable_ch_function_code() {
+  
+  // @@protoc_insertion_point(field_mutable:Transaction.ch_function_code)
+  return ch_function_code_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* Transaction::release_ch_function_code() {
+  
+  return ch_function_code_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Transaction::set_allocated_ch_function_code(::std::string* ch_function_code) {
+  if (ch_function_code != NULL) {
+    
+  } else {
+    
+  }
+  ch_function_code_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ch_function_code);
+  // @@protoc_insertion_point(field_set_allocated:Transaction.ch_function_code)
+}
+
+// optional int32 ask_order = 13;
+inline void Transaction::clear_ask_order() {
+  ask_order_ = 0;
+}
+inline ::google::protobuf::int32 Transaction::ask_order() const {
+  // @@protoc_insertion_point(field_get:Transaction.ask_order)
+  return ask_order_;
+}
+inline void Transaction::set_ask_order(::google::protobuf::int32 value) {
+  
+  ask_order_ = value;
+  // @@protoc_insertion_point(field_set:Transaction.ask_order)
+}
+
+// optional int32 bid_order = 14;
+inline void Transaction::clear_bid_order() {
+  bid_order_ = 0;
+}
+inline ::google::protobuf::int32 Transaction::bid_order() const {
+  // @@protoc_insertion_point(field_get:Transaction.bid_order)
+  return bid_order_;
+}
+inline void Transaction::set_bid_order(::google::protobuf::int32 value) {
+  
+  bid_order_ = value;
+  // @@protoc_insertion_point(field_set:Transaction.bid_order)
 }
 
 // -------------------------------------------------------------------
@@ -1226,6 +1998,8 @@ inline void DataRequest::set_allocated_data_type(::std::string* data_type) {
 }
 
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

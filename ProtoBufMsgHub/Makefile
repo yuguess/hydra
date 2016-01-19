@@ -10,6 +10,7 @@ SRC=./src
 INCLUDE= -I/usr/include \
 		-I./include \
 		-I../ProtoBufMsg \
+		-I../easyloggingpp/src \
 		-I../MsgHub/include \
 		-I../CedarJsonConfig/include \
 		-I../CedarHelper/include \
@@ -29,7 +30,7 @@ $(TESTCLIENT):
 	$(CC) $(CFLAGS) $(DEBUG) $(INCLUDE) src/TestClient.cpp $(PROTOBUF) $(LDFLAGS) -o $@ 
 
 $(EXECUTABLE): $(OBJECTS)
-	$(CC) $(OBJECTS) $(LDFLAGS) -o $@
+	$(CC) $(CFLAGS) $(OBJECTS) $(LDFLAGS) -o $@
 
 .cpp.o:
 	$(CC) -c $(CFLAGS) $(DEBUG)  $(INCLUDE) $< -o $@

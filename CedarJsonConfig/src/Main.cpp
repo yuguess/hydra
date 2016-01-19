@@ -1,9 +1,12 @@
 #include "CedarJsonConfig.h"
 #include "CedarHelper.h"
+#include "easylogging++.h"
+
+INITIALIZE_EASYLOGGINGPP
 
 int main() {
-  CedarHelper::initGlog("CedarJsonConfig");
-  CedarJsonConfig::getInstance().loadConfigFile("config/CedarJsonConfig.json");
+//  CedarHelper::initGlog("CedarJsonConfig");
+  CedarJsonConfig::getInstance().loadConfigFile("../config/CedarJsonConfig.json");
 
   std::string tmp;
   CedarJsonConfig::getInstance().getStringByPath("tt.deepArray.hello", tmp);

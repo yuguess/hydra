@@ -4,13 +4,6 @@
 
 extern WindMarket windMarket;
 
-void DumpScreenMarket(TDF_MARKET_DATA* pMarket, int nItems);
-void DumpScreenFuture(THANDLE hTdf,TDF_FUTURE_DATA* pFuture, int nItems);
-void DumpScreenIndex(TDF_INDEX_DATA* pIndex, int nItems);
-void DumpScreenTransaction(TDF_TRANSACTION* pTransaction, int nItems);
-void DumpScreenOrder(TDF_ORDER* pOrder, int nItems);
-void DumpScreenOrderQueue(TDF_ORDER_QUEUE* pOrderQueue, int nItems);
-
 void RelayMarket(TDF_MARKET_DATA* pMarket, int nItems);
 void RelayFuture(THANDLE hTdf,TDF_FUTURE_DATA* pFuture, int nItems);
 void RelayIndex(TDF_INDEX_DATA* pIndex, int nItems);
@@ -73,7 +66,7 @@ void WindMarket::RecvData(THANDLE hTdf, TDF_MSG* pMsgHead) {
       assert(nItemSize == sizeof(TDF_MARKET_DATA));
       if (recordNum > PRINTNUM){
         recordNum = 0;
-	windMarket.RelayMarket((TDF_MARKET_DATA*)pMsgHead->pData, nItemCount);
+    	windMarket.RelayMarket((TDF_MARKET_DATA*)pMsgHead->pData, nItemCount);
         //DumpScreenMarket((TDF_MARKET_DATA*)pMsgHead->pData, nItemCount);
         std::cout << "MarketDataUpdate broadcast" << std::endl;
       }
@@ -114,6 +107,7 @@ void WindMarket::RecvData(THANDLE hTdf, TDF_MSG* pMsgHead) {
       if (recordNum > PRINTNUM) {
         recordNum = 0;
         //DumpScreenTransaction((TDF_TRANSACTION*)pMsgHead->pData, nItemCount);
+    	windMarket.RelayTransaction((TDF_TRANSACTION*)pMsgHead->pData, nItemCount);
 	std::cout << "ScreenTransaction" << std::endl;
       }
       TDF_TRANSACTION* pLastTransaction = GETRECORD(pMsgHead->pData,
@@ -237,17 +231,27 @@ void WindMarket::RelayMarket(TDF_MARKET_DATA* pMarket, int nItems) {
     mktUpdt.set_symbol(marketData.szWindCode);
     mktUpdt.set_code(marketData.szCode); 
     mktUpdt.set_exchange(exchange);
+    mktUpdt.set_status(marketData.nStatus);
+    mktUpdt.set_pre_close(marketData.nPreClose);
     mktUpdt.set_open_price(marketData.nOpen);
-    mktUpdt.set_last_price(marketData.nPreClose); //???
     mktUpdt.set_highest_price(marketData.nHigh);
     mktUpdt.set_lowest_price(marketData.nLow);
     mktUpdt.set_high_limit_price(marketData.nHighLimited);
     mktUpdt.set_low_limit_price(marketData.nLowLimited);
-    mktUpdt.set_open_interest(marketData.nMatch); //???
+    mktUpdt.set_open_interest(1024); //???
+    mktUpdt.set_latest_price(marketData.nMatch);
+    mktUpdt.set_num_trades(marketData.nNumTrades);
     mktUpdt.set_turnover(marketData.iTurnover);
     mktUpdt.set_volume(marketData.iVolume);
+    mktUpdt.set_total_bid_vol(marketData.nTotalBidVol);
+    mktUpdt.set_total_ask_vol(marketData.nTotalAskVol);
+    mktUpdt.set_weighted_avg_bid_price(marketData.nWeightedAvgBidPrice);
+    mktUpdt.set_weighted_avg_ask_price(marketData.nWeightedAvgAskPrice);
+    mktUpdt.set_iopv(marketData.nIOPV);
+    mktUpdt.set_yield_to_maturity(marketData.nYieldToMaturity);
+    mktUpdt.set_action_day(marketData.nActionDay);
     mktUpdt.set_exchange_timestamp(std::to_string(marketData.nTime));
-    mktUpdt.set_recv_timestamp("11"); //???
+    mktUpdt.set_recv_timestamp("1024"); //???
 
     for (int j = 0; j < 10; j++) {
       mktUpdt.add_bid_price(marketData.nBidPrice[j]);
@@ -260,6 +264,34 @@ void WindMarket::RelayMarket(TDF_MARKET_DATA* pMarket, int nItems) {
     msgHub.boardcastMsg(marketData.szCode, res);
   }   
 
+}
+
+void WindMarket::RelayTransaction(TDF_TRANSACTION* pMarket, int nItems) {
+  Transaction trans;
+  for (int i = 0; i < nItems; i++) {
+    const TDF_TRANSACTION& tdfTrans = pMarket[i];
+    const char *exchange = tdfTrans.szWindCode + 7;
+
+    trans.set_code(tdfTrans.szCode);
+    trans.set_symbol(tdfTrans.szWindCode);
+    trans.set_exchange(exchange);
+    trans.set_action_day(tdfTrans.nActionDay);
+    trans.set_time(tdfTrans.nTime);
+    trans.set_index(tdfTrans.nIndex);
+    trans.set_price(tdfTrans.nPrice);
+    trans.set_volume(tdfTrans.nVolume);
+    trans.set_turnover(tdfTrans.nTurnover);
+    trans.set_bsflag(tdfTrans.nBSFlag);
+    trans.set_ch_order_kind(&(tdfTrans.chOrderKind));
+    trans.set_ch_function_code(&(tdfTrans.chFunctionCode));
+
+    trans.set_ask_order(tdfTrans.nAskOrder);
+    trans.set_bid_order(tdfTrans.nBidOrder);
+
+    std::string res = 
+      ProtoBufHelper::wrapMsg<Transaction>(TYPE_TRANSACTION, trans);
+    msgHub.boardcastMsg(tdfTrans.szCode, res);
+  }
 }
 
 int WindMarket::addDataSubscription(DataRequest dtRqst) {

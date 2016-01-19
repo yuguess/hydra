@@ -8,11 +8,12 @@
 #include <functional>
 #include <unordered_map>
 #include <memory>
-#include <glog/logging.h>
+//#include <glog/logging.h>
 #include "CPlusPlusCode/ProtoBufMsg.pb.h"
 #include "CedarJsonConfig.h"
+#include "easylogging++.h"
 
-#define GLOG_NO_ABBREVIATED_SEVERITIES
+//#define GLOG_NO_ABBREVIATED_SEVERITIES
 
 class ProtoBufMsgHub {
 
