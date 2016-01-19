@@ -52,6 +52,8 @@ int main() {
   mdReq.set_code("000001");
   mdReq.set_exchange("SZ");
 
+  pushAddr = "127.0.0.1:15216";
+  publishAddr = "127.0.0.1:15215";
   msgHub.pushMsg(pushAddr, ProtoBufHelper::wrapMsg(TYPE_DATAREQUEST, mdReq));
 
   msgHub.addSubscription(publishAddr, mdReq.code());

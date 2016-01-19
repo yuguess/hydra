@@ -7,8 +7,8 @@
   ],
 
   "DataServer": {
-    "serverAddr":"192.168.0.50:15222",
-    "boardcastAddr":"192.168.0.50:15221"
+    "serverAddr":"192.168.0.50:15212",
+    "boardcastAddr":"192.168.0.50:15213"
   },
 
   "MsgHub": {

@@ -6,17 +6,17 @@
 #include "ProtoBufMsgHub.h"
 #include "StockProcessor.h"
 
-
 int initMap(std::map<std::string, StockProcessor> &map) {
   std::vector<std::string> codes;
   std::vector<std::string> exchanges;
   CedarJsonConfig::getInstance().getStringArrayWithTag(codes, "Ticker", "code");
-  CedarJsonConfig::getInstance().getStringArrayWithTag(codes, "Ticker", "exchange");
+  CedarJsonConfig::getInstance().getStringArrayWithTag(exchanges, "Ticker", "exchange");
 
   for (int i = 0; i < codes.size(); i++) {
     StockProcessor stk = StockProcessor();
-    stk.init(codes[i] + "." + exchanges[i]);
-    map[codes[i]] = stk;
+    std::string chan = codes[i] + "." + exchanges[i];
+    stk.init(chan);
+    map[chan] = stk;
   }
 
   return 0;
@@ -30,14 +30,15 @@ int onMsg(MessageBase msg) {
   if (initFlag) {
     initMap(codeToProcessor);
     initFlag = false;
-    LOG(INFO) << "run ";
+    LOG(INFO) << "run";
   }
 
   if (msg.type() == TYPE_MARKETUPDATE) {
     MarketUpdate mkt = ProtoBufHelper::unwrapMsg<MarketUpdate>(msg);
     std::string chan = mkt.code() + "." + mkt.exchange();
-    if (codeToProcessor.find(chan) == codeToProcessor.end())
+    if (codeToProcessor.find(chan) == codeToProcessor.end()) {
       LOG(WARNING) << "recv invalid mkt update with code" << chan;
+    }
     else
       codeToProcessor[chan].onMarketUpdate(mkt);
 
@@ -47,11 +48,13 @@ int onMsg(MessageBase msg) {
   return 0;
 }
 
+INITIALIZE_EASYLOGGINGPP
+
 int main() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-  CedarHelper::initGlog("StockMonitor");
-  CedarJsonConfig::getInstance().loadConfigFile("config/StockMonitor.json");
+  //CedarHelper::initGlog("StockMonitor");
+  CedarJsonConfig::getInstance().loadConfigFile("../config/StockMonitor.json");
 
   ProtoBufMsgHub msgHub;
   ProtoBufHelper::setupProtoBufMsgHub(msgHub);
@@ -75,11 +78,13 @@ int main() {
     DataRequest mdReq;
     mdReq.set_code(codes[i]);
     mdReq.set_exchange(exchanges[i]);
-    msgHub.pushMsg(dataServerAddr, 
+    std::string pushAddr = "127.0.0.1:15213";
+    std::string publishAddr = "127.0.0.1:15212";
+    msgHub.pushMsg(pushAddr, 
         ProtoBufHelper::wrapMsg(TYPE_DATAREQUEST, mdReq));
 
-    std::string chan = mdReq.code() + "." + mdReq.exchange();
-    msgHub.addSubscription(boardcastAddr, chan);
+    //std::string chan = mdReq.code() + "." + mdReq.exchange();
+    msgHub.addSubscription(publishAddr, mdReq.code());
   }
 
   LOG(INFO) << "StockMonitor service online!"; 

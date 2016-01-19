@@ -1,0 +1,430 @@
+2016-01-19 09:35:39,653 FATAL [default] Parse config file config/StockMonitor.json error, check your path or config file format
+2016-01-19 09:35:39,653 WARN  [default] Aborting application. Reason: Fatal log at [../CedarJsonConfig/include/CedarJsonConfig.h:32]
+2016-01-19 10:12:40,791 INFO  [default] block on zmq_poll1
+2016-01-19 10:12:40,791 INFO  [default] block on zmq_poll1data server addr192.168.0.50:15222
+2016-01-19 10:12:40,791 INFO  [default] block on zmq_poll1
+2016-01-19 10:12:40,791 INFO  [default] block on zmq_poll1data server addr192.168.0.50:15222
+2016-01-19 10:12:40,792 INFO  [default] init new sock
+2016-01-19 10:12:40,792 INFO  [default] PushMsg complete
+2016-01-19 10:12:40,792 INFO  [default] PushMsg complete
+2016-01-19 10:12:40,792 INFO  [default] PushMsg complete
+2016-01-19 10:12:40,792 INFO  [default] PushMsg complete
+2016-01-19 10:12:40,792 INFO  [default] StockMonitor service online!
+2016-01-19 10:12:56,048 INFO  [default] init quiting procedures now!
+2016-01-19 10:12:56,048 ERROR [default] Socket operation on non-socket
+2016-01-19 10:17:46,810 INFO  [default] block on zmq_poll1
+2016-01-19 10:17:46,810 INFO  [default] block on zmq_poll1
+2016-01-19 10:17:46,810 INFO  [default] block on zmq_poll1data server addr192.168.0.50:15212
+2016-01-19 10:17:46,810 INFO  [default] init new sock
+2016-01-19 10:17:46,810 INFO  [default] PushMsg complete
+2016-01-19 10:17:46,810 INFO  [default] PushMsg complete
+2016-01-19 10:17:46,810 INFO  [default] PushMsg complete
+2016-01-19 10:17:46,810 INFO  [default] PushMsg complete
+2016-01-19 10:17:46,810 INFO  [default] StockMonitor service online!
+2016-01-19 10:17:56,794 INFO  [default] init quiting procedures now!
+2016-01-19 10:17:56,794 ERROR [default] Socket operation on non-socket
+2016-01-19 10:59:01,005 INFO  [default] block on zmq_poll1
+2016-01-19 10:59:01,005 INFO  [default] block on zmq_poll1data server addr192.168.0.50:15212
+2016-01-19 10:59:01,005 INFO  [default] block on zmq_poll1
+2016-01-19 10:59:01,005 INFO  [default] block on zmq_poll1data server addr192.168.0.50:15212
+2016-01-19 10:59:01,005 INFO  [default] init new sock
+2016-01-19 10:59:01,005 INFO  [default] PushMsg complete
+2016-01-19 10:59:01,005 INFO  [default] PushMsg complete
+2016-01-19 10:59:01,005 INFO  [default] PushMsg complete
+2016-01-19 10:59:01,005 INFO  [default] PushMsg complete
+2016-01-19 10:59:01,005 INFO  [default] StockMonitor service online!
+2016-01-19 11:00:58,542 INFO  [default] init quiting procedures now!
+2016-01-19 11:00:58,542 ERROR [default] Socket operation on non-socket
+2016-01-19 11:15:56,318 INFO  [default] block on zmq_poll1
+2016-01-19 11:15:56,318 INFO  [default] block on zmq_poll1data server addr192.168.0.50:15212
+2016-01-19 11:15:56,319 INFO  [default] init new sock
+2016-01-19 11:15:56,319 INFO  [default] PushMsg complete
+2016-01-19 11:15:56,319 INFO  [default] PushMsg complete
+2016-01-19 11:15:56,319 INFO  [default] PushMsg complete
+2016-01-19 11:15:56,319 INFO  [default] PushMsg complete
+2016-01-19 11:15:56,319 INFO  [default] StockMonitor service online!
+2016-01-19 11:16:22,598 INFO  [default] init quiting procedures now!
+2016-01-19 11:16:22,599 ERROR [default] Socket operation on non-socket
+2016-01-19 11:23:09,924 INFO  [default] block on zmq_poll1
+2016-01-19 11:23:09,924 INFO  [default] block on zmq_poll1
+2016-01-19 11:23:09,924 INFO  [default] block on zmq_poll1data server addr192.168.0.50:15212
+2016-01-19 11:23:09,924 INFO  [default] init new sock
+2016-01-19 11:23:09,924 INFO  [default] PushMsg complete
+2016-01-19 11:23:09,924 INFO  [default] PushMsg complete
+2016-01-19 11:23:09,924 INFO  [default] PushMsg complete
+2016-01-19 11:23:09,924 INFO  [default] PushMsg complete
+2016-01-19 11:23:09,924 INFO  [default] StockMonitor service online!
+2016-01-19 11:23:31,677 INFO  [default] init quiting procedures now!
+2016-01-19 11:23:31,677 ERROR [default] Socket operation on non-socket
+2016-01-19 11:31:50,303 INFO  [default] block on zmq_poll1
+2016-01-19 11:31:50,303 INFO  [default] block on zmq_poll1data server addr192.168.0.50:15212
+2016-01-19 11:31:50,303 INFO  [default] block on zmq_poll1
+2016-01-19 11:31:50,303 INFO  [default] block on zmq_poll1data server addr192.168.0.50:15212
+2016-01-19 11:31:50,304 INFO  [default] init new sock
+2016-01-19 11:31:50,304 INFO  [default] PushMsg complete
+2016-01-19 11:31:50,304 INFO  [default] PushMsg complete
+2016-01-19 11:31:50,304 INFO  [default] PushMsg complete
+2016-01-19 11:31:50,304 INFO  [default] PushMsg complete
+2016-01-19 11:31:50,304 INFO  [default] StockMonitor service online!
+2016-01-19 11:31:50,709 INFO  [default] subSock get event
+2016-01-19 11:31:50,709 INFO  [default] onMsg
+2016-01-19 11:31:50,709 FATAL [default] CRASH HANDLED; Application has crashed due to [SIGSEGV] signal
+2016-01-19 11:31:50,709 WARN  [default] Aborting application. Reason: Fatal log at [../easyloggingpp/src/easylogging++.h:5583]
+2016-01-19 13:48:18,599 INFO  [default] data server addr192.168.0.50:15212
+2016-01-19 13:48:18,599 INFO  [default] init new sock
+2016-01-19 13:48:18,599 INFO  [default] PushMsg complete
+2016-01-19 13:48:18,600 INFO  [default] PushMsg complete
+2016-01-19 13:48:18,600 INFO  [default] PushMsg complete
+2016-01-19 13:48:18,600 INFO  [default] PushMsg complete
+2016-01-19 13:48:18,600 INFO  [default] StockMonitor service online!
+2016-01-19 13:48:18,601 INFO  [default] block on zmq_poll1
+2016-01-19 13:48:35,935 INFO  [default] subSock get event
+2016-01-19 13:48:35,935 INFO  [default] onMsg
+2016-01-19 13:48:35,935 FATAL [default] CRASH HANDLED; Application has crashed due to [SIGSEGV] signal
+2016-01-19 13:48:35,935 WARN  [default] Aborting application. Reason: Fatal log at [../easyloggingpp/src/easylogging++.h:5583]
+2016-01-19 13:57:53,262 INFO  [default] block on zmq_poll1
+2016-01-19 13:57:53,262 INFO  [default] block on zmq_poll1
+2016-01-19 13:57:53,262 INFO  [default] block on zmq_poll1data server addr192.168.0.50:15212
+2016-01-19 13:57:53,262 INFO  [default] init new sock
+2016-01-19 13:57:53,262 INFO  [default] PushMsg complete
+2016-01-19 13:57:53,262 INFO  [default] PushMsg complete
+2016-01-19 13:57:53,263 INFO  [default] PushMsg complete
+2016-01-19 13:57:53,263 INFO  [default] PushMsg complete
+2016-01-19 13:57:53,263 INFO  [default] StockMonitor service online!
+2016-01-19 13:57:53,697 INFO  [default] subSock get event
+2016-01-19 13:57:53,697 INFO  [default] onMsg
+2016-01-19 13:57:53,697 FATAL [default] CRASH HANDLED; Application has crashed due to [SIGSEGV] signal
+2016-01-19 13:57:53,697 WARN  [default] Aborting application. Reason: Fatal log at [../easyloggingpp/src/easylogging++.h:5583]
+2016-01-19 13:59:22,815 INFO  [default] block on zmq_poll1
+2016-01-19 13:59:22,815 INFO  [default] block on zmq_poll1
+2016-01-19 13:59:22,815 INFO  [default] block on zmq_poll1data server addr192.168.0.50:15212
+2016-01-19 13:59:22,815 INFO  [default] init new sock
+2016-01-19 13:59:22,815 INFO  [default] PushMsg complete
+2016-01-19 13:59:22,815 INFO  [default] PushMsg complete
+2016-01-19 13:59:22,815 INFO  [default] PushMsg complete
+2016-01-19 13:59:22,815 INFO  [default] PushMsg complete
+2016-01-19 13:59:22,816 INFO  [default] StockMonitor service online!
+2016-01-19 13:59:23,591 INFO  [default] subSock get event
+2016-01-19 13:59:23,592 INFO  [default] onMsg
+2016-01-19 13:59:23,592 FATAL [default] CRASH HANDLED; Application has crashed due to [SIGSEGV] signal
+2016-01-19 13:59:23,612 WARN  [default] Aborting application. Reason: Fatal log at [../easyloggingpp/src/easylogging++.h:5583]
+2016-01-19 14:01:12,615 INFO  [default] block on zmq_poll1data server addr192.168.0.50:15212
+2016-01-19 14:01:12,615 INFO  [default] block on zmq_poll1
+2016-01-19 14:01:12,615 INFO  [default] block on zmq_poll1data server addr192.168.0.50:15212
+2016-01-19 14:01:12,615 INFO  [default] block on zmq_poll1
+2016-01-19 14:01:12,615 INFO  [default] init new sock
+2016-01-19 14:01:12,615 INFO  [default] PushMsg complete
+2016-01-19 14:01:12,616 INFO  [default] PushMsg complete
+2016-01-19 14:01:12,616 INFO  [default] PushMsg complete
+2016-01-19 14:01:12,616 INFO  [default] PushMsg complete
+2016-01-19 14:01:12,616 INFO  [default] StockMonitor service online!
+2016-01-19 14:01:13,058 INFO  [default] subSock get event
+2016-01-19 14:01:13,058 INFO  [default] onMsg
+2016-01-19 14:01:13,058 FATAL [default] CRASH HANDLED; Application has crashed due to [SIGSEGV] signal
+2016-01-19 14:01:13,058 WARN  [default] Aborting application. Reason: Fatal log at [../easyloggingpp/src/easylogging++.h:5583]
+2016-01-19 14:02:04,672 INFO  [default] block on zmq_poll1
+2016-01-19 14:02:04,672 INFO  [default] block on zmq_poll1
+2016-01-19 14:02:04,672 INFO  [default] block on zmq_poll1data server addr192.168.0.50:15212
+2016-01-19 14:02:04,672 INFO  [default] init new sock
+2016-01-19 14:02:04,673 INFO  [default] PushMsg complete
+2016-01-19 14:02:04,673 INFO  [default] PushMsg complete
+2016-01-19 14:02:04,673 INFO  [default] PushMsg complete
+2016-01-19 14:02:04,673 INFO  [default] PushMsg complete
+2016-01-19 14:02:04,673 INFO  [default] StockMonitor service online!
+2016-01-19 14:02:05,101 INFO  [default] subSock get event
+2016-01-19 14:02:05,101 FATAL [default] CRASH HANDLED; Application has crashed due to [SIGSEGV] signal
+2016-01-19 14:02:05,101 WARN  [default] Aborting application. Reason: Fatal log at [../easyloggingpp/src/easylogging++.h:5583]
+2016-01-19 14:05:29,755 INFO  [default] block on zmq_poll1
+2016-01-19 14:05:29,755 INFO  [default] block on zmq_poll1data server addr192.168.0.50:15212
+2016-01-19 14:05:29,756 INFO  [default] init new sock
+2016-01-19 14:05:29,756 INFO  [default] PushMsg complete
+2016-01-19 14:05:29,756 INFO  [default] PushMsg complete
+2016-01-19 14:05:29,756 INFO  [default] PushMsg complete
+2016-01-19 14:05:29,756 INFO  [default] PushMsg complete
+2016-01-19 14:05:29,756 INFO  [default] StockMonitor service online!
+2016-01-19 14:05:30,385 INFO  [default] subSock get event
+2016-01-19 14:05:30,385 INFO  [default] onMsg
+2016-01-19 14:05:30,385 FATAL [default] CRASH HANDLED; Application has crashed due to [SIGSEGV] signal
+2016-01-19 14:05:30,385 WARN  [default] Aborting application. Reason: Fatal log at [../easyloggingpp/src/easylogging++.h:5583]
+2016-01-19 14:09:22,244 INFO  [default] block on zmq_poll1
+2016-01-19 14:09:22,244 INFO  [default] block on zmq_poll1
+2016-01-19 14:09:22,244 INFO  [default] block on zmq_poll1data server addr192.168.0.50:15212
+2016-01-19 14:09:22,244 INFO  [default] init new sock
+2016-01-19 14:09:22,244 INFO  [default] PushMsg complete
+2016-01-19 14:09:22,244 INFO  [default] PushMsg complete
+2016-01-19 14:09:22,244 INFO  [default] PushMsg complete
+2016-01-19 14:09:22,244 INFO  [default] PushMsg complete
+2016-01-19 14:09:22,244 INFO  [default] StockMonitor service online!
+2016-01-19 14:09:22,646 INFO  [default] subSock get event
+2016-01-19 14:09:22,646 INFO  [default] onMsg
+2016-01-19 14:09:22,646 FATAL [default] CRASH HANDLED; Application has crashed due to [SIGSEGV] signal
+2016-01-19 14:09:22,646 WARN  [default] Aborting application. Reason: Fatal log at [../easyloggingpp/src/easylogging++.h:5583]
+2016-01-19 14:16:12,432 INFO  [default] block on zmq_poll1
+ata server addr192.168.0.50:15212
+2016-01-19 14:16:12,432 INFO  [default] block on zmq_poll1
+ata server addr192.168.0.50:15212
+2016-01-19 14:16:12,433 INFO  [default] init new sock
+2016-01-19 14:16:12,433 INFO  [default] PushMsg complete
+2016-01-19 14:16:12,433 INFO  [default] PushMsg complete
+2016-01-19 14:16:12,433 INFO  [default] PushMsg complete
+2016-01-19 14:16:12,433 INFO  [default] PushMsg complete
+2016-01-19 14:16:12,433 INFO  [default] StockMonitor service online!
+2016-01-19 14:16:37,024 INFO  [default] subSock get event
+2016-01-19 14:16:37,024 INFO  [default] onMsg
+2016-01-19 14:16:37,024 FATAL [default] CRASH HANDLED; Application has crashed due to [SIGSEGV] signal
+2016-01-19 14:16:37,024 WARN  [default] Aborting application. Reason: Fatal log at [../easyloggingpp/src/easylogging++.h:5583]
+2016-01-19 14:19:48,834 INFO  [default] block on zmq_poll1
+2016-01-19 14:19:48,834 INFO  [default] block on zmq_poll1init new sock
+2016-01-19 14:19:48,834 INFO  [default] PushMsg complete
+2016-01-19 14:19:48,834 INFO  [default] PushMsg complete
+2016-01-19 14:19:48,834 INFO  [default] PushMsg complete
+2016-01-19 14:19:48,835 INFO  [default] PushMsg complete
+2016-01-19 14:19:49,398 INFO  [default] subSock get event
+2016-01-19 14:19:49,398 FATAL [default] CRASH HANDLED; Application has crashed due to [SIGSEGV] signal
+2016-01-19 14:19:49,398 WARN  [default] Aborting application. Reason: Fatal log at [../easyloggingpp/src/easylogging++.h:5583]
+2016-01-19 14:20:52,371 INFO  [default] block on zmq_poll1
+2016-01-19 14:20:52,371 INFO  [default] block on zmq_poll1init new sock
+2016-01-19 14:20:52,371 INFO  [default] PushMsg complete
+2016-01-19 14:20:52,371 INFO  [default] PushMsg complete
+2016-01-19 14:20:52,371 INFO  [default] PushMsg complete
+2016-01-19 14:20:52,371 INFO  [default] PushMsg complete
+2016-01-19 14:20:52,929 INFO  [default] subSock get event
+2016-01-19 14:20:52,929 FATAL [default] CRASH HANDLED; Application has crashed due to [SIGSEGV] signal
+2016-01-19 14:20:52,929 WARN  [default] Aborting application. Reason: Fatal log at [../easyloggingpp/src/easylogging++.h:5583]
+2016-01-19 14:23:08,059 INFO  [default] data server addr192.168.0.50:15212
+2016-01-19 14:23:08,059 INFO  [default] init new sock
+2016-01-19 14:23:08,059 INFO  [default] PushMsg complete
+2016-01-19 14:23:08,060 INFO  [default] PushMsg complete
+2016-01-19 14:23:08,060 INFO  [default] PushMsg complete
+2016-01-19 14:23:08,060 INFO  [default] PushMsg complete
+2016-01-19 14:23:08,060 INFO  [default] StockMonitor service online!
+2016-01-19 14:23:08,073 INFO  [default] block on zmq_poll1
+2016-01-19 14:23:08,084 INFO  [default] subSock get event
+2016-01-19 14:23:08,084 INFO  [default] onMsg
+2016-01-19 14:23:10,891 INFO  [default] onMsg
+2016-01-19 14:23:16,860 INFO  [default] onMsg
+2016-01-19 14:23:18,517 INFO  [default] init quiting procedures now!
+2016-01-19 14:23:18,518 INFO  [default] ETERM, receiving thread exit
+2016-01-19 14:27:08,543 INFO  [default] block on zmq_poll1
+2016-01-19 14:27:08,544 INFO  [default] block on zmq_poll1data server addr192.168.0.50:15212
+2016-01-19 14:27:08,543 INFO  [default] block on zmq_poll1
+2016-01-19 14:27:08,544 INFO  [default] block on zmq_poll1data server addr192.168.0.50:15212
+2016-01-19 14:27:08,544 INFO  [default] init new sock
+2016-01-19 14:27:08,544 INFO  [default] PushMsg complete
+2016-01-19 14:27:08,544 INFO  [default] PushMsg complete
+2016-01-19 14:27:08,544 INFO  [default] PushMsg complete
+2016-01-19 14:27:08,544 INFO  [default] PushMsg complete
+2016-01-19 14:27:08,544 INFO  [default] StockMonitor service online!
+2016-01-19 14:27:13,888 INFO  [default] subSock get event
+2016-01-19 14:27:13,888 INFO  [default] onMsg
+2016-01-19 14:27:13,888 FATAL [default] CRASH HANDLED; Application has crashed due to [SIGSEGV] signal
+2016-01-19 14:27:13,888 WARN  [default] Aborting application. Reason: Fatal log at [../easyloggingpp/src/easylogging++.h:5583]
+2016-01-19 14:28:01,664 INFO  [default] block on zmq_poll1
+2016-01-19 14:28:01,664 INFO  [default] block on zmq_poll1
+2016-01-19 14:28:01,664 INFO  [default] block on zmq_poll1data server addr192.168.0.50:15212
+2016-01-19 14:28:01,665 INFO  [default] init new sock
+2016-01-19 14:28:01,665 INFO  [default] PushMsg complete
+2016-01-19 14:28:01,665 INFO  [default] PushMsg complete
+2016-01-19 14:28:01,665 INFO  [default] PushMsg complete
+2016-01-19 14:28:01,665 INFO  [default] PushMsg complete
+2016-01-19 14:28:01,665 INFO  [default] StockMonitor service online!
+2016-01-19 14:28:01,968 INFO  [default] subSock get event
+2016-01-19 14:28:01,968 INFO  [default] onMsg
+2016-01-19 14:28:01,968 INFO  [default] run
+2016-01-19 14:28:04,903 INFO  [default] onMsg
+2016-01-19 14:28:06,713 INFO  [default] init quiting procedures now!
+2016-01-19 14:28:06,713 INFO  [default] ETERM, receiving thread exit
+2016-01-19 14:30:01,977 INFO  [default] block on zmq_poll1
+2016-01-19 14:30:01,977 INFO  [default] block on zmq_poll1data server addr192.168.0.50:15212
+2016-01-19 14:30:01,977 INFO  [default] block on zmq_poll1
+2016-01-19 14:30:01,977 INFO  [default] block on zmq_poll1data server addr192.168.0.50:15212
+2016-01-19 14:30:01,977 INFO  [default] init new sock
+2016-01-19 14:30:01,978 INFO  [default] PushMsg complete
+2016-01-19 14:30:01,978 INFO  [default] PushMsg complete
+2016-01-19 14:30:01,978 INFO  [default] PushMsg complete
+2016-01-19 14:30:01,978 INFO  [default] PushMsg complete
+2016-01-19 14:30:01,978 INFO  [default] StockMonitor service online!
+2016-01-19 14:30:04,946 INFO  [default] subSock get event
+2016-01-19 14:30:04,946 INFO  [default] onMsg
+2016-01-19 14:30:04,946 INFO  [default] run
+2016-01-19 14:30:04,946 WARN  [default] recv invalid mkt update with code000001.SZ
+2016-01-19 14:30:10,891 INFO  [default] onMsg
+2016-01-19 14:30:10,891 WARN  [default] recv invalid mkt update with code000001.SZ
+2016-01-19 14:30:13,265 INFO  [default] init quiting procedures now!
+2016-01-19 14:30:13,265 INFO  [default] ETERM, receiving thread exit
+2016-01-19 14:32:41,802 INFO  [default] block on zmq_poll1
+2016-01-19 14:32:41,802 INFO  [default] block on zmq_poll1data server addr192.168.0.50:15212
+2016-01-19 14:32:41,802 INFO  [default] block on zmq_poll1
+2016-01-19 14:32:41,802 INFO  [default] block on zmq_poll1data server addr192.168.0.50:15212
+2016-01-19 14:32:41,803 INFO  [default] init new sock
+2016-01-19 14:32:41,803 INFO  [default] PushMsg complete
+2016-01-19 14:32:41,803 INFO  [default] PushMsg complete
+2016-01-19 14:32:41,803 INFO  [default] PushMsg complete
+2016-01-19 14:32:41,803 INFO  [default] PushMsg complete
+2016-01-19 14:32:41,803 INFO  [default] StockMonitor service online!
+2016-01-19 14:32:44,020 INFO  [default] subSock get event
+2016-01-19 14:32:44,020 INFO  [default] onMsg
+2016-01-19 14:32:44,021 INFO  [default] run
+2016-01-19 14:32:44,021 WARN  [default] recv invalid mkt update with code000001.SZ
+2016-01-19 14:32:46,939 INFO  [default] onMsg
+2016-01-19 14:32:46,939 WARN  [default] recv invalid mkt update with code000001.SZ
+2016-01-19 14:32:49,996 INFO  [default] onMsg
+2016-01-19 14:32:49,996 WARN  [default] recv invalid mkt update with code000001.SZ
+2016-01-19 14:32:53,054 INFO  [default] onMsg
+2016-01-19 14:32:53,054 WARN  [default] recv invalid mkt update with code000001.SZ
+2016-01-19 14:32:56,034 INFO  [default] onMsg
+2016-01-19 14:32:56,034 WARN  [default] recv invalid mkt update with code000004.SZ
+2016-01-19 14:33:02,012 INFO  [default] onMsg
+2016-01-19 14:33:02,012 WARN  [default] recv invalid mkt update with code000001.SZ
+2016-01-19 14:33:04,957 INFO  [default] onMsg
+2016-01-19 14:33:04,957 WARN  [default] recv invalid mkt update with code000001.SZ
+2016-01-19 14:33:08,107 INFO  [default] onMsg
+2016-01-19 14:33:08,108 WARN  [default] recv invalid mkt update with code000001.SZ
+2016-01-19 14:33:11,041 INFO  [default] onMsg
+2016-01-19 14:33:11,041 WARN  [default] recv invalid mkt update with code000001.SZ
+2016-01-19 14:33:14,104 INFO  [default] onMsg
+2016-01-19 14:33:14,105 WARN  [default] recv invalid mkt update with code000004.SZ
+2016-01-19 14:33:16,912 INFO  [default] onMsg
+2016-01-19 14:33:16,912 WARN  [default] recv invalid mkt update with code000004.SZ
+2016-01-19 14:33:20,152 INFO  [default] onMsg
+2016-01-19 14:33:20,153 WARN  [default] recv invalid mkt update with code000004.SZ
+2016-01-19 14:33:23,101 INFO  [default] onMsg
+2016-01-19 14:33:23,101 WARN  [default] recv invalid mkt update with code000004.SZ
+2016-01-19 14:33:27,203 INFO  [default] onMsg
+2016-01-19 14:33:27,203 WARN  [default] recv invalid mkt update with code000004.SZ
+2016-01-19 14:33:32,030 INFO  [default] onMsg
+2016-01-19 14:33:32,030 WARN  [default] recv invalid mkt update with code000001.SZ
+2016-01-19 14:33:35,057 INFO  [default] onMsg
+2016-01-19 14:33:35,057 WARN  [default] recv invalid mkt update with code000001.SZ
+2016-01-19 14:33:37,973 INFO  [default] onMsg
+2016-01-19 14:33:37,973 WARN  [default] recv invalid mkt update with code000001.SZ
+2016-01-19 14:33:41,092 INFO  [default] onMsg
+2016-01-19 14:33:41,092 WARN  [default] recv invalid mkt update with code000001.SZ
+2016-01-19 14:33:44,011 INFO  [default] onMsg
+2016-01-19 14:33:44,011 WARN  [default] recv invalid mkt update with code000001.SZ
+2016-01-19 14:33:47,095 INFO  [default] onMsg
+2016-01-19 14:33:47,095 WARN  [default] recv invalid mkt update with code000004.SZ
+2016-01-19 14:33:50,067 INFO  [default] onMsg
+2016-01-19 14:33:50,067 WARN  [default] recv invalid mkt update with code000004.SZ
+2016-01-19 14:33:53,057 INFO  [default] onMsg
+2016-01-19 14:33:53,057 WARN  [default] recv invalid mkt update with code000004.SZ
+2016-01-19 14:33:56,111 INFO  [default] onMsg
+2016-01-19 14:33:56,111 WARN  [default] recv invalid mkt update with code000004.SZ
+2016-01-19 14:33:59,234 INFO  [default] onMsg
+2016-01-19 14:33:59,234 WARN  [default] recv invalid mkt update with code000004.SZ
+2016-01-19 14:34:03,051 INFO  [default] init quiting procedures now!
+2016-01-19 14:34:03,052 INFO  [default] ETERM, receiving thread exit
+2016-01-19 14:43:05,881 INFO  [default] block on zmq_poll1
+2016-01-19 14:43:05,881 INFO  [default] block on zmq_poll1data server addr192.168.0.50:15212
+2016-01-19 14:43:05,882 INFO  [default] init new sock
+2016-01-19 14:43:05,882 INFO  [default] PushMsg complete
+2016-01-19 14:43:05,882 INFO  [default] PushMsg complete
+2016-01-19 14:43:05,882 INFO  [default] PushMsg complete
+2016-01-19 14:43:05,882 INFO  [default] PushMsg complete
+2016-01-19 14:43:05,882 INFO  [default] StockMonitor service online!
+2016-01-19 14:43:08,087 INFO  [default] subSock get event
+2016-01-19 14:43:08,087 INFO  [default] onMsg
+2016-01-19 14:43:08,087 INFO  [default] run
+2016-01-19 14:43:08,087 WARN  [default] recv invalid mkt update with code000004.SZ
+2016-01-19 14:43:14,087 INFO  [default] onMsg
+2016-01-19 14:43:14,087 WARN  [default] recv invalid mkt update with code000001.SZ
+2016-01-19 14:43:19,833 INFO  [default] init quiting procedures now!
+2016-01-19 14:43:19,834 INFO  [default] ETERM, receiving thread exit
+2016-01-19 14:47:00,946 INFO  [default] block on zmq_poll1
+2016-01-19 14:47:00,946 INFO  [default] block on zmq_poll1data server addr192.168.0.50:15212
+2016-01-19 14:47:00,946 INFO  [default] block on zmq_poll1
+2016-01-19 14:47:00,946 INFO  [default] block on zmq_poll1data server addr192.168.0.50:15212
+2016-01-19 14:47:00,947 INFO  [default] init new sock
+2016-01-19 14:47:00,947 INFO  [default] PushMsg complete
+2016-01-19 14:47:00,947 INFO  [default] PushMsg complete
+2016-01-19 14:47:00,947 INFO  [default] PushMsg complete
+2016-01-19 14:47:00,947 INFO  [default] PushMsg complete
+2016-01-19 14:47:00,947 INFO  [default] StockMonitor service online!
+2016-01-19 14:47:02,152 INFO  [default] subSock get event
+2016-01-19 14:47:02,152 INFO  [default] onMsg
+2016-01-19 14:47:02,152 INFO  [default] run
+2016-01-19 14:47:02,152 WARN  [default] recv invalid mkt update with code000001.SZ
+2016-01-19 14:47:05,119 INFO  [default] onMsg
+2016-01-19 14:47:05,119 WARN  [default] recv invalid mkt update with code000001.SZ
+2016-01-19 14:47:08,144 INFO  [default] onMsg
+2016-01-19 14:47:08,144 WARN  [default] recv invalid mkt update with code000001.SZ
+2016-01-19 14:47:09,780 INFO  [default] init quiting procedures now!
+2016-01-19 14:47:09,780 INFO  [default] ETERM, receiving thread exit
+2016-01-19 14:47:59,715 INFO  [default] block on zmq_poll1
+2016-01-19 14:47:59,715 INFO  [default] block on zmq_poll1data server addr192.168.0.50:15212
+2016-01-19 14:47:59,715 INFO  [default] block on zmq_poll1
+2016-01-19 14:47:59,715 INFO  [default] block on zmq_poll1data server addr192.168.0.50:15212
+2016-01-19 14:47:59,716 INFO  [default] init new sock
+2016-01-19 14:47:59,716 INFO  [default] PushMsg complete
+2016-01-19 14:47:59,716 INFO  [default] PushMsg complete
+2016-01-19 14:47:59,716 INFO  [default] PushMsg complete
+2016-01-19 14:47:59,716 INFO  [default] PushMsg complete
+2016-01-19 14:47:59,716 INFO  [default] StockMonitor service online!
+2016-01-19 14:48:02,089 INFO  [default] subSock get event
+2016-01-19 14:48:02,089 INFO  [default] onMsg
+2016-01-19 14:48:02,089 INFO  [default] run
+2016-01-19 14:48:05,164 INFO  [default] onMsg
+2016-01-19 14:48:05,164 INFO  [default] Ticker 000001.SZ speed increase change alert
+2016-01-19 14:48:08,140 INFO  [default] onMsg
+2016-01-19 14:48:08,140 INFO  [default] Ticker 000001.SZ speed increase change alert
+2016-01-19 14:48:11,146 INFO  [default] onMsg
+2016-01-19 14:48:11,146 INFO  [default] Ticker 000001.SZ speed increase change alert
+2016-01-19 14:48:14,196 INFO  [default] onMsg
+2016-01-19 14:48:14,196 INFO  [default] Ticker 000001.SZ speed increase change alert
+2016-01-19 14:48:17,161 INFO  [default] onMsg
+2016-01-19 14:48:17,161 INFO  [default] Ticker 000001.SZ speed increase change alert
+2016-01-19 14:48:20,087 INFO  [default] onMsg
+2016-01-19 14:48:20,087 INFO  [default] Ticker 000001.SZ speed increase change alert
+2016-01-19 14:48:23,111 INFO  [default] onMsg
+2016-01-19 14:48:23,111 INFO  [default] Ticker 000001.SZ speed increase change alert
+2016-01-19 14:48:26,480 INFO  [default] onMsg
+2016-01-19 14:48:26,480 INFO  [default] Ticker 000001.SZ speed increase change alert
+2016-01-19 14:48:29,467 INFO  [default] onMsg
+2016-01-19 14:48:29,467 INFO  [default] Ticker 000001.SZ speed increase change alert
+2016-01-19 14:48:32,085 INFO  [default] onMsg
+2016-01-19 14:48:32,085 INFO  [default] Ticker 000001.SZ speed increase change alert
+2016-01-19 14:48:35,123 INFO  [default] onMsg
+2016-01-19 14:48:35,123 INFO  [default] Ticker 000001.SZ speed increase change alert
+2016-01-19 14:48:38,098 INFO  [default] onMsg
+2016-01-19 14:48:38,098 INFO  [default] Ticker 000001.SZ speed increase change alert
+2016-01-19 14:48:41,199 INFO  [default] onMsg
+2016-01-19 14:48:41,199 INFO  [default] Ticker 000001.SZ speed increase change alert
+2016-01-19 14:48:44,145 INFO  [default] onMsg
+2016-01-19 14:48:44,145 INFO  [default] Ticker 000001.SZ speed increase change alert
+2016-01-19 14:48:47,128 INFO  [default] onMsg
+2016-01-19 14:48:47,128 INFO  [default] Ticker 000001.SZ speed increase change alert
+2016-01-19 14:48:50,139 INFO  [default] onMsg
+2016-01-19 14:48:50,139 INFO  [default] Ticker 000001.SZ speed increase change alert
+2016-01-19 14:48:53,114 INFO  [default] onMsg
+2016-01-19 14:48:53,114 INFO  [default] Ticker 000001.SZ speed increase change alert
+2016-01-19 14:48:56,154 INFO  [default] onMsg
+2016-01-19 14:48:56,154 INFO  [default] Ticker 000001.SZ speed increase change alert
+2016-01-19 14:48:59,151 INFO  [default] onMsg
+2016-01-19 14:49:02,130 INFO  [default] onMsg
+2016-01-19 14:49:05,132 INFO  [default] onMsg
+2016-01-19 14:49:08,122 INFO  [default] onMsg
+2016-01-19 14:49:11,242 INFO  [default] onMsg
+2016-01-19 14:49:14,198 INFO  [default] onMsg
+2016-01-19 14:49:20,069 INFO  [default] onMsg
+2016-01-19 14:49:20,069 INFO  [default] Ticker 000001.SZ speed increase change alert
+2016-01-19 14:49:23,181 INFO  [default] onMsg
+2016-01-19 14:49:23,181 INFO  [default] Ticker 000001.SZ speed increase change alert
+2016-01-19 14:49:26,147 INFO  [default] onMsg
+2016-01-19 14:49:26,147 INFO  [default] Ticker 000001.SZ speed increase change alert
+2016-01-19 14:49:29,156 INFO  [default] onMsg
+2016-01-19 14:49:29,156 INFO  [default] Ticker 000001.SZ speed increase change alert
+2016-01-19 14:49:32,097 INFO  [default] onMsg
+2016-01-19 14:49:32,097 INFO  [default] Ticker 000001.SZ speed increase change alert
+2016-01-19 14:49:35,266 INFO  [default] onMsg
+2016-01-19 14:49:35,266 INFO  [default] Ticker 000001.SZ speed increase change alert
+2016-01-19 14:49:38,085 INFO  [default] onMsg
+2016-01-19 14:49:38,085 INFO  [default] Ticker 000001.SZ speed increase change alert
+2016-01-19 14:49:41,071 INFO  [default] onMsg
+2016-01-19 14:49:44,177 INFO  [default] onMsg
+2016-01-19 14:49:47,252 INFO  [default] onMsg
+2016-01-19 14:49:50,208 INFO  [default] onMsg
+2016-01-19 14:49:53,133 INFO  [default] onMsg
+2016-01-19 14:49:56,174 INFO  [default] onMsg
+2016-01-19 14:49:59,141 INFO  [default] onMsg
+2016-01-19 14:49:59,877 INFO  [default] init quiting procedures now!
+2016-01-19 14:49:59,877 INFO  [default] ETERM, receiving thread exit
