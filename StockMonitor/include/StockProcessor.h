@@ -4,6 +4,7 @@
 #include "CPlusPlusCode/ProtoBufMsg.pb.h"
 #include <chrono>
 #include <boost/circular_buffer.hpp>
+#include "easylogging++.h"
 
 typedef std::chrono::high_resolution_clock::time_point TimeStamp;
 

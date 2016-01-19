@@ -1,0 +1,11 @@
+Log file created at: 2016/01/19 10:14:29
+Running on machine: spike
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0119 10:14:29.382653 15480 ProtoBufMsgHub.h:229] block on zmq_poll1
+I0119 10:14:29.382694 15477 ProtoBufMsgHub.h:135] init new sock
+I0119 10:14:29.383325 15477 ProtoBufMsgHub.h:147] PushMsg complete
+I0119 10:14:29.383414 15477 Main.cpp:50] add subscription 127.0.0.1:15215 000001
+I0119 10:14:29.383443 15477 Main.cpp:52] suspend
+I0119 10:14:47.919239 15480 ProtoBufMsgHub.h:245] subSock get event
+I0119 10:14:47.919356 15480 Main.cpp:8] onMsg
+I0119 10:14:48.919261 15480 Main.cpp:8] onMsg

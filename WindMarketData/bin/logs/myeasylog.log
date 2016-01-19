@@ -30,3 +30,538 @@
 2016-01-18 13:17:26,516 INFO  [default] onMsg
 2016-01-18 13:17:26,516 WARN  [default] Recv invalid msg0
 2016-01-18 13:17:27,611 INFO  [default] ETERM, receiving thread exit
+2016-01-19 10:09:55,784 INFO  [default] block on zmq_poll1
+2016-01-19 10:09:56,294 INFO  [default]  Open Success!
+2016-01-19 10:09:56,294 INFO  [default] suspend
+2016-01-19 10:17:01,246 INFO  [default] block on zmq_poll1
+2016-01-19 10:17:01,347 INFO  [default]  Open Success!
+2016-01-19 10:17:01,347 INFO  [default] suspend
+2016-01-19 10:59:53,077 INFO  [default] block on zmq_poll1
+2016-01-19 10:59:53,078 INFO  [default] pullSock get event
+2016-01-19 10:59:53,078 INFO  [default] onMsg
+2016-01-19 10:59:53,078 WARN  [default] subscribe 000001.SZ failed
+2016-01-19 10:59:53,078 INFO  [default] onMsg
+2016-01-19 10:59:53,078 WARN  [default] subscribe 000002.SZ failed
+2016-01-19 10:59:53,078 INFO  [default] onMsg
+2016-01-19 10:59:53,078 WARN  [default] subscribe 000003.SZ failed
+2016-01-19 10:59:53,078 INFO  [default] onMsg
+2016-01-19 10:59:53,078 WARN  [default] subscribe 000004.SZ failed
+2016-01-19 10:59:53,179 INFO  [default]  Open Success!
+2016-01-19 10:59:53,179 INFO  [default] suspend
+2016-01-19 11:02:01,986 INFO  [default] block on zmq_poll1
+2016-01-19 11:02:01,986 INFO  [default] init new sock
+2016-01-19 11:02:01,986 INFO  [default] PushMsg complete
+2016-01-19 11:02:01,986 INFO  [default] add subscription127.0.0.1:15212 000001
+2016-01-19 11:02:01,986 INFO  [default] suspend
+2016-01-19 11:02:12,231 INFO  [default] block on zmq_poll1
+2016-01-19 11:02:12,231 INFO  [default] pullSock get event
+2016-01-19 11:02:12,231 INFO  [default] onMsg
+2016-01-19 11:02:12,231 WARN  [default] subscribe 000001.SH failed
+2016-01-19 11:02:12,332 INFO  [default]  Open Success!
+2016-01-19 11:02:12,332 INFO  [default] suspend
+2016-01-19 11:02:15,032 INFO  [default] subSock get event
+2016-01-19 11:02:15,032 INFO  [default] onMsg
+2016-01-19 11:02:15,343 INFO  [default] onMsg
+2016-01-19 11:02:15,530 INFO  [default] onMsg
+2016-01-19 11:02:15,593 INFO  [default] onMsg
+2016-01-19 11:02:15,593 INFO  [default] onMsg
+2016-01-19 11:02:15,659 INFO  [default] onMsg
+2016-01-19 11:02:15,717 INFO  [default] onMsg
+2016-01-19 11:02:15,718 INFO  [default] onMsg
+2016-01-19 11:02:15,779 INFO  [default] onMsg
+2016-01-19 11:02:15,842 INFO  [default] onMsg
+2016-01-19 11:02:15,904 INFO  [default] onMsg
+2016-01-19 11:02:15,971 INFO  [default] onMsg
+2016-01-19 11:02:16,031 INFO  [default] onMsg
+2016-01-19 11:02:16,091 INFO  [default] onMsg
+2016-01-19 11:02:16,092 INFO  [default] onMsg
+2016-01-19 11:02:16,154 INFO  [default] onMsg
+2016-01-19 11:02:16,217 INFO  [default] onMsg
+2016-01-19 11:02:16,278 INFO  [default] onMsg
+2016-01-19 11:02:16,279 INFO  [default] onMsg
+2016-01-19 11:02:16,467 INFO  [default] onMsg
+2016-01-19 11:02:16,529 INFO  [default] onMsg
+2016-01-19 11:02:16,654 INFO  [default] onMsg
+2016-01-19 11:02:16,946 INFO  [default] onMsg
+2016-01-19 11:02:17,092 INFO  [default] onMsg
+2016-01-19 11:02:17,277 INFO  [default] onMsg
+2016-01-19 11:02:32,846 INFO  [default] onMsg
+2016-01-19 11:02:36,481 INFO  [default] onMsg
+2016-01-19 11:02:40,697 INFO  [default] onMsg
+2016-01-19 11:02:44,875 INFO  [default] onMsg
+2016-01-19 11:02:46,247 INFO  [default] onMsg
+2016-01-19 11:02:47,590 INFO  [default] onMsg
+2016-01-19 11:02:48,930 INFO  [default] onMsg
+2016-01-19 11:02:50,241 INFO  [default] onMsg
+2016-01-19 11:02:51,616 INFO  [default] onMsg
+2016-01-19 11:02:53,096 INFO  [default] onMsg
+2016-01-19 11:02:54,532 INFO  [default] onMsg
+2016-01-19 11:02:55,968 INFO  [default] onMsg
+2016-01-19 11:02:57,448 INFO  [default] onMsg
+2016-01-19 11:02:58,939 INFO  [default] onMsg
+2016-01-19 11:03:00,351 INFO  [default] onMsg
+2016-01-19 11:03:01,848 INFO  [default] onMsg
+2016-01-19 11:03:03,439 INFO  [default] onMsg
+2016-01-19 11:03:04,830 INFO  [default] onMsg
+2016-01-19 11:03:06,357 INFO  [default] onMsg
+2016-01-19 11:03:07,811 INFO  [default] onMsg
+2016-01-19 11:03:09,242 INFO  [default] onMsg
+2016-01-19 11:03:10,135 INFO  [default] ETERM, receiving thread exit
+2016-01-19 11:10:25,500 INFO  [default] block on zmq_poll1
+2016-01-19 11:10:25,902 INFO  [default]  Open Success!
+2016-01-19 11:10:25,902 INFO  [default] suspend
+2016-01-19 11:15:40,104 INFO  [default] block on zmq_poll1
+2016-01-19 11:15:40,205 INFO  [default]  Open Success!
+2016-01-19 11:15:40,205 INFO  [default] suspend
+2016-01-19 11:15:56,319 INFO  [default] pullSock get event
+2016-01-19 11:15:56,320 INFO  [default] onMsg
+2016-01-19 11:15:56,320 INFO  [default] onMsg
+2016-01-19 11:15:56,320 INFO  [default] onMsg
+2016-01-19 11:15:56,320 INFO  [default] onMsg
+2016-01-19 11:22:37,051 INFO  [default] block on zmq_poll1
+2016-01-19 11:22:37,153 INFO  [default]  Open Success!
+2016-01-19 11:22:37,153 INFO  [default] suspend
+2016-01-19 11:22:39,965 INFO  [default] relayed successful!
+2016-01-19 11:22:40,292 INFO  [default] relayed successful!
+2016-01-19 11:22:40,479 INFO  [default] relayed successful!
+2016-01-19 11:22:40,542 INFO  [default] relayed successful!
+2016-01-19 11:22:40,543 INFO  [default] relayed successful!
+2016-01-19 11:22:40,604 INFO  [default] relayed successful!
+2016-01-19 11:22:40,667 INFO  [default] relayed successful!
+2016-01-19 11:22:40,668 INFO  [default] relayed successful!
+2016-01-19 11:22:40,730 INFO  [default] relayed successful!
+2016-01-19 11:22:40,792 INFO  [default] relayed successful!
+2016-01-19 11:22:40,856 INFO  [default] relayed successful!
+2016-01-19 11:22:40,920 INFO  [default] relayed successful!
+2016-01-19 11:22:40,980 INFO  [default] relayed successful!
+2016-01-19 11:22:41,054 INFO  [default] relayed successful!
+2016-01-19 11:22:41,054 INFO  [default] relayed successful!
+2016-01-19 11:22:41,136 INFO  [default] relayed successful!
+2016-01-19 11:22:41,196 INFO  [default] relayed successful!
+2016-01-19 11:22:41,260 INFO  [default] relayed successful!
+2016-01-19 11:22:41,260 INFO  [default] relayed successful!
+2016-01-19 11:22:41,448 INFO  [default] relayed successful!
+2016-01-19 11:22:41,508 INFO  [default] relayed successful!
+2016-01-19 11:22:41,634 INFO  [default] relayed successful!
+2016-01-19 11:22:41,915 INFO  [default] relayed successful!
+2016-01-19 11:22:42,071 INFO  [default] relayed successful!
+2016-01-19 11:22:42,258 INFO  [default] relayed successful!
+2016-01-19 11:22:57,951 INFO  [default] relayed successful!
+2016-01-19 11:23:01,775 INFO  [default] relayed successful!
+2016-01-19 11:23:05,839 INFO  [default] relayed successful!
+2016-01-19 11:23:09,684 INFO  [default] relayed successful!
+2016-01-19 11:23:09,925 INFO  [default] pullSock get event
+2016-01-19 11:23:09,925 INFO  [default] onMsg
+2016-01-19 11:23:09,925 INFO  [default] onMsg
+2016-01-19 11:23:09,925 INFO  [default] onMsg
+2016-01-19 11:23:09,925 INFO  [default] onMsg
+2016-01-19 11:23:10,346 INFO  [default] relayed successful!
+2016-01-19 11:23:10,495 INFO  [default] relayed successful!
+2016-01-19 11:23:13,367 INFO  [default] relayed successful!
+2016-01-19 11:23:16,425 INFO  [default] relayed successful!
+2016-01-19 11:23:19,342 INFO  [default] relayed successful!
+2016-01-19 11:23:26,108 INFO  [default] relayed successful!
+2016-01-19 11:23:28,374 INFO  [default] relayed successful!
+2016-01-19 11:31:37,967 INFO  [default] block on zmq_poll1
+2016-01-19 11:31:38,069 INFO  [default]  Open Success!
+2016-01-19 11:31:38,069 INFO  [default] suspend
+2016-01-19 11:31:40,514 INFO  [default] relayed successful!
+2016-01-19 11:31:40,827 INFO  [default] relayed successful!
+2016-01-19 11:31:41,014 INFO  [default] relayed successful!
+2016-01-19 11:31:41,076 INFO  [default] relayed successful!
+2016-01-19 11:31:41,076 INFO  [default] relayed successful!
+2016-01-19 11:31:41,138 INFO  [default] relayed successful!
+2016-01-19 11:31:41,201 INFO  [default] relayed successful!
+2016-01-19 11:31:41,201 INFO  [default] relayed successful!
+2016-01-19 11:31:41,263 INFO  [default] relayed successful!
+2016-01-19 11:31:41,327 INFO  [default] relayed successful!
+2016-01-19 11:31:41,388 INFO  [default] relayed successful!
+2016-01-19 11:31:41,450 INFO  [default] relayed successful!
+2016-01-19 11:31:41,513 INFO  [default] relayed successful!
+2016-01-19 11:31:41,576 INFO  [default] relayed successful!
+2016-01-19 11:31:41,576 INFO  [default] relayed successful!
+2016-01-19 11:31:41,637 INFO  [default] relayed successful!
+2016-01-19 11:31:41,700 INFO  [default] relayed successful!
+2016-01-19 11:31:41,762 INFO  [default] relayed successful!
+2016-01-19 11:31:41,763 INFO  [default] relayed successful!
+2016-01-19 11:31:41,951 INFO  [default] relayed successful!
+2016-01-19 11:31:42,012 INFO  [default] relayed successful!
+2016-01-19 11:31:42,247 INFO  [default] relayed successful!
+2016-01-19 11:31:42,527 INFO  [default] relayed successful!
+2016-01-19 11:31:42,652 INFO  [default] relayed successful!
+2016-01-19 11:31:42,840 INFO  [default] relayed successful!
+2016-01-19 11:31:50,304 INFO  [default] pullSock get event
+2016-01-19 11:31:50,304 INFO  [default] onMsg
+2016-01-19 11:31:50,304 INFO  [default] onMsg
+2016-01-19 11:31:50,304 INFO  [default] onMsg
+2016-01-19 11:31:50,305 INFO  [default] onMsg
+2016-01-19 11:31:50,709 INFO  [default] relayed successful!
+2016-01-19 11:31:50,709 INFO  [default] relayed successful!
+2016-01-19 13:48:33,050 INFO  [default] block on zmq_poll1
+2016-01-19 13:48:33,050 INFO  [default] pullSock get event
+2016-01-19 13:48:33,050 INFO  [default] onMsg
+2016-01-19 13:48:33,050 WARN  [default] subscribe 000001.SZ failed
+2016-01-19 13:48:33,050 INFO  [default] onMsg
+2016-01-19 13:48:33,050 WARN  [default] subscribe 000002.SZ failed
+2016-01-19 13:48:33,050 INFO  [default] onMsg
+2016-01-19 13:48:33,050 WARN  [default] subscribe 000003.SZ failed
+2016-01-19 13:48:33,050 INFO  [default] onMsg
+2016-01-19 13:48:33,050 WARN  [default] subscribe 000004.SZ failed
+2016-01-19 13:48:33,151 INFO  [default]  Open Success!
+2016-01-19 13:48:33,151 INFO  [default] suspend
+2016-01-19 13:48:35,934 INFO  [default] relayed successful!
+2016-01-19 13:48:36,247 INFO  [default] relayed successful!
+2016-01-19 13:48:36,433 INFO  [default] relayed successful!
+2016-01-19 13:48:36,498 INFO  [default] relayed successful!
+2016-01-19 13:48:36,498 INFO  [default] relayed successful!
+2016-01-19 13:48:36,558 INFO  [default] relayed successful!
+2016-01-19 13:48:36,637 INFO  [default] relayed successful!
+2016-01-19 13:48:36,637 INFO  [default] relayed successful!
+2016-01-19 13:48:36,713 INFO  [default] relayed successful!
+2016-01-19 13:48:36,777 INFO  [default] relayed successful!
+2016-01-19 13:48:36,826 INFO  [default] relayed successful!
+2016-01-19 13:48:36,885 INFO  [default] relayed successful!
+2016-01-19 13:48:36,948 INFO  [default] relayed successful!
+2016-01-19 13:48:37,013 INFO  [default] relayed successful!
+2016-01-19 13:48:37,013 INFO  [default] relayed successful!
+2016-01-19 13:48:37,073 INFO  [default] relayed successful!
+2016-01-19 13:48:37,136 INFO  [default] relayed successful!
+2016-01-19 13:48:37,198 INFO  [default] relayed successful!
+2016-01-19 13:48:37,198 INFO  [default] relayed successful!
+2016-01-19 13:48:37,385 INFO  [default] relayed successful!
+2016-01-19 13:48:37,453 INFO  [default] relayed successful!
+2016-01-19 13:48:37,582 INFO  [default] relayed successful!
+2016-01-19 13:48:37,949 INFO  [default] relayed successful!
+2016-01-19 13:48:38,088 INFO  [default] relayed successful!
+2016-01-19 13:48:38,275 INFO  [default] relayed successful!
+2016-01-19 13:57:45,047 INFO  [default] block on zmq_poll1
+2016-01-19 13:57:45,149 INFO  [default]  Open Success!
+2016-01-19 13:57:45,149 INFO  [default] suspend
+2016-01-19 13:57:47,765 INFO  [default] relayed successful!
+2016-01-19 13:57:48,106 INFO  [default] relayed successful!
+2016-01-19 13:57:48,295 INFO  [default] relayed successful!
+2016-01-19 13:57:48,356 INFO  [default] relayed successful!
+2016-01-19 13:57:48,357 INFO  [default] relayed successful!
+2016-01-19 13:57:48,417 INFO  [default] relayed successful!
+2016-01-19 13:57:48,480 INFO  [default] relayed successful!
+2016-01-19 13:57:48,480 INFO  [default] relayed successful!
+2016-01-19 13:57:48,546 INFO  [default] relayed successful!
+2016-01-19 13:57:48,610 INFO  [default] relayed successful!
+2016-01-19 13:57:48,678 INFO  [default] relayed successful!
+2016-01-19 13:57:48,735 INFO  [default] relayed successful!
+2016-01-19 13:57:48,825 INFO  [default] relayed successful!
+2016-01-19 13:57:48,886 INFO  [default] relayed successful!
+2016-01-19 13:57:48,886 INFO  [default] relayed successful!
+2016-01-19 13:57:48,948 INFO  [default] relayed successful!
+2016-01-19 13:57:49,010 INFO  [default] relayed successful!
+2016-01-19 13:57:49,073 INFO  [default] relayed successful!
+2016-01-19 13:57:49,073 INFO  [default] relayed successful!
+2016-01-19 13:57:49,260 INFO  [default] relayed successful!
+2016-01-19 13:57:49,322 INFO  [default] relayed successful!
+2016-01-19 13:57:49,448 INFO  [default] relayed successful!
+2016-01-19 13:57:49,784 INFO  [default] relayed successful!
+2016-01-19 13:57:49,918 INFO  [default] relayed successful!
+2016-01-19 13:57:50,107 INFO  [default] relayed successful!
+2016-01-19 13:57:53,263 INFO  [default] pullSock get event
+2016-01-19 13:57:53,263 INFO  [default] onMsg
+2016-01-19 13:57:53,263 INFO  [default] onMsg
+2016-01-19 13:57:53,263 INFO  [default] onMsg
+2016-01-19 13:57:53,263 INFO  [default] onMsg
+2016-01-19 13:57:53,697 INFO  [default] relayed successful!
+2016-01-19 13:57:53,697 INFO  [default] relayed successful!
+2016-01-19 13:57:55,876 INFO  [default] relayed successful!
+2016-01-19 13:57:58,933 INFO  [default] relayed successful!
+2016-01-19 13:58:01,822 INFO  [default] relayed successful!
+2016-01-19 13:59:07,896 INFO  [default] block on zmq_poll1
+2016-01-19 13:59:07,998 INFO  [default]  Open Success!
+2016-01-19 13:59:07,998 INFO  [default] suspend
+2016-01-19 13:59:10,725 INFO  [default] relayed successful!
+2016-01-19 13:59:11,119 INFO  [default] relayed successful!
+2016-01-19 13:59:11,335 INFO  [default] relayed successful!
+2016-01-19 13:59:11,399 INFO  [default] relayed successful!
+2016-01-19 13:59:11,399 INFO  [default] relayed successful!
+2016-01-19 13:59:11,461 INFO  [default] relayed successful!
+2016-01-19 13:59:11,611 INFO  [default] relayed successful!
+2016-01-19 13:59:11,611 INFO  [default] relayed successful!
+2016-01-19 13:59:11,691 INFO  [default] relayed successful!
+2016-01-19 13:59:11,774 INFO  [default] relayed successful!
+2016-01-19 13:59:11,873 INFO  [default] relayed successful!
+2016-01-19 13:59:11,926 INFO  [default] relayed successful!
+2016-01-19 13:59:11,989 INFO  [default] relayed successful!
+2016-01-19 13:59:12,052 INFO  [default] relayed successful!
+2016-01-19 13:59:12,053 INFO  [default] relayed successful!
+2016-01-19 13:59:12,114 INFO  [default] relayed successful!
+2016-01-19 13:59:12,178 INFO  [default] relayed successful!
+2016-01-19 13:59:12,351 INFO  [default] relayed successful!
+2016-01-19 13:59:12,351 INFO  [default] relayed successful!
+2016-01-19 13:59:12,539 INFO  [default] relayed successful!
+2016-01-19 13:59:12,614 INFO  [default] relayed successful!
+2016-01-19 13:59:12,802 INFO  [default] relayed successful!
+2016-01-19 13:59:13,083 INFO  [default] relayed successful!
+2016-01-19 13:59:13,236 INFO  [default] relayed successful!
+2016-01-19 13:59:13,424 INFO  [default] relayed successful!
+2016-01-19 13:59:22,816 INFO  [default] pullSock get event
+2016-01-19 13:59:22,816 INFO  [default] onMsg
+2016-01-19 13:59:22,816 INFO  [default] onMsg
+2016-01-19 13:59:22,816 INFO  [default] onMsg
+2016-01-19 13:59:22,816 INFO  [default] onMsg
+2016-01-19 13:59:23,591 INFO  [default] relayed successful!
+2016-01-19 13:59:23,591 INFO  [default] relayed successful!
+2016-01-19 13:59:23,910 INFO  [default] relayed successful!
+2016-01-19 13:59:25,790 INFO  [default] relayed successful!
+2016-01-19 14:00:15,320 INFO  [default] block on zmq_poll1
+2016-01-19 14:00:15,422 INFO  [default]  Open Success!
+2016-01-19 14:00:15,422 INFO  [default] suspend
+2016-01-19 14:00:18,189 INFO  [default] relayed successful!
+2016-01-19 14:00:18,494 INFO  [default] relayed successful!
+2016-01-19 14:00:18,685 INFO  [default] relayed successful!
+2016-01-19 14:00:18,760 INFO  [default] relayed successful!
+2016-01-19 14:00:18,760 INFO  [default] relayed successful!
+2016-01-19 14:00:18,821 INFO  [default] relayed successful!
+2016-01-19 14:00:18,883 INFO  [default] relayed successful!
+2016-01-19 14:00:18,883 INFO  [default] relayed successful!
+2016-01-19 14:00:18,946 INFO  [default] relayed successful!
+2016-01-19 14:00:19,010 INFO  [default] relayed successful!
+2016-01-19 14:00:19,071 INFO  [default] relayed successful!
+2016-01-19 14:00:19,134 INFO  [default] relayed successful!
+2016-01-19 14:00:19,197 INFO  [default] relayed successful!
+2016-01-19 14:00:19,258 INFO  [default] relayed successful!
+2016-01-19 14:00:19,258 INFO  [default] relayed successful!
+2016-01-19 14:00:19,320 INFO  [default] relayed successful!
+2016-01-19 14:00:19,383 INFO  [default] relayed successful!
+2016-01-19 14:00:19,446 INFO  [default] relayed successful!
+2016-01-19 14:00:19,446 INFO  [default] relayed successful!
+2016-01-19 14:00:19,640 INFO  [default] relayed successful!
+2016-01-19 14:00:19,697 INFO  [default] relayed successful!
+2016-01-19 14:00:19,821 INFO  [default] relayed successful!
+2016-01-19 14:00:19,964 INFO  [default] relayed successful!
+2016-01-19 14:00:20,025 INFO  [default] relayed successful!
+2016-01-19 14:00:20,289 INFO  [default] relayed successful!
+2016-01-19 14:00:36,707 INFO  [default] relayed successful!
+2016-01-19 14:00:40,506 INFO  [default] relayed successful!
+2016-01-19 14:00:44,580 INFO  [default] relayed successful!
+2016-01-19 14:00:48,604 INFO  [default] relayed successful!
+2016-01-19 14:00:50,178 INFO  [default] relayed successful!
+2016-01-19 14:00:51,488 INFO  [default] relayed successful!
+2016-01-19 14:00:52,830 INFO  [default] relayed successful!
+2016-01-19 14:00:54,249 INFO  [default] relayed successful!
+2016-01-19 14:00:55,717 INFO  [default] relayed successful!
+2016-01-19 14:00:57,301 INFO  [default] relayed successful!
+2016-01-19 14:00:58,837 INFO  [default] relayed successful!
+2016-01-19 14:01:00,366 INFO  [default] relayed successful!
+2016-01-19 14:01:01,864 INFO  [default] relayed successful!
+2016-01-19 14:01:03,642 INFO  [default] relayed successful!
+2016-01-19 14:01:05,077 INFO  [default] relayed successful!
+2016-01-19 14:01:06,738 INFO  [default] relayed successful!
+2016-01-19 14:01:08,274 INFO  [default] relayed successful!
+2016-01-19 14:01:09,927 INFO  [default] relayed successful!
+2016-01-19 14:01:11,489 INFO  [default] relayed successful!
+2016-01-19 14:01:12,616 INFO  [default] pullSock get event
+2016-01-19 14:01:12,616 INFO  [default] onMsg
+2016-01-19 14:01:12,616 INFO  [default] onMsg
+2016-01-19 14:01:12,616 INFO  [default] onMsg
+2016-01-19 14:01:12,616 INFO  [default] onMsg
+2016-01-19 14:01:13,057 INFO  [default] relayed successful!
+2016-01-19 14:01:13,057 INFO  [default] relayed successful!
+2016-01-19 14:01:13,907 INFO  [default] relayed successful!
+2016-01-19 14:01:16,857 INFO  [default] relayed successful!
+2016-01-19 14:01:19,883 INFO  [default] relayed successful!
+2016-01-19 14:01:48,613 INFO  [default] block on zmq_poll1
+2016-01-19 14:01:48,703 INFO  [default]  Open Success!
+2016-01-19 14:01:48,703 INFO  [default] suspend
+2016-01-19 14:01:51,378 INFO  [default] relayed successful!
+2016-01-19 14:01:51,698 INFO  [default] relayed successful!
+2016-01-19 14:01:51,877 INFO  [default] relayed successful!
+2016-01-19 14:01:51,954 INFO  [default] relayed successful!
+2016-01-19 14:01:51,954 INFO  [default] relayed successful!
+2016-01-19 14:01:52,032 INFO  [default] relayed successful!
+2016-01-19 14:01:52,094 INFO  [default] relayed successful!
+2016-01-19 14:01:52,094 INFO  [default] relayed successful!
+2016-01-19 14:01:52,159 INFO  [default] relayed successful!
+2016-01-19 14:01:52,219 INFO  [default] relayed successful!
+2016-01-19 14:01:52,281 INFO  [default] relayed successful!
+2016-01-19 14:01:52,346 INFO  [default] relayed successful!
+2016-01-19 14:01:52,406 INFO  [default] relayed successful!
+2016-01-19 14:01:52,469 INFO  [default] relayed successful!
+2016-01-19 14:01:52,469 INFO  [default] relayed successful!
+2016-01-19 14:01:52,531 INFO  [default] relayed successful!
+2016-01-19 14:01:52,606 INFO  [default] relayed successful!
+2016-01-19 14:01:52,661 INFO  [default] relayed successful!
+2016-01-19 14:01:52,661 INFO  [default] relayed successful!
+2016-01-19 14:01:52,986 INFO  [default] relayed successful!
+2016-01-19 14:01:53,048 INFO  [default] relayed successful!
+2016-01-19 14:01:53,173 INFO  [default] relayed successful!
+2016-01-19 14:01:53,453 INFO  [default] relayed successful!
+2016-01-19 14:01:53,593 INFO  [default] relayed successful!
+2016-01-19 14:01:53,794 INFO  [default] relayed successful!
+2016-01-19 14:02:04,673 INFO  [default] pullSock get event
+2016-01-19 14:02:04,673 INFO  [default] onMsg
+2016-01-19 14:02:04,673 INFO  [default] onMsg
+2016-01-19 14:02:04,673 INFO  [default] onMsg
+2016-01-19 14:02:04,673 INFO  [default] onMsg
+2016-01-19 14:02:05,100 INFO  [default] relayed successful!
+2016-01-19 14:02:05,100 INFO  [default] relayed successful!
+2016-01-19 14:02:05,387 INFO  [default] relayed successful!
+2016-01-19 14:02:10,924 INFO  [default] relayed successful!
+2016-01-19 14:02:13,810 INFO  [default] relayed successful!
+2016-01-19 14:02:23,810 INFO  [default] block on zmq_poll1
+2016-01-19 14:02:23,911 INFO  [default]  Open Success!
+2016-01-19 14:02:23,911 INFO  [default] suspend
+2016-01-19 14:02:26,510 INFO  [default] relayed successful!
+2016-01-19 14:02:26,820 INFO  [default] relayed successful!
+2016-01-19 14:02:27,007 INFO  [default] relayed successful!
+2016-01-19 14:02:27,070 INFO  [default] relayed successful!
+2016-01-19 14:02:27,070 INFO  [default] relayed successful!
+2016-01-19 14:02:27,140 INFO  [default] relayed successful!
+2016-01-19 14:02:27,194 INFO  [default] relayed successful!
+2016-01-19 14:02:27,194 INFO  [default] relayed successful!
+2016-01-19 14:02:27,258 INFO  [default] relayed successful!
+2016-01-19 14:02:27,330 INFO  [default] relayed successful!
+2016-01-19 14:02:27,384 INFO  [default] relayed successful!
+2016-01-19 14:02:27,445 INFO  [default] relayed successful!
+2016-01-19 14:02:27,509 INFO  [default] relayed successful!
+2016-01-19 14:02:27,572 INFO  [default] relayed successful!
+2016-01-19 14:02:27,572 INFO  [default] relayed successful!
+2016-01-19 14:02:27,658 INFO  [default] relayed successful!
+2016-01-19 14:02:27,699 INFO  [default] relayed successful!
+2016-01-19 14:02:27,775 INFO  [default] relayed successful!
+2016-01-19 14:02:27,775 INFO  [default] relayed successful!
+2016-01-19 14:05:23,731 INFO  [default] block on zmq_poll1
+2016-01-19 14:05:23,832 INFO  [default]  Open Success!
+2016-01-19 14:05:23,832 INFO  [default] suspend
+2016-01-19 14:05:26,538 INFO  [default] relayed successful!
+2016-01-19 14:05:26,848 INFO  [default] relayed successful!
+2016-01-19 14:05:27,036 INFO  [default] relayed successful!
+2016-01-19 14:05:27,099 INFO  [default] relayed successful!
+2016-01-19 14:05:27,099 INFO  [default] relayed successful!
+2016-01-19 14:05:27,161 INFO  [default] relayed successful!
+2016-01-19 14:05:27,225 INFO  [default] relayed successful!
+2016-01-19 14:05:27,225 INFO  [default] relayed successful!
+2016-01-19 14:05:27,285 INFO  [default] relayed successful!
+2016-01-19 14:05:27,349 INFO  [default] relayed successful!
+2016-01-19 14:05:27,411 INFO  [default] relayed successful!
+2016-01-19 14:05:27,473 INFO  [default] relayed successful!
+2016-01-19 14:05:27,536 INFO  [default] relayed successful!
+2016-01-19 14:05:27,600 INFO  [default] relayed successful!
+2016-01-19 14:05:27,600 INFO  [default] relayed successful!
+2016-01-19 14:05:27,663 INFO  [default] relayed successful!
+2016-01-19 14:05:27,729 INFO  [default] relayed successful!
+2016-01-19 14:05:27,795 INFO  [default] relayed successful!
+2016-01-19 14:05:27,795 INFO  [default] relayed successful!
+2016-01-19 14:05:27,988 INFO  [default] relayed successful!
+2016-01-19 14:05:28,050 INFO  [default] relayed successful!
+2016-01-19 14:05:28,175 INFO  [default] relayed successful!
+2016-01-19 14:05:28,457 INFO  [default] relayed successful!
+2016-01-19 14:05:28,587 INFO  [default] relayed successful!
+2016-01-19 14:05:28,830 INFO  [default] relayed successful!
+2016-01-19 14:05:29,757 INFO  [default] pullSock get event
+2016-01-19 14:05:29,757 INFO  [default] onMsg
+2016-01-19 14:05:29,757 INFO  [default] onMsg
+2016-01-19 14:05:29,757 INFO  [default] onMsg
+2016-01-19 14:05:29,757 INFO  [default] onMsg
+2016-01-19 14:05:30,385 INFO  [default] relayed successful!
+2016-01-19 14:05:31,811 INFO  [default] relayed successful!
+2016-01-19 14:05:34,979 INFO  [default] relayed successful!
+2016-01-19 14:05:37,801 INFO  [default] relayed successful!
+2016-01-19 14:05:40,906 INFO  [default] relayed successful!
+2016-01-19 14:05:43,755 INFO  [default] relayed successful!
+2016-01-19 14:08:58,695 INFO  [default] block on zmq_poll1
+2016-01-19 14:08:58,796 INFO  [default]  Open Success!
+2016-01-19 14:08:58,796 INFO  [default] suspend
+2016-01-19 14:09:01,829 INFO  [default] relayed successful!
+2016-01-19 14:09:02,213 INFO  [default] relayed successful!
+2016-01-19 14:09:02,414 INFO  [default] relayed successful!
+2016-01-19 14:09:02,478 INFO  [default] relayed successful!
+2016-01-19 14:09:02,478 INFO  [default] relayed successful!
+2016-01-19 14:09:02,539 INFO  [default] relayed successful!
+2016-01-19 14:09:02,602 INFO  [default] relayed successful!
+2016-01-19 14:09:02,602 INFO  [default] relayed successful!
+2016-01-19 14:09:02,672 INFO  [default] relayed successful!
+2016-01-19 14:09:02,760 INFO  [default] relayed successful!
+2016-01-19 14:09:02,867 INFO  [default] relayed successful!
+2016-01-19 14:09:02,930 INFO  [default] relayed successful!
+2016-01-19 14:09:03,022 INFO  [default] relayed successful!
+2016-01-19 14:09:03,083 INFO  [default] relayed successful!
+2016-01-19 14:09:03,083 INFO  [default] relayed successful!
+2016-01-19 14:09:03,145 INFO  [default] relayed successful!
+2016-01-19 14:09:03,211 INFO  [default] relayed successful!
+2016-01-19 14:09:03,273 INFO  [default] relayed successful!
+2016-01-19 14:09:03,273 INFO  [default] relayed successful!
+2016-01-19 14:09:03,504 INFO  [default] relayed successful!
+2016-01-19 14:09:03,567 INFO  [default] relayed successful!
+2016-01-19 14:09:03,705 INFO  [default] relayed successful!
+2016-01-19 14:09:03,852 INFO  [default] relayed successful!
+2016-01-19 14:09:04,067 INFO  [default] relayed successful!
+2016-01-19 14:09:04,254 INFO  [default] relayed successful!
+2016-01-19 14:09:21,977 INFO  [default] relayed successful!
+2016-01-19 14:09:22,246 INFO  [default] pullSock get event
+2016-01-19 14:09:22,246 INFO  [default] onMsg
+2016-01-19 14:09:22,246 INFO  [default] onMsg
+2016-01-19 14:09:22,246 INFO  [default] onMsg
+2016-01-19 14:09:22,246 INFO  [default] onMsg
+2016-01-19 14:09:22,646 INFO  [default] relayed successful!
+2016-01-19 14:09:23,527 INFO  [default] relayed successful!
+2016-01-19 14:09:25,942 INFO  [default] relayed successful!
+2016-01-19 14:09:29,022 INFO  [default] relayed successful!
+2016-01-19 14:10:46,006 INFO  [default] block on zmq_poll1
+2016-01-19 14:10:46,108 INFO  [default]  Open Success!
+2016-01-19 14:10:46,108 INFO  [default] suspend
+2016-01-19 14:14:02,952 INFO  [default] block on zmq_poll1
+2016-01-19 14:14:03,053 INFO  [default]  Open Success!
+2016-01-19 14:14:03,053 INFO  [default] suspend
+2016-01-19 14:16:34,133 INFO  [default] block on zmq_poll1
+2016-01-19 14:16:34,133 INFO  [default] pullSock get event
+2016-01-19 14:16:34,133 INFO  [default] onMsg
+2016-01-19 14:16:34,133 WARN  [default] subscribe 000001.SZ failed
+2016-01-19 14:16:34,133 INFO  [default] onMsg
+2016-01-19 14:16:34,133 WARN  [default] subscribe 000002.SZ failed
+2016-01-19 14:16:34,133 INFO  [default] onMsg
+2016-01-19 14:16:34,133 WARN  [default] subscribe 000003.SZ failed
+2016-01-19 14:16:34,133 INFO  [default] onMsg
+2016-01-19 14:16:34,133 WARN  [default] subscribe 000004.SZ failed
+2016-01-19 14:16:34,235 INFO  [default]  Open Success!
+2016-01-19 14:16:34,235 INFO  [default] suspend
+2016-01-19 14:19:43,260 INFO  [default] block on zmq_poll1
+2016-01-19 14:19:43,361 INFO  [default]  Open Success!
+2016-01-19 14:19:43,361 INFO  [default] suspend
+2016-01-19 14:19:48,836 INFO  [default] pullSock get event
+2016-01-19 14:19:48,836 INFO  [default] onMsg
+2016-01-19 14:19:48,836 INFO  [default] onMsg
+2016-01-19 14:19:48,836 INFO  [default] onMsg
+2016-01-19 14:19:48,836 INFO  [default] onMsg
+2016-01-19 14:20:52,372 INFO  [default] onMsg
+2016-01-19 14:20:52,372 INFO  [default] onMsg
+2016-01-19 14:20:52,372 INFO  [default] onMsg
+2016-01-19 14:20:52,372 INFO  [default] onMsg
+2016-01-19 14:23:08,061 INFO  [default] onMsg
+2016-01-19 14:23:08,061 INFO  [default] onMsg
+2016-01-19 14:23:08,061 INFO  [default] onMsg
+2016-01-19 14:23:08,061 INFO  [default] onMsg
+2016-01-19 14:27:08,544 INFO  [default] onMsg
+2016-01-19 14:27:08,544 INFO  [default] onMsg
+2016-01-19 14:27:08,545 INFO  [default] onMsg
+2016-01-19 14:27:08,545 INFO  [default] onMsg
+2016-01-19 14:28:01,665 INFO  [default] onMsg
+2016-01-19 14:28:01,665 INFO  [default] onMsg
+2016-01-19 14:28:01,666 INFO  [default] onMsg
+2016-01-19 14:28:01,666 INFO  [default] onMsg
+2016-01-19 14:30:01,981 INFO  [default] onMsg
+2016-01-19 14:30:01,981 INFO  [default] onMsg
+2016-01-19 14:30:01,981 INFO  [default] onMsg
+2016-01-19 14:30:01,981 INFO  [default] onMsg
+2016-01-19 14:32:41,804 INFO  [default] onMsg
+2016-01-19 14:32:41,804 INFO  [default] onMsg
+2016-01-19 14:32:41,804 INFO  [default] onMsg
+2016-01-19 14:32:41,804 INFO  [default] onMsg
+2016-01-19 14:43:05,883 INFO  [default] onMsg
+2016-01-19 14:43:05,883 INFO  [default] onMsg
+2016-01-19 14:43:05,883 INFO  [default] onMsg
+2016-01-19 14:43:05,883 INFO  [default] onMsg
+2016-01-19 14:47:00,947 INFO  [default] onMsg
+2016-01-19 14:47:00,947 INFO  [default] onMsg
+2016-01-19 14:47:00,947 INFO  [default] onMsg
+2016-01-19 14:47:00,947 INFO  [default] onMsg
+2016-01-19 14:47:59,717 INFO  [default] onMsg
+2016-01-19 14:47:59,717 INFO  [default] onMsg
+2016-01-19 14:47:59,717 INFO  [default] onMsg
+2016-01-19 14:47:59,717 INFO  [default] onMsg

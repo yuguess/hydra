@@ -68,7 +68,6 @@ void WindMarket::RecvData(THANDLE hTdf, TDF_MSG* pMsgHead) {
         recordNum = 0;
     	windMarket.RelayMarket((TDF_MARKET_DATA*)pMsgHead->pData, nItemCount);
         //DumpScreenMarket((TDF_MARKET_DATA*)pMsgHead->pData, nItemCount);
-        std::cout << "MarketDataUpdate broadcast" << std::endl;
       }
     }
     break;
@@ -290,7 +289,10 @@ void WindMarket::RelayTransaction(TDF_TRANSACTION* pMarket, int nItems) {
 
     std::string res = 
       ProtoBufHelper::wrapMsg<Transaction>(TYPE_TRANSACTION, trans);
-    msgHub.boardcastMsg(tdfTrans.szCode, res);
+    if (msgHub.boardcastMsg(tdfTrans.szCode, res) != 0) 
+      LOG(INFO) << "relay successfully!";
+    else 
+      LOG(WARNING) << "relay failed!";
   }
 }
 

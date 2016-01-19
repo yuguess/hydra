@@ -1,0 +1,9 @@
+Log file created at: 2016/01/19 10:36:29
+Running on machine: spike
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0119 10:36:29.164803 15839 ProtoBufMsgHub.h:229] block on zmq_poll1
+I0119 10:36:29.164882 15836 ProtoBufMsgHub.h:135] init new sock
+I0119 10:36:29.165467 15836 ProtoBufMsgHub.h:147] PushMsg complete
+I0119 10:36:29.165555 15836 Main.cpp:50] add subscription 127.0.0.1:15215 000001
+I0119 10:36:29.165591 15836 Main.cpp:52] suspend
+E0119 10:36:42.704355 15839 ProtoBufMsgHub.h:234] Socket operation on non-socket
