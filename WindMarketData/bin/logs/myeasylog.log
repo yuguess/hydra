@@ -565,3 +565,28 @@
 2016-01-19 14:47:59,717 INFO  [default] onMsg
 2016-01-19 14:47:59,717 INFO  [default] onMsg
 2016-01-19 14:47:59,717 INFO  [default] onMsg
+2016-01-19 15:02:33,646 INFO  [default] onMsg
+2016-01-19 15:02:33,646 INFO  [default] onMsg
+2016-01-19 15:02:33,646 INFO  [default] onMsg
+2016-01-19 15:02:33,646 INFO  [default] onMsg
+2016-01-19 15:03:12,621 INFO  [default] block on zmq_poll1
+2016-01-19 15:03:12,722 INFO  [default]  Open Success!
+2016-01-19 15:03:12,722 INFO  [default] suspend
+2016-01-19 15:03:17,364 INFO  [default] pullSock get event
+2016-01-19 15:03:17,364 INFO  [default] onMsg
+2016-01-19 15:03:17,364 INFO  [default] onMsg
+2016-01-19 15:03:17,364 INFO  [default] onMsg
+2016-01-19 15:03:17,364 INFO  [default] onMsg
+2016-01-19 16:19:38,482 INFO  [default] block on zmq_poll1
+2016-01-19 16:19:38,482 INFO  [default] pullSock get event
+2016-01-19 16:19:38,482 INFO  [default] onMsg
+2016-01-19 16:19:38,483 WARN  [default] subscribe 000001.SZ failed
+2016-01-19 16:19:38,483 INFO  [default] onMsg
+2016-01-19 16:19:38,483 WARN  [default] subscribe 000002.SZ failed
+2016-01-19 16:19:38,483 INFO  [default] onMsg
+2016-01-19 16:19:38,483 WARN  [default] subscribe 000003.SZ failed
+2016-01-19 16:19:38,483 INFO  [default] onMsg
+2016-01-19 16:19:38,483 WARN  [default] subscribe 000004.SZ failed
+2016-01-19 16:19:38,584 INFO  [default]  Open Success!
+2016-01-19 16:19:38,584 INFO  [default] suspend
+2016-01-19 16:19:49,497 INFO  [default] ETERM, receiving thread exit

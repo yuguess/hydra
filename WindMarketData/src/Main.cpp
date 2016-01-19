@@ -8,7 +8,7 @@
 
 //####ALL GLOBAL VARIABLE HERE####
 //this is bad practice, but I have no better way
-WindMarket windMarket;
+//WindMarket windMarket;
 //################################
 
 INITIALIZE_EASYLOGGINGPP
@@ -19,6 +19,7 @@ int main() {
   //CedarHelper::initGlog("WindMarket");
   CedarJsonConfig::getInstance().loadConfigFile("../config/WindMarketData.json");
 
+  WindMarket windMarket; 
   windMarket.start();
 
   //std::string pushAddr = "127.0.0.1:15216";
