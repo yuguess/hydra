@@ -8,8 +8,13 @@
 #include <boost/algorithm/string.hpp>
 #include <vector>
 #include "CedarHelper.h"
-#include "json/reader.h"
 #include "easylogging++.h"
+
+#ifdef __linux
+	#include "json/reader.h"
+#elif  _WIN32
+	#include "json/json.h"	
+#endif
 
 class CedarJsonConfig {
 
@@ -20,13 +25,14 @@ public:
   }
 
   int loadConfigFile(std::string path) {
-    /// path wrong checked 1.14
-    std::ifstream fileStream(path, std::ifstream::binary); 
+    std::ifstream fileStream(path, std::ifstream::binary);
 
     Json::Reader reader;
     if (!reader.parse(fileStream, root))
       LOG(FATAL) << "Parse config file " << path << " error, "
         << "check your path or config file format";
+
+	return 0;
   }
 
   int getStringByPath(std::string path, std::string &result) {
@@ -39,7 +45,7 @@ public:
 
     return 0;
   }
-
+  //arrayPath is the 
   int getStringArrayWithTag(std::vector<std::string> &results, 
       std::string arrayPath, std::string tagName = "") {
 
@@ -49,7 +55,7 @@ public:
     if (!val.isArray())
       LOG(FATAL) << "Get array failed, check your array path" << arrayPath;
 
-    for (int i = 0; i < val.size(); i++) {
+    for (unsigned int i = 0; i < val.size(); i++) {
       std::string tmp; 
       if (tagName == "") {
         if (val[i].isString()) 
@@ -87,7 +93,7 @@ public:
       return val;
 
     //for nested path only
-    for (int i = 1; i < strs.size() - 1; i++) {
+    for (unsigned int i = 1; i < strs.size() - 1; i++) {
       if ((val = val[strs[i]]) == Json::nullValue)
         LOG(FATAL) << "Tag " << strs[i] << " has error !";
     }

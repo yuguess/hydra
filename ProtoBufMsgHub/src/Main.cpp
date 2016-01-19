@@ -41,16 +41,21 @@ int main() {
   ProtoBufHelper::setupProtoBufMsgHub(msgHub);
   msgHub.registerCallback(onMsg);
 
-  std::string pushAddr = "127.0.0.1:15216";
-  std::string pullAddr = "127.0.0.1:15215";
+  std::string pushAddr, publishAddr;
+
+  CedarJsonConfig::getInstance().getStringByPath("DataSource.serverAddr",
+      pushAddr);
+  CedarJsonConfig::getInstance().getStringByPath("DataSource.boardcastAddr",
+      publishAddr);
+
   DataRequest mdReq;
   mdReq.set_code("000001");
-  mdReq.set_exchange("SH");
+  mdReq.set_exchange("SZ");
 
   msgHub.pushMsg(pushAddr, ProtoBufHelper::wrapMsg(TYPE_DATAREQUEST, mdReq));
 
-  msgHub.addSubscription(pullAddr, mdReq.code());
-  LOG(INFO) << "add subscription " << pullAddr << " " << mdReq.code();
+  msgHub.addSubscription(publishAddr, mdReq.code());
+  LOG(INFO) << "add subscription " << publishAddr << " " << mdReq.code();
 
   LOG(INFO) << "suspend";
   CedarHelper::blockSignalAndSuspend();

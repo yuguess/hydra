@@ -1,7 +1,6 @@
 #ifndef CEDAR_HELPER_H
 #define CEDAR_HELPER_H
 
-//#include "glog/logging.h"
 #include "json/json.h"
 //#include "CedarConfig.h"
 //#include "NewCedarConfig.h"
@@ -24,6 +23,7 @@ class CedarHelper {
 public:
   static int blockSignalAndSuspend() {
     int sig = 0, s = 0;
+#ifdef __linux
     sigset_t sigSet;
     sigemptyset(&sigSet);
     sigaddset(&sigSet, SIGINT);
@@ -33,6 +33,7 @@ public:
 
     if ((s = sigwait(&sigSet, &sig)) != 0)
       perror("sigwait error\n");
+#endif
     return 0;
   }
 
@@ -229,7 +230,7 @@ public:
 #ifdef _WIN32 
     SYSTEMTIME st;
     GetLocalTime(&st);
-    sprintf(currentTime, "%02d%02d%02d%03d", st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
+    //sprintf(currentTime, "%02d%02d%02d%03d", st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
 #endif
 #ifdef __linux
     struct timeval curTime;
