@@ -1,7 +1,0 @@
-Log file created at: 2016/01/15 15:41:46
-Running on machine: spike
-Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
-I0115 15:41:46.144527 16118 ProtoBufMsgHub.h:229] block on zmq_poll1
-I0115 15:41:46.245959 16115 WindMarket.cpp:612]  Open Success!
-I0115 15:41:46.245995 16115 Main.cpp:33] suspend
-E0115 15:42:00.162943 16118 ProtoBufMsgHub.h:234] Socket operation on non-socket

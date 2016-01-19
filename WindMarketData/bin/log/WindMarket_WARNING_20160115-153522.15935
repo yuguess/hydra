@@ -1,4 +1,0 @@
-Log file created at: 2016/01/15 15:35:22
-Running on machine: spike
-Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
-F0115 15:35:22.619679 15935 ProtoBufMsgHub.h:56] zmq_bind error: Address already in use

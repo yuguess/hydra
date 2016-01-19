@@ -8,13 +8,15 @@ CC=g++
 
 CFLAGS=-std=c++0x 
 #LDFLAGS = -L/usr/local/lib -L/usr/lib -L/bld/dev_multi -llzo2 -lpthread -lrt -lconnector -llogger -lxsim -ldatamanip -lcommonutils /usr/local/lib/libsnappy.a 
-LDFLAGS = -L/usr/local/lib -L/usr/lib  -L$(HOME)/CedarLib -lboost_system -lboost_thread -lBTMdUserApi -lthostmduserapi -lsqlite3 -lglog -ljsoncpp
+LDFLAGS = -L/usr/local/lib -L/usr/lib  -L$(HOME)/CedarLib -lboost_system -lboost_thread -lsqlite3 -lglog -ljsoncpp
+#-lBTMdUserApi -lthostmduserapi -lsqlite3 -lglog -ljsoncpp
 DEBUG = -g
 BIN=./bin
 SRC=./src
 
 INCLUDE= -I/usr/include \
 	 -I./include \
+	 -I../easyloggingpp/src \
 	 -I../CedarHelper/include
 
 SOURCES= $(SRC)/Main.cpp

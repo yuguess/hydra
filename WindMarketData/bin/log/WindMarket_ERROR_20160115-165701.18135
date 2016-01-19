@@ -1,4 +1,0 @@
-Log file created at: 2016/01/15 16:57:01
-Running on machine: spike
-Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
-E0115 16:57:01.397475 18135 WindMarket.cpp:331] TDF_Open return error: -99

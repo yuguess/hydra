@@ -1,7 +1,0 @@
-Log file created at: 2016/01/14 13:51:59
-Running on machine: spike
-Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
-I0114 13:51:59.219197 30370 ProtoBufMsgHub.h:229] block on zmq_poll1
-E0114 13:52:00.225575 30367 WindMarket.cpp:568] TDF_Open return error: -99
-I0114 13:52:00.226130 30367 Main.cpp:33] suspend
-E0114 13:52:04.994940 30370 ProtoBufMsgHub.h:234] Socket operation on non-socket

@@ -9,6 +9,7 @@
 #include <vector>
 #include "CedarHelper.h"
 #include "json/reader.h"
+#include "easylogging++.h"
 
 class CedarJsonConfig {
 

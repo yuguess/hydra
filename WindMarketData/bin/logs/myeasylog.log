@@ -1,0 +1,32 @@
+2016-01-18 13:12:30,416 INFO  [default] block on zmq_poll1
+2016-01-18 13:12:30,504 INFO  [default]  Open Success!
+2016-01-18 13:12:30,504 INFO  [default] suspend
+2016-01-18 13:12:37,881 INFO  [default] block on zmq_poll1
+2016-01-18 13:12:37,881 INFO  [default] block on zmq_poll1
+2016-01-18 13:12:37,881 INFO  [default] block on zmq_poll1init new sock
+2016-01-18 13:12:37,881 INFO  [default] PushMsg complete
+2016-01-18 13:12:37,882 INFO  [default] add subscription127.0.0.1:15212 000001
+2016-01-18 13:12:37,882 INFO  [default] suspend
+2016-01-18 13:12:37,883 INFO  [default] pullSock get event
+2016-01-18 13:12:37,883 INFO  [default] onMsg
+2016-01-18 13:12:38,817 INFO  [default] subSock get event
+2016-01-18 13:12:38,817 INFO  [default] onMsg
+2016-01-18 13:12:54,083 INFO  [default] onMsg
+2016-01-18 13:12:57,520 INFO  [default] onMsg
+2016-01-18 13:12:57,784 INFO  [default] ETERM, receiving thread exit
+2016-01-18 13:16:58,124 INFO  [default] block on zmq_poll1
+2016-01-18 13:16:58,226 INFO  [default]  Open Success!
+2016-01-18 13:16:58,226 INFO  [default] suspend
+2016-01-18 13:17:08,131 INFO  [default] init new sock
+2016-01-18 13:17:08,131 INFO  [default] PushMsg complete
+2016-01-18 13:17:08,131 INFO  [default] add subscription127.0.0.1:15212 000001
+2016-01-18 13:17:08,131 INFO  [default] suspend
+2016-01-18 13:17:08,145 INFO  [default] block on zmq_poll1
+2016-01-18 13:17:08,166 INFO  [default] pullSock get event
+2016-01-18 13:17:08,166 INFO  [default] onMsg
+2016-01-18 13:17:23,081 INFO  [default] subSock get event
+2016-01-18 13:17:23,081 INFO  [default] onMsg
+2016-01-18 13:17:23,081 WARN  [default] Recv invalid msg0
+2016-01-18 13:17:26,516 INFO  [default] onMsg
+2016-01-18 13:17:26,516 WARN  [default] Recv invalid msg0
+2016-01-18 13:17:27,611 INFO  [default] ETERM, receiving thread exit

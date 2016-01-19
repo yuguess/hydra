@@ -4,19 +4,19 @@
 #include "CedarJsonConfig.h"
 #include "CedarHelper.h"
 #include "WindMarket.h"
-//#include "easylogging++.h"
+#include "easylogging++.h"
 
 //####ALL GLOBAL VARIABLE HERE####
 //this is bad practice, but I have no better way
 WindMarket windMarket;
 //################################
 
-//INITIALIZE_EASYLOGGINGPP
+INITIALIZE_EASYLOGGINGPP
 
 int main() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-  CedarHelper::initGlog("WindMarket");
+  //CedarHelper::initGlog("WindMarket");
   CedarJsonConfig::getInstance().loadConfigFile("../config/WindMarketData.json");
 
   windMarket.start();

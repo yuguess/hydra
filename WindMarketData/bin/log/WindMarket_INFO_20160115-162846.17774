@@ -1,9 +1,0 @@
-Log file created at: 2016/01/15 16:28:46
-Running on machine: spike
-Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
-I0115 16:28:46.777470 17777 ProtoBufMsgHub.h:229] block on zmq_poll1
-I0115 16:28:46.879016 17774 WindMarket.cpp:389]  Open Success!
-I0115 16:28:46.879051 17774 Main.cpp:33] suspend
-I0115 16:28:55.804008 17777 ProtoBufMsgHub.h:240] pullSock get event
-I0115 16:28:55.804064 17777 WindMarket.cpp:43] onMsg
-I0115 16:29:30.824812 17777 ProtoBufMsgHub.h:184] ETERM, receiving thread exit

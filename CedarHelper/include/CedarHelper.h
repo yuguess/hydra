@@ -1,7 +1,7 @@
 #ifndef CEDAR_HELPER_H
 #define CEDAR_HELPER_H
 
-#include "glog/logging.h"
+//#include "glog/logging.h"
 #include "json/json.h"
 //#include "CedarConfig.h"
 //#include "NewCedarConfig.h"
@@ -17,6 +17,7 @@
 #include <winsock2.h>
 #include <direct.h>
 #endif
+#include "easylogging++.h"
 
 class CedarHelper {
 
@@ -174,6 +175,7 @@ public:
   //  return rtnInfo;
   //}
 
+/*
   static int initGlog(std::string program, int severity = google::GLOG_INFO) {
 #ifdef _WIN32
     _mkdir("log");
@@ -202,6 +204,7 @@ public:
 
     return 0;
   }
+*/
 
   //static std::string returnTypeToString(ReturnType returnType) {
   //  switch (returnType) {

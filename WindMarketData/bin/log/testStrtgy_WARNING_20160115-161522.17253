@@ -1,4 +1,0 @@
-Log file created at: 2016/01/15 16:15:22
-Running on machine: spike
-Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
-W0115 16:15:22.808531 17256 testStrtgy.cpp:33] Recv invalid msg1

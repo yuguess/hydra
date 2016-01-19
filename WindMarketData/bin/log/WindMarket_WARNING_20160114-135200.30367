@@ -1,5 +1,0 @@
-Log file created at: 2016/01/14 13:52:00
-Running on machine: spike
-Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
-E0114 13:52:00.225575 30367 WindMarket.cpp:568] TDF_Open return error: -99
-E0114 13:52:04.994940 30370 ProtoBufMsgHub.h:234] Socket operation on non-socket

@@ -1,6 +1,0 @@
-Log file created at: 2016/01/15 16:25:31
-Running on machine: spike
-Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
-I0115 16:25:31.952154 17638 ProtoBufMsgHub.h:229] block on zmq_poll1
-I0115 16:25:32.054131 17635 WindMarket.cpp:389]  Open Success!
-I0115 16:25:32.054164 17635 Main.cpp:33] suspend

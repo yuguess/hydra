@@ -3,6 +3,9 @@
 #include "ProtoBufMsgHub.h"
 #include "CedarJsonConfig.h"
 #include "CedarHelper.h"
+//#include "easylogging++.h"
+
+INITIALIZE_EASYLOGGINGPP
 
 int onMsg(MessageBase msg) {
   LOG(INFO) << "onMsg";
@@ -31,7 +34,7 @@ int onMsg(MessageBase msg) {
 int main() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-  CedarHelper::initGlog("ProtoBufMsgHub");
+  //CedarHelper::initGlog("ProtoBufMsgHub");
   CedarJsonConfig::getInstance().loadConfigFile("../config/ProtoBufMsgHub.json");
   ProtoBufMsgHub msgHub;
 

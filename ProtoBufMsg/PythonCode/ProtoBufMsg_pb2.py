@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='ProtoBufMsg.proto',
   package='',
   syntax='proto3',
-  serialized_pb=_b('\n\x11ProtoBufMsg.proto\"2\n\x0bMessageBase\x12\x16\n\x04type\x18\x01 \x01(\x0e\x32\x08.MsgType\x12\x0b\n\x03msg\x18\x02 \x01(\x0c\"\x81\x03\n\x0cMarketUpdate\x12\x0c\n\x04\x63ode\x18\x01 \x01(\t\x12\x0e\n\x06symbol\x18\x02 \x01(\t\x12\x10\n\x08\x65xchange\x18\x03 \x01(\t\x12\x12\n\nopen_price\x18\x04 \x01(\x01\x12\x12\n\nlast_price\x18\x05 \x01(\x01\x12\x15\n\rhighest_price\x18\x06 \x01(\x01\x12\x14\n\x0clowest_price\x18\x07 \x01(\x01\x12\x18\n\x10high_limit_price\x18\x08 \x01(\x01\x12\x17\n\x0flow_limit_price\x18\t \x01(\x01\x12\x15\n\ropen_interest\x18\n \x01(\x05\x12\x10\n\x08turnover\x18\x0b \x01(\x01\x12\x0e\n\x06volume\x18\x0c \x01(\x05\x12\x1a\n\x12\x65xchange_timestamp\x18\r \x01(\t\x12\x16\n\x0erecv_timestamp\x18\x0e \x01(\t\x12\x11\n\tbid_price\x18\x0f \x03(\x01\x12\x12\n\nbid_volume\x18\x10 \x03(\x05\x12\x11\n\task_price\x18\x11 \x03(\x01\x12\x12\n\nask_volume\x18\x12 \x03(\x05\"P\n\x0b\x44\x61taRequest\x12\x0c\n\x04\x63ode\x18\x01 \x01(\t\x12\x0e\n\x06symbol\x18\x02 \x01(\t\x12\x10\n\x08\x65xchange\x18\x03 \x01(\t\x12\x11\n\tdata_type\x18\x04 \x01(\t*6\n\x07MsgType\x12\x15\n\x11TYPE_MARKETUPDATE\x10\x00\x12\x14\n\x10TYPE_DATAREQUEST\x10\x01\x62\x06proto3')
+  serialized_pb=_b('\n\x11ProtoBufMsg.proto\"2\n\x0bMessageBase\x12\x16\n\x04type\x18\x01 \x01(\x0e\x32\x08.MsgType\x12\x0b\n\x03msg\x18\x02 \x01(\x0c\"\xf9\x04\n\x0cMarketUpdate\x12\x0c\n\x04\x63ode\x18\x01 \x01(\t\x12\x0e\n\x06symbol\x18\x02 \x01(\t\x12\x10\n\x08\x65xchange\x18\x03 \x01(\t\x12\x0e\n\x06status\x18\x04 \x01(\x05\x12\x11\n\tpre_close\x18\x05 \x01(\x05\x12\x12\n\nopen_price\x18\x06 \x01(\x01\x12\x12\n\nlast_price\x18\x07 \x01(\x01\x12\x15\n\rhighest_price\x18\x08 \x01(\x01\x12\x14\n\x0clowest_price\x18\t \x01(\x01\x12\x18\n\x10high_limit_price\x18\n \x01(\x01\x12\x17\n\x0flow_limit_price\x18\x0b \x01(\x01\x12\x15\n\ropen_interest\x18\x0c \x01(\x05\x12\x14\n\x0clatest_price\x18\r \x01(\x01\x12\x12\n\nnum_trades\x18\x0e \x01(\x05\x12\x10\n\x08turnover\x18\x0f \x01(\x01\x12\x0e\n\x06volume\x18\x10 \x01(\x03\x12\x15\n\rtotal_bid_vol\x18\x11 \x01(\x03\x12\x15\n\rtotal_ask_vol\x18\x12 \x01(\x03\x12\x1e\n\x16weighted_avg_bid_price\x18\x13 \x01(\x05\x12\x1e\n\x16weighted_avg_ask_price\x18\x14 \x01(\x05\x12\x0c\n\x04iopv\x18\x15 \x01(\x05\x12\x19\n\x11yield_to_maturity\x18\x16 \x01(\x05\x12\x12\n\naction_day\x18\x17 \x01(\x05\x12\x1a\n\x12\x65xchange_timestamp\x18\x18 \x01(\t\x12\x16\n\x0erecv_timestamp\x18\x19 \x01(\t\x12\x11\n\tbid_price\x18\x1a \x03(\x01\x12\x12\n\nbid_volume\x18\x1b \x03(\x05\x12\x11\n\task_price\x18\x1c \x03(\x01\x12\x12\n\nask_volume\x18\x1d \x03(\x05\"\x86\x02\n\x0bTransaction\x12\x0c\n\x04\x63ode\x18\x01 \x01(\t\x12\x0e\n\x06symbol\x18\x02 \x01(\t\x12\x10\n\x08\x65xchange\x18\x03 \x01(\t\x12\x12\n\naction_day\x18\x04 \x01(\x05\x12\x0c\n\x04time\x18\x05 \x01(\x05\x12\r\n\x05index\x18\x06 \x01(\x05\x12\r\n\x05price\x18\x07 \x01(\x05\x12\x0e\n\x06volume\x18\x08 \x01(\x05\x12\x10\n\x08turnover\x18\t \x01(\x05\x12\x0e\n\x06\x62sflag\x18\n \x01(\x05\x12\x15\n\rch_order_kind\x18\x0b \x01(\t\x12\x18\n\x10\x63h_function_code\x18\x0c \x01(\t\x12\x11\n\task_order\x18\r \x01(\x05\x12\x11\n\tbid_order\x18\x0e \x01(\x05\"P\n\x0b\x44\x61taRequest\x12\x0c\n\x04\x63ode\x18\x01 \x01(\t\x12\x0e\n\x06symbol\x18\x02 \x01(\t\x12\x10\n\x08\x65xchange\x18\x03 \x01(\t\x12\x11\n\tdata_type\x18\x04 \x01(\t*L\n\x07MsgType\x12\x14\n\x10TYPE_DATAREQUEST\x10\x00\x12\x15\n\x11TYPE_MARKETUPDATE\x10\x01\x12\x14\n\x10TYPE_TRANSACTION\x10\x02\x62\x06proto3')
 )
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -31,24 +31,29 @@ _MSGTYPE = _descriptor.EnumDescriptor(
   file=DESCRIPTOR,
   values=[
     _descriptor.EnumValueDescriptor(
-      name='TYPE_MARKETUPDATE', index=0, number=0,
+      name='TYPE_DATAREQUEST', index=0, number=0,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='TYPE_DATAREQUEST', index=1, number=1,
+      name='TYPE_MARKETUPDATE', index=1, number=1,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='TYPE_TRANSACTION', index=2, number=2,
       options=None,
       type=None),
   ],
   containing_type=None,
   options=None,
-  serialized_start=543,
-  serialized_end=597,
+  serialized_start=1056,
+  serialized_end=1132,
 )
 _sym_db.RegisterEnumDescriptor(_MSGTYPE)
 
 MsgType = enum_type_wrapper.EnumTypeWrapper(_MSGTYPE)
-TYPE_MARKETUPDATE = 0
-TYPE_DATAREQUEST = 1
+TYPE_DATAREQUEST = 0
+TYPE_MARKETUPDATE = 1
+TYPE_TRANSACTION = 2
 
 
 
@@ -119,106 +124,183 @@ _MARKETUPDATE = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='open_price', full_name='MarketUpdate.open_price', index=3,
-      number=4, type=1, cpp_type=5, label=1,
+      name='status', full_name='MarketUpdate.status', index=3,
+      number=4, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='last_price', full_name='MarketUpdate.last_price', index=4,
-      number=5, type=1, cpp_type=5, label=1,
+      name='pre_close', full_name='MarketUpdate.pre_close', index=4,
+      number=5, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='highest_price', full_name='MarketUpdate.highest_price', index=5,
+      name='open_price', full_name='MarketUpdate.open_price', index=5,
       number=6, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='lowest_price', full_name='MarketUpdate.lowest_price', index=6,
+      name='last_price', full_name='MarketUpdate.last_price', index=6,
       number=7, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='high_limit_price', full_name='MarketUpdate.high_limit_price', index=7,
+      name='highest_price', full_name='MarketUpdate.highest_price', index=7,
       number=8, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='low_limit_price', full_name='MarketUpdate.low_limit_price', index=8,
+      name='lowest_price', full_name='MarketUpdate.lowest_price', index=8,
       number=9, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='open_interest', full_name='MarketUpdate.open_interest', index=9,
-      number=10, type=5, cpp_type=1, label=1,
+      name='high_limit_price', full_name='MarketUpdate.high_limit_price', index=9,
+      number=10, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='turnover', full_name='MarketUpdate.turnover', index=10,
+      name='low_limit_price', full_name='MarketUpdate.low_limit_price', index=10,
       number=11, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='volume', full_name='MarketUpdate.volume', index=11,
+      name='open_interest', full_name='MarketUpdate.open_interest', index=11,
       number=12, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='exchange_timestamp', full_name='MarketUpdate.exchange_timestamp', index=12,
-      number=13, type=9, cpp_type=9, label=1,
+      name='latest_price', full_name='MarketUpdate.latest_price', index=12,
+      number=13, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='num_trades', full_name='MarketUpdate.num_trades', index=13,
+      number=14, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='turnover', full_name='MarketUpdate.turnover', index=14,
+      number=15, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='volume', full_name='MarketUpdate.volume', index=15,
+      number=16, type=3, cpp_type=2, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='total_bid_vol', full_name='MarketUpdate.total_bid_vol', index=16,
+      number=17, type=3, cpp_type=2, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='total_ask_vol', full_name='MarketUpdate.total_ask_vol', index=17,
+      number=18, type=3, cpp_type=2, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='weighted_avg_bid_price', full_name='MarketUpdate.weighted_avg_bid_price', index=18,
+      number=19, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='weighted_avg_ask_price', full_name='MarketUpdate.weighted_avg_ask_price', index=19,
+      number=20, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='iopv', full_name='MarketUpdate.iopv', index=20,
+      number=21, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='yield_to_maturity', full_name='MarketUpdate.yield_to_maturity', index=21,
+      number=22, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='action_day', full_name='MarketUpdate.action_day', index=22,
+      number=23, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='exchange_timestamp', full_name='MarketUpdate.exchange_timestamp', index=23,
+      number=24, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='recv_timestamp', full_name='MarketUpdate.recv_timestamp', index=13,
-      number=14, type=9, cpp_type=9, label=1,
+      name='recv_timestamp', full_name='MarketUpdate.recv_timestamp', index=24,
+      number=25, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='bid_price', full_name='MarketUpdate.bid_price', index=14,
-      number=15, type=1, cpp_type=5, label=3,
+      name='bid_price', full_name='MarketUpdate.bid_price', index=25,
+      number=26, type=1, cpp_type=5, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='bid_volume', full_name='MarketUpdate.bid_volume', index=15,
-      number=16, type=5, cpp_type=1, label=3,
+      name='bid_volume', full_name='MarketUpdate.bid_volume', index=26,
+      number=27, type=5, cpp_type=1, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='ask_price', full_name='MarketUpdate.ask_price', index=16,
-      number=17, type=1, cpp_type=5, label=3,
+      name='ask_price', full_name='MarketUpdate.ask_price', index=27,
+      number=28, type=1, cpp_type=5, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='ask_volume', full_name='MarketUpdate.ask_volume', index=17,
-      number=18, type=5, cpp_type=1, label=3,
+      name='ask_volume', full_name='MarketUpdate.ask_volume', index=28,
+      number=29, type=5, cpp_type=1, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -236,7 +318,129 @@ _MARKETUPDATE = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=74,
-  serialized_end=459,
+  serialized_end=707,
+)
+
+
+_TRANSACTION = _descriptor.Descriptor(
+  name='Transaction',
+  full_name='Transaction',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='code', full_name='Transaction.code', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='symbol', full_name='Transaction.symbol', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='exchange', full_name='Transaction.exchange', index=2,
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='action_day', full_name='Transaction.action_day', index=3,
+      number=4, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='time', full_name='Transaction.time', index=4,
+      number=5, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='index', full_name='Transaction.index', index=5,
+      number=6, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='price', full_name='Transaction.price', index=6,
+      number=7, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='volume', full_name='Transaction.volume', index=7,
+      number=8, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='turnover', full_name='Transaction.turnover', index=8,
+      number=9, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='bsflag', full_name='Transaction.bsflag', index=9,
+      number=10, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='ch_order_kind', full_name='Transaction.ch_order_kind', index=10,
+      number=11, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='ch_function_code', full_name='Transaction.ch_function_code', index=11,
+      number=12, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='ask_order', full_name='Transaction.ask_order', index=12,
+      number=13, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='bid_order', full_name='Transaction.bid_order', index=13,
+      number=14, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=710,
+  serialized_end=972,
 )
 
 
@@ -287,13 +491,14 @@ _DATAREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=461,
-  serialized_end=541,
+  serialized_start=974,
+  serialized_end=1054,
 )
 
 _MESSAGEBASE.fields_by_name['type'].enum_type = _MSGTYPE
 DESCRIPTOR.message_types_by_name['MessageBase'] = _MESSAGEBASE
 DESCRIPTOR.message_types_by_name['MarketUpdate'] = _MARKETUPDATE
+DESCRIPTOR.message_types_by_name['Transaction'] = _TRANSACTION
 DESCRIPTOR.message_types_by_name['DataRequest'] = _DATAREQUEST
 DESCRIPTOR.enum_types_by_name['MsgType'] = _MSGTYPE
 
@@ -310,6 +515,13 @@ MarketUpdate = _reflection.GeneratedProtocolMessageType('MarketUpdate', (_messag
   # @@protoc_insertion_point(class_scope:MarketUpdate)
   ))
 _sym_db.RegisterMessage(MarketUpdate)
+
+Transaction = _reflection.GeneratedProtocolMessageType('Transaction', (_message.Message,), dict(
+  DESCRIPTOR = _TRANSACTION,
+  __module__ = 'ProtoBufMsg_pb2'
+  # @@protoc_insertion_point(class_scope:Transaction)
+  ))
+_sym_db.RegisterMessage(Transaction)
 
 DataRequest = _reflection.GeneratedProtocolMessageType('DataRequest', (_message.Message,), dict(
   DESCRIPTOR = _DATAREQUEST,

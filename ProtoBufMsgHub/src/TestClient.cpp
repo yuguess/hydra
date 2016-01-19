@@ -4,6 +4,7 @@
 #include "CPlusPlusCode/ProtoBufMsg.pb.h"
 #include "CedarJsonConfig.h"
 #include "ProtoBufMsgHub.h"
+#include "easylogging++.h"
 
 inline double genRandom(int min, int max) {
   if (max < min)
@@ -76,9 +77,11 @@ private:
 
 };
 
+INITIALIZE_EASYLOGGINGPP
+
 int main() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
-  CedarHelper::initGlog("TestClient");
+  //CedarHelper::initGlog("TestClient");
 
   CedarJsonConfig::getInstance().loadConfigFile("../config/TestClient.json");
 
