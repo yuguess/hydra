@@ -13,8 +13,8 @@ public:
   int close();
   static void RecvData(THANDLE hTdf, TDF_MSG* pMsgHead);
   static void RecvSys(THANDLE hTdf, TDF_MSG* pSysMsg);
-  void RelayMarket(TDF_MARKET_DATA* pMarket, int nItems); 
-  void RelayTransaction(TDF_TRANSACTION* pTrans, int nItems); 
+  static void RelayMarket(TDF_MARKET_DATA* pMarket, int nItems); 
+  static void RelayTransaction(TDF_TRANSACTION* pTrans, int nItems); 
 
 private:
   int addDataSubscription(DataRequest);
@@ -25,7 +25,7 @@ private:
   THANDLE nTDF;
   bool closeFlag;
 
-  ProtoBufMsgHub msgHub;
+  static ProtoBufMsgHub msgHub;
 };
 
 #endif

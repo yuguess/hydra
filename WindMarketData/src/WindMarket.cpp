@@ -2,14 +2,14 @@
 #include "ProtoBufMsgHub.h"
 #include "WindMarket.h"
 
-extern WindMarket windMarket;
+//extern WindMarket windMarket;
 
-void RelayMarket(TDF_MARKET_DATA* pMarket, int nItems);
-void RelayFuture(THANDLE hTdf,TDF_FUTURE_DATA* pFuture, int nItems);
-void RelayIndex(TDF_INDEX_DATA* pIndex, int nItems);
-void RelayTransaction(TDF_TRANSACTION* pTransaction, int nItems);
-void RelayOrder(TDF_ORDER* pOrder, int nItems);
-void RelayOrderQueue(TDF_ORDER_QUEUE* pOrderQueue, int nItems);
+/* void RelayMarket(TDF_MARKET_DATA* pMarket, int nItems); */
+/* void RelayFuture(THANDLE hTdf,TDF_FUTURE_DATA* pFuture, int nItems); */
+/* void RelayIndex(TDF_INDEX_DATA* pIndex, int nItems); */
+/* void RelayTransaction(TDF_TRANSACTION* pTransaction, int nItems); */
+/* void RelayOrder(TDF_ORDER* pOrder, int nItems); */
+/* void RelayOrderQueue(TDF_ORDER_QUEUE* pOrderQueue, int nItems); */
 
 #define ELEM_COUNT(arr) (sizeof(arr)/sizeof(arr[0]))
 #define SAFE_STR(str) ((str)?(str):"")
@@ -31,6 +31,8 @@ char* intarr2str(char* szBuf, int nBufLen, int arr[], int n) {
   }
   return szBuf;
 }
+
+ProtoBufMsgHub WindMarket::msgHub;
 
 int WindMarket::onMsg(MessageBase msg) {
   LOG(INFO) << "onMsg";
@@ -66,7 +68,7 @@ void WindMarket::RecvData(THANDLE hTdf, TDF_MSG* pMsgHead) {
       assert(nItemSize == sizeof(TDF_MARKET_DATA));
       if (recordNum > PRINTNUM){
         recordNum = 0;
-    	windMarket.RelayMarket((TDF_MARKET_DATA*)pMsgHead->pData, nItemCount);
+    	RelayMarket((TDF_MARKET_DATA*)pMsgHead->pData, nItemCount);
         //DumpScreenMarket((TDF_MARKET_DATA*)pMsgHead->pData, nItemCount);
       }
     }
@@ -106,7 +108,7 @@ void WindMarket::RecvData(THANDLE hTdf, TDF_MSG* pMsgHead) {
       if (recordNum > PRINTNUM) {
         recordNum = 0;
         //DumpScreenTransaction((TDF_TRANSACTION*)pMsgHead->pData, nItemCount);
-    	windMarket.RelayTransaction((TDF_TRANSACTION*)pMsgHead->pData, nItemCount);
+    	//RelayTransaction((TDF_TRANSACTION*)pMsgHead->pData, nItemCount);
 	std::cout << "ScreenTransaction" << std::endl;
       }
       TDF_TRANSACTION* pLastTransaction = GETRECORD(pMsgHead->pData,
@@ -289,10 +291,10 @@ void WindMarket::RelayTransaction(TDF_TRANSACTION* pMarket, int nItems) {
 
     std::string res = 
       ProtoBufHelper::wrapMsg<Transaction>(TYPE_TRANSACTION, trans);
-    if (msgHub.boardcastMsg(tdfTrans.szCode, res) != 0) 
-      LOG(INFO) << "relay successfully!";
-    else 
-      LOG(WARNING) << "relay failed!";
+    /* if (msgHub.boardcastMsg(tdfTrans.szCode, res) != 0) */ 
+    /*   LOG(INFO) << "relay successfully!"; */
+    /* else */ 
+    /*   LOG(WARNING) << "relay failed!"; */
   }
 }
 

@@ -428,3 +428,115 @@ ata server addr192.168.0.50:15212
 2016-01-19 14:49:59,141 INFO  [default] onMsg
 2016-01-19 14:49:59,877 INFO  [default] init quiting procedures now!
 2016-01-19 14:49:59,877 INFO  [default] ETERM, receiving thread exit
+2016-01-19 15:02:33,645 INFO  [default] block on zmq_poll1
+2016-01-19 15:02:33,645 INFO  [default] block on zmq_poll1data server addr192.168.0.50:15212
+2016-01-19 15:02:33,645 INFO  [default] block on zmq_poll1
+2016-01-19 15:02:33,645 INFO  [default] block on zmq_poll1data server addr192.168.0.50:15212
+2016-01-19 15:02:33,645 INFO  [default] init new sock
+2016-01-19 15:02:33,645 INFO  [default] PushMsg complete
+2016-01-19 15:02:33,645 INFO  [default] PushMsg complete
+2016-01-19 15:02:33,645 INFO  [default] PushMsg complete
+2016-01-19 15:02:33,645 INFO  [default] PushMsg complete
+2016-01-19 15:02:33,645 INFO  [default] StockMonitor service online!
+2016-01-19 15:03:05,878 INFO  [default] init quiting procedures now!
+2016-01-19 15:03:05,878 ERROR [default] Socket operation on non-socket
+2016-01-19 15:03:17,363 INFO  [default] block on zmq_poll1
+2016-01-19 15:03:17,363 INFO  [default] block on zmq_poll1data server addr192.168.0.50:15212
+2016-01-19 15:03:17,363 INFO  [default] block on zmq_poll1
+2016-01-19 15:03:17,363 INFO  [default] block on zmq_poll1data server addr192.168.0.50:15212
+2016-01-19 15:03:17,363 INFO  [default] init new sock
+2016-01-19 15:03:17,363 INFO  [default] PushMsg complete
+2016-01-19 15:03:17,363 INFO  [default] PushMsg complete
+2016-01-19 15:03:17,363 INFO  [default] PushMsg complete
+2016-01-19 15:03:17,363 INFO  [default] PushMsg complete
+2016-01-19 15:03:17,363 INFO  [default] StockMonitor service online!
+2016-01-19 15:03:17,886 INFO  [default] subSock get event
+2016-01-19 15:03:17,886 INFO  [default] onMsg
+2016-01-19 15:03:17,887 INFO  [default] run
+2016-01-19 15:03:48,741 INFO  [default] init quiting procedures now!
+2016-01-19 15:03:48,742 INFO  [default] ETERM, receiving thread exit
+2016-01-19 16:19:21,804 INFO  [default] block on zmq_poll1data server addr192.168.0.50:15212
+                                                          2016-01-19 16:19:21,804 INFO  [default] block on zmq_poll1data server addr192.168.0.50:15212
+                                                          2016-01-19 16:19:21,804 INFO  [default] init new sock
+2016-01-19 16:19:21,804 INFO  [default] PushMsg complete
+2016-01-19 16:19:21,804 INFO  [default] PushMsg complete
+2016-01-19 16:19:21,804 INFO  [default] PushMsg complete
+2016-01-19 16:19:21,804 INFO  [default] PushMsg complete
+2016-01-19 16:19:21,804 INFO  [default] StockMonitor service online!
+2016-01-19 16:19:41,055 INFO  [default] subSock get event
+2016-01-19 16:19:41,055 INFO  [default] onMsg
+2016-01-19 16:19:41,055 INFO  [default] run
+2016-01-19 16:19:41,367 INFO  [default] onMsg
+2016-01-19 16:19:41,367 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:41,367 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:41,554 INFO  [default] onMsg
+2016-01-19 16:19:41,554 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:41,554 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:41,616 INFO  [default] onMsg
+2016-01-19 16:19:41,616 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:41,616 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:41,616 INFO  [default] onMsg
+2016-01-19 16:19:41,616 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:41,616 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:41,678 INFO  [default] onMsg
+2016-01-19 16:19:41,678 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:41,678 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:41,741 INFO  [default] onMsg
+2016-01-19 16:19:41,741 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:41,741 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:41,741 INFO  [default] onMsg
+2016-01-19 16:19:41,741 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:41,741 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:41,803 INFO  [default] onMsg
+2016-01-19 16:19:41,803 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:41,803 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:41,865 INFO  [default] onMsg
+2016-01-19 16:19:41,866 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:41,866 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:41,928 INFO  [default] onMsg
+2016-01-19 16:19:41,928 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:41,928 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:41,990 INFO  [default] onMsg
+2016-01-19 16:19:41,990 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:41,990 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:42,053 INFO  [default] onMsg
+2016-01-19 16:19:42,053 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:42,053 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:42,115 INFO  [default] onMsg
+2016-01-19 16:19:42,115 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:42,115 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:42,115 INFO  [default] onMsg
+2016-01-19 16:19:42,115 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:42,115 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:42,178 INFO  [default] onMsg
+2016-01-19 16:19:42,178 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:42,178 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:42,240 INFO  [default] onMsg
+2016-01-19 16:19:42,240 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:42,240 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:42,302 INFO  [default] onMsg
+2016-01-19 16:19:42,302 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:42,302 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:42,302 INFO  [default] onMsg
+2016-01-19 16:19:42,302 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:42,303 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:42,490 INFO  [default] onMsg
+2016-01-19 16:19:42,490 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:42,490 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:42,552 INFO  [default] onMsg
+2016-01-19 16:19:42,552 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:42,552 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:42,677 INFO  [default] onMsg
+2016-01-19 16:19:42,677 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:42,677 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:42,958 INFO  [default] onMsg
+2016-01-19 16:19:42,958 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:42,958 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:43,082 INFO  [default] onMsg
+2016-01-19 16:19:43,082 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:43,082 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:43,269 INFO  [default] onMsg
+2016-01-19 16:19:43,270 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:43,270 WARN  [default] Recv an invalid markupdate with ask and bid volume be 0 !
+2016-01-19 16:19:47,475 INFO  [default] init quiting procedures now!
+2016-01-19 16:19:47,475 INFO  [default] ETERM, receiving thread exit
