@@ -10,7 +10,6 @@ SRC=./src
 INCLUDE= -I/usr/include \
 		-I./include \
 		-I../ProtoBufMsg \
-		-I../easyloggingpp/src \
 		-I../MsgHub/include \
 		-I../TDFAPI/include \
 		-I../CedarJsonConfig/include \

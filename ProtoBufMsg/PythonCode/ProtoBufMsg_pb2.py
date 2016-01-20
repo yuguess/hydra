@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='ProtoBufMsg.proto',
   package='',
   syntax='proto3',
-  serialized_pb=_b('\n\x11ProtoBufMsg.proto\"2\n\x0bMessageBase\x12\x16\n\x04type\x18\x01 \x01(\x0e\x32\x08.MsgType\x12\x0b\n\x03msg\x18\x02 \x01(\x0c\"\xf9\x04\n\x0cMarketUpdate\x12\x0c\n\x04\x63ode\x18\x01 \x01(\t\x12\x0e\n\x06symbol\x18\x02 \x01(\t\x12\x10\n\x08\x65xchange\x18\x03 \x01(\t\x12\x0e\n\x06status\x18\x04 \x01(\x05\x12\x11\n\tpre_close\x18\x05 \x01(\x05\x12\x12\n\nopen_price\x18\x06 \x01(\x01\x12\x12\n\nlast_price\x18\x07 \x01(\x01\x12\x15\n\rhighest_price\x18\x08 \x01(\x01\x12\x14\n\x0clowest_price\x18\t \x01(\x01\x12\x18\n\x10high_limit_price\x18\n \x01(\x01\x12\x17\n\x0flow_limit_price\x18\x0b \x01(\x01\x12\x15\n\ropen_interest\x18\x0c \x01(\x05\x12\x14\n\x0clatest_price\x18\r \x01(\x01\x12\x12\n\nnum_trades\x18\x0e \x01(\x05\x12\x10\n\x08turnover\x18\x0f \x01(\x01\x12\x0e\n\x06volume\x18\x10 \x01(\x03\x12\x15\n\rtotal_bid_vol\x18\x11 \x01(\x03\x12\x15\n\rtotal_ask_vol\x18\x12 \x01(\x03\x12\x1e\n\x16weighted_avg_bid_price\x18\x13 \x01(\x05\x12\x1e\n\x16weighted_avg_ask_price\x18\x14 \x01(\x05\x12\x0c\n\x04iopv\x18\x15 \x01(\x05\x12\x19\n\x11yield_to_maturity\x18\x16 \x01(\x05\x12\x12\n\naction_day\x18\x17 \x01(\x05\x12\x1a\n\x12\x65xchange_timestamp\x18\x18 \x01(\t\x12\x16\n\x0erecv_timestamp\x18\x19 \x01(\t\x12\x11\n\tbid_price\x18\x1a \x03(\x01\x12\x12\n\nbid_volume\x18\x1b \x03(\x05\x12\x11\n\task_price\x18\x1c \x03(\x01\x12\x12\n\nask_volume\x18\x1d \x03(\x05\"\x86\x02\n\x0bTransaction\x12\x0c\n\x04\x63ode\x18\x01 \x01(\t\x12\x0e\n\x06symbol\x18\x02 \x01(\t\x12\x10\n\x08\x65xchange\x18\x03 \x01(\t\x12\x12\n\naction_day\x18\x04 \x01(\x05\x12\x0c\n\x04time\x18\x05 \x01(\x05\x12\r\n\x05index\x18\x06 \x01(\x05\x12\r\n\x05price\x18\x07 \x01(\x05\x12\x0e\n\x06volume\x18\x08 \x01(\x05\x12\x10\n\x08turnover\x18\t \x01(\x05\x12\x0e\n\x06\x62sflag\x18\n \x01(\x05\x12\x15\n\rch_order_kind\x18\x0b \x01(\t\x12\x18\n\x10\x63h_function_code\x18\x0c \x01(\t\x12\x11\n\task_order\x18\r \x01(\x05\x12\x11\n\tbid_order\x18\x0e \x01(\x05\"P\n\x0b\x44\x61taRequest\x12\x0c\n\x04\x63ode\x18\x01 \x01(\t\x12\x0e\n\x06symbol\x18\x02 \x01(\t\x12\x10\n\x08\x65xchange\x18\x03 \x01(\t\x12\x11\n\tdata_type\x18\x04 \x01(\t*L\n\x07MsgType\x12\x14\n\x10TYPE_DATAREQUEST\x10\x00\x12\x15\n\x11TYPE_MARKETUPDATE\x10\x01\x12\x14\n\x10TYPE_TRANSACTION\x10\x02\x62\x06proto3')
+  serialized_pb=_b('\n\x11ProtoBufMsg.proto\"2\n\x0bMessageBase\x12\x16\n\x04type\x18\x01 \x01(\x0e\x32\x08.MsgType\x12\x0b\n\x03msg\x18\x02 \x01(\x0c\"\xf9\x04\n\x0cMarketUpdate\x12\x0c\n\x04\x63ode\x18\x01 \x01(\t\x12\x0e\n\x06symbol\x18\x02 \x01(\t\x12\x10\n\x08\x65xchange\x18\x03 \x01(\t\x12\x0e\n\x06status\x18\x04 \x01(\x05\x12\x11\n\tpre_close\x18\x05 \x01(\x05\x12\x12\n\nopen_price\x18\x06 \x01(\x01\x12\x12\n\nlast_price\x18\x07 \x01(\x01\x12\x15\n\rhighest_price\x18\x08 \x01(\x01\x12\x14\n\x0clowest_price\x18\t \x01(\x01\x12\x18\n\x10high_limit_price\x18\n \x01(\x01\x12\x17\n\x0flow_limit_price\x18\x0b \x01(\x01\x12\x15\n\ropen_interest\x18\x0c \x01(\x05\x12\x14\n\x0clatest_price\x18\r \x01(\x01\x12\x12\n\nnum_trades\x18\x0e \x01(\x05\x12\x10\n\x08turnover\x18\x0f \x01(\x01\x12\x0e\n\x06volume\x18\x10 \x01(\x03\x12\x15\n\rtotal_bid_vol\x18\x11 \x01(\x03\x12\x15\n\rtotal_ask_vol\x18\x12 \x01(\x03\x12\x1e\n\x16weighted_avg_bid_price\x18\x13 \x01(\x05\x12\x1e\n\x16weighted_avg_ask_price\x18\x14 \x01(\x05\x12\x0c\n\x04iopv\x18\x15 \x01(\x05\x12\x19\n\x11yield_to_maturity\x18\x16 \x01(\x05\x12\x12\n\naction_day\x18\x17 \x01(\x05\x12\x1a\n\x12\x65xchange_timestamp\x18\x18 \x01(\t\x12\x16\n\x0erecv_timestamp\x18\x19 \x01(\t\x12\x11\n\tbid_price\x18\x1a \x03(\x01\x12\x12\n\nbid_volume\x18\x1b \x03(\x05\x12\x11\n\task_price\x18\x1c \x03(\x01\x12\x12\n\nask_volume\x18\x1d \x03(\x05\"\x86\x02\n\x0bTransaction\x12\x0c\n\x04\x63ode\x18\x01 \x01(\t\x12\x0e\n\x06symbol\x18\x02 \x01(\t\x12\x10\n\x08\x65xchange\x18\x03 \x01(\t\x12\x12\n\naction_day\x18\x04 \x01(\x05\x12\x0c\n\x04time\x18\x05 \x01(\x05\x12\r\n\x05index\x18\x06 \x01(\x05\x12\r\n\x05price\x18\x07 \x01(\x05\x12\x0e\n\x06volume\x18\x08 \x01(\x05\x12\x10\n\x08turnover\x18\t \x01(\x05\x12\x0e\n\x06\x62sflag\x18\n \x01(\x05\x12\x15\n\rch_order_kind\x18\x0b \x01(\t\x12\x18\n\x10\x63h_function_code\x18\x0c \x01(\t\x12\x11\n\task_order\x18\r \x01(\x05\x12\x11\n\tbid_order\x18\x0e \x01(\x05\"\xed\x01\n\tIndexData\x12\x0c\n\x04\x63ode\x18\x01 \x01(\t\x12\x0e\n\x06symbol\x18\x02 \x01(\t\x12\x10\n\x08\x65xchange\x18\x03 \x01(\t\x12\x12\n\naction_day\x18\x04 \x01(\x05\x12\x0c\n\x04time\x18\x05 \x01(\x05\x12\x12\n\nopen_index\x18\x06 \x01(\x05\x12\x12\n\nhigh_index\x18\x07 \x01(\x05\x12\x11\n\tlow_index\x18\x08 \x01(\x05\x12\x12\n\nlast_index\x18\t \x01(\x05\x12\x14\n\x0ctotal_volume\x18\n \x01(\x03\x12\x10\n\x08turnover\x18\x0b \x01(\x03\x12\x17\n\x0fpre_close_index\x18\x0c \x01(\x05\"P\n\x0b\x44\x61taRequest\x12\x0c\n\x04\x63ode\x18\x01 \x01(\t\x12\x0e\n\x06symbol\x18\x02 \x01(\t\x12\x10\n\x08\x65xchange\x18\x03 \x01(\t\x12\x11\n\tdata_type\x18\x04 \x01(\t*a\n\x07MsgType\x12\x14\n\x10TYPE_DATAREQUEST\x10\x00\x12\x15\n\x11TYPE_MARKETUPDATE\x10\x01\x12\x14\n\x10TYPE_TRANSACTION\x10\x02\x12\x13\n\x0fTYPE_INDEX_DATA\x10\x03\x62\x06proto3')
 )
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -42,11 +42,15 @@ _MSGTYPE = _descriptor.EnumDescriptor(
       name='TYPE_TRANSACTION', index=2, number=2,
       options=None,
       type=None),
+    _descriptor.EnumValueDescriptor(
+      name='TYPE_INDEX_DATA', index=3, number=3,
+      options=None,
+      type=None),
   ],
   containing_type=None,
   options=None,
-  serialized_start=1056,
-  serialized_end=1132,
+  serialized_start=1296,
+  serialized_end=1393,
 )
 _sym_db.RegisterEnumDescriptor(_MSGTYPE)
 
@@ -54,6 +58,7 @@ MsgType = enum_type_wrapper.EnumTypeWrapper(_MSGTYPE)
 TYPE_DATAREQUEST = 0
 TYPE_MARKETUPDATE = 1
 TYPE_TRANSACTION = 2
+TYPE_INDEX_DATA = 3
 
 
 
@@ -444,6 +449,114 @@ _TRANSACTION = _descriptor.Descriptor(
 )
 
 
+_INDEXDATA = _descriptor.Descriptor(
+  name='IndexData',
+  full_name='IndexData',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='code', full_name='IndexData.code', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='symbol', full_name='IndexData.symbol', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='exchange', full_name='IndexData.exchange', index=2,
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='action_day', full_name='IndexData.action_day', index=3,
+      number=4, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='time', full_name='IndexData.time', index=4,
+      number=5, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='open_index', full_name='IndexData.open_index', index=5,
+      number=6, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='high_index', full_name='IndexData.high_index', index=6,
+      number=7, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='low_index', full_name='IndexData.low_index', index=7,
+      number=8, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='last_index', full_name='IndexData.last_index', index=8,
+      number=9, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='total_volume', full_name='IndexData.total_volume', index=9,
+      number=10, type=3, cpp_type=2, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='turnover', full_name='IndexData.turnover', index=10,
+      number=11, type=3, cpp_type=2, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='pre_close_index', full_name='IndexData.pre_close_index', index=11,
+      number=12, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=975,
+  serialized_end=1212,
+)
+
+
 _DATAREQUEST = _descriptor.Descriptor(
   name='DataRequest',
   full_name='DataRequest',
@@ -491,14 +604,15 @@ _DATAREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=974,
-  serialized_end=1054,
+  serialized_start=1214,
+  serialized_end=1294,
 )
 
 _MESSAGEBASE.fields_by_name['type'].enum_type = _MSGTYPE
 DESCRIPTOR.message_types_by_name['MessageBase'] = _MESSAGEBASE
 DESCRIPTOR.message_types_by_name['MarketUpdate'] = _MARKETUPDATE
 DESCRIPTOR.message_types_by_name['Transaction'] = _TRANSACTION
+DESCRIPTOR.message_types_by_name['IndexData'] = _INDEXDATA
 DESCRIPTOR.message_types_by_name['DataRequest'] = _DATAREQUEST
 DESCRIPTOR.enum_types_by_name['MsgType'] = _MSGTYPE
 
@@ -522,6 +636,13 @@ Transaction = _reflection.GeneratedProtocolMessageType('Transaction', (_message.
   # @@protoc_insertion_point(class_scope:Transaction)
   ))
 _sym_db.RegisterMessage(Transaction)
+
+IndexData = _reflection.GeneratedProtocolMessageType('IndexData', (_message.Message,), dict(
+  DESCRIPTOR = _INDEXDATA,
+  __module__ = 'ProtoBufMsg_pb2'
+  # @@protoc_insertion_point(class_scope:IndexData)
+  ))
+_sym_db.RegisterMessage(IndexData)
 
 DataRequest = _reflection.GeneratedProtocolMessageType('DataRequest', (_message.Message,), dict(
   DESCRIPTOR = _DATAREQUEST,

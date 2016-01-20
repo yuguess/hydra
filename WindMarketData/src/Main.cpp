@@ -15,7 +15,7 @@
 int main() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-  CedarLogging::init();
+  CedarLogging::init("WindMarket");
   CedarJsonConfig::getInstance().loadConfigFile("../config/WindMarketData.json");
   //CedarHelper::initGlog("WindMarket");
   

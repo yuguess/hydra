@@ -1,0 +1,363 @@
+I%d%a 14:34:13.166  ProtoBufMsgHub.h:228] block on zmq_poll1
+I%d%a 14:34:13.380  WindMarket.cpp:430]  Open Success!
+I%d%a 14:34:13.380  Main.cpp:36] suspend
+-------- Market, Count:1 --------
+szWindCode: 000001.SZ
+szCode: 000001
+nActionDay: 20160120
+nTradingDay: 20160120
+nTime: 84353000
+nStatus: 0( )
+nPreClose: 0
+nOpen: 0
+nHigh: 0
+nLow: 0
+nMatch: 0
+nAskPrice: 0 0 0 0 0 0 0 0 0 0  
+nAskVol: 0 0 0 0 0 0 0 0 0 0  
+nBidPrice: 0 0 0 0 0 0 0 0 0 0  
+nBidVol: 0 0 0 0 0 0 0 0 0 0  
+nNumTrades: 0
+iVolume: 0
+iTurnover: 0
+nTotalBidVol: 0
+nTotalAskVol: 0
+nWeightedAvgBidPrice: 0
+nWeightedAvgAskPrice: 0
+nIOPV: 0
+nYieldToMaturity: 0
+nHighLimited: 117800
+nLowLimited: 96400
+chPrefix: 0( ) 0( ) 0( ) 0( ) 
+nSy11: 0
+nSy12: 0
+nSD2: 0
+
+-------- Market, Count:1 --------
+szWindCode: 000001.SZ
+szCode: 000001
+nActionDay: 20160120
+nTradingDay: 20160120
+nTime: 84353000
+nStatus: 0( )
+nPreClose: 107100
+nOpen: 0
+nHigh: 0
+nLow: 0
+nMatch: 0
+nAskPrice: 0 0 0 0 0 0 0 0 0 0  
+nAskVol: 0 0 0 0 0 0 0 0 0 0  
+nBidPrice: 0 0 0 0 0 0 0 0 0 0  
+nBidVol: 0 0 0 0 0 0 0 0 0 0  
+nNumTrades: 0
+iVolume: 0
+iTurnover: 0
+nTotalBidVol: 0
+nTotalAskVol: 0
+nWeightedAvgBidPrice: 0
+nWeightedAvgAskPrice: 0
+nIOPV: 0
+nYieldToMaturity: 0
+nHighLimited: 117800
+nLowLimited: 96400
+chPrefix: 0( ) 0( ) 0( ) 0( ) 
+nSy11: 776
+nSy12: 0
+nSD2: 0
+
+I%d%a 14:34:16.132  ProtoBufMsgHub.h:239] pullSock get event
+I%d%a 14:34:16.132  WindMarket.cpp:39] onMsg
+I%d%a 14:34:16.132  WindMarket.cpp:39] onMsg
+I%d%a 14:34:16.132  WindMarket.cpp:39] onMsg
+I%d%a 14:34:16.132  WindMarket.cpp:39] onMsg
+[0;33mW0120 14:34:16.512148  5971 ConnectionInstance.cpp:633] øÏ’’Ω” ’ÕÍ±œ£¨ExchId:SZ-2-0
+[m-------- Market, Count:1 --------
+szWindCode: 000001.SZ
+szCode: 000001
+nActionDay: 20160120
+nTradingDay: 20160120
+nTime: 143410500
+nStatus: 0( )
+nPreClose: 107100
+nOpen: 107000
+nHigh: 108000
+nLow: 104400
+nMatch: 105400
+nAskPrice: 105500 105600 105700 105800 105900 106000 106100 106200 106300 106400  
+nAskVol: 73933 42300 67617 76100 102086 476824 38000 17500 9000 93900  
+nBidPrice: 105400 105300 105200 105100 105000 104900 104800 104700 104600 104500  
+nBidVol: 600 69162 109414 268941 240432 41400 191243 137200 374400 165500  
+nNumTrades: 22670
+iVolume: 55944133
+iTurnover: 594243164
+nTotalBidVol: 6164691
+nTotalAskVol: 11121477
+nWeightedAvgBidPrice: 102700
+nWeightedAvgAskPrice: 111500
+nIOPV: 0
+nYieldToMaturity: 0
+nHighLimited: 117800
+nLowLimited: 96400
+chPrefix: 46(.) 65(A) 46(.) 46(.) 
+nSy11: 776
+nSy12: 0
+nSD2: 0
+
+-------- Market, Count:1 --------
+szWindCode: 000004.SZ
+szCode: 000004
+nActionDay: 20160120
+nTradingDay: 20160120
+nTime: 143409080
+nStatus: 0( )
+nPreClose: 326800
+nOpen: 326800
+nHigh: 339400
+nLow: 320100
+nMatch: 327700
+nAskPrice: 327900 328500 329000 329100 329300 329500 329600 329800 329900 330000  
+nAskVol: 118166 300 1600 400 4000 500 3800 2400 100 6000  
+nBidPrice: 327800 327200 326800 326700 326600 326500 326200 326100 325500 325000  
+nBidVol: 400 200 700 1000 7200 500 163 100 400 7500  
+nNumTrades: 4457
+iVolume: 2495761
+iTurnover: 82420811
+nTotalBidVol: 209263
+nTotalAskVol: 403428
+nWeightedAvgBidPrice: 315000
+nWeightedAvgAskPrice: 338500
+nIOPV: 0
+nYieldToMaturity: 0
+nHighLimited: 359500
+nLowLimited: 294100
+chPrefix: 46(.) 46(.) 46(.) 46(.) 
+nSy11: 65360
+nSy12: 0
+nSD2: 0
+
+-------- Market, Count:1 --------
+szWindCode: 000004.SZ
+szCode: 000004
+nActionDay: 20160120
+nTradingDay: 20160120
+nTime: 143411370
+nStatus: 0( )
+nPreClose: 326800
+nOpen: 326800
+nHigh: 339400
+nLow: 320100
+nMatch: 327700
+nAskPrice: 327900 328500 329000 329100 329300 329500 329600 329800 329900 330000  
+nAskVol: 118366 300 1600 400 4000 500 3800 2400 100 6000  
+nBidPrice: 327800 327200 326800 326700 326600 326500 326200 326100 325500 325000  
+nBidVol: 400 200 700 1000 7200 500 163 100 400 7500  
+nNumTrades: 4457
+iVolume: 2495761
+iTurnover: 82420811
+nTotalBidVol: 209263
+nTotalAskVol: 403628
+nWeightedAvgBidPrice: 315000
+nWeightedAvgAskPrice: 338500
+nIOPV: 0
+nYieldToMaturity: 0
+nHighLimited: 359500
+nLowLimited: 294100
+chPrefix: 46(.) 46(.) 46(.) 46(.) 
+nSy11: 65360
+nSy12: 0
+nSD2: 0
+
+-------- Market, Count:1 --------
+szWindCode: 000004.SZ
+szCode: 000004
+nActionDay: 20160120
+nTradingDay: 20160120
+nTime: 143413050
+nStatus: 0( )
+nPreClose: 326800
+nOpen: 326800
+nHigh: 339400
+nLow: 320100
+nMatch: 327900
+nAskPrice: 327900 328500 329000 329100 329300 329500 329600 329800 329900 330000  
+nAskVol: 117966 300 1600 400 4000 500 3800 2400 100 6000  
+nBidPrice: 327800 327200 326800 326700 326600 326500 326200 326100 325500 325000  
+nBidVol: 400 200 700 1000 7200 500 163 100 400 7500  
+nNumTrades: 4458
+iVolume: 2496161
+iTurnover: 82433927
+nTotalBidVol: 209263
+nTotalAskVol: 403228
+nWeightedAvgBidPrice: 315000
+nWeightedAvgAskPrice: 338500
+nIOPV: 0
+nYieldToMaturity: 0
+nHighLimited: 359500
+nLowLimited: 294100
+chPrefix: 46(.) 46(.) 46(.) 46(.) 
+nSy11: 65360
+nSy12: 0
+nSD2: 0
+
+-------- Market, Count:1 --------
+szWindCode: 000004.SZ
+szCode: 000004
+nActionDay: 20160120
+nTradingDay: 20160120
+nTime: 143417040
+nStatus: 0( )
+nPreClose: 326800
+nOpen: 326800
+nHigh: 339400
+nLow: 320100
+nMatch: 327900
+nAskPrice: 327900 328500 329000 329100 329300 329500 329600 329800 329900 330000  
+nAskVol: 115566 300 1600 400 4000 500 3800 2400 100 6000  
+nBidPrice: 327800 327200 326800 326700 326600 326500 326200 326100 325500 325000  
+nBidVol: 400 200 700 1000 7200 500 163 100 400 7500  
+nNumTrades: 4459
+iVolume: 2498561
+iTurnover: 82512623
+nTotalBidVol: 209263
+nTotalAskVol: 400828
+nWeightedAvgBidPrice: 315000
+nWeightedAvgAskPrice: 338600
+nIOPV: 0
+nYieldToMaturity: 0
+nHighLimited: 359500
+nLowLimited: 294100
+chPrefix: 46(.) 46(.) 46(.) 46(.) 
+nSy11: 65360
+nSy12: 0
+nSD2: 0
+
+-------- Market, Count:1 --------
+szWindCode: 000001.SZ
+szCode: 000001
+nActionDay: 20160120
+nTradingDay: 20160120
+nTim[0;33mW0120 14:34:39.191239  5971 ConnectionInstance.cpp:46] «Î«ÛÕÀ≥ˆ ˝æ›¥¶¿Ìœﬂ≥Ã£°
+[me: 143423070
+nStatus: 0( )
+nPreClose: 107100
+nOpen: 107000
+nHigh: 108000
+nLow: 104400
+nMatch: 105500
+nAskPrice: 105500 105600 105700 105800 105900 106000 106100 106200 106300 106400  
+nAskVol: 34733 35300 67317 76100 102086 476824 38000 17500 9000 93900  
+nBidPrice: 105400 105300 105200 105100 105000 104900 104800 104700 104600 104500  
+nBidVol: 44400 80262 109614 268941 240432 41400 187243 136200 374400 165500  
+nNumTrades: 22684
+iVolume: 55988333
+iTurnover: 594709436
+nTotalBidVol: 6210791
+nTotalAskVol: 11073477
+nWeightedAvgBidPrice: 102800
+nWeightedAvgAskPrice: 111600
+nIOPV: 0
+nYieldToMaturity: 0
+nHighLimited: 117800
+nLowLimited: 96400
+chPrefix: 46(.) 65(A) 46(.) 46(.) 
+nSy11: 776
+nSy12: 0
+nSD2: 0
+
+-------- Market, Count:1 --------
+szWindCode: 000001.SZ
+szCode: 000001
+nActionDay: 20160120
+nTradingDay: 20160120
+nTime: 143428070
+nStatus: 0( )
+nPreClose: 107100
+nOpen: 107000
+nHigh: 108000
+nLow: 104400
+nMatch: 105500
+nAskPrice: 105500 105600 105700 105800 105900 106000 106100 106200 106300 106400  
+nAskVol: 34233 40300 67317 77800 102086 476824 38000 17500 9000 93900  
+nBidPrice: 105400 105300 105200 105100 105000 104900 104800 104700 104600 104500  
+nBidVol: 44400 80262 110114 268941 240532 41400 187243 136200 374400 174500  
+nNumTrades: 22685
+iVolume: 55988833
+iTurnover: 594714711
+nTotalBidVol: 6218891
+nTotalAskVol: 11079677
+nWeightedAvgBidPrice: 102800
+nWeightedAvgAskPrice: 111600
+nIOPV: 0
+nYieldToMaturity: 0
+nHighLimited: 117800
+nLowLimited: 96400
+chPrefix: 46(.) 65(A) 46(.) 46(.) 
+nSy11: 776
+nSy12: 0
+nSD2: 0
+
+-------- Market, Count:1 --------
+szWindCode: 000001.SZ
+szCode: 000001
+nActionDay: 20160120
+nTradingDay: 20160120
+nTime: 143431380
+nStatus: 0( )
+nPreClose: 107100
+nOpen: 107000
+nHigh: 108000
+nLow: 104400
+nMatch: 105500
+nAskPrice: 105500 105600 105700 105800 105900 106000 106100 106200 106300 106400  
+nAskVol: 33033 40300 67317 80100 102086 476824 38000 17500 9000 93900  
+nBidPrice: 105400 105300 105200 105100 105000 104900 104800 104700 104600 104500  
+nBidVol: 38800 80262 110114 268941 224032 41400 187243 136200 374400 174500  
+nNumTrades: 22691
+iVolume: 55995633
+iTurnover: 594786395
+nTotalBidVol: 6196091
+nTotalAskVol: 11080777
+nWeightedAvgBidPrice: 102800
+nWeightedAvgAskPrice: 111600
+nIOPV: 0
+nYieldToMaturity: 0
+nHighLimited: 117800
+nLowLimited: 96400
+chPrefix: 46(.) 65(A) 46(.) 46(.) 
+nSy11: 776
+nSy12: 0
+nSD2: 0
+
+-------- Market, Count:1 --------
+szWindCode: 000001.SZ
+szCode: 000001
+nActionDay: 20160120
+nTradingDay: 20160120
+nTime: 143434050
+nStatus: 0( )
+nPreClose: 107100
+nOpen: 107000
+nHigh: 108000
+nLow: 104400
+nMatch: 105400
+nAskPrice: 105500 105600 105700 105800 105900 106000 106100 106200 106300 106400  
+nAskVol: 14633 40300 67317 80100 102086 476824 38000 17500 9000 93900  
+nBidPrice: 105400 105300 105200 105100 105000 104900 104800 104700 104600 104500  
+nBidVol: 30121 80262 110114 269941 224032 41400 187243 136200 374400 174500  
+nNumTrades: 22704
+iVolume: 56025812
+iTurnover: 595104687
+nTotalBidVol: 6188012
+nTotalAskVol: 11062377
+nWeightedAvgBidPrice: 102800
+nWeightedAvgAskPrice: 111600
+nIOPV: 0
+nYieldToMaturity: 0
+nHighLimited: 117800
+nLowLimited: 96400
+chPrefix: 46(.) 65(A) 46(.) 46(.) 
+nSy11: 776
+nSy12: 0
+nSD2: 0
+
+I%d%a 14:34:39.212  ProtoBufMsgHub.h:183] ETERM, receiving thread exit
