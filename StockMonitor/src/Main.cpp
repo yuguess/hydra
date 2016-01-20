@@ -5,6 +5,7 @@
 #include "CedarJsonConfig.h"
 #include "ProtoBufMsgHub.h"
 #include "StockProcessor.h"
+#include "CedarLogging.h"
 
 int initMap(std::map<std::string, StockProcessor> &map) {
   std::vector<std::string> codes;
@@ -47,8 +48,6 @@ int onMsg(MessageBase msg) {
 
   return 0;
 }
-
-INITIALIZE_EASYLOGGINGPP
 
 int main() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;

@@ -4,6 +4,7 @@ enum MsgType {
   TYPE_DATAREQUEST = 0;
   TYPE_MARKETUPDATE = 1; 
   TYPE_TRANSACTION = 2;
+  TYPE_INDEX_DATA = 3;
 }
 
 message MessageBase {
@@ -64,6 +65,22 @@ message Transaction {
 
   int32 ask_order = 13;
   int32 bid_order = 14;
+}
+
+message IndexData {
+  string code = 1;
+  string symbol = 2;
+  string exchange = 3;
+
+  int32 action_day = 4;
+  int32 time = 5;
+  int32 open_index = 6;
+  int32 high_index = 7;
+  int32 low_index = 8;
+  int32 last_index = 9;
+  int64 total_volume = 10;
+  int64 turnover = 11;
+  int32 pre_close_index = 12;
 }
 
 message DataRequest {

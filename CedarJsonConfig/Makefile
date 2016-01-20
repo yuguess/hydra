@@ -16,7 +16,6 @@ SRC=./src
 
 INCLUDE= -I/usr/include \
 	 -I./include \
-	 -I../easyloggingpp/src \
 	 -I../CedarHelper/include
 
 SOURCES= $(SRC)/Main.cpp

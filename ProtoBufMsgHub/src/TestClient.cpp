@@ -4,7 +4,7 @@
 #include "CPlusPlusCode/ProtoBufMsg.pb.h"
 #include "CedarJsonConfig.h"
 #include "ProtoBufMsgHub.h"
-#include "easylogging++.h"
+#include "CedarLogging.h"
 
 inline double genRandom(int min, int max) {
   if (max < min)
@@ -76,8 +76,6 @@ private:
   std::vector<std::string> codes;
 
 };
-
-INITIALIZE_EASYLOGGINGPP
 
 int main() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;

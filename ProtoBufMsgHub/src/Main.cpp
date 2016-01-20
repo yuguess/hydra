@@ -3,9 +3,7 @@
 #include "ProtoBufMsgHub.h"
 #include "CedarJsonConfig.h"
 #include "CedarHelper.h"
-//#include "easylogging++.h"
-
-INITIALIZE_EASYLOGGINGPP
+#include "CedarLogging.h"
 
 int onMsg(MessageBase msg) {
   LOG(INFO) << "onMsg";

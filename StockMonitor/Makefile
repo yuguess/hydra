@@ -24,7 +24,6 @@ INCLUDE= -I/usr/include \
 		-I../CedarHelper/include \
 	 	-I../CedarJsonConfig/include \
 		-I../ProtoBufMsgHub/include \
-		-I../easyloggingpp/src
 
 PROTOBUF= ../ProtoBufMsg/CPlusPlusCode/ProtoBufMsg.pb.cc
 

@@ -10,6 +10,8 @@
 /* void RelayTransaction(TDF_TRANSACTION* pTransaction, int nItems); */
 /* void RelayOrder(TDF_ORDER* pOrder, int nItems); */
 /* void RelayOrderQueue(TDF_ORDER_QUEUE* pOrderQueue, int nItems); */
+void DumpScreenMarket(TDF_MARKET_DATA*, int);
+void DumpScreenIndex(TDF_INDEX_DATA*, int);
 
 #define ELEM_COUNT(arr) (sizeof(arr)/sizeof(arr[0]))
 #define SAFE_STR(str) ((str)?(str):"")
@@ -69,7 +71,7 @@ void WindMarket::RecvData(THANDLE hTdf, TDF_MSG* pMsgHead) {
       if (recordNum > PRINTNUM){
         recordNum = 0;
         RelayMarket((TDF_MARKET_DATA*)pMsgHead->pData, nItemCount);
-        //DumpScreenMarket((TDF_MARKET_DATA*)pMsgHead->pData, nItemCount);
+        DumpScreenMarket((TDF_MARKET_DATA*)pMsgHead->pData, nItemCount);
       }
     }
     break;
@@ -79,7 +81,6 @@ void WindMarket::RecvData(THANDLE hTdf, TDF_MSG* pMsgHead) {
       if (recordNum > PRINTNUM) {
         recordNum = 0;
         //DumpScreenFuture(hTdf,(TDF_FUTURE_DATA*)pMsgHead->pData, nItemCount);
-        std::cout << "Future" << std::endl;
       }
       TDF_FUTURE_DATA* pLastFuture = GETRECORD(pMsgHead->pData, 
           TDF_FUTURE_DATA, nItemCount-1);
@@ -92,8 +93,8 @@ void WindMarket::RecvData(THANDLE hTdf, TDF_MSG* pMsgHead) {
     case MSG_DATA_INDEX: {
       if (recordNum > PRINTNUM){
         recordNum = 0;
-        //DumpScreenIndex((TDF_INDEX_DATA*)pMsgHead->pData, nItemCount);
-        std::cout << "Index" << std::endl;
+        RelayIndexData((TDF_INDEX_DATA*)pMsgHead->pData, nItemCount);
+        DumpScreenIndex((TDF_INDEX_DATA*)pMsgHead->pData, nItemCount);
       }
 
       TDF_INDEX_DATA* pLastIndex = GETRECORD(pMsgHead->pData,TDF_INDEX_DATA,
@@ -109,7 +110,6 @@ void WindMarket::RecvData(THANDLE hTdf, TDF_MSG* pMsgHead) {
         recordNum = 0;
         //DumpScreenTransaction((TDF_TRANSACTION*)pMsgHead->pData, nItemCount);
     	//RelayTransaction((TDF_TRANSACTION*)pMsgHead->pData, nItemCount);
-	std::cout << "ScreenTransaction" << std::endl;
       }
       TDF_TRANSACTION* pLastTransaction = GETRECORD(pMsgHead->pData,
           TDF_TRANSACTION, nItemCount-1);
@@ -221,13 +221,98 @@ void WindMarket::RecvSys(THANDLE hTdf, TDF_MSG* pSysMsg) {
   }
 }
 
+void DumpScreenMarket(TDF_MARKET_DATA* pMarket, int nItems) {
+
+  printf("-------- Market, Count:%d --------\n", nItems);
+  char szBuf1[512];
+  char szBuf2[512];
+  char szBuf3[512];
+  char szBuf4[512];
+  char szBufSmall[64];
+
+  for (int i=0; i<nItems; i++) {
+    const TDF_MARKET_DATA& marketData = pMarket[i];
+    printf("szWindCode: %s\n", marketData.szWindCode);
+    printf("szCode: %s\n", marketData.szCode);
+    printf("nActionDay: %d\n", marketData.nActionDay);
+    printf("nTradingDay: %d\n", marketData.nTradingDay);
+
+    printf("nTime: %d\n", marketData.nTime );
+    printf("nStatus: %d(%c)\n", marketData.nStatus, 
+        SAFE_CHAR(marketData.nStatus));
+    printf("nPreClose: %d\n", marketData.nPreClose);
+    printf("nOpen: %d\n", marketData.nOpen);
+    printf("nHigh: %d\n", marketData.nHigh);
+    printf("nLow: %d\n", marketData.nLow);
+    printf("nMatch: %d\n", marketData.nMatch);
+    printf("nAskPrice: %s \n", 
+      intarr2str(szBuf1, sizeof(szBuf1), (int*)marketData.nAskPrice, 
+      ELEM_COUNT(marketData.nAskPrice)));
+
+    printf("nAskVol: %s \n", intarr2str(szBuf2, sizeof(szBuf2), 
+          (int*)marketData.nAskVol, ELEM_COUNT(marketData.nAskVol)));
+    printf("nBidPrice: %s \n", intarr2str(szBuf3, sizeof(szBuf3), 
+          (int*)marketData.nBidPrice, ELEM_COUNT(marketData.nBidPrice)));
+    printf("nBidVol: %s \n", intarr2str(szBuf4, sizeof(szBuf4), 
+          (int*)marketData.nBidVol, ELEM_COUNT(marketData.nBidVol)));
+    printf("nNumTrades: %d\n", marketData.nNumTrades);
+
+    printf("iVolume: %lld\n", marketData.iVolume);
+    printf("iTurnover: %lld\n", marketData.iTurnover);
+    printf("nTotalBidVol: %lld\n", marketData.nTotalBidVol);
+    printf("nTotalAskVol: %lld\n", marketData.nTotalAskVol);
+
+    printf("nWeightedAvgBidPrice: %u\n", marketData.nWeightedAvgBidPrice);
+    printf("nWeightedAvgAskPrice: %u\n", marketData.nWeightedAvgAskPrice);
+
+    printf("nIOPV: %d\n",  marketData.nIOPV);
+    printf("nYieldToMaturity: %d\n", marketData.nYieldToMaturity);
+    printf("nHighLimited: %d\n", marketData.nHighLimited);
+    printf("nLowLimited: %d\n", marketData.nLowLimited);
+    printf("chPrefix: %s\n", chararr2str(szBufSmall, sizeof(szBufSmall), 
+          (char*)marketData.chPrefix, ELEM_COUNT(marketData.chPrefix)));
+    printf("nSy11: %d\n", marketData.nSyl1);
+    printf("nSy12: %d\n", marketData.nSyl2);
+    printf("nSD2: %d\n", marketData.nSD2);
+    if (nItems>1)
+      printf("\n");
+  }
+
+  printf("\n");
+}
+
+void DumpScreenIndex(TDF_INDEX_DATA* pIndex, int nItems) {
+  printf("-------- Index, Count:%d --------\n", nItems);
+
+  for (int i=0; i<nItems; i++) {
+    const TDF_INDEX_DATA& indexData = pIndex[i];
+    printf("万得代码 szWindCode: %s\n", indexData.szWindCode);
+    printf("原始代码 szCode: %s\n", indexData.szCode);
+    printf("业务发生日(自然日) nActionDay: %d\n", indexData.nActionDay);
+    printf("交易日 nTradingDay: %d\n", indexData.nTradingDay);
+    printf("时间(HHMMSSmmm) nTime: %d\n", indexData.nTime);
+
+    printf("今开盘指数 nOpenIndex: %d\n", indexData.nOpenIndex);
+    printf("最高指数 nHighIndex: %d\n", indexData.nHighIndex);
+    printf("最低指数 nLowIndex: %d\n", indexData.nLowIndex);
+    printf("最新指数 nLastIndex: %d\n", indexData.nLastIndex);
+    printf("成交总量 iTotalVolume: %lld\n", indexData.iTotalVolume);
+    printf("成交总金额 iTurnover: %lld\n", indexData.iTurnover);
+    printf("前盘指数 nPreCloseIndex: %d\n", indexData.nPreCloseIndex);
+
+    if (nItems>1)
+      printf("\n");
+  }
+
+  printf("\n");
+}
 
 void WindMarket::RelayMarket(TDF_MARKET_DATA* pMarket, int nItems) {
 
   MarketUpdate mktUpdt;
   for (int i = 0; i < nItems; i++) {
     const TDF_MARKET_DATA& marketData = pMarket[i];
-    const char *exchange = marketData.szWindCode + 7;
+    const char* exchange = marketData.szWindCode + 7;
 
     mktUpdt.set_symbol(marketData.szWindCode);
     mktUpdt.set_code(marketData.szCode); 
@@ -262,7 +347,10 @@ void WindMarket::RelayMarket(TDF_MARKET_DATA* pMarket, int nItems) {
     }
     std::string res = 
       ProtoBufHelper::wrapMsg<MarketUpdate>(TYPE_MARKETUPDATE, mktUpdt); 
-    msgHub.boardcastMsg(marketData.szCode, res);
+    if (msgHub.boardcastMsg(marketData.szCode, res) != 0) 
+      LOG(INFO) << "relay mktUpdt successfully!";
+    else 
+      LOG(WARNING) << "relay mktUpdt failed!";
   }   
 
 }
@@ -271,7 +359,7 @@ void WindMarket::RelayTransaction(TDF_TRANSACTION* pMarket, int nItems) {
   Transaction trans;
   for (int i = 0; i < nItems; i++) {
     const TDF_TRANSACTION& tdfTrans = pMarket[i];
-    const char *exchange = tdfTrans.szWindCode + 7;
+    const char* exchange = tdfTrans.szWindCode + 7;
 
     trans.set_code(tdfTrans.szCode);
     trans.set_symbol(tdfTrans.szWindCode);
@@ -291,10 +379,38 @@ void WindMarket::RelayTransaction(TDF_TRANSACTION* pMarket, int nItems) {
 
     std::string res = 
       ProtoBufHelper::wrapMsg<Transaction>(TYPE_TRANSACTION, trans);
-    /* if (msgHub.boardcastMsg(tdfTrans.szCode, res) != 0) */ 
-    /*   LOG(INFO) << "relay successfully!"; */
-    /* else */ 
-    /*   LOG(WARNING) << "relay failed!"; */
+    if (msgHub.boardcastMsg(tdfTrans.szCode, res) != 0) 
+      LOG(INFO) << "relay trans successfully!";
+    else 
+      LOG(WARNING) << "relay trans failed!";
+  }
+}
+
+void WindMarket::RelayIndexData(TDF_INDEX_DATA* pIndex, int nItems) {
+  IndexData indexd;
+  for (int i = 0; i < nItems; i++) {
+    const TDF_INDEX_DATA& tdfIndex = pIndex[i];
+    const char* exchange = tdfIndex.szWindCode + 7;
+
+    indexd.set_code(tdfIndex.szCode);
+    indexd.set_symbol(tdfIndex.szWindCode);
+    indexd.set_exchange(exchange);
+    indexd.set_action_day(tdfIndex.nActionDay);
+    indexd.set_time(tdfIndex.nTime);
+    indexd.set_open_index(tdfIndex.nOpenIndex);
+    indexd.set_high_index(tdfIndex.nHighIndex);
+    indexd.set_low_index(tdfIndex.nLowIndex);
+    indexd.set_last_index(tdfIndex.nLastIndex);
+    indexd.set_total_volume(tdfIndex.iTotalVolume);
+    indexd.set_pre_close_index(tdfIndex.nPreCloseIndex);
+
+    std::string res = 
+      ProtoBufHelper::wrapMsg<IndexData>(TYPE_INDEX_DATA, indexd);
+
+    if (msgHub.boardcastMsg(tdfIndex.szCode, res) != 0) 
+      LOG(INFO) << "relay indexd successfully!";
+    else 
+      LOG(WARNING) << "relay indexd failed!";
   }
 }
 
@@ -349,12 +465,12 @@ int WindMarket::start() {
 
   //settings.nProtocol = 0;
   //需要订阅的市场列表
-  settings.szMarkets = "SZ-2;";
-  //settings.szMarkets = "SZ-2;SH-2";
+  //settings.szMarkets = "SZ-2;";
+  settings.szMarkets = "SZ-2;SH-2";
   //settings.szMarkets = "SZ;SH";
 
   //需要订阅的股票,为空则订阅全市场
-  settings.szSubScriptions = "000001.SZ;000002.SH";
+  settings.szSubScriptions = "";
 
   //请求的日期，格式YYMMDD，为0则请求今天
   //请求的时间，格式HHMMSS，为0则请求实时行情，为0xffffffff从头请求
