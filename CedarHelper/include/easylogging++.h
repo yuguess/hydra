@@ -784,12 +784,12 @@ namespace consts {
 #else
 #   if ELPP_OS_UNIX
 #      if ELPP_OS_ANDROID
-    static const char* kDefaultLogFile                         =      "log/";
+    static const char* kDefaultLogFile                         =      "log/OTHERLOG";
 #      else
-    static const char* kDefaultLogFile                         =      "log/";
+    static const char* kDefaultLogFile                         =      "log/OTHERLOG";
 #      endif  // ELPP_OS_ANDROID
 #   elif ELPP_OS_WINDOWS
-    static const char* kDefaultLogFile                         =      "log\\";
+    static const char* kDefaultLogFile                         =      "log\\OTHERLOG";
 #   endif  // ELPP_OS_UNIX
 #endif  // defined(ELPP_DEFAULT_LOG_FILE)
 #if !defined(ELPP_DISABLE_LOG_FILE_FROM_ARG)
