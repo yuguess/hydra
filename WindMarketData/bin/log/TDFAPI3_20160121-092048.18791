@@ -1,0 +1,44 @@
+Log file created at: 2016/01/21 09:20:48
+Running on machine: spike
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0121 09:20:48.708353 18795 OpenInstance.cpp:66] SysManagerThread 线程开始！
+I0121 09:20:48.708340 18791 OpenManager.h:62] 创建一个Open实例：0x1dc6700
+I0121 09:20:48.709141 18791 TDFAPI.cpp:40] API版本：TDFAPI3.1.1
+I0121 09:20:48.709163 18791 TDFAPI.cpp:56] 调用TDF_Open! szMarkets:SZ-2;SH-2 szSubScriptions: nTypeFlags:0 nConnectionID:19
+I0121 09:20:48.709177 18791 TDFAPI.cpp:61] nServerNum0:114.80.154.34 6221 TD1000961001 41376499
+I0121 09:20:48.709338 18791 ConnectionInstance.cpp:320] 创建一个ConnectionInstance
+I0121 09:20:48.709451 18796 ConnectionInstance.cpp:189] 开始尝试连接服务器！
+I0121 09:20:48.718657 18796 ConnectionInstance.cpp:205] 连接服务器成功，开始登陆和取代码表！
+I0121 09:20:48.718693 18796 HHNetFrameProcessor_TDFAPI.cpp:429] 正在注册...
+I0121 09:20:48.765378 18797 HHNetFrameProcessor_TDFAPI.cpp:87] 收到登陆响应！
+I0121 09:20:48.768131 18797 HHNetFrameProcessor_TDFAPI.cpp:276] 请求代码表, strExchID=SZ-2-0
+I0121 09:20:48.768227 18797 HHNetFrameProcessor_TDFAPI.cpp:276] 请求代码表, strExchID=SH-2-0
+I0121 09:20:48.768263 18797 HHNetFrameProcessor_TDFAPI.cpp:533] SendDataTypeSubscription(DataType:0,SubStype:0
+I0121 09:20:48.768293 18797 HHNetFrameProcessor_TDFAPI.cpp:490] 没有具体订阅代码，不发送请求
+I0121 09:20:48.768313 18797 HHNetFrameProcessor_TDFAPI.cpp:393] 请求心跳, time=10
+I0121 09:20:48.768802 18796 ConnectionInstance.cpp:215] open成功!
+I0121 09:20:48.768914 18798 ConnectionInstance.cpp:21] DataHandlerThread 线程开始！
+I0121 09:20:48.772565 18797 HHNetFrameProcessor_TDFAPI.cpp:239] ReceiveSubScriptionRsp!
+I0121 09:20:48.846752 18797 HHNetFrameProcessor_TDFAPI.cpp:289] 收到代码表数据，数据长度：32628
+I0121 09:20:48.901247 18797 HHNetFrameProcessor_TDFAPI.cpp:289] 收到代码表数据，数据长度：32628
+I0121 09:20:48.963305 18797 HHNetFrameProcessor_TDFAPI.cpp:289] 收到代码表数据，数据长度：29878
+I0121 09:20:48.964545 18797 CodeTables.cpp:79] Decode Recv CodeTable Count:4483
+I0121 09:20:48.971626 18797 ConnectionInstance.cpp:534] 接收%d代码表完毕！SZ-2-0
+I0121 09:20:48.971673 18797 HHNetFrameProcessor_TDFAPI.cpp:339] 请求代码表, strExchID=SZ-2-0
+I0121 09:20:48.971710 18797 HHNetFrameProcessor_TDFAPI.cpp:342] 请求动态数据: mkt=SZ-2-0User:TD1000961001
+I0121 09:20:48.971727 18797 ConnectionInstance.cpp:537] 请求动态行情: SZ-2-0
+I0121 09:20:49.041579 18797 HHNetFrameProcessor_TDFAPI.cpp:289] 收到代码表数据，数据长度：32628
+I0121 09:20:49.196995 18797 HHNetFrameProcessor_TDFAPI.cpp:289] 收到代码表数据，数据长度：32628
+I0121 09:20:49.321782 18797 HHNetFrameProcessor_TDFAPI.cpp:289] 收到代码表数据，数据长度：27552
+I0121 09:20:49.324132 18797 CodeTables.cpp:79] Decode Recv CodeTable Count:8791
+I0121 09:20:49.337710 18797 ConnectionInstance.cpp:534] 接收%d代码表完毕！SH-2-0
+I0121 09:20:49.337776 18797 HHNetFrameProcessor_TDFAPI.cpp:339] 请求代码表, strExchID=SH-2-0
+I0121 09:20:49.337821 18797 HHNetFrameProcessor_TDFAPI.cpp:342] 请求动态数据: mkt=SH-2-0User:TD1000961001
+I0121 09:20:49.337838 18797 ConnectionInstance.cpp:537] 请求动态行情: SH-2-0
+I0121 09:20:49.337853 18797 ConnectionInstance.cpp:540] 接收所有代码表完毕,通知用户
+I0121 09:20:59.492287 18791 TDFAPI.cpp:184] 调用TDF_Close：0x1dc6700
+I0121 09:20:59.492319 18791 OpenManager.h:70] 删除一个Open实例：0x1dc6700
+I0121 09:20:59.492346 18791 OpenInstance.cpp:43] 释放一个OpenInstance：0x1dc6700
+I0121 09:20:59.716413 18791 ConnectionInstance.cpp:332] 销毁一个ConnectionInstance
+W0121 09:21:00.342036 18798 ConnectionInstance.cpp:46] 请求退出数据处理线程！
+I0121 09:21:00.345576 18791 HHNetFrameProcessor_TDFAPI.cpp:39] CHHNetFrameProcessor_TDFAPI 退出

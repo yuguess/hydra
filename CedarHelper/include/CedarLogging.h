@@ -3,7 +3,6 @@
 
 #include "easylogging++.h"
 
-#define ELPP_NO_DEFAULT_LOG_FILE
 INITIALIZE_EASYLOGGINGPP
 
 class CedarLogging {
@@ -23,7 +22,7 @@ public:
         el::ConfigurationType::Filename, destDir + program + "_WARNING_%datetime{%Y%M%d-%H%m%s.%g}");
     defaultConf.set(el::Level::Error,    
         el::ConfigurationType::Filename, destDir + program + "_ERROR_%datetime{%Y%M%d-%H%m%s.%g}");
-    defaultConf.set(el::Level::Fatal,    
+    defaultConf.set(el::Level::Fatal,   
         el::ConfigurationType::Filename, destDir + program + "_FATAL_%datetime{%Y%M%d-%H%m%s.%g}");
 
     el::Loggers::reconfigureLogger("default", defaultConf);
