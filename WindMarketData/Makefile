@@ -23,12 +23,12 @@ SOURCES= $(SRC)/Main.cpp $(SRC)/WindMarket.cpp $(PROTOBUF)
 
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=$(BIN)/windMD
-TESTSTRTGY=$(BIN)/testStrtgy
+TESTSTRTGY=$(BIN)/TestStrtgy
 
 all: $(TESTSTRTGY) $(EXECUTABLE) 
 
 $(TESTSTRTGY):
-	$(CC) $(CFLAGS) $(DEBUG) $(INCLUDE) src/testStrtgy.cpp $(PROTOBUF) $(LDFLAGS) -o $@
+	$(CC) $(CFLAGS) $(DEBUG) $(INCLUDE) src/TestStrtgy.cpp $(PROTOBUF) $(LDFLAGS) -o $@
 
 $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(CFLAGS) $(OBJECTS) $(LDFLAGS) -o $@

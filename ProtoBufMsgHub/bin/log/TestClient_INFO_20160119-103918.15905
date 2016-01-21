@@ -1,5 +1,0 @@
-Log file created at: 2016/01/19 10:39:18
-Running on machine: spike
-Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
-I0119 10:39:18.326014 15905 TestClient.cpp:87] suspend
-I0119 10:39:18.326014 15908 ProtoBufMsgHub.h:229] block on zmq_poll1
