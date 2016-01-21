@@ -223,7 +223,7 @@ void WindMarket::RecvSys(THANDLE hTdf, TDF_MSG* pSysMsg) {
 
 void DumpScreenMarket(TDF_MARKET_DATA* pMarket, int nItems) {
 
-  printf("-------- Market, Count:%d --------\n", nItems);
+  LOG(INFO) << "-------- Market, Count: " << nItems << "--------"; 
   char szBuf1[512];
   char szBuf2[512];
   char szBuf3[512];
@@ -232,79 +232,62 @@ void DumpScreenMarket(TDF_MARKET_DATA* pMarket, int nItems) {
 
   for (int i=0; i<nItems; i++) {
     const TDF_MARKET_DATA& marketData = pMarket[i];
-    printf("szWindCode: %s\n", marketData.szWindCode);
-    printf("szCode: %s\n", marketData.szCode);
-    printf("nActionDay: %d\n", marketData.nActionDay);
-    printf("nTradingDay: %d\n", marketData.nTradingDay);
+    LOG(INFO) << "szWindCode: " << marketData.szWindCode;
+    LOG(INFO) << "szCode: " << marketData.szCode;
+    LOG(INFO) << "nActionDay: " << marketData.nActionDay;
+    LOG(INFO) << "nTradingDay: " << marketData.nTradingDay;
+    LOG(INFO) << "nTime: " << marketData.nTime;
+    LOG(INFO) << "nStatus: " << marketData.nStatus;
+    LOG(INFO) << "nPreClose: " << marketData.nPreClose;
+    LOG(INFO) << "nOpen: " << marketData.nOpen;
+    LOG(INFO) << "nHigh: " << marketData.nHigh;
+    LOG(INFO) << "nLow: " << marketData.nLow;
+    LOG(INFO) << "nMatch: " << marketData.nMatch;
+    LOG(INFO) << "nAskPrice: " << intarr2str(szBuf1, sizeof(szBuf1), 
+          (int*)marketData.nAskPrice, ELEM_COUNT(marketData.nAskPrice));
+    LOG(INFO) << "nAskVol: " << intarr2str(szBuf2, sizeof(szBuf2), 
+          (int*)marketData.nAskVol, ELEM_COUNT(marketData.nAskVol));
+    LOG(INFO) << "nBidPrice: " << intarr2str(szBuf3, sizeof(szBuf3), 
+          (int*)marketData.nBidPrice, ELEM_COUNT(marketData.nBidPrice));
+    LOG(INFO) << "nBidVol: " << intarr2str(szBuf4, sizeof(szBuf4), 
+          (int*)marketData.nBidVol, ELEM_COUNT(marketData.nBidVol));
+    LOG(INFO) << "nNumTrades: " << marketData.nNumTrades;
+    LOG(INFO) << "iVolume: " << marketData.iVolume;
+    LOG(INFO) << "nTotalBidVol: " << marketData.nTotalBidVol;
+    LOG(INFO) << "nTotalAskVol: " << marketData.nTotalAskVol;
+    LOG(INFO) << "nWeightedAvgBidPrice: " << marketData.nWeightedAvgBidPrice;
+    LOG(INFO) << "nWeightedAvgAskPrice: " << marketData.nWeightedAvgAskPrice;
+    LOG(INFO) << "nIOPV: " << marketData.nIOPV;
+    LOG(INFO) << "nYieldToMaturity: " << marketData.nYieldToMaturity;
+    LOG(INFO) << "nHighLimited: " << marketData.nHighLimited;
+    LOG(INFO) << "nLowLimited: " << marketData.nLowLimited;
+    LOG(INFO) << "chPrefix: " << chararr2str(szBufSmall, sizeof(szBufSmall), 
+          (char*)marketData.chPrefix, ELEM_COUNT(marketData.chPrefix));
+    LOG(INFO) << "nSyl1: " << marketData.nSyl1;
+    LOG(INFO) << "nSyl2: " << marketData.nSyl2;
+    LOG(INFO) << "nSD2: " << marketData.nSD2;
 
-    printf("nTime: %d\n", marketData.nTime );
-    printf("nStatus: %d(%c)\n", marketData.nStatus, 
-        SAFE_CHAR(marketData.nStatus));
-    printf("nPreClose: %d\n", marketData.nPreClose);
-    printf("nOpen: %d\n", marketData.nOpen);
-    printf("nHigh: %d\n", marketData.nHigh);
-    printf("nLow: %d\n", marketData.nLow);
-    printf("nMatch: %d\n", marketData.nMatch);
-    printf("nAskPrice: %s \n", 
-      intarr2str(szBuf1, sizeof(szBuf1), (int*)marketData.nAskPrice, 
-      ELEM_COUNT(marketData.nAskPrice)));
-
-    printf("nAskVol: %s \n", intarr2str(szBuf2, sizeof(szBuf2), 
-          (int*)marketData.nAskVol, ELEM_COUNT(marketData.nAskVol)));
-    printf("nBidPrice: %s \n", intarr2str(szBuf3, sizeof(szBuf3), 
-          (int*)marketData.nBidPrice, ELEM_COUNT(marketData.nBidPrice)));
-    printf("nBidVol: %s \n", intarr2str(szBuf4, sizeof(szBuf4), 
-          (int*)marketData.nBidVol, ELEM_COUNT(marketData.nBidVol)));
-    printf("nNumTrades: %d\n", marketData.nNumTrades);
-
-    printf("iVolume: %lld\n", marketData.iVolume);
-    printf("iTurnover: %lld\n", marketData.iTurnover);
-    printf("nTotalBidVol: %lld\n", marketData.nTotalBidVol);
-    printf("nTotalAskVol: %lld\n", marketData.nTotalAskVol);
-
-    printf("nWeightedAvgBidPrice: %u\n", marketData.nWeightedAvgBidPrice);
-    printf("nWeightedAvgAskPrice: %u\n", marketData.nWeightedAvgAskPrice);
-
-    printf("nIOPV: %d\n",  marketData.nIOPV);
-    printf("nYieldToMaturity: %d\n", marketData.nYieldToMaturity);
-    printf("nHighLimited: %d\n", marketData.nHighLimited);
-    printf("nLowLimited: %d\n", marketData.nLowLimited);
-    printf("chPrefix: %s\n", chararr2str(szBufSmall, sizeof(szBufSmall), 
-          (char*)marketData.chPrefix, ELEM_COUNT(marketData.chPrefix)));
-    printf("nSy11: %d\n", marketData.nSyl1);
-    printf("nSy12: %d\n", marketData.nSyl2);
-    printf("nSD2: %d\n", marketData.nSD2);
-    if (nItems>1)
-      printf("\n");
   }
-
-  printf("\n");
 }
 
 void DumpScreenIndex(TDF_INDEX_DATA* pIndex, int nItems) {
-  printf("-------- Index, Count:%d --------\n", nItems);
+  LOG(INFO) << "-------- Index, Count: " << nItems << "--------"; 
 
   for (int i=0; i<nItems; i++) {
     const TDF_INDEX_DATA& indexData = pIndex[i];
-    printf("万得代码 szWindCode: %s\n", indexData.szWindCode);
-    printf("原始代码 szCode: %s\n", indexData.szCode);
-    printf("业务发生日(自然日) nActionDay: %d\n", indexData.nActionDay);
-    printf("交易日 nTradingDay: %d\n", indexData.nTradingDay);
-    printf("时间(HHMMSSmmm) nTime: %d\n", indexData.nTime);
-
-    printf("今开盘指数 nOpenIndex: %d\n", indexData.nOpenIndex);
-    printf("最高指数 nHighIndex: %d\n", indexData.nHighIndex);
-    printf("最低指数 nLowIndex: %d\n", indexData.nLowIndex);
-    printf("最新指数 nLastIndex: %d\n", indexData.nLastIndex);
-    printf("成交总量 iTotalVolume: %lld\n", indexData.iTotalVolume);
-    printf("成交总金额 iTurnover: %lld\n", indexData.iTurnover);
-    printf("前盘指数 nPreCloseIndex: %d\n", indexData.nPreCloseIndex);
-
-    if (nItems>1)
-      printf("\n");
+    LOG(INFO) << "szWindCode: " << indexData.szWindCode;
+    LOG(INFO) << "szCode: " << indexData.szCode;
+    LOG(INFO) << "nActionDay: " << indexData.nActionDay;
+    LOG(INFO) << "nTradingDay: " << indexData.nTradingDay;
+    LOG(INFO) << "nTime: " << indexData.nTime;
+    LOG(INFO) << "nOpenIndex: " << indexData.nOpenIndex;
+    LOG(INFO) << "nHighIndex: " << indexData.nHighIndex;
+    LOG(INFO) << "nLowIndex: " << indexData.nLowIndex;
+    LOG(INFO) << "nLastIndex: " << indexData.nLastIndex;
+    LOG(INFO) << "iTotalVolume: " << indexData.iTotalVolume;
+    LOG(INFO) << "iTurnover: " << indexData.iTurnover;
+    LOG(INFO) << "nPreCloseIndex: " << indexData.nPreCloseIndex;
   }
-
-  printf("\n");
 }
 
 void WindMarket::RelayMarket(TDF_MARKET_DATA* pMarket, int nItems) {
@@ -347,7 +330,7 @@ void WindMarket::RelayMarket(TDF_MARKET_DATA* pMarket, int nItems) {
     }
     std::string res = 
       ProtoBufHelper::wrapMsg<MarketUpdate>(TYPE_MARKETUPDATE, mktUpdt); 
-    if (msgHub.boardcastMsg(marketData.szCode, res) != 0) 
+    if (msgHub.boardcastMsg(marketData.szWindCode, res) != 0) 
       LOG(INFO) << "relay mktUpdt successfully!";
     else 
       LOG(WARNING) << "relay mktUpdt failed!";
@@ -379,7 +362,7 @@ void WindMarket::RelayTransaction(TDF_TRANSACTION* pMarket, int nItems) {
 
     std::string res = 
       ProtoBufHelper::wrapMsg<Transaction>(TYPE_TRANSACTION, trans);
-    if (msgHub.boardcastMsg(tdfTrans.szCode, res) != 0) 
+    if (msgHub.boardcastMsg(tdfTrans.szWindCode, res) != 0) 
       LOG(INFO) << "relay trans successfully!";
     else 
       LOG(WARNING) << "relay trans failed!";
@@ -407,7 +390,7 @@ void WindMarket::RelayIndexData(TDF_INDEX_DATA* pIndex, int nItems) {
     std::string res = 
       ProtoBufHelper::wrapMsg<IndexData>(TYPE_INDEX_DATA, indexd);
 
-    if (msgHub.boardcastMsg(tdfIndex.szCode, res) != 0) 
+    if (msgHub.boardcastMsg(tdfIndex.szWindCode, res) != 0) 
       LOG(INFO) << "relay indexd successfully!";
     else 
       LOG(WARNING) << "relay indexd failed!";

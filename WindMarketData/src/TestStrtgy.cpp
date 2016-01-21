@@ -19,8 +19,8 @@ int onMsg(MessageBase msg) {
 int main() {
   GOOGLE_PROTOBUF_VERIFY_VERSION; 
 
-  CedarLogging::init("testStrtgy");
-  CedarJsonConfig::getInstance().loadConfigFile("../config/testStrtgy.json");
+  CedarLogging::init("TestStrtgy");
+  CedarJsonConfig::getInstance().loadConfigFile("../config/TestStrtgy.json");
 
   ProtoBufMsgHub msgHub;
 

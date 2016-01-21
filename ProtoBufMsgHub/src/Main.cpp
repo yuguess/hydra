@@ -32,7 +32,8 @@ int onMsg(MessageBase msg) {
 int main() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-  //CedarHelper::initGlog("ProtoBufMsgHub");
+  CedarLogging::init("ProtoBufMsgHub");
+
   CedarJsonConfig::getInstance().loadConfigFile("../config/ProtoBufMsgHub.json");
   ProtoBufMsgHub msgHub;
 
