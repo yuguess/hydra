@@ -1,6 +1,0 @@
-I0120 16:11:23.788  ProtoBufMsgHub.h:228] block on zmq_poll1
-I0120 16:11:23.788  ProtoBufMsgHub.h:228] block on zmq_poll1
-I0120 16:11:23.788  ProtoBufMsgHub.h:134] block on zmq_poll1init new sock
-I0120 16:11:23.788  ProtoBufMsgHub.h:146] PushMsg complete
-I0120 16:11:23.788  testStrtgy.cpp:39] add subscription127.0.0.1:15212 000001
-I0120 16:11:23.788  testStrtgy.cpp:41] suspend

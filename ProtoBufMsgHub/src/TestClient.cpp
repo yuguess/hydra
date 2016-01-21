@@ -79,7 +79,8 @@ private:
 
 int main() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
-  //CedarHelper::initGlog("TestClient");
+
+  CedarLogging::init("TestClient");
 
   CedarJsonConfig::getInstance().loadConfigFile("../config/TestClient.json");
 
