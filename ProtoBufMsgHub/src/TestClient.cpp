@@ -56,10 +56,10 @@ public:
       std::string code = codes[genRandom(0, codes.size() - 1)];
       mktUpdt.set_code(code);
       for (int index = 0; index < 10; index++) {
-	mktUpdt.add_bid_price(genRandom(1, 10));
-	mktUpdt.add_bid_volume(genRandom(1, 10));
-	mktUpdt.add_ask_price(genRandom(1, 10));
-	mktUpdt.add_ask_volume(genRandom(1, 10));
+        mktUpdt.add_bid_price(genRandom(1, 10));
+        mktUpdt.add_bid_volume(genRandom(1, 10));
+        mktUpdt.add_ask_price(genRandom(1, 10));
+        mktUpdt.add_ask_volume(genRandom(1, 10));
       }
       std::string res = 
         ProtoBufHelper::wrapMsg<MarketUpdate>(TYPE_MARKETUPDATE, mktUpdt);

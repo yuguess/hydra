@@ -60,6 +60,11 @@ void MdAdapter::loadFile(std::string filepath, int type) {
   }while(1);
 }
 
+void MdAdapter::releaseFile() {
+  queueMap.clear();
+  bufQueues.clear();
+}
+
 MessageBase WindMdAdapter::getCedarMsg() {
 }
 
