@@ -34,6 +34,9 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* DataRequest_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   DataRequest_reflection_ = NULL;
+const ::google::protobuf::Descriptor* ReplayRequest_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  ReplayRequest_reflection_ = NULL;
 const ::google::protobuf::EnumDescriptor* MsgType_descriptor_ = NULL;
 
 }  // namespace
@@ -176,6 +179,25 @@ void protobuf_AssignDesc_ProtoBufMsg_2eproto() {
       sizeof(DataRequest),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DataRequest, _internal_metadata_),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DataRequest, _is_default_instance_));
+  ReplayRequest_descriptor_ = file->message_type(5);
+  static const int ReplayRequest_offsets_[5] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ReplayRequest, wind_code_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ReplayRequest, start_date_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ReplayRequest, end_date_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ReplayRequest, day_length_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ReplayRequest, replay_rate_),
+  };
+  ReplayRequest_reflection_ =
+    ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
+      ReplayRequest_descriptor_,
+      ReplayRequest::default_instance_,
+      ReplayRequest_offsets_,
+      -1,
+      -1,
+      -1,
+      sizeof(ReplayRequest),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ReplayRequest, _internal_metadata_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ReplayRequest, _is_default_instance_));
   MsgType_descriptor_ = file->enum_type(0);
 }
 
@@ -199,6 +221,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
       IndexData_descriptor_, &IndexData::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
       DataRequest_descriptor_, &DataRequest::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+      ReplayRequest_descriptor_, &ReplayRequest::default_instance());
 }
 
 }  // namespace
@@ -214,6 +238,8 @@ void protobuf_ShutdownFile_ProtoBufMsg_2eproto() {
   delete IndexData_reflection_;
   delete DataRequest::default_instance_;
   delete DataRequest_reflection_;
+  delete ReplayRequest::default_instance_;
+  delete ReplayRequest_reflection_;
 }
 
 void protobuf_AddDesc_ProtoBufMsg_2eproto() {
@@ -239,8 +265,8 @@ void protobuf_AddDesc_ProtoBufMsg_2eproto() {
     "iopv\030\025 \001(\005\022\031\n\021yield_to_maturity\030\026 \001(\005\022\022\n"
     "\naction_day\030\027 \001(\005\022\032\n\022exchange_timestamp\030"
     "\030 \001(\t\022\026\n\016recv_timestamp\030\031 \001(\t\022\021\n\tbid_pri"
-    "ce\030\032 \003(\001\022\022\n\nbid_volume\030\033 \003(\005\022\021\n\task_pric"
-    "e\030\034 \003(\001\022\022\n\nask_volume\030\035 \003(\005\"\206\002\n\013Transact"
+    "ce\030\032 \003(\003\022\022\n\nbid_volume\030\033 \003(\005\022\021\n\task_pric"
+    "e\030\034 \003(\003\022\022\n\nask_volume\030\035 \003(\005\"\206\002\n\013Transact"
     "ion\022\014\n\004code\030\001 \001(\t\022\016\n\006symbol\030\002 \001(\t\022\020\n\010exc"
     "hange\030\003 \001(\t\022\022\n\naction_day\030\004 \001(\005\022\014\n\004time\030"
     "\005 \001(\005\022\r\n\005index\030\006 \001(\005\022\r\n\005price\030\007 \001(\005\022\016\n\006v"
@@ -253,12 +279,15 @@ void protobuf_AddDesc_ProtoBufMsg_2eproto() {
     "ex\030\006 \001(\005\022\022\n\nhigh_index\030\007 \001(\005\022\021\n\tlow_inde"
     "x\030\010 \001(\005\022\022\n\nlast_index\030\t \001(\005\022\024\n\014total_vol"
     "ume\030\n \001(\003\022\020\n\010turnover\030\013 \001(\003\022\027\n\017pre_close"
-    "_index\030\014 \001(\005\"P\n\013DataRequest\022\014\n\004code\030\001 \001("
+    "_index\030\014 \001(\005\"P\n\013DataRequest\022\014\n\004code\030\001 \003("
     "\t\022\016\n\006symbol\030\002 \001(\t\022\020\n\010exchange\030\003 \001(\t\022\021\n\td"
-    "ata_type\030\004 \001(\t*a\n\007MsgType\022\024\n\020TYPE_DATARE"
-    "QUEST\020\000\022\025\n\021TYPE_MARKETUPDATE\020\001\022\024\n\020TYPE_T"
-    "RANSACTION\020\002\022\023\n\017TYPE_INDEX_DATA\020\003b\006proto"
-    "3", 1401);
+    "ata_type\030\004 \001(\t\"q\n\rReplayRequest\022\021\n\twind_"
+    "code\030\001 \003(\t\022\022\n\nstart_date\030\002 \001(\t\022\020\n\010end_da"
+    "te\030\003 \001(\t\022\022\n\nday_length\030\004 \001(\t\022\023\n\013replay_r"
+    "ate\030\005 \001(\005*z\n\007MsgType\022\024\n\020TYPE_DATAREQUEST"
+    "\020\000\022\025\n\021TYPE_MARKETUPDATE\020\001\022\024\n\020TYPE_TRANSA"
+    "CTION\020\002\022\023\n\017TYPE_INDEX_DATA\020\003\022\027\n\023TYPE_REP"
+    "LAY_REQUEST\020\004b\006proto3", 1541);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "ProtoBufMsg.proto", &protobuf_RegisterTypes);
   MessageBase::default_instance_ = new MessageBase();
@@ -266,11 +295,13 @@ void protobuf_AddDesc_ProtoBufMsg_2eproto() {
   Transaction::default_instance_ = new Transaction();
   IndexData::default_instance_ = new IndexData();
   DataRequest::default_instance_ = new DataRequest();
+  ReplayRequest::default_instance_ = new ReplayRequest();
   MessageBase::default_instance_->InitAsDefaultInstance();
   MarketUpdate::default_instance_->InitAsDefaultInstance();
   Transaction::default_instance_->InitAsDefaultInstance();
   IndexData::default_instance_->InitAsDefaultInstance();
   DataRequest::default_instance_->InitAsDefaultInstance();
+  ReplayRequest::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_ProtoBufMsg_2eproto);
 }
 
@@ -290,6 +321,7 @@ bool MsgType_IsValid(int value) {
     case 1:
     case 2:
     case 3:
+    case 4:
       return true;
     default:
       return false;
@@ -1166,16 +1198,16 @@ bool MarketUpdate::MergePartialFromCodedStream(
         break;
       }
 
-      // repeated double bid_price = 26;
+      // repeated int64 bid_price = 26;
       case 26: {
         if (tag == 210) {
          parse_bid_price:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitive<
-                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
+                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
                  input, this->mutable_bid_price())));
-        } else if (tag == 209) {
+        } else if (tag == 208) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitiveNoInline<
-                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
+                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
                  2, 210, input, this->mutable_bid_price())));
         } else {
           goto handle_unusual;
@@ -1202,16 +1234,16 @@ bool MarketUpdate::MergePartialFromCodedStream(
         break;
       }
 
-      // repeated double ask_price = 28;
+      // repeated int64 ask_price = 28;
       case 28: {
         if (tag == 226) {
          parse_ask_price:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitive<
-                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
+                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
                  input, this->mutable_ask_price())));
-        } else if (tag == 225) {
+        } else if (tag == 224) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitiveNoInline<
-                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
+                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
                  2, 226, input, this->mutable_ask_price())));
         } else {
           goto handle_unusual;
@@ -1412,13 +1444,13 @@ void MarketUpdate::SerializeWithCachedSizes(
       25, this->recv_timestamp(), output);
   }
 
-  // repeated double bid_price = 26;
+  // repeated int64 bid_price = 26;
   if (this->bid_price_size() > 0) {
     ::google::protobuf::internal::WireFormatLite::WriteTag(26, ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED, output);
     output->WriteVarint32(_bid_price_cached_byte_size_);
   }
   for (int i = 0; i < this->bid_price_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteDoubleNoTag(
+    ::google::protobuf::internal::WireFormatLite::WriteInt64NoTag(
       this->bid_price(i), output);
   }
 
@@ -1432,13 +1464,13 @@ void MarketUpdate::SerializeWithCachedSizes(
       this->bid_volume(i), output);
   }
 
-  // repeated double ask_price = 28;
+  // repeated int64 ask_price = 28;
   if (this->ask_price_size() > 0) {
     ::google::protobuf::internal::WireFormatLite::WriteTag(28, ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED, output);
     output->WriteVarint32(_ask_price_cached_byte_size_);
   }
   for (int i = 0; i < this->ask_price_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteDoubleNoTag(
+    ::google::protobuf::internal::WireFormatLite::WriteInt64NoTag(
       this->ask_price(i), output);
   }
 
@@ -1613,7 +1645,7 @@ void MarketUpdate::SerializeWithCachedSizes(
         25, this->recv_timestamp(), target);
   }
 
-  // repeated double bid_price = 26;
+  // repeated int64 bid_price = 26;
   if (this->bid_price_size() > 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteTagToArray(
       26,
@@ -1624,7 +1656,7 @@ void MarketUpdate::SerializeWithCachedSizes(
   }
   for (int i = 0; i < this->bid_price_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteDoubleNoTagToArray(this->bid_price(i), target);
+      WriteInt64NoTagToArray(this->bid_price(i), target);
   }
 
   // repeated int32 bid_volume = 27;
@@ -1641,7 +1673,7 @@ void MarketUpdate::SerializeWithCachedSizes(
       WriteInt32NoTagToArray(this->bid_volume(i), target);
   }
 
-  // repeated double ask_price = 28;
+  // repeated int64 ask_price = 28;
   if (this->ask_price_size() > 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteTagToArray(
       28,
@@ -1652,7 +1684,7 @@ void MarketUpdate::SerializeWithCachedSizes(
   }
   for (int i = 0; i < this->ask_price_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteDoubleNoTagToArray(this->ask_price(i), target);
+      WriteInt64NoTagToArray(this->ask_price(i), target);
   }
 
   // repeated int32 ask_volume = 29;
@@ -1835,10 +1867,13 @@ int MarketUpdate::ByteSize() const {
         this->recv_timestamp());
   }
 
-  // repeated double bid_price = 26;
+  // repeated int64 bid_price = 26;
   {
     int data_size = 0;
-    data_size = 8 * this->bid_price_size();
+    for (int i = 0; i < this->bid_price_size(); i++) {
+      data_size += ::google::protobuf::internal::WireFormatLite::
+        Int64Size(this->bid_price(i));
+    }
     if (data_size > 0) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(data_size);
@@ -1866,10 +1901,13 @@ int MarketUpdate::ByteSize() const {
     total_size += data_size;
   }
 
-  // repeated double ask_price = 28;
+  // repeated int64 ask_price = 28;
   {
     int data_size = 0;
-    data_size = 8 * this->ask_price_size();
+    for (int i = 0; i < this->ask_price_size(); i++) {
+      data_size += ::google::protobuf::internal::WireFormatLite::
+        Int64Size(this->ask_price(i));
+    }
     if (data_size > 0) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(data_size);
@@ -2564,31 +2602,31 @@ void MarketUpdate::clear_recv_timestamp() {
   // @@protoc_insertion_point(field_set_allocated:MarketUpdate.recv_timestamp)
 }
 
-// repeated double bid_price = 26;
+// repeated int64 bid_price = 26;
 int MarketUpdate::bid_price_size() const {
   return bid_price_.size();
 }
 void MarketUpdate::clear_bid_price() {
   bid_price_.Clear();
 }
- double MarketUpdate::bid_price(int index) const {
+ ::google::protobuf::int64 MarketUpdate::bid_price(int index) const {
   // @@protoc_insertion_point(field_get:MarketUpdate.bid_price)
   return bid_price_.Get(index);
 }
- void MarketUpdate::set_bid_price(int index, double value) {
+ void MarketUpdate::set_bid_price(int index, ::google::protobuf::int64 value) {
   bid_price_.Set(index, value);
   // @@protoc_insertion_point(field_set:MarketUpdate.bid_price)
 }
- void MarketUpdate::add_bid_price(double value) {
+ void MarketUpdate::add_bid_price(::google::protobuf::int64 value) {
   bid_price_.Add(value);
   // @@protoc_insertion_point(field_add:MarketUpdate.bid_price)
 }
- const ::google::protobuf::RepeatedField< double >&
+ const ::google::protobuf::RepeatedField< ::google::protobuf::int64 >&
 MarketUpdate::bid_price() const {
   // @@protoc_insertion_point(field_list:MarketUpdate.bid_price)
   return bid_price_;
 }
- ::google::protobuf::RepeatedField< double >*
+ ::google::protobuf::RepeatedField< ::google::protobuf::int64 >*
 MarketUpdate::mutable_bid_price() {
   // @@protoc_insertion_point(field_mutable_list:MarketUpdate.bid_price)
   return &bid_price_;
@@ -2624,31 +2662,31 @@ MarketUpdate::mutable_bid_volume() {
   return &bid_volume_;
 }
 
-// repeated double ask_price = 28;
+// repeated int64 ask_price = 28;
 int MarketUpdate::ask_price_size() const {
   return ask_price_.size();
 }
 void MarketUpdate::clear_ask_price() {
   ask_price_.Clear();
 }
- double MarketUpdate::ask_price(int index) const {
+ ::google::protobuf::int64 MarketUpdate::ask_price(int index) const {
   // @@protoc_insertion_point(field_get:MarketUpdate.ask_price)
   return ask_price_.Get(index);
 }
- void MarketUpdate::set_ask_price(int index, double value) {
+ void MarketUpdate::set_ask_price(int index, ::google::protobuf::int64 value) {
   ask_price_.Set(index, value);
   // @@protoc_insertion_point(field_set:MarketUpdate.ask_price)
 }
- void MarketUpdate::add_ask_price(double value) {
+ void MarketUpdate::add_ask_price(::google::protobuf::int64 value) {
   ask_price_.Add(value);
   // @@protoc_insertion_point(field_add:MarketUpdate.ask_price)
 }
- const ::google::protobuf::RepeatedField< double >&
+ const ::google::protobuf::RepeatedField< ::google::protobuf::int64 >&
 MarketUpdate::ask_price() const {
   // @@protoc_insertion_point(field_list:MarketUpdate.ask_price)
   return ask_price_;
 }
- ::google::protobuf::RepeatedField< double >*
+ ::google::protobuf::RepeatedField< ::google::protobuf::int64 >*
 MarketUpdate::mutable_ask_price() {
   // @@protoc_insertion_point(field_mutable_list:MarketUpdate.ask_price)
   return &ask_price_;
@@ -4807,7 +4845,6 @@ void DataRequest::SharedCtor() {
     _is_default_instance_ = false;
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
-  code_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   symbol_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   exchange_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   data_type_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
@@ -4819,7 +4856,6 @@ DataRequest::~DataRequest() {
 }
 
 void DataRequest::SharedDtor() {
-  code_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   symbol_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   exchange_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   data_type_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
@@ -4853,10 +4889,10 @@ DataRequest* DataRequest::New(::google::protobuf::Arena* arena) const {
 }
 
 void DataRequest::Clear() {
-  code_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   symbol_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   exchange_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   data_type_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  code_.Clear();
 }
 
 bool DataRequest::MergePartialFromCodedStream(
@@ -4869,18 +4905,21 @@ bool DataRequest::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional string code = 1;
+      // repeated string code = 1;
       case 1: {
         if (tag == 10) {
+         parse_code:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_code()));
+                input, this->add_code()));
           DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-            this->code().data(), this->code().length(),
+            this->code(this->code_size() - 1).data(),
+            this->code(this->code_size() - 1).length(),
             ::google::protobuf::internal::WireFormatLite::PARSE,
             "DataRequest.code"));
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(10)) goto parse_code;
         if (input->ExpectTag(18)) goto parse_symbol;
         break;
       }
@@ -4960,14 +4999,14 @@ failure:
 void DataRequest::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // @@protoc_insertion_point(serialize_start:DataRequest)
-  // optional string code = 1;
-  if (this->code().size() > 0) {
+  // repeated string code = 1;
+  for (int i = 0; i < this->code_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->code().data(), this->code().length(),
+      this->code(i).data(), this->code(i).length(),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
       "DataRequest.code");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      1, this->code(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      1, this->code(i), output);
   }
 
   // optional string symbol = 2;
@@ -5006,15 +5045,14 @@ void DataRequest::SerializeWithCachedSizes(
 ::google::protobuf::uint8* DataRequest::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
   // @@protoc_insertion_point(serialize_to_array_start:DataRequest)
-  // optional string code = 1;
-  if (this->code().size() > 0) {
+  // repeated string code = 1;
+  for (int i = 0; i < this->code_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->code().data(), this->code().length(),
+      this->code(i).data(), this->code(i).length(),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
       "DataRequest.code");
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        1, this->code(), target);
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteStringToArray(1, this->code(i), target);
   }
 
   // optional string symbol = 2;
@@ -5057,13 +5095,6 @@ void DataRequest::SerializeWithCachedSizes(
 int DataRequest::ByteSize() const {
   int total_size = 0;
 
-  // optional string code = 1;
-  if (this->code().size() > 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::StringSize(
-        this->code());
-  }
-
   // optional string symbol = 2;
   if (this->symbol().size() > 0) {
     total_size += 1 +
@@ -5083,6 +5114,13 @@ int DataRequest::ByteSize() const {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::StringSize(
         this->data_type());
+  }
+
+  // repeated string code = 1;
+  total_size += 1 * this->code_size();
+  for (int i = 0; i < this->code_size(); i++) {
+    total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
+      this->code(i));
   }
 
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
@@ -5105,10 +5143,7 @@ void DataRequest::MergeFrom(const ::google::protobuf::Message& from) {
 
 void DataRequest::MergeFrom(const DataRequest& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  if (from.code().size() > 0) {
-
-    code_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.code_);
-  }
+  code_.MergeFrom(from.code_);
   if (from.symbol().size() > 0) {
 
     symbol_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.symbol_);
@@ -5145,7 +5180,7 @@ void DataRequest::Swap(DataRequest* other) {
   InternalSwap(other);
 }
 void DataRequest::InternalSwap(DataRequest* other) {
-  code_.Swap(&other->code_);
+  code_.UnsafeArenaSwap(&other->code_);
   symbol_.Swap(&other->symbol_);
   exchange_.Swap(&other->exchange_);
   data_type_.Swap(&other->data_type_);
@@ -5164,47 +5199,58 @@ void DataRequest::InternalSwap(DataRequest* other) {
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
 // DataRequest
 
-// optional string code = 1;
+// repeated string code = 1;
+int DataRequest::code_size() const {
+  return code_.size();
+}
 void DataRequest::clear_code() {
-  code_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  code_.Clear();
 }
- const ::std::string& DataRequest::code() const {
+ const ::std::string& DataRequest::code(int index) const {
   // @@protoc_insertion_point(field_get:DataRequest.code)
-  return code_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  return code_.Get(index);
 }
- void DataRequest::set_code(const ::std::string& value) {
-  
-  code_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+ ::std::string* DataRequest::mutable_code(int index) {
+  // @@protoc_insertion_point(field_mutable:DataRequest.code)
+  return code_.Mutable(index);
+}
+ void DataRequest::set_code(int index, const ::std::string& value) {
   // @@protoc_insertion_point(field_set:DataRequest.code)
+  code_.Mutable(index)->assign(value);
 }
- void DataRequest::set_code(const char* value) {
-  
-  code_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+ void DataRequest::set_code(int index, const char* value) {
+  code_.Mutable(index)->assign(value);
   // @@protoc_insertion_point(field_set_char:DataRequest.code)
 }
- void DataRequest::set_code(const char* value, size_t size) {
-  
-  code_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
+ void DataRequest::set_code(int index, const char* value, size_t size) {
+  code_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
   // @@protoc_insertion_point(field_set_pointer:DataRequest.code)
 }
- ::std::string* DataRequest::mutable_code() {
-  
-  // @@protoc_insertion_point(field_mutable:DataRequest.code)
-  return code_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+ ::std::string* DataRequest::add_code() {
+  return code_.Add();
 }
- ::std::string* DataRequest::release_code() {
-  
-  return code_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+ void DataRequest::add_code(const ::std::string& value) {
+  code_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:DataRequest.code)
 }
- void DataRequest::set_allocated_code(::std::string* code) {
-  if (code != NULL) {
-    
-  } else {
-    
-  }
-  code_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), code);
-  // @@protoc_insertion_point(field_set_allocated:DataRequest.code)
+ void DataRequest::add_code(const char* value) {
+  code_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:DataRequest.code)
+}
+ void DataRequest::add_code(const char* value, size_t size) {
+  code_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:DataRequest.code)
+}
+ const ::google::protobuf::RepeatedPtrField< ::std::string>&
+DataRequest::code() const {
+  // @@protoc_insertion_point(field_list:DataRequest.code)
+  return code_;
+}
+ ::google::protobuf::RepeatedPtrField< ::std::string>*
+DataRequest::mutable_code() {
+  // @@protoc_insertion_point(field_mutable_list:DataRequest.code)
+  return &code_;
 }
 
 // optional string symbol = 2;
@@ -5334,6 +5380,629 @@ void DataRequest::clear_data_type() {
   }
   data_type_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), data_type);
   // @@protoc_insertion_point(field_set_allocated:DataRequest.data_type)
+}
+
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
+
+// ===================================================================
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int ReplayRequest::kWindCodeFieldNumber;
+const int ReplayRequest::kStartDateFieldNumber;
+const int ReplayRequest::kEndDateFieldNumber;
+const int ReplayRequest::kDayLengthFieldNumber;
+const int ReplayRequest::kReplayRateFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+ReplayRequest::ReplayRequest()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:ReplayRequest)
+}
+
+void ReplayRequest::InitAsDefaultInstance() {
+  _is_default_instance_ = true;
+}
+
+ReplayRequest::ReplayRequest(const ReplayRequest& from)
+  : ::google::protobuf::Message(),
+    _internal_metadata_(NULL) {
+  SharedCtor();
+  MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:ReplayRequest)
+}
+
+void ReplayRequest::SharedCtor() {
+    _is_default_instance_ = false;
+  ::google::protobuf::internal::GetEmptyString();
+  _cached_size_ = 0;
+  start_date_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  end_date_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  day_length_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  replay_rate_ = 0;
+}
+
+ReplayRequest::~ReplayRequest() {
+  // @@protoc_insertion_point(destructor:ReplayRequest)
+  SharedDtor();
+}
+
+void ReplayRequest::SharedDtor() {
+  start_date_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  end_date_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  day_length_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (this != default_instance_) {
+  }
+}
+
+void ReplayRequest::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* ReplayRequest::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return ReplayRequest_descriptor_;
+}
+
+const ReplayRequest& ReplayRequest::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_ProtoBufMsg_2eproto();
+  return *default_instance_;
+}
+
+ReplayRequest* ReplayRequest::default_instance_ = NULL;
+
+ReplayRequest* ReplayRequest::New(::google::protobuf::Arena* arena) const {
+  ReplayRequest* n = new ReplayRequest;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
+}
+
+void ReplayRequest::Clear() {
+  start_date_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  end_date_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  day_length_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  replay_rate_ = 0;
+  wind_code_.Clear();
+}
+
+bool ReplayRequest::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:ReplayRequest)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // repeated string wind_code = 1;
+      case 1: {
+        if (tag == 10) {
+         parse_wind_code:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->add_wind_code()));
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+            this->wind_code(this->wind_code_size() - 1).data(),
+            this->wind_code(this->wind_code_size() - 1).length(),
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "ReplayRequest.wind_code"));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(10)) goto parse_wind_code;
+        if (input->ExpectTag(18)) goto parse_start_date;
+        break;
+      }
+
+      // optional string start_date = 2;
+      case 2: {
+        if (tag == 18) {
+         parse_start_date:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_start_date()));
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+            this->start_date().data(), this->start_date().length(),
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "ReplayRequest.start_date"));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(26)) goto parse_end_date;
+        break;
+      }
+
+      // optional string end_date = 3;
+      case 3: {
+        if (tag == 26) {
+         parse_end_date:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_end_date()));
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+            this->end_date().data(), this->end_date().length(),
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "ReplayRequest.end_date"));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(34)) goto parse_day_length;
+        break;
+      }
+
+      // optional string day_length = 4;
+      case 4: {
+        if (tag == 34) {
+         parse_day_length:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_day_length()));
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+            this->day_length().data(), this->day_length().length(),
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "ReplayRequest.day_length"));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(40)) goto parse_replay_rate;
+        break;
+      }
+
+      // optional int32 replay_rate = 5;
+      case 5: {
+        if (tag == 40) {
+         parse_replay_rate:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &replay_rate_)));
+
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(input, tag));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:ReplayRequest)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:ReplayRequest)
+  return false;
+#undef DO_
+}
+
+void ReplayRequest::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:ReplayRequest)
+  // repeated string wind_code = 1;
+  for (int i = 0; i < this->wind_code_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->wind_code(i).data(), this->wind_code(i).length(),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "ReplayRequest.wind_code");
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      1, this->wind_code(i), output);
+  }
+
+  // optional string start_date = 2;
+  if (this->start_date().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->start_date().data(), this->start_date().length(),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "ReplayRequest.start_date");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      2, this->start_date(), output);
+  }
+
+  // optional string end_date = 3;
+  if (this->end_date().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->end_date().data(), this->end_date().length(),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "ReplayRequest.end_date");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      3, this->end_date(), output);
+  }
+
+  // optional string day_length = 4;
+  if (this->day_length().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->day_length().data(), this->day_length().length(),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "ReplayRequest.day_length");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      4, this->day_length(), output);
+  }
+
+  // optional int32 replay_rate = 5;
+  if (this->replay_rate() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(5, this->replay_rate(), output);
+  }
+
+  // @@protoc_insertion_point(serialize_end:ReplayRequest)
+}
+
+::google::protobuf::uint8* ReplayRequest::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:ReplayRequest)
+  // repeated string wind_code = 1;
+  for (int i = 0; i < this->wind_code_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->wind_code(i).data(), this->wind_code(i).length(),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "ReplayRequest.wind_code");
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteStringToArray(1, this->wind_code(i), target);
+  }
+
+  // optional string start_date = 2;
+  if (this->start_date().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->start_date().data(), this->start_date().length(),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "ReplayRequest.start_date");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        2, this->start_date(), target);
+  }
+
+  // optional string end_date = 3;
+  if (this->end_date().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->end_date().data(), this->end_date().length(),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "ReplayRequest.end_date");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        3, this->end_date(), target);
+  }
+
+  // optional string day_length = 4;
+  if (this->day_length().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->day_length().data(), this->day_length().length(),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "ReplayRequest.day_length");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        4, this->day_length(), target);
+  }
+
+  // optional int32 replay_rate = 5;
+  if (this->replay_rate() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(5, this->replay_rate(), target);
+  }
+
+  // @@protoc_insertion_point(serialize_to_array_end:ReplayRequest)
+  return target;
+}
+
+int ReplayRequest::ByteSize() const {
+  int total_size = 0;
+
+  // optional string start_date = 2;
+  if (this->start_date().size() > 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->start_date());
+  }
+
+  // optional string end_date = 3;
+  if (this->end_date().size() > 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->end_date());
+  }
+
+  // optional string day_length = 4;
+  if (this->day_length().size() > 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->day_length());
+  }
+
+  // optional int32 replay_rate = 5;
+  if (this->replay_rate() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->replay_rate());
+  }
+
+  // repeated string wind_code = 1;
+  total_size += 1 * this->wind_code_size();
+  for (int i = 0; i < this->wind_code_size(); i++) {
+    total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
+      this->wind_code(i));
+  }
+
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void ReplayRequest::MergeFrom(const ::google::protobuf::Message& from) {
+  if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
+  const ReplayRequest* source = 
+      ::google::protobuf::internal::DynamicCastToGenerated<const ReplayRequest>(
+          &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void ReplayRequest::MergeFrom(const ReplayRequest& from) {
+  if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
+  wind_code_.MergeFrom(from.wind_code_);
+  if (from.start_date().size() > 0) {
+
+    start_date_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.start_date_);
+  }
+  if (from.end_date().size() > 0) {
+
+    end_date_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.end_date_);
+  }
+  if (from.day_length().size() > 0) {
+
+    day_length_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.day_length_);
+  }
+  if (from.replay_rate() != 0) {
+    set_replay_rate(from.replay_rate());
+  }
+}
+
+void ReplayRequest::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void ReplayRequest::CopyFrom(const ReplayRequest& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool ReplayRequest::IsInitialized() const {
+
+  return true;
+}
+
+void ReplayRequest::Swap(ReplayRequest* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void ReplayRequest::InternalSwap(ReplayRequest* other) {
+  wind_code_.UnsafeArenaSwap(&other->wind_code_);
+  start_date_.Swap(&other->start_date_);
+  end_date_.Swap(&other->end_date_);
+  day_length_.Swap(&other->day_length_);
+  std::swap(replay_rate_, other->replay_rate_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  std::swap(_cached_size_, other->_cached_size_);
+}
+
+::google::protobuf::Metadata ReplayRequest::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = ReplayRequest_descriptor_;
+  metadata.reflection = ReplayRequest_reflection_;
+  return metadata;
+}
+
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// ReplayRequest
+
+// repeated string wind_code = 1;
+int ReplayRequest::wind_code_size() const {
+  return wind_code_.size();
+}
+void ReplayRequest::clear_wind_code() {
+  wind_code_.Clear();
+}
+ const ::std::string& ReplayRequest::wind_code(int index) const {
+  // @@protoc_insertion_point(field_get:ReplayRequest.wind_code)
+  return wind_code_.Get(index);
+}
+ ::std::string* ReplayRequest::mutable_wind_code(int index) {
+  // @@protoc_insertion_point(field_mutable:ReplayRequest.wind_code)
+  return wind_code_.Mutable(index);
+}
+ void ReplayRequest::set_wind_code(int index, const ::std::string& value) {
+  // @@protoc_insertion_point(field_set:ReplayRequest.wind_code)
+  wind_code_.Mutable(index)->assign(value);
+}
+ void ReplayRequest::set_wind_code(int index, const char* value) {
+  wind_code_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:ReplayRequest.wind_code)
+}
+ void ReplayRequest::set_wind_code(int index, const char* value, size_t size) {
+  wind_code_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:ReplayRequest.wind_code)
+}
+ ::std::string* ReplayRequest::add_wind_code() {
+  return wind_code_.Add();
+}
+ void ReplayRequest::add_wind_code(const ::std::string& value) {
+  wind_code_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:ReplayRequest.wind_code)
+}
+ void ReplayRequest::add_wind_code(const char* value) {
+  wind_code_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:ReplayRequest.wind_code)
+}
+ void ReplayRequest::add_wind_code(const char* value, size_t size) {
+  wind_code_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:ReplayRequest.wind_code)
+}
+ const ::google::protobuf::RepeatedPtrField< ::std::string>&
+ReplayRequest::wind_code() const {
+  // @@protoc_insertion_point(field_list:ReplayRequest.wind_code)
+  return wind_code_;
+}
+ ::google::protobuf::RepeatedPtrField< ::std::string>*
+ReplayRequest::mutable_wind_code() {
+  // @@protoc_insertion_point(field_mutable_list:ReplayRequest.wind_code)
+  return &wind_code_;
+}
+
+// optional string start_date = 2;
+void ReplayRequest::clear_start_date() {
+  start_date_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ const ::std::string& ReplayRequest::start_date() const {
+  // @@protoc_insertion_point(field_get:ReplayRequest.start_date)
+  return start_date_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void ReplayRequest::set_start_date(const ::std::string& value) {
+  
+  start_date_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:ReplayRequest.start_date)
+}
+ void ReplayRequest::set_start_date(const char* value) {
+  
+  start_date_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:ReplayRequest.start_date)
+}
+ void ReplayRequest::set_start_date(const char* value, size_t size) {
+  
+  start_date_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:ReplayRequest.start_date)
+}
+ ::std::string* ReplayRequest::mutable_start_date() {
+  
+  // @@protoc_insertion_point(field_mutable:ReplayRequest.start_date)
+  return start_date_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ ::std::string* ReplayRequest::release_start_date() {
+  
+  return start_date_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void ReplayRequest::set_allocated_start_date(::std::string* start_date) {
+  if (start_date != NULL) {
+    
+  } else {
+    
+  }
+  start_date_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), start_date);
+  // @@protoc_insertion_point(field_set_allocated:ReplayRequest.start_date)
+}
+
+// optional string end_date = 3;
+void ReplayRequest::clear_end_date() {
+  end_date_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ const ::std::string& ReplayRequest::end_date() const {
+  // @@protoc_insertion_point(field_get:ReplayRequest.end_date)
+  return end_date_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void ReplayRequest::set_end_date(const ::std::string& value) {
+  
+  end_date_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:ReplayRequest.end_date)
+}
+ void ReplayRequest::set_end_date(const char* value) {
+  
+  end_date_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:ReplayRequest.end_date)
+}
+ void ReplayRequest::set_end_date(const char* value, size_t size) {
+  
+  end_date_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:ReplayRequest.end_date)
+}
+ ::std::string* ReplayRequest::mutable_end_date() {
+  
+  // @@protoc_insertion_point(field_mutable:ReplayRequest.end_date)
+  return end_date_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ ::std::string* ReplayRequest::release_end_date() {
+  
+  return end_date_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void ReplayRequest::set_allocated_end_date(::std::string* end_date) {
+  if (end_date != NULL) {
+    
+  } else {
+    
+  }
+  end_date_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), end_date);
+  // @@protoc_insertion_point(field_set_allocated:ReplayRequest.end_date)
+}
+
+// optional string day_length = 4;
+void ReplayRequest::clear_day_length() {
+  day_length_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ const ::std::string& ReplayRequest::day_length() const {
+  // @@protoc_insertion_point(field_get:ReplayRequest.day_length)
+  return day_length_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void ReplayRequest::set_day_length(const ::std::string& value) {
+  
+  day_length_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:ReplayRequest.day_length)
+}
+ void ReplayRequest::set_day_length(const char* value) {
+  
+  day_length_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:ReplayRequest.day_length)
+}
+ void ReplayRequest::set_day_length(const char* value, size_t size) {
+  
+  day_length_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:ReplayRequest.day_length)
+}
+ ::std::string* ReplayRequest::mutable_day_length() {
+  
+  // @@protoc_insertion_point(field_mutable:ReplayRequest.day_length)
+  return day_length_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ ::std::string* ReplayRequest::release_day_length() {
+  
+  return day_length_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void ReplayRequest::set_allocated_day_length(::std::string* day_length) {
+  if (day_length != NULL) {
+    
+  } else {
+    
+  }
+  day_length_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), day_length);
+  // @@protoc_insertion_point(field_set_allocated:ReplayRequest.day_length)
+}
+
+// optional int32 replay_rate = 5;
+void ReplayRequest::clear_replay_rate() {
+  replay_rate_ = 0;
+}
+ ::google::protobuf::int32 ReplayRequest::replay_rate() const {
+  // @@protoc_insertion_point(field_get:ReplayRequest.replay_rate)
+  return replay_rate_;
+}
+ void ReplayRequest::set_replay_rate(::google::protobuf::int32 value) {
+  
+  replay_rate_ = value;
+  // @@protoc_insertion_point(field_set:ReplayRequest.replay_rate)
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS

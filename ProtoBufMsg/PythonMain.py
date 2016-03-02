@@ -2,7 +2,7 @@
 
 # See README.txt for information and build instructions.
 
-import addressbook_pb2
+import ProtoBufMsg_pb2
 import sys
 
 # This function fills in a Person message based on user input.

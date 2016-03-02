@@ -8,16 +8,15 @@
 #include <boost/algorithm/string.hpp>
 #include <vector>
 #include "CedarHelper.h"
-#include "easylogging++.h"
 
 #ifdef __linux
 	#include "json/reader.h"
+    #include "json/writer.h"
 #elif  _WIN32
 	#include "json/json.h"	
 #endif
 
 class CedarJsonConfig {
-
 public:
   static CedarJsonConfig& getInstance() {
     static CedarJsonConfig jsonConfig;
@@ -42,6 +41,17 @@ public:
       LOG(FATAL) << "Get string failed, check your valuetype " << path;
 
     result = val.asString();
+
+    return 0;
+  }
+
+  int getIntByPath(std::string path, int &result) {
+    Json::Value val;
+    getJsonValueByPath(path, val);
+    if (!val.isInt())
+      LOG(FATAL) << "Get string failed, check your valuetype " << path;
+
+    result = val.asInt();
 
     return 0;
   }
@@ -103,6 +113,10 @@ public:
     }
 
     return val;
+  }
+
+  std::string valueToString(const Json::Value val) {
+    return fastWriter.write(val);    
   }
 
   //int loadConfigFile(std::string path) {
@@ -191,6 +205,7 @@ public:
 
 private:
   Json::Value root;
+  Json::FastWriter fastWriter;
   //const static int BUFFER_MAX = 125536;
   //rapidjson::Document doc;
   //std::string filePath;
