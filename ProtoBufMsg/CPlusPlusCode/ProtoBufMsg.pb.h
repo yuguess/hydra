@@ -39,6 +39,7 @@ class DataRequest;
 class IndexData;
 class MarketUpdate;
 class MessageBase;
+class ReplayRequest;
 class Transaction;
 
 enum MsgType {
@@ -46,12 +47,13 @@ enum MsgType {
   TYPE_MARKETUPDATE = 1,
   TYPE_TRANSACTION = 2,
   TYPE_INDEX_DATA = 3,
+  TYPE_REPLAY_REQUEST = 4,
   MsgType_INT_MIN_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32min,
   MsgType_INT_MAX_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32max
 };
 bool MsgType_IsValid(int value);
 const MsgType MsgType_MIN = TYPE_DATAREQUEST;
-const MsgType MsgType_MAX = TYPE_INDEX_DATA;
+const MsgType MsgType_MAX = TYPE_REPLAY_REQUEST;
 const int MsgType_ARRAYSIZE = MsgType_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* MsgType_descriptor();
@@ -387,16 +389,16 @@ class MarketUpdate : public ::google::protobuf::Message {
   ::std::string* release_recv_timestamp();
   void set_allocated_recv_timestamp(::std::string* recv_timestamp);
 
-  // repeated double bid_price = 26;
+  // repeated int64 bid_price = 26;
   int bid_price_size() const;
   void clear_bid_price();
   static const int kBidPriceFieldNumber = 26;
-  double bid_price(int index) const;
-  void set_bid_price(int index, double value);
-  void add_bid_price(double value);
-  const ::google::protobuf::RepeatedField< double >&
+  ::google::protobuf::int64 bid_price(int index) const;
+  void set_bid_price(int index, ::google::protobuf::int64 value);
+  void add_bid_price(::google::protobuf::int64 value);
+  const ::google::protobuf::RepeatedField< ::google::protobuf::int64 >&
       bid_price() const;
-  ::google::protobuf::RepeatedField< double >*
+  ::google::protobuf::RepeatedField< ::google::protobuf::int64 >*
       mutable_bid_price();
 
   // repeated int32 bid_volume = 27;
@@ -411,16 +413,16 @@ class MarketUpdate : public ::google::protobuf::Message {
   ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
       mutable_bid_volume();
 
-  // repeated double ask_price = 28;
+  // repeated int64 ask_price = 28;
   int ask_price_size() const;
   void clear_ask_price();
   static const int kAskPriceFieldNumber = 28;
-  double ask_price(int index) const;
-  void set_ask_price(int index, double value);
-  void add_ask_price(double value);
-  const ::google::protobuf::RepeatedField< double >&
+  ::google::protobuf::int64 ask_price(int index) const;
+  void set_ask_price(int index, ::google::protobuf::int64 value);
+  void add_ask_price(::google::protobuf::int64 value);
+  const ::google::protobuf::RepeatedField< ::google::protobuf::int64 >&
       ask_price() const;
-  ::google::protobuf::RepeatedField< double >*
+  ::google::protobuf::RepeatedField< ::google::protobuf::int64 >*
       mutable_ask_price();
 
   // repeated int32 ask_volume = 29;
@@ -464,11 +466,11 @@ class MarketUpdate : public ::google::protobuf::Message {
   ::google::protobuf::int32 yield_to_maturity_;
   ::google::protobuf::internal::ArenaStringPtr exchange_timestamp_;
   ::google::protobuf::internal::ArenaStringPtr recv_timestamp_;
-  ::google::protobuf::RepeatedField< double > bid_price_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::int64 > bid_price_;
   mutable int _bid_price_cached_byte_size_;
   ::google::protobuf::RepeatedField< ::google::protobuf::int32 > bid_volume_;
   mutable int _bid_volume_cached_byte_size_;
-  ::google::protobuf::RepeatedField< double > ask_price_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::int64 > ask_price_;
   mutable int _ask_price_cached_byte_size_;
   ::google::protobuf::RepeatedField< ::google::protobuf::int32 > ask_volume_;
   mutable int _ask_volume_cached_byte_size_;
@@ -903,16 +905,21 @@ class DataRequest : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional string code = 1;
+  // repeated string code = 1;
+  int code_size() const;
   void clear_code();
   static const int kCodeFieldNumber = 1;
-  const ::std::string& code() const;
-  void set_code(const ::std::string& value);
-  void set_code(const char* value);
-  void set_code(const char* value, size_t size);
-  ::std::string* mutable_code();
-  ::std::string* release_code();
-  void set_allocated_code(::std::string* code);
+  const ::std::string& code(int index) const;
+  ::std::string* mutable_code(int index);
+  void set_code(int index, const ::std::string& value);
+  void set_code(int index, const char* value);
+  void set_code(int index, const char* value, size_t size);
+  ::std::string* add_code();
+  void add_code(const ::std::string& value);
+  void add_code(const char* value);
+  void add_code(const char* value, size_t size);
+  const ::google::protobuf::RepeatedPtrField< ::std::string>& code() const;
+  ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_code();
 
   // optional string symbol = 2;
   void clear_symbol();
@@ -952,7 +959,7 @@ class DataRequest : public ::google::protobuf::Message {
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   bool _is_default_instance_;
-  ::google::protobuf::internal::ArenaStringPtr code_;
+  ::google::protobuf::RepeatedPtrField< ::std::string> code_;
   ::google::protobuf::internal::ArenaStringPtr symbol_;
   ::google::protobuf::internal::ArenaStringPtr exchange_;
   ::google::protobuf::internal::ArenaStringPtr data_type_;
@@ -963,6 +970,137 @@ class DataRequest : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static DataRequest* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class ReplayRequest : public ::google::protobuf::Message {
+ public:
+  ReplayRequest();
+  virtual ~ReplayRequest();
+
+  ReplayRequest(const ReplayRequest& from);
+
+  inline ReplayRequest& operator=(const ReplayRequest& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const ReplayRequest& default_instance();
+
+  void Swap(ReplayRequest* other);
+
+  // implements Message ----------------------------------------------
+
+  inline ReplayRequest* New() const { return New(NULL); }
+
+  ReplayRequest* New(::google::protobuf::Arena* arena) const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const ReplayRequest& from);
+  void MergeFrom(const ReplayRequest& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  void InternalSwap(ReplayRequest* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return _internal_metadata_.arena();
+  }
+  inline void* MaybeArenaPtr() const {
+    return _internal_metadata_.raw_arena_ptr();
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated string wind_code = 1;
+  int wind_code_size() const;
+  void clear_wind_code();
+  static const int kWindCodeFieldNumber = 1;
+  const ::std::string& wind_code(int index) const;
+  ::std::string* mutable_wind_code(int index);
+  void set_wind_code(int index, const ::std::string& value);
+  void set_wind_code(int index, const char* value);
+  void set_wind_code(int index, const char* value, size_t size);
+  ::std::string* add_wind_code();
+  void add_wind_code(const ::std::string& value);
+  void add_wind_code(const char* value);
+  void add_wind_code(const char* value, size_t size);
+  const ::google::protobuf::RepeatedPtrField< ::std::string>& wind_code() const;
+  ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_wind_code();
+
+  // optional string start_date = 2;
+  void clear_start_date();
+  static const int kStartDateFieldNumber = 2;
+  const ::std::string& start_date() const;
+  void set_start_date(const ::std::string& value);
+  void set_start_date(const char* value);
+  void set_start_date(const char* value, size_t size);
+  ::std::string* mutable_start_date();
+  ::std::string* release_start_date();
+  void set_allocated_start_date(::std::string* start_date);
+
+  // optional string end_date = 3;
+  void clear_end_date();
+  static const int kEndDateFieldNumber = 3;
+  const ::std::string& end_date() const;
+  void set_end_date(const ::std::string& value);
+  void set_end_date(const char* value);
+  void set_end_date(const char* value, size_t size);
+  ::std::string* mutable_end_date();
+  ::std::string* release_end_date();
+  void set_allocated_end_date(::std::string* end_date);
+
+  // optional string day_length = 4;
+  void clear_day_length();
+  static const int kDayLengthFieldNumber = 4;
+  const ::std::string& day_length() const;
+  void set_day_length(const ::std::string& value);
+  void set_day_length(const char* value);
+  void set_day_length(const char* value, size_t size);
+  ::std::string* mutable_day_length();
+  ::std::string* release_day_length();
+  void set_allocated_day_length(::std::string* day_length);
+
+  // optional int32 replay_rate = 5;
+  void clear_replay_rate();
+  static const int kReplayRateFieldNumber = 5;
+  ::google::protobuf::int32 replay_rate() const;
+  void set_replay_rate(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:ReplayRequest)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  bool _is_default_instance_;
+  ::google::protobuf::RepeatedPtrField< ::std::string> wind_code_;
+  ::google::protobuf::internal::ArenaStringPtr start_date_;
+  ::google::protobuf::internal::ArenaStringPtr end_date_;
+  ::google::protobuf::internal::ArenaStringPtr day_length_;
+  ::google::protobuf::int32 replay_rate_;
+  mutable int _cached_size_;
+  friend void  protobuf_AddDesc_ProtoBufMsg_2eproto();
+  friend void protobuf_AssignDesc_ProtoBufMsg_2eproto();
+  friend void protobuf_ShutdownFile_ProtoBufMsg_2eproto();
+
+  void InitAsDefaultInstance();
+  static ReplayRequest* default_instance_;
 };
 // ===================================================================
 
@@ -1528,31 +1666,31 @@ inline void MarketUpdate::set_allocated_recv_timestamp(::std::string* recv_times
   // @@protoc_insertion_point(field_set_allocated:MarketUpdate.recv_timestamp)
 }
 
-// repeated double bid_price = 26;
+// repeated int64 bid_price = 26;
 inline int MarketUpdate::bid_price_size() const {
   return bid_price_.size();
 }
 inline void MarketUpdate::clear_bid_price() {
   bid_price_.Clear();
 }
-inline double MarketUpdate::bid_price(int index) const {
+inline ::google::protobuf::int64 MarketUpdate::bid_price(int index) const {
   // @@protoc_insertion_point(field_get:MarketUpdate.bid_price)
   return bid_price_.Get(index);
 }
-inline void MarketUpdate::set_bid_price(int index, double value) {
+inline void MarketUpdate::set_bid_price(int index, ::google::protobuf::int64 value) {
   bid_price_.Set(index, value);
   // @@protoc_insertion_point(field_set:MarketUpdate.bid_price)
 }
-inline void MarketUpdate::add_bid_price(double value) {
+inline void MarketUpdate::add_bid_price(::google::protobuf::int64 value) {
   bid_price_.Add(value);
   // @@protoc_insertion_point(field_add:MarketUpdate.bid_price)
 }
-inline const ::google::protobuf::RepeatedField< double >&
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::int64 >&
 MarketUpdate::bid_price() const {
   // @@protoc_insertion_point(field_list:MarketUpdate.bid_price)
   return bid_price_;
 }
-inline ::google::protobuf::RepeatedField< double >*
+inline ::google::protobuf::RepeatedField< ::google::protobuf::int64 >*
 MarketUpdate::mutable_bid_price() {
   // @@protoc_insertion_point(field_mutable_list:MarketUpdate.bid_price)
   return &bid_price_;
@@ -1588,31 +1726,31 @@ MarketUpdate::mutable_bid_volume() {
   return &bid_volume_;
 }
 
-// repeated double ask_price = 28;
+// repeated int64 ask_price = 28;
 inline int MarketUpdate::ask_price_size() const {
   return ask_price_.size();
 }
 inline void MarketUpdate::clear_ask_price() {
   ask_price_.Clear();
 }
-inline double MarketUpdate::ask_price(int index) const {
+inline ::google::protobuf::int64 MarketUpdate::ask_price(int index) const {
   // @@protoc_insertion_point(field_get:MarketUpdate.ask_price)
   return ask_price_.Get(index);
 }
-inline void MarketUpdate::set_ask_price(int index, double value) {
+inline void MarketUpdate::set_ask_price(int index, ::google::protobuf::int64 value) {
   ask_price_.Set(index, value);
   // @@protoc_insertion_point(field_set:MarketUpdate.ask_price)
 }
-inline void MarketUpdate::add_ask_price(double value) {
+inline void MarketUpdate::add_ask_price(::google::protobuf::int64 value) {
   ask_price_.Add(value);
   // @@protoc_insertion_point(field_add:MarketUpdate.ask_price)
 }
-inline const ::google::protobuf::RepeatedField< double >&
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::int64 >&
 MarketUpdate::ask_price() const {
   // @@protoc_insertion_point(field_list:MarketUpdate.ask_price)
   return ask_price_;
 }
-inline ::google::protobuf::RepeatedField< double >*
+inline ::google::protobuf::RepeatedField< ::google::protobuf::int64 >*
 MarketUpdate::mutable_ask_price() {
   // @@protoc_insertion_point(field_mutable_list:MarketUpdate.ask_price)
   return &ask_price_;
@@ -2256,47 +2394,58 @@ inline void IndexData::set_pre_close_index(::google::protobuf::int32 value) {
 
 // DataRequest
 
-// optional string code = 1;
+// repeated string code = 1;
+inline int DataRequest::code_size() const {
+  return code_.size();
+}
 inline void DataRequest::clear_code() {
-  code_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  code_.Clear();
 }
-inline const ::std::string& DataRequest::code() const {
+inline const ::std::string& DataRequest::code(int index) const {
   // @@protoc_insertion_point(field_get:DataRequest.code)
-  return code_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  return code_.Get(index);
 }
-inline void DataRequest::set_code(const ::std::string& value) {
-  
-  code_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+inline ::std::string* DataRequest::mutable_code(int index) {
+  // @@protoc_insertion_point(field_mutable:DataRequest.code)
+  return code_.Mutable(index);
+}
+inline void DataRequest::set_code(int index, const ::std::string& value) {
   // @@protoc_insertion_point(field_set:DataRequest.code)
+  code_.Mutable(index)->assign(value);
 }
-inline void DataRequest::set_code(const char* value) {
-  
-  code_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+inline void DataRequest::set_code(int index, const char* value) {
+  code_.Mutable(index)->assign(value);
   // @@protoc_insertion_point(field_set_char:DataRequest.code)
 }
-inline void DataRequest::set_code(const char* value, size_t size) {
-  
-  code_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
+inline void DataRequest::set_code(int index, const char* value, size_t size) {
+  code_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
   // @@protoc_insertion_point(field_set_pointer:DataRequest.code)
 }
-inline ::std::string* DataRequest::mutable_code() {
-  
-  // @@protoc_insertion_point(field_mutable:DataRequest.code)
-  return code_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+inline ::std::string* DataRequest::add_code() {
+  return code_.Add();
 }
-inline ::std::string* DataRequest::release_code() {
-  
-  return code_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+inline void DataRequest::add_code(const ::std::string& value) {
+  code_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:DataRequest.code)
 }
-inline void DataRequest::set_allocated_code(::std::string* code) {
-  if (code != NULL) {
-    
-  } else {
-    
-  }
-  code_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), code);
-  // @@protoc_insertion_point(field_set_allocated:DataRequest.code)
+inline void DataRequest::add_code(const char* value) {
+  code_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:DataRequest.code)
+}
+inline void DataRequest::add_code(const char* value, size_t size) {
+  code_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:DataRequest.code)
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+DataRequest::code() const {
+  // @@protoc_insertion_point(field_list:DataRequest.code)
+  return code_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+DataRequest::mutable_code() {
+  // @@protoc_insertion_point(field_mutable_list:DataRequest.code)
+  return &code_;
 }
 
 // optional string symbol = 2;
@@ -2428,7 +2577,210 @@ inline void DataRequest::set_allocated_data_type(::std::string* data_type) {
   // @@protoc_insertion_point(field_set_allocated:DataRequest.data_type)
 }
 
+// -------------------------------------------------------------------
+
+// ReplayRequest
+
+// repeated string wind_code = 1;
+inline int ReplayRequest::wind_code_size() const {
+  return wind_code_.size();
+}
+inline void ReplayRequest::clear_wind_code() {
+  wind_code_.Clear();
+}
+inline const ::std::string& ReplayRequest::wind_code(int index) const {
+  // @@protoc_insertion_point(field_get:ReplayRequest.wind_code)
+  return wind_code_.Get(index);
+}
+inline ::std::string* ReplayRequest::mutable_wind_code(int index) {
+  // @@protoc_insertion_point(field_mutable:ReplayRequest.wind_code)
+  return wind_code_.Mutable(index);
+}
+inline void ReplayRequest::set_wind_code(int index, const ::std::string& value) {
+  // @@protoc_insertion_point(field_set:ReplayRequest.wind_code)
+  wind_code_.Mutable(index)->assign(value);
+}
+inline void ReplayRequest::set_wind_code(int index, const char* value) {
+  wind_code_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:ReplayRequest.wind_code)
+}
+inline void ReplayRequest::set_wind_code(int index, const char* value, size_t size) {
+  wind_code_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:ReplayRequest.wind_code)
+}
+inline ::std::string* ReplayRequest::add_wind_code() {
+  return wind_code_.Add();
+}
+inline void ReplayRequest::add_wind_code(const ::std::string& value) {
+  wind_code_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:ReplayRequest.wind_code)
+}
+inline void ReplayRequest::add_wind_code(const char* value) {
+  wind_code_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:ReplayRequest.wind_code)
+}
+inline void ReplayRequest::add_wind_code(const char* value, size_t size) {
+  wind_code_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:ReplayRequest.wind_code)
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+ReplayRequest::wind_code() const {
+  // @@protoc_insertion_point(field_list:ReplayRequest.wind_code)
+  return wind_code_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+ReplayRequest::mutable_wind_code() {
+  // @@protoc_insertion_point(field_mutable_list:ReplayRequest.wind_code)
+  return &wind_code_;
+}
+
+// optional string start_date = 2;
+inline void ReplayRequest::clear_start_date() {
+  start_date_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& ReplayRequest::start_date() const {
+  // @@protoc_insertion_point(field_get:ReplayRequest.start_date)
+  return start_date_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void ReplayRequest::set_start_date(const ::std::string& value) {
+  
+  start_date_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:ReplayRequest.start_date)
+}
+inline void ReplayRequest::set_start_date(const char* value) {
+  
+  start_date_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:ReplayRequest.start_date)
+}
+inline void ReplayRequest::set_start_date(const char* value, size_t size) {
+  
+  start_date_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:ReplayRequest.start_date)
+}
+inline ::std::string* ReplayRequest::mutable_start_date() {
+  
+  // @@protoc_insertion_point(field_mutable:ReplayRequest.start_date)
+  return start_date_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* ReplayRequest::release_start_date() {
+  
+  return start_date_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void ReplayRequest::set_allocated_start_date(::std::string* start_date) {
+  if (start_date != NULL) {
+    
+  } else {
+    
+  }
+  start_date_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), start_date);
+  // @@protoc_insertion_point(field_set_allocated:ReplayRequest.start_date)
+}
+
+// optional string end_date = 3;
+inline void ReplayRequest::clear_end_date() {
+  end_date_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& ReplayRequest::end_date() const {
+  // @@protoc_insertion_point(field_get:ReplayRequest.end_date)
+  return end_date_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void ReplayRequest::set_end_date(const ::std::string& value) {
+  
+  end_date_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:ReplayRequest.end_date)
+}
+inline void ReplayRequest::set_end_date(const char* value) {
+  
+  end_date_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:ReplayRequest.end_date)
+}
+inline void ReplayRequest::set_end_date(const char* value, size_t size) {
+  
+  end_date_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:ReplayRequest.end_date)
+}
+inline ::std::string* ReplayRequest::mutable_end_date() {
+  
+  // @@protoc_insertion_point(field_mutable:ReplayRequest.end_date)
+  return end_date_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* ReplayRequest::release_end_date() {
+  
+  return end_date_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void ReplayRequest::set_allocated_end_date(::std::string* end_date) {
+  if (end_date != NULL) {
+    
+  } else {
+    
+  }
+  end_date_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), end_date);
+  // @@protoc_insertion_point(field_set_allocated:ReplayRequest.end_date)
+}
+
+// optional string day_length = 4;
+inline void ReplayRequest::clear_day_length() {
+  day_length_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& ReplayRequest::day_length() const {
+  // @@protoc_insertion_point(field_get:ReplayRequest.day_length)
+  return day_length_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void ReplayRequest::set_day_length(const ::std::string& value) {
+  
+  day_length_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:ReplayRequest.day_length)
+}
+inline void ReplayRequest::set_day_length(const char* value) {
+  
+  day_length_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:ReplayRequest.day_length)
+}
+inline void ReplayRequest::set_day_length(const char* value, size_t size) {
+  
+  day_length_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:ReplayRequest.day_length)
+}
+inline ::std::string* ReplayRequest::mutable_day_length() {
+  
+  // @@protoc_insertion_point(field_mutable:ReplayRequest.day_length)
+  return day_length_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* ReplayRequest::release_day_length() {
+  
+  return day_length_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void ReplayRequest::set_allocated_day_length(::std::string* day_length) {
+  if (day_length != NULL) {
+    
+  } else {
+    
+  }
+  day_length_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), day_length);
+  // @@protoc_insertion_point(field_set_allocated:ReplayRequest.day_length)
+}
+
+// optional int32 replay_rate = 5;
+inline void ReplayRequest::clear_replay_rate() {
+  replay_rate_ = 0;
+}
+inline ::google::protobuf::int32 ReplayRequest::replay_rate() const {
+  // @@protoc_insertion_point(field_get:ReplayRequest.replay_rate)
+  return replay_rate_;
+}
+inline void ReplayRequest::set_replay_rate(::google::protobuf::int32 value) {
+  
+  replay_rate_ = value;
+  // @@protoc_insertion_point(field_set:ReplayRequest.replay_rate)
+}
+
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
