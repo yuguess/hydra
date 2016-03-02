@@ -91,7 +91,7 @@ public:
       }
       publisherAddrs[addr] = true;
     }
-  //send data request
+    //send data request
 
     zmq_setsockopt(subSock, ZMQ_SUBSCRIBE, channel.c_str(), channel.size());
 

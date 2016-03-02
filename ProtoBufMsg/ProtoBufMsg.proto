@@ -5,6 +5,7 @@ enum MsgType {
   TYPE_MARKETUPDATE = 1; 
   TYPE_TRANSACTION = 2;
   TYPE_INDEX_DATA = 3;
+  TYPE_REPLAY_REQUEST= 4;
 }
 
 message MessageBase {
@@ -42,9 +43,9 @@ message MarketUpdate {
   string exchange_timestamp = 24;
   string recv_timestamp = 25;
 
-  repeated double bid_price = 26;
+  repeated int64 bid_price = 26;
   repeated int32 bid_volume = 27;
-  repeated double ask_price = 28;
+  repeated int64 ask_price = 28;
   repeated int32 ask_volume = 29;
 }
 
@@ -84,8 +85,16 @@ message IndexData {
 }
 
 message DataRequest {
-  string code = 1;
+  repeated string code = 1;
   string symbol = 2;
   string exchange = 3;
   string data_type = 4;
+}
+
+message ReplayRequest {
+  repeated string wind_code = 1;
+  string start_date = 2;
+  string end_date = 3;
+  string day_length = 4;
+  int32 replay_rate = 5;
 }

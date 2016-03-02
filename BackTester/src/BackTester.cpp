@@ -12,6 +12,17 @@ int BackTester::m_rate = 1;
 void Tester::spreadCedarMD() {
 }
 
+BackTester::BackTester() {
+  CedarJsonConfig::getInstance().getStringByPath("BackTesterCfg.startDate", m_startDate);   
+  CedarJsonConfig::getInstance().getStringByPath("BackTesterCfg.endDate", m_endDate);   
+  CedarJsonConfig::getInstance().getIntByPath("BackTesterCfg.dayLength", m_dayLength);
+
+  CedarJsonConfig::getInstance().getIntByPath("BackTesterCfg.rate", m_rate);
+  CedarJsonConfig::getInstance().getStringByPath("BackTesterCfg.dir", m_dir);
+
+  ProtoBufHelper::setupProtoBufMsgHub(msgHub);
+  msgHub.registerCallback(std::bind(&BackTester::onMsg, this, std::placeholders::_1));
+}
 
 BackTester::BackTester(std::string startDate, std::string endDate, int dayLength, int rate, std::vector<std::string> symbols) : m_startDate(startDate), m_endDate(endDate), m_dayLength(dayLength) {
   if(startDate.empty())
@@ -20,18 +31,19 @@ BackTester::BackTester(std::string startDate, std::string endDate, int dayLength
     CedarJsonConfig::getInstance().getStringByPath("BackTesterCfg.endDate", m_endDate);   
   if(dayLength == 0)
     CedarJsonConfig::getInstance().getIntByPath("BackTesterCfg.dayLength", m_dayLength);
-  if(rate > 0) m_rate = rate;
 
+  CedarJsonConfig::getInstance().getIntByPath("BackTesterCfg.rate", m_rate);
   CedarJsonConfig::getInstance().getStringByPath("BackTesterCfg.dir", m_dir);
+  /* CedarJsonConfig::getInstance().getStringArrayWithTag(m_symbols, "BackTesterCfg.symbols"); */
 
-  for (auto symbol : symbols)
-    m_symbols.push_back(symbol);
+  /* for (auto symbol : symbols) */
+  /*   m_symbols.push_back(symbol); */
 
-  getFilesToBufQ();
+  /* /1* getFilesToBufQ(); *1/ */
 
-  std::string timeInterval;
-  CedarJsonConfig::getInstance().getStringByPath("BackTesterCfg.timeInterval", timeInterval);
-  setTimeInterval(std::atoi(timeInterval.c_str()));
+  /* std::string timeInterval; */
+  /* CedarJsonConfig::getInstance().getStringByPath("BackTesterCfg.timeInterval", timeInterval); */
+  /* setTimeInterval(std::atoi(timeInterval.c_str())); */
   ProtoBufHelper::setupProtoBufMsgHub(msgHub);
   msgHub.registerCallback(std::bind(&BackTester::onMsg, this, std::placeholders::_1));
 }
@@ -88,7 +100,6 @@ void wrapToMktUpdt(MarketUpdate &mktUpdt, Json::Value v) {
 }
 
 double calTDiff(int now, int pre) {
-  LOG(INFO) << now << " " << pre;
   double diff = 0;
   diff += now % 1000 - pre % 1000;
   diff /= 1000.0;
@@ -104,7 +115,7 @@ double calTDiff(int now, int pre) {
   pre /= 100;
 
   diff += (now - pre) * 3600;
-  LOG(INFO) << diff;
+  /* LOG(INFO) << diff; */
   return diff;
 }
 
@@ -115,7 +126,7 @@ static void timeout_cb(EV_P_ ev_timer *w, int revents) {
 
   std::string windCode = (qt->front()).getMemberNames()[0];
   BackTester::nowTick = (qt->front())[windCode]["nTime"].asInt();
-  LOG(INFO) << windCode << " " << (qt->front())[windCode]["nActionDay"] << " " << BackTester::nowTick;
+  /* LOG(INFO) << windCode << " " << (qt->front())[windCode]["nActionDay"] << " " << BackTester::nowTick; */
 
   pqElem qe;
   qe.index = BackTester::md->bufpq.top().index;
@@ -144,7 +155,8 @@ static void timeout_cb(EV_P_ ev_timer *w, int revents) {
   if(BackTester::md->bufpq.empty()) {
     LOG(INFO) << "buf priority queue is empty now";
   } else {
-    double interval = calTDiff(BackTester::nowTick, BackTester::preTick);
+    /* double interval = calTDiff(BackTester::nowTick, BackTester::preTick); */
+    double interval = 0.01;
     interval = interval / BackTester::m_rate;
     BackTester::preTick = BackTester::nowTick;
     ev_timer_stop(loop, &(BackTester::timeout_watcher));
@@ -154,6 +166,8 @@ static void timeout_cb(EV_P_ ev_timer *w, int revents) {
 }
 
 void BackTester::run() {
+  getFilesToBufQ();
+
   for(int i = 0; i < md->bufQueues.size(); i++) {
       pqElem qe;
       std::queue<Json::Value> q = md->bufQueues[i];
@@ -197,6 +211,7 @@ int BackTester::getFilesToBufQ() {
       continue;
     LOG(INFO) << "d_name: " << filelist[i]->d_name;
     for (int j = 0; j < WindTypeNum; j++) {
+      LOG(INFO) << "WindTypeNum j: " << j;
       for (int k = 0; k < m_symbols.size(); k++) {
         std::string filename = m_dir + "/" + filelist[i]->d_name + "/" + m_symbols[k] + "/" + WindDataType[j]; 
         if (std::ifstream(filename.c_str())) {
@@ -214,4 +229,21 @@ int BackTester::getFilesToBufQ() {
 }
 
 int BackTester::onMsg(MessageBase msg) {
+  LOG(INFO) << "BackTester onMsg";
+  if(msg.type() == TYPE_DATAREQUEST) {
+    m_symbols.clear();
+    md->bufpq = std::priority_queue<pqElem, std::vector<pqElem>, pqComp>();
+
+    DataRequest dtRqst = ProtoBufHelper::unwrapMsg<DataRequest>(msg);
+
+    for(int i = 0; i < dtRqst.code_size(); i++) {
+      std::string str = dtRqst.code(i) + ".";
+      m_symbols.push_back(str + dtRqst.exchange());
+    }
+
+    BackTester::run();
+  } else
+    LOG(WARNING) << "Recv invalid msg: " << msg.type();
+
+  return 0;
 }

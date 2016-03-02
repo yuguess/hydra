@@ -15,10 +15,10 @@ void PrintHelp() {
 
 int main(int argc, char *argv[]) {
   CedarLogging::init("BackTester");
-  if(argc < 2) {
-    PrintHelp();
-    exit(0);
-  }
+  /* if(argc < 2) { */
+  /*   PrintHelp(); */
+  /*   exit(0); */
+  /* } */
 
   CedarJsonConfig::getInstance().loadConfigFile("../config/default.cfg");
   std::string startDate, endDate, dayLength; 
@@ -54,10 +54,15 @@ int main(int argc, char *argv[]) {
         break;
     }
   }
-  BackTester *bt = new BackTester(startDate, endDate, stoi(dayLength), stoi(rate), symbols);
 
-  bt->run();
-  getchar();
+  /* BackTester *bt = new BackTester(startDate, endDate, stoi(dayLength), stoi(rate), symbols); */
+  BackTester *bt = new BackTester();
+  /* bt->run(); */
+
+  /* LOG(INFO) << "suspend"; */
+  CedarHelper::blockSignalAndSuspend();
+
+  /* /1* getchar(); *1/ */
   delete bt;
-  return 0;
+  /* return 0; */
 }

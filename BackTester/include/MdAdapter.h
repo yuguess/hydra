@@ -61,6 +61,7 @@ protected:
   int getTickIter();
   void inQueue(Json::Value);
   void loadFile(std::string filepath, int type);
+  void releaseFile();
 
   std::unordered_map<std::string, int> iterRecord;
 
