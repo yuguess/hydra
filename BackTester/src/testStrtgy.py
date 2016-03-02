@@ -20,6 +20,7 @@ logger = Logger(os.path.basename(__file__)).logger
 
 data = []
 longLen = 250
+shortLen = 50
 result = [None] * longLen
 shortSum = 0
 longSum = 0
@@ -84,13 +85,16 @@ dtRqst.exchange = "SZ"
 str = Helper.wrapMsg(protoMsg.TYPE_DATAREQUEST, dtRqst)
 msgHub.pushMsg(str)
 
-def signal_handler(signal, frame):
-  print("signal_hanlder called")
 
+def drawPics():
   plt.figure(1)
 
   ax = plt.subplot(311)
   ax.plot(np.array(data), color = 'k', label="raw data")
+  for elem in buySignal:
+    ax.axvline(elem, color='r')
+  for elem in sellSignal:
+    ax.axvline(elem, color='b')
   ax.legend(loc=2, prop={'size':7})
   ax.set_ylabel('prices')
   plt.title('selfMACD-000001SZ')
@@ -101,7 +105,7 @@ def signal_handler(signal, frame):
   bx.set_ylabel('avg prices')
 
   cx = plt.subplot(313)
-  cx.plot(np.zeros(len(data)), 'k')
+  cx.axhline(0, color='k')
   cx.plot(np.array(result), 'r', label="MACD")
   cx.legend(loc=2, prop={'size':7})
   cx.set_ylabel('MACD value')
@@ -109,10 +113,30 @@ def signal_handler(signal, frame):
 
   plt.savefig('selfMACD-000001SZ')
 
+  print(buySignal)
+  print(sellSignal)
+
+
+def calearning():
+  totalearning = 0
+  for tick in buySignal:
+    totalearning -= data[tick]
+    logger.info("tick %d buy @ %f update earning: %f", tick, data[tick], totalearning)
+  for tick in sellSignal:
+    totalearning += data[tick]
+    logger.info("tick %d sell @ %f update earning: %f", tick, data[tick], totalearning)
+  loafearning = data[len(data) - 1] - data[0]
+  logger.info("totalearning: %f vs loafearning: %f", totalearning, loafearning)
+
+
+def signal_handler(signal, frame):
+  print("signal_hanlder called")
+
+  drawPics()
+  calearning()
+
   msgHub.close()
   sys.exit(0)
-
-shortLen = 50
 
 signal.signal(signal.SIGINT, signal_handler)
 signal.pause()
