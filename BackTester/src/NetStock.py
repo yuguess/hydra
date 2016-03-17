@@ -22,21 +22,24 @@ from CalCorre import CalCorre
 
 logger = Logger(os.path.basename(__file__)).logger
 codes = ["000001.SZ", "002142.SZ", "601939.SH", "600000.SH", "601166.SH", "601818.SH", "601998.SH", "601988.SH", "601398.SH", "601328.SH", "601288.SH", "601169.SH", "601009.SH", "600036.SH", "600016.SH", "600015.SH"]
-PriceRec = {}
-buyRec = {}
+priceRec = {}  # record mktUpdt of each stocks
+buyRec = {}    # record buy times of each stocks
+recentRec = {} # record recent tick price
+preRec = {}    # record 10s earlier tick price
 for code in codes:
-  PriceRec[code.split('.')[0]] = []
+  priceRec[code.split('.')[0]] = []
   buyRec[code.split('.')[0]] = 0
+  recentRec[code.split('.')[0]] = []
+  preRec[code.split('.')[0]] = []
 
-LOR = 100  # length limit of record
+LOR = 100   # length limit of record
 TW = 100000 # time window
 TH = 1000   # threshold of price variance
-STH = 60 # threshold of price variance for related stocks
+STH = 60    # threshold of price variance for related stocks
+recLen = 10 # length of recentRec and preRec
 start = '2015-12-14'
 end = '2016-03-14'
 industry = '银行'
-
-writer = open("/var/log/td-agent/netStock.log", 'a')
 
 calCorre = CalCorre()
 logger.info("loading pearson correlation values...")
@@ -44,58 +47,31 @@ result = calCorre.CorreOfClosePrice(start, end, industry)
 logger.info("load completed")
 
 def checkRelatedStocks(tstock):
-  # logger.info("check related stocks")
+  logger.info("check related stocks")
   relatedStocks = result[tstock].order(ascending=False).index
   for rstock in relatedStocks.values[1:4]:
-    tag = True
-    count = 0
-    mktUpdt = 0
-    for item in reversed(PriceRec[rstock]):
-      if count == 0:
-        count += 1
-        mktUpdt = item
-        continue
-      # logger.info("recent time %s, last time %s ", mktUpdt.exchange_timestamp, item.exchange_timestamp)
-      if int(mktUpdt.exchange_timestamp) -  int(item.exchange_timestamp) > TW:
-        break;
-      # logger.info("recent price %d, last price %d ", mktUpdt.latest_price, item.latest_price)
-      if abs(mktUpdt.latest_price - item.latest_price) > STH:
-        tag = False
-        logger.info("not interested!")
-        break;
-      count += 1
-    if tag:
-      logger.info("buy %s, @price: %d", rstock, mktUpdt.latest_price)
+    if len(preRec[rstock]) == 0:
+      continue
+    if (sum(recentRec[rstock]) / len(recentRec[rstock])) / (sum(preRec[rstock]) / recLen) < 0.03:
+      logger.info("buy %s @ %f", rstock, priceRec[rstock][-1])
       buyRec[rstock] += 1
+    else:
+      logger.info("not interested")
 
 def dealWithOneTick(mktUpdt):
-  # logger.info("dealWithOneTick %d", mktUpdt.latest_price)
+  logger.info("dealWithOneTick %f", mktUpdt.latest_price / 10000.0)
 
-  length = len(PriceRec[mktUpdt.code])
-  count = 0
-  for item in reversed(PriceRec[mktUpdt.code]):
-    if count >= LOR:
-      break;
-    if int(mktUpdt.exchange_timestamp) -  int(item.exchange_timestamp) > TW:
-      break
-    else:
-      diff = mktUpdt.latest_price - item.latest_price
-      if abs(diff) > TH:
-        tag = "up"
-        if diff > 0:
-          logger.info("code: %s, up signal: %d %d", mktUpdt.code, mktUpdt.latest_price, item.latest_price)
-        else:
-          logger.info("code: %s, down signal: %d %d", mktUpdt.code, mktUpdt.latest_price, item.latest_price)
-          tag = "down"
-        checkRelatedStocks(mktUpdt.code)
-        jsonObj = {"code":mktUpdt.code, "signal":tag, "price":mktUpdt.latest_price, "compared price":item.latest_price}
-        with open("/var/log/td-agent/netStock.log", 'w') as f:
-          json.dump(jsonObj, f)
-          f.write('\n')
-        break
-      count += 1
+  length = len(priceRec[mktUpdt.code])
 
-  PriceRec[mktUpdt.code].append(mktUpdt)
+  code = mktUpdt.code
+  recentRec[code].append(float(mktUpdt.latest_price) / 10000.0)
+  priceRec[code].append(float(mktUpdt.latest_price) / 10000.0)
+
+  if len(recentRec[code]) >= recLen:
+    if len(preRec[code]) >= recLen:
+      if (sum(recentRec[code]) / recLen) / (sum(preRec[code]) / recLen) > 0.04:
+        checkRelatedStocks(code)
+    preRec[code] = recentRec[code]
 
 def onMsg(msg):
   mktUpdt = protoMsg.MarketUpdate()
