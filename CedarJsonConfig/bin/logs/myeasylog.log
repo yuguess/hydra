@@ -1,4 +1,0 @@
-2016-01-18 12:54:02,073 FATAL [default] Parse config file config/CedarJsonConfig.json error, check your path or config file format
-2016-01-18 12:54:02,074 WARN  [default] Aborting application. Reason: Fatal log at [./include/CedarJsonConfig.h:28]
-2016-01-18 12:55:06,922 INFO  [default] world
-2016-01-18 12:55:06,922 INFO  [default] world
