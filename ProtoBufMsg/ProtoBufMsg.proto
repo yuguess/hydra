@@ -85,7 +85,7 @@ message IndexData {
 }
 
 message DataRequest {
-  repeated string code = 1;
+  string code = 1;
   string symbol = 2;
   string exchange = 3;
   string data_type = 4;

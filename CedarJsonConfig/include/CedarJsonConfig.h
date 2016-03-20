@@ -27,9 +27,10 @@ public:
     std::ifstream fileStream(path, std::ifstream::binary);
 
     Json::Reader reader;
-    if (!reader.parse(fileStream, root))
+    if (!reader.parse(fileStream, root)) {
       LOG(FATAL) << "Parse config file " << path << " error, "
         << "check your path or config file format";
+    }
 
 	return 0;
   }

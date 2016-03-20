@@ -52,39 +52,46 @@ int onMsg(MessageBase msg) {
 int main() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-  //CedarHelper::initGlog("StockMonitor");
+  CedarLogging::init("StockMonitor");
   CedarJsonConfig::getInstance().loadConfigFile("../config/StockMonitor.json");
 
   ProtoBufMsgHub msgHub;
-  ProtoBufHelper::setupProtoBufMsgHub(msgHub);
-  msgHub.registerCallback(onMsg);
+  //ProtoBufHelper::setupProtoBufMsgHub(msgHub);
+  //msgHub.registerCallback(onMsg);
 
-  std::vector<std::string> codes;
-  std::vector<std::string> exchanges;
-  CedarJsonConfig::getInstance().getStringArrayWithTag(codes, "Ticker", "code");
-  CedarJsonConfig::getInstance().getStringArrayWithTag(exchanges,
-      "Ticker", "exchange");
+  //std::vector<std::string> codes;
+  //std::vector<std::string> exchanges;
+  //CedarJsonConfig::getInstance().getStringArrayWithTag(codes, "Ticker", "code");
+  //CedarJsonConfig::getInstance().getStringArrayWithTag(exchanges,
+  //    "Ticker", "exchange");
 
-  std::string dataServerAddr;
-  std::string boardcastAddr;
-  CedarJsonConfig::getInstance().getStringByPath("DataServer.serverAddr", 
-      dataServerAddr);
-  CedarJsonConfig::getInstance().getStringByPath("DataServer.boardcastAddr", 
-      boardcastAddr);
-  LOG(INFO) << "data server addr" << dataServerAddr;
+  //std::string dataServerAddr;
+  //std::string boardcastAddr;
+  //CedarJsonConfig::getInstance().getStringByPath("DataServer.serverAddr", 
+  //    dataServerAddr);
+  //CedarJsonConfig::getInstance().getStringByPath("DataServer.boardcastAddr", 
+  //    boardcastAddr);
+  //LOG(INFO) << "data server addr" << dataServerAddr;
 
-  for (int i = 0; i < codes.size(); i++) {
-    DataRequest mdReq;
-    mdReq.set_code(codes[i]);
-    mdReq.set_exchange(exchanges[i]);
-    std::string pushAddr = "127.0.0.1:15213";
-    std::string publishAddr = "127.0.0.1:15212";
-    msgHub.pushMsg(pushAddr, 
-        ProtoBufHelper::wrapMsg(TYPE_DATAREQUEST, mdReq));
+  //for (int i = 0; i < codes.size(); i++) {
+  //  DataRequest mdReq;
+  //  mdReq.set_code(codes[i]);
+  //  mdReq.set_exchange(exchanges[i]);
 
-    //std::string chan = mdReq.code() + "." + mdReq.exchange();
-    msgHub.addSubscription(publishAddr, mdReq.code());
-  }
+  //  //std::string pushAddr = "127.0.0.1:15213";
+  //  //std::string publishAddr = "127.0.0.1:15212";
+  //  //msgHub.pushMsg(pushAddr, 
+  //  //    ProtoBufHelper::wrapMsg(TYPE_DATAREQUEST, mdReq));
+
+  //  ////std::string chan = mdReq.code() + "." + mdReq.exchange();
+  //  //msgHub.addSubscription(publishAddr, mdReq.code());
+  //  
+  //  msgHub.pushMsg(dataServerAddr, 
+  //      ProtoBufHelper::wrapMsg(TYPE_DATAREQUEST, mdReq));
+
+  //  std::string chan = mdReq.code() + "." + mdReq.exchange();
+  //  msgHub.addSubscription(boardcastAddr, mdReq.code());
+  //}
 
   LOG(INFO) << "StockMonitor service online!"; 
   CedarHelper::blockSignalAndSuspend();
