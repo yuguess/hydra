@@ -1,10 +1,11 @@
 #include "CatsMktUpdt.h"
 #include "CPlusPlusCode/ProtoBufMsg.pb.h"
+#include "CedarLogging.h"
 
 int main() {
 	GOOGLE_PROTOBUF_VERIFY_VERSION;
 	
-	CedarHelper::initGlog("CatsMktUpdt");
+	CedarLogging::init("CatsMktUpdt");
 	CedarJsonConfig::getInstance().loadConfigFile("CatsMktUpdt.json");
 
 	//sub Market data
