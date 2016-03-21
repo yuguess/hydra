@@ -1,8 +1,11 @@
 syntax = "proto3";
 
 enum MsgType {
-  TYPE_MARKETUPDATE = 0;
-  TYPE_DATAREQUEST = 1;
+  TYPE_DATAREQUEST = 0;
+  TYPE_MARKETUPDATE = 1; 
+  TYPE_TRANSACTION = 2;
+  TYPE_INDEX_DATA = 3;
+  TYPE_REPLAY_REQUEST= 4;
 }
 
 message MessageBase {
@@ -15,24 +18,70 @@ message MarketUpdate {
   string symbol = 2;
   string exchange = 3;
 
-  double open_price = 4;
-  double last_price = 5;
-  double highest_price = 6;
-  double lowest_price = 7;
-  double high_limit_price = 8;
-  double low_limit_price = 9;
-  int32 open_interest = 10;
-  double turnover = 11;
-  int32 volume = 12;
+  int32 status = 4;
+  int32 pre_close = 5;
+  double open_price = 6;
+  double last_price = 7;
+  double highest_price = 8; 
+  double lowest_price = 9;
+  double high_limit_price = 10;
+  double low_limit_price = 11;
+  int32 open_interest = 12;
+  double latest_price = 13;
+  int32 num_trades = 14;
+  double turnover = 15;
+  int64 volume = 16;
+  int64 total_bid_vol = 17;
+  int64 total_ask_vol = 18;
+  int32 weighted_avg_bid_price = 19;
+  int32 weighted_avg_ask_price = 20;
+  int32 iopv = 21;
+  int32 yield_to_maturity = 22;
 
   //HHMMSSmmm
-  string exchange_timestamp = 13;
-  string recv_timestamp = 14;
+  int32 action_day = 23;
+  string exchange_timestamp = 24;
+  string recv_timestamp = 25;
 
-  repeated double bid_price = 15;
-  repeated int32 bid_volume = 16;
-  repeated double ask_price = 17;
-  repeated int32 ask_volume = 18;
+  repeated int64 bid_price = 26;
+  repeated int32 bid_volume = 27;
+  repeated int64 ask_price = 28;
+  repeated int32 ask_volume = 29;
+}
+
+message Transaction {
+  string code = 1;
+  string symbol = 2;    
+  string exchange = 3;
+
+  int32 action_day = 4;
+  int32 time = 5;
+  int32 index = 6;
+  int32 price = 7;
+  int32 volume = 8;
+  int32 turnover = 9;
+  int32 bsflag = 10;
+  string ch_order_kind = 11;
+  string ch_function_code = 12;
+
+  int32 ask_order = 13;
+  int32 bid_order = 14;
+}
+
+message IndexData {
+  string code = 1;
+  string symbol = 2;
+  string exchange = 3;
+
+  int32 action_day = 4;
+  int32 time = 5;
+  int32 open_index = 6;
+  int32 high_index = 7;
+  int32 low_index = 8;
+  int32 last_index = 9;
+  int64 total_volume = 10;
+  int64 turnover = 11;
+  int32 pre_close_index = 12;
 }
 
 message DataRequest {
@@ -40,4 +89,12 @@ message DataRequest {
   string symbol = 2;
   string exchange = 3;
   string data_type = 4;
+}
+
+message ReplayRequest {
+  repeated string wind_code = 1;
+  string start_date = 2;
+  string end_date = 3;
+  string day_length = 4;
+  int32 replay_rate = 5;
 }

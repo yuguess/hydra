@@ -2,7 +2,7 @@
 
 CC=g++ 
 CFLAGS=-std=c++0x 
-LDFLAGS = -L/usr/local/lib -L/usr/lib  -L$(HOME)/CedarLib -lzmq -lprotobuf -lglog -ljsoncpp -lTDFAPI30
+LDFLAGS = -L/usr/local/lib -L/usr/lib  -L$(HOME)/CedarLib -L../TDFAPI/lib -lzmq -lprotobuf -lglog -ljsoncpp -lTDFAPI30
 DEBUG = -g
 BIN=./bin
 SRC=./src
@@ -11,6 +11,7 @@ INCLUDE= -I/usr/include \
 		-I./include \
 		-I../ProtoBufMsg \
 		-I../MsgHub/include \
+		-I../TDFAPI/include \
 		-I../CedarJsonConfig/include \
 		-I../CedarHelper/include \
 		-I../ProtoBufMsgHub/include \
@@ -22,15 +23,19 @@ SOURCES= $(SRC)/Main.cpp $(SRC)/WindMarket.cpp $(PROTOBUF)
 
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=$(BIN)/windMD
+TESTSTRTGY=$(BIN)/TestStrtgy
 
-all: $(EXECUTABLE)
+all: $(TESTSTRTGY) $(EXECUTABLE) 
+
+$(TESTSTRTGY):
+	$(CC) $(CFLAGS) $(DEBUG) $(INCLUDE) src/TestStrtgy.cpp $(PROTOBUF) $(LDFLAGS) -o $@
 
 $(EXECUTABLE): $(OBJECTS)
-	$(CC) $(OBJECTS) $(LDFLAGS) -o $@
+	$(CC) $(CFLAGS) $(OBJECTS) $(LDFLAGS) -o $@
 
 .cpp.o:
 	$(CC) -c $(CFLAGS) $(DEBUG)  $(INCLUDE) $< -o $@
 
 # --- remove binary and executable files
 clean:
-	rm $(EXECUTABLE) $(TESTCLIENT) $(SRC)/*.o
+	rm $(EXECUTABLE) $(TESTCLIENT) $(TESTSTRTGY) $(SRC)/*.o

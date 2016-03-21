@@ -11,7 +11,11 @@ public:
   ~WindMarket();
   int start();
   int close();
-  
+  static void RecvData(THANDLE hTdf, TDF_MSG* pMsgHead);
+  static void RecvSys(THANDLE hTdf, TDF_MSG* pSysMsg);
+  static void RelayMarket(TDF_MARKET_DATA* pMarket, int nItems); 
+  static void RelayTransaction(TDF_TRANSACTION* pTrans, int nItems); 
+  static void RelayIndexData(TDF_INDEX_DATA* pIndex, int nTtems);
 
 private:
   int addDataSubscription(DataRequest);
@@ -22,7 +26,9 @@ private:
   THANDLE nTDF;
   bool closeFlag;
 
-  ProtoBufMsgHub msgHub;
+  static ProtoBufMsgHub msgHub;
+
+  const static int priceLevel = 10;
 };
 
 #endif

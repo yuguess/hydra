@@ -1,9 +1,10 @@
 #include "CedarJsonConfig.h"
 #include "CedarHelper.h"
+#include "CedarLogging.h"
 
 int main() {
-  CedarHelper::initGlog("CedarJsonConfig");
-  CedarJsonConfig::getInstance().loadConfigFile("config/CedarJsonConfig.json");
+//  CedarHelper::initGlog("CedarJsonConfig");
+  CedarJsonConfig::getInstance().loadConfigFile("../config/CedarJsonConfig.json");
 
   std::string tmp;
   CedarJsonConfig::getInstance().getStringByPath("tt.deepArray.hello", tmp);
@@ -20,18 +21,10 @@ int main() {
   CedarJsonConfig::getInstance().getStringArrayWithTag(
     addrs, "MsgHub.Subscribe", "hostPort");
 
-  for (int i = 0; i < addrs.size(); i++) {
-    std::cout << names[i] << std::endl;
-    std::cout << addrs[i] << std::endl;
-  }
-
   std::vector<std::string> fruits;
   CedarJsonConfig::getInstance().getStringArrayWithTag(
     fruits, "TestTag");
 
-  for (int i = 0; i < fruits.size(); i++) {
-    std::cout << fruits[i] << std::endl;
-  }
   //LOG(ERROR) << "Error";
   //LOG(WARNING) <<  "WARNING";
 

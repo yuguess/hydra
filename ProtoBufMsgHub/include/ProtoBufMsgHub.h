@@ -9,11 +9,9 @@
 #include <unordered_map>
 #include <memory>
 
-#define GLOG_NO_ABBREVIATED_SEVERITIES
-#include <glog/logging.h>
-
 #include "CPlusPlusCode/ProtoBufMsg.pb.h"
 #include "CedarJsonConfig.h"
+#include "easylogging++.h"
 
 class ProtoBufMsgHub {
 
@@ -93,7 +91,7 @@ public:
       }
       publisherAddrs[addr] = true;
     }
-  //send data request
+    //send data request
 
     zmq_setsockopt(subSock, ZMQ_SUBSCRIBE, channel.c_str(), channel.size());
 

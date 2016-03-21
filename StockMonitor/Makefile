@@ -23,10 +23,11 @@ INCLUDE= -I/usr/include \
 		-I../MsgHub/include \
 		-I../CedarHelper/include \
 	 	-I../CedarJsonConfig/include \
-		-I../ProtoBufMsgHub/include
+		-I../ProtoBufMsgHub/include \
 
-SOURCES= $(SRC)/Main.cpp $(SRC)/StockProcessor.cpp \
-		../ProtoBufMsg/CPlusPlusCode/ProtoBufMsg.pb.cc
+PROTOBUF= ../ProtoBufMsg/CPlusPlusCode/ProtoBufMsg.pb.cc
+
+SOURCES= $(SRC)/Main.cpp $(SRC)/StockProcessor.cpp $(PROTOBUF)
 
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=$(BIN)/StockMonitor
@@ -41,4 +42,4 @@ $(EXECUTABLE): $(OBJECTS)
 
 # --- remove binary and executable files
 clean:
-	rm $(OBJECTS) $(EXECUTABLE)
+	rm $(EXECUTABLE) $(SRC)/*.o
