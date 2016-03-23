@@ -2,13 +2,12 @@
   "Ticker": [
     {"code":"000001", "exchange":"SZ", "code_type":"stock"},
     {"code":"000002", "exchange":"SZ", "code_type":"stock"},
-    {"code":"000003", "exchange":"SZ", "code_type":"stock"},
     {"code":"000004", "exchange":"SZ", "code_type":"index"}
   ],
 
   "DataServer": {
-    "serverAddr":"192.168.0.50:15212",
-    "boardcastAddr":"192.168.0.50:15213"
+    "serverAddr":"192.168.0.50:15222",
+    "boardcastAddr":"192.168.0.50:15221"
   },
 
   "MsgHub": {

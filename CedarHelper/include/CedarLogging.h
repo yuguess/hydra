@@ -40,7 +40,7 @@ public:
     std::string symlinkFile = program + ".INFO";
     std::string oldSymLink = destDir + symlinkFile;
     remove(oldSymLink.c_str());
-    if (symlinkat(filename.c_str(), fd, symlinkFile.c_str()) != 0)
+    if(symlinkat(filename.c_str(), fd, symlinkFile.c_str()) != 0)
       LOG(ERROR) << ".INFO symlink set fail!";
 
     filename = l->typedConfigurations()->filename(el::Level::Warning);
@@ -48,7 +48,7 @@ public:
     symlinkFile = program + ".WARN";
     oldSymLink = destDir + symlinkFile;
     remove(oldSymLink.c_str());
-    if (symlinkat(filename.c_str(), fd, symlinkFile.c_str()) != 0)
+    if(symlinkat(filename.c_str(), fd, symlinkFile.c_str()) != 0)
       LOG(ERROR) << ".WARN symlink set fail!";
 
     filename = l->typedConfigurations()->filename(el::Level::Error);
@@ -56,7 +56,7 @@ public:
     symlinkFile = program + ".ERROR";
     oldSymLink = destDir + symlinkFile;
     remove(oldSymLink.c_str());
-    if (symlinkat(filename.c_str(), fd, symlinkFile.c_str()) != 0)
+    if(symlinkat(filename.c_str(), fd, symlinkFile.c_str()) != 0)
       LOG(ERROR) << ".ERROR symlink set fail!";
 
     filename = l->typedConfigurations()->filename(el::Level::Fatal);
@@ -64,7 +64,7 @@ public:
     symlinkFile = program + ".FATAL";
     oldSymLink = destDir + symlinkFile;
     remove(oldSymLink.c_str());
-    if (symlinkat(filename.c_str(), fd, symlinkFile.c_str()) != 0)
+    if(symlinkat(filename.c_str(), fd, symlinkFile.c_str()) != 0)
       LOG(ERROR) << ".FATAL symlink set fail!";
 
     return 0;

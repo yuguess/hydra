@@ -6,6 +6,8 @@ enum MsgType {
   TYPE_TRANSACTION = 2;
   TYPE_INDEX_DATA = 3;
   TYPE_REPLAY_REQUEST= 4;
+  TYPE_ORDERREQUEST = 5;
+  TYPE_RETURNMSG = 6;
 }
 
 message MessageBase {
@@ -14,39 +16,60 @@ message MessageBase {
 }
 
 message MarketUpdate {
+  //instrument id
   string code = 1;
+  //could be stock chinese name
   string symbol = 2;
+  //exchange id
   string exchange = 3;
 
   int32 status = 4;
-  int32 pre_close = 5;
+  //last trading day close pirce
+  int32 pre_close_price = 5;
+  //this trading day open price
   double open_price = 6;
-  double last_price = 7;
-  double highest_price = 8; 
-  double lowest_price = 9;
-  double high_limit_price = 10;
-  double low_limit_price = 11;
-  int32 open_interest = 12;
-  double latest_price = 13;
-  int32 num_trades = 14;
-  double turnover = 15;
-  int64 volume = 16;
-  int64 total_bid_vol = 17;
-  int64 total_ask_vol = 18;
-  int32 weighted_avg_bid_price = 19;
-  int32 weighted_avg_ask_price = 20;
-  int32 iopv = 21;
-  int32 yield_to_maturity = 22;
+  //this trading day close price
+  double close_price = 7;
+  //lastest trading price
+  double last_price = 8;
+  //this trading day 
+  double highest_price = 9; 
+  double lowest_price = 10;
+  double high_limit_price = 11;
+  double low_limit_price = 12;
+  
+	//last trading day settle price
+	double pre_settlement_price = 13;
+	//this trading day settle price
+	double settlement_price = 14;
+  //this trading day avg price
+	double average_price = 15;
+	//last trading day open interest
+	int32 pre_open_interest = 16;
+  //last trading day open interest
+  int32 open_interest = 17;
 
-  //HHMMSSmmm
-  int32 action_day = 23;
-  string exchange_timestamp = 24;
-  string recv_timestamp = 25;
+  int32 num_trades = 18;
+  double turnover = 19;
+  int64 volume = 20;
+  int64 total_bid_vol = 21;
+  int64 total_ask_vol = 22;
+  int32 weighted_avg_bid_price = 23;
+  int32 weighted_avg_ask_price = 24;
+  int32 iopv = 25;
+  int32 yield_to_maturity = 26;
 
-  repeated int64 bid_price = 26;
-  repeated int32 bid_volume = 27;
-  repeated int64 ask_price = 28;
-  repeated int32 ask_volume = 29;
+  int32 action_day = 27;
+  string trading_day = 28;
+  //the ts that come with origianl tick data, format "09:30:00" --> "093000000"
+  string exchange_timestamp = 29;
+  //when out agent recv ts
+  string recv_timestamp = 30;
+
+  repeated double bid_price = 31;
+  repeated int32 bid_volume = 32;
+  repeated double ask_price = 33;
+  repeated int32 ask_volume = 34;
 }
 
 message Transaction {
@@ -97,4 +120,34 @@ message ReplayRequest {
   string end_date = 3;
   string day_length = 4;
   int32 replay_rate = 5;
+}
+
+enum OrderType {
+  TYPE_NEW_ORDER = 0;
+  TYPE_CANCEL_ORDER = 1; 
+}
+
+//New Order 
+//Cancel Order
+message OrderRequest {
+
+}
+
+enum ReturnMsgType {
+  TYPE_ERROR = 0;
+  TYPE_TRADE = 1; 
+  TYPE_NEW_ORDER_CONFIRM = 2;
+  TYPE_CANCEL_ORDER_CONFIRM = 3;
+}
+
+//Error
+//Trade(Could be partial trade)
+//NewOrder Confirm
+//Cancel Confirm
+message ReturnMessage {
+
+}
+
+message ServiceOrder {
+
 }

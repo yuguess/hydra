@@ -1,0 +1,21 @@
+{
+  //Cedar CTP
+  "CTP": {
+    "BrokerID": "7090",
+    "UserID": "82500155",
+    "Password": "596816",
+    "MDFront": "tcp://front101.ctp.gtjafutures.com:41213"
+  },
+  
+  //"CTP": {
+  //  "BrokerID": "8000",
+  //  "UserID": "01620118",
+  //  "Password": "201212",
+  //  "MDFront": "tcp://180.168.212.75:41213"
+  //},
+
+  "MsgHub": {
+    "PublishPort":"15213",
+    "PullPort":"15214"
+  }
+}

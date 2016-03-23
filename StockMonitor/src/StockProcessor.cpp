@@ -2,12 +2,12 @@
 #include "ProtoBufMsgHub.h"
 #include "CedarJsonConfig.h"
 
-const double StockProcessor::priceAnomalyThreshold = 0.00016;
+const double StockProcessor::priceAnomalyThreshold = 0.005;
 
 inline double weightedPrice(MarketUpdate &mkdt) {
   double vol = mkdt.ask_volume(0) + mkdt.bid_volume(0);
   if (vol == 0) {
-    LOG(WARNING) << "Recv an invalid markupdate with ask and bid volume be 0 !";
+    LOG(WARNING) << "Recv an invalid markupdate with ask and bid volume be 0";
     return 0.0;
   }
 

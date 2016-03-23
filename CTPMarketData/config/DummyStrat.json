@@ -1,0 +1,21 @@
+{
+  "Ticker": [
+    {"code":"jd1606", "exchange":"DCE"},
+    {"code":"jd1605", "exchange":"DCE"}
+  ],
+
+  "DataSource": {
+    "serverAddr":"192.168.0.66:15214",
+    "boardcastAddr":"192.168.0.66:15213"
+  },
+
+  "TradeSource": {
+    "serverAddr":"192.168.0.66:15214",
+    "boardcastAddr":"192.168.0.66:15213"
+  },
+
+  "MsgHub": {
+    "PublishPort":"15215",
+    "PullPort":"15216"
+  }
+}

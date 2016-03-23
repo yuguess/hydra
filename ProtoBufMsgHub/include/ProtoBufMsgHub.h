@@ -225,7 +225,8 @@ private:
 
     int itemSize = sizeof(items) / sizeof(zmq_pollitem_t);
     while (closeFlag) {
-      LOG(INFO) << "block on zmq_poll1";
+      //LOG(INFO) << "block on zmq_poll1";
+
       if (zmq_poll(items, itemSize, -1) == -1) {
         if (errno == ETERM) {
           LOG(INFO) << "pool return for one sock become invalid";
@@ -236,12 +237,12 @@ private:
       }
 
       if (items[0].revents & ZMQ_POLLIN) {
-        LOG(INFO) << "pullSock get event";
+        //LOG(INFO) << "pullSock get event";
         recvMsg(pullSock, false);
       }
 
       if (items[1].revents & ZMQ_POLLIN) {
-        LOG(INFO) << "subSock get event";
+        //LOG(INFO) << "subSock get event";
         recvMsg(subSock, true);
       }
     }
