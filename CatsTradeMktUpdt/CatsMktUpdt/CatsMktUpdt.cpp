@@ -3,6 +3,7 @@
 using namespace std;
 
 CatsMktUpdt::CatsMktUpdt() : csm(CatsSessionManager("CatsMktUpdt")) {
+	LOG(INFO) << "[CatsMktUpdt init] setup MsgHub done.";
 	//setup MsgHub
 	ProtoBufHelper::setupProtoBufMsgHub(msgHub);
 	msgHub.registerCallback(std::bind(&CatsMktUpdt::onMsg, this, std::placeholders::_1));
@@ -59,7 +60,6 @@ void CatsMktUpdt::BizSubCommonCallback(void* pArg) {
 
 #define INT_TO_DOUBLE(x)  (static_cast<double>(x) / 10000)
 void CatsMktUpdt::PubMarketDataCallback(void* pArg) {
-
 	CatsMktUpdt* pMktUpdt = static_cast<CatsMktUpdt*>(pArg);
 	CATSAPI_Fetch_MarketDataResult(pMktUpdt->csm.g_hHandle);
 
@@ -119,8 +119,6 @@ void CatsMktUpdt::PubMarketDataCallback(void* pArg) {
 
 		std::string res = ProtoBufHelper::wrapMsg<MarketUpdate>(TYPE_MARKETUPDATE, mktUpdt);
 		pMktUpdt->msgHub.boardcastMsg(symb, res);
-		
-		LOG(INFO) << "boardcast " << res;
 	}
 }
 
@@ -128,8 +126,11 @@ void CatsMktUpdt::PubMarketDataCallback(void* pArg) {
 int CatsMktUpdt::onMsg(MessageBase msg) {
 	if (msg.type() == TYPE_DATAREQUEST) {
 		DataRequest dataReq = ProtoBufHelper::unwrapMsg<DataRequest>(msg);
-		subSingleSymbol(dataReq.symbol());
-		LOG(INFO) << "subscribe " << dataReq.code();
+		std::string chan = dataReq.code() + "." + dataReq.exchange();
+
+		LOG(INFO) << "subscribe " << chan;
+		subSingleSymbol(chan);
+
 	} else {
 		LOG(WARNING) << "Recv invalid msg type " << msg.type();
 	}
