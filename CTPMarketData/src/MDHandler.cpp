@@ -17,6 +17,8 @@ MDHandler::MDHandler() {
 
 MDHandler::~MDHandler() {
   msgHub.close();
+  //logout
+  //release
 }
 
 int MDHandler::start() {
@@ -99,7 +101,7 @@ void MDHandler::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin,
 }
 
 int MDHandler::onMsg(MessageBase msg) {
-  if (msg.type() == TYPE_DATAREQUEST) {
+  if (msg.type() == TYPE_ORDER_REQUEST) {
     DataRequest dataReq = ProtoBufHelper::unwrapMsg<DataRequest>(msg);
     LOG(INFO) << "recv data request " << dataReq.code() << " into codes";
     subscribeTicker(dataReq.code());

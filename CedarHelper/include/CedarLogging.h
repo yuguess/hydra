@@ -41,7 +41,7 @@ public:
 		el::Logger* l = el::Loggers::getLogger("default");
 
 #ifdef __linux
-		int fd = _open(destDir.c_str(), O_RDONLY);
+		int fd = open(destDir.c_str(), O_RDONLY);
 #else
 		int fd = _open(destDir.c_str(), O_RDONLY);
 #endif

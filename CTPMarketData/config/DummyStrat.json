@@ -10,8 +10,8 @@
   },
 
   "TradeSource": {
-    "serverAddr":"192.168.0.66:15214",
-    "boardcastAddr":"192.168.0.66:15213"
+    "serverAddr":"192.168.0.66:15224",
+    "boardcastAddr":"192.168.0.66:15223"
   },
 
   "MsgHub": {

@@ -6,8 +6,8 @@ enum MsgType {
   TYPE_TRANSACTION = 2;
   TYPE_INDEX_DATA = 3;
   TYPE_REPLAY_REQUEST= 4;
-  TYPE_ORDERREQUEST = 5;
-  TYPE_RETURNMSG = 6;
+  TYPE_ORDER_REQUEST = 5;
+  TYPE_RETURN_MSG = 6;
 }
 
 message MessageBase {
@@ -122,22 +122,42 @@ message ReplayRequest {
   int32 replay_rate = 5;
 }
 
-enum OrderType {
-  TYPE_NEW_ORDER = 0;
-  TYPE_CANCEL_ORDER = 1; 
+enum RequestType {
+  TYPE_LIMIT_ORDER_REQUEST = 0;
+  TYPE_MARKET_ORDER_REQUEST = 1;
+  TYPE_CANCEL_ORDER_REQUEST = 2; 
+}
+
+enum TradeDirection {
+  LONG_BUY = 0;
+  SHORT_SELL = 1;
+}
+
+enum PositionDirection {
+  OPEN_POSITION = 0;
+  CLOSE_POSITION = 1;
 }
 
 //New Order 
 //Cancel Order
 message OrderRequest {
-
+  
+  RequestType type = 1;
+  //response address ip:port, format as 110.31.12.132:13213
+  string response_address = 2;
+  string id = 1;
+  TradeDirection buy_sell = 3;
+  //
+  double limit_price = 4;
+  //Only for China futures market
+  PositionDirection open_close = 5;
 }
 
 enum ReturnMsgType {
-  TYPE_ERROR = 0;
-  TYPE_TRADE = 1; 
-  TYPE_NEW_ORDER_CONFIRM = 2;
-  TYPE_CANCEL_ORDER_CONFIRM = 3;
+  TYPE_NEW_ORDER_CONFIRM = 0;
+  TYPE_CANCEL_ORDER_CONFIRM = 1;
+  TYPE_ERROR = 2;
+  TYPE_TRADE = 3;
 }
 
 //Error
@@ -145,7 +165,7 @@ enum ReturnMsgType {
 //NewOrder Confirm
 //Cancel Confirm
 message ReturnMessage {
-
+  ReturnMsgType type = 1;
 }
 
 message ServiceOrder {

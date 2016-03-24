@@ -4,9 +4,8 @@
 #include <iostream>
 #include <vector>
 #include <map>
-#include "ProtoBufMsgHub.h"
 
-//#include "MarketUpdate.h"
+#include "ProtoBufMsgHub.h"
 
 #include "ThostFtdcMdApi.h"
 #include "ThostFtdcUserApiStruct.h"
