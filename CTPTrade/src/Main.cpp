@@ -13,11 +13,11 @@ int main() {
   TradeHandler trade;
   trade.start();
 
-  LOG(INFO) << "CTPTrade service online!"; 
+  LOG(INFO) << "CTPTrade service online!";
   CedarHelper::blockSignalAndSuspend();
 
   trade.close();
 
-  LOG(INFO) << "init quiting procedures now!"; 
+  LOG(INFO) << "init quiting procedures now!";
   google::protobuf::ShutdownProtobufLibrary();
 }

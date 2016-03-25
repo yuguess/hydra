@@ -2,18 +2,17 @@
 #define CEDAR_JSON_CONFIG_H
 
 #include <stdio.h>
-//#include "rapidjson/document.h"
-//#include "rapidjson/filereadstream.h"
 #include <iostream>
 #include <boost/algorithm/string.hpp>
 #include <vector>
+
 #include "CedarHelper.h"
 
 #ifdef __linux
 	#include "json/reader.h"
     #include "json/writer.h"
 #elif  _WIN32
-	#include "json/json.h"	
+	#include "json/json.h"
 #endif
 
 class CedarJsonConfig {
@@ -55,8 +54,9 @@ public:
 
     return 0;
   }
-  //arrayPath is the 
-  int getStringArrayWithTag(std::vector<std::string> &results, 
+
+  //arrayPath is the
+  int getStringArrayWithTag(std::vector<std::string> &results,
       std::string arrayPath, std::string tagName = "") {
 
     Json::Value val;
@@ -66,9 +66,9 @@ public:
       LOG(FATAL) << "Get array failed, check your array path" << arrayPath;
 
     for (unsigned int i = 0; i < val.size(); i++) {
-      std::string tmp; 
+      std::string tmp;
       if (tagName == "") {
-        if (val[i].isString()) 
+        if (val[i].isString())
           tmp = val[i].asString();
         else
           LOG(FATAL) << "array path " << arrayPath 

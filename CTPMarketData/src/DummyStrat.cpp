@@ -8,26 +8,30 @@
 
 class Tester {
 public:
-  Tester() {
+  Tester() : bidOrderFlag(false),
+  tradeOrderFlag(false) {
     ProtoBufHelper::setupProtoBufMsgHub(msgHub);
-    msgHub.registerCallback(std::bind(&Tester::onMsg, this, 
+    msgHub.registerCallback(std::bind(&Tester::onMsg, this,
           std::placeholders::_1));
 
     std::vector<std::string> codes;
     std::vector<std::string> exchanges;
-    CedarJsonConfig::getInstance().getStringArrayWithTag(codes, 
+    CedarJsonConfig::getInstance().getStringArrayWithTag(codes,
       "Ticker", "code");
     CedarJsonConfig::getInstance().getStringArrayWithTag(exchanges,
       "Ticker", "exchange");
 
-    std::string dataServerAddr;
-    std::string boardcastAddr;
-    CedarJsonConfig::getInstance().getStringByPath("DataSource.serverAddr", 
+    std::string dataServerAddr, boardcastAddr, pullPort;
+    CedarJsonConfig::getInstance().getStringByPath("DataSource.serverAddr",
       dataServerAddr);
-    CedarJsonConfig::getInstance().getStringByPath("DataSource.boardcastAddr", 
+    CedarJsonConfig::getInstance().getStringByPath("DataSource.boardcastAddr",
       boardcastAddr);
-    CedarJsonConfig::getInstance().getStringByPath("TradeSource.serverAddr", 
+    CedarJsonConfig::getInstance().getStringByPath("TradeSource.serverAddr",
       tradeAddr);
+
+    CedarJsonConfig::getInstance().getStringByPath("MsgHub.pullPort",pullPort);
+    respAddr = CedarHelper::getResponseAddr(pullPort);
+
     LOG(INFO) << "data server addr" << dataServerAddr;
 
     for (int i = 0; i < codes.size(); i++) {
@@ -36,7 +40,7 @@ public:
       mdReq.set_exchange(exchanges[i]);
 
       //send request
-      msgHub.pushMsg(dataServerAddr, 
+      msgHub.pushMsg(dataServerAddr,
         ProtoBufHelper::wrapMsg(TYPE_DATAREQUEST, mdReq));
       msgHub.addSubscription(boardcastAddr, mdReq.code());
     }
@@ -57,15 +61,34 @@ private:
       //several dummy send at the same time expect to recv diff reply
 
       //10 tick and place bid and ask at far price, then cancel after 5 ticks
-      BidCancel();
-      
-      //cross tick to hit and flat out after 100ticks
-      
-      //place 10 order at bid1 and wait 
+      bidCancel(mktUpdt);
+
+      //cross tick to hit and flat out after 30ticks
+      hitFlat(mktUpdt);
+
+      //cross tick to hit, then cancel the rest and flat out after 30 ticks
+      hitCancelFlag(mktUpdt);
+
+      //test market order
+      marketOrder(mktUpdt);
+
+      //place 10 order at bid1 and wait
 
       //first order
-      
-      //test market order
+
+    } else if (msg.type() == TYPE_RESPONSE_MSG) {
+      ResponseMessage resp = ProtoBufHelper::unwrapMsg<ResponseMessage>(msg);
+
+      if (resp.type() == TYPE_NEW_ORDER_CONFIRM) {
+        bidOrderFlag = true;
+        LOG(INFO) << "new order confirm";
+      } else if (resp.type() == TYPE_CANCEL_ORDER_CONFIRM) {
+        bidOrderFlag = false;
+        LOG(INFO) << "cancel order confirm";
+      } else if (resp.type() == TYPE_TRADE) {
+        //trade
+        LOG(INFO) << "trade order";
+      }
 
     } else if (msg.type() == TYPE_DATAREQUEST) {
       DataRequest dataReq = ProtoBufHelper::unwrapMsg<DataRequest>(msg);
@@ -79,32 +102,62 @@ private:
     return 0;
   }
 
-  int BidCancel(MarketUpdate &mktUpdt) {
+  int bidCancel(MarketUpdate &mktUpdt) {
     static int count = 0;
     if (++count % 10 == 0) {
       OrderRequest req;
-
+      //req.set_response_address
       if (!bidOrderFlag) {
+        req.set_id(std::to_string(count));
         req.set_type(TYPE_LIMIT_ORDER_REQUEST);
-        //req.set_limit_price();
-        // 
+        req.set_limit_price(mktUpdt.bid_price(0) - 10);
+        req.set_buy_sell(LONG_BUY);
+        req.set_open_close(OPEN_POSITION);
         //send new order request
       } else {
         //send cancel order request
       }
 
       msgHub.pushMsg(tradeAddr,
-          ProtoBufHelper::wrapMsg(TYPE_LIMIT_ORDER_REQUEST, req));
+          ProtoBufHelper::wrapMsg(TYPE_ORDER_REQUEST,req));
     }
-
     return 0;
   }
 
+  int hitFlat(MarketUpdate &mktUpdt) {
+    static int count = 0;
+    if (++count % 10 == 0) {
+      OrderRequest req;
+      if (!tradeOrderFlag) {
+        req.set_id(std::to_string(count));
+        req.set_type(TYPE_LIMIT_ORDER_REQUEST);
+        req.set_limit_price(mktUpdt.ask_price(0));
+        req.set_buy_sell(LONG_BUY);
+        req.set_open_close(OPEN_POSITION);
+      } else if(bidOrderFlag && (count % 50 == 0)){
+        //flat
+      }
+      
+      msgHub.pushMsg(tradeAddr,
+          ProtoBufHelper::wrapMsg(TYPE_ORDER_REQUEST, req));
+    }
+  }
+
+  int hitCancelFlag(MarketUpdate &mktUpdt) {
+
+  }
+
+  int marketOrder(MarketUpdate & mktUpdt) {
+
+  }
+
+  bool tradeOrderFlag;
+  bool bidOrderFlag;
   std::string tradeAddr;
+  std::string respAddr;
   std::thread subThr;
   ProtoBufMsgHub msgHub;
   std::vector<std::string> codes;
-
 };
 
 int main() {

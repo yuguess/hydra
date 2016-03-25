@@ -2,21 +2,25 @@
 #define CEDAR_HELPER_H
 
 #include "json/json.h"
-//#include "CedarConfig.h"
-//#include "NewCedarConfig.h"
-//#include "MsgHub.h"
 #include <signal.h>
 #include <fstream>
 #ifdef __linux
 #include <sys/time.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <ifaddrs.h>
+#include <netinet/in.h>
+#include <string.h>
+#include <arpa/inet.h>
 #endif
-#ifdef _WIN32 
+#ifdef _WIN32
 #include <winsock2.h>
 #include <direct.h>
 #endif
+#include "CedarJsonConfig.h"
 #include "easylogging++.h"
+
+class CedarJsonConfig;
 
 class CedarHelper {
 
@@ -37,26 +41,7 @@ public:
     return 0;
   }
 
-  //for xml configure.
-  //static int getMsgHubConfig(std::vector<Channel> &chnls, std::string &bindPort) {
-  //  std::vector<std::string> names;
-  //  std::vector<std::string> hosts;
-
-  //  ConfigGetValues("MsgHub.Subscribe", "Name", names);
-  //  ConfigGetValues("MsgHub.Subscribe", "HostPort", hosts);
-  //  bindPort = ConfigGetValue("MsgHub.Port");
-
-  //  for (unsigned i = 0; i < names.size(); i++) {
-  //    Channel chnl;
-  //    chnl.name = names[i];
-  //    chnl.hostPort = hosts[i];
-  //    chnls.push_back(chnl);
-  //  }
-
-  //  return 0;
-  //}
-
-  static int stringSplit(std::string str, 
+  static int stringSplit(std::string str,
       char delimiter, std::vector<std::string> &res) {
     std::string token;
     std::istringstream ss(str);
@@ -70,153 +55,18 @@ public:
   static std::string timestampString() {
     time_t sec;
     time(&sec);
-    std::stringstream ss; 
+    std::stringstream ss;
     ss << sec;
     return ss.str();
   }
 
-  //static int setupMsgHub(MsgHub &msgHub) {
-  //  std::vector<Channel> chnls;
-  //  std::string bindPort;
-  //  getMsgHubConfig(chnls, bindPort);
-  //  msgHub.init(chnls, bindPort);
-  //  return 0;
-  //}
-
-  //for json configure.
-  //static int getMsgHubConfig(std::vector<Channel> &chnls, 
-  //    std::string &bindPort, Json::Value &jMsg) {
-  //  bindPort = jMsg["Port"].asString();
-  //  Json::Value Chan = jMsg["Channel"];
-  //  std::vector<std::string> channelNames = Chan.getMemberNames();
-  //  for (unsigned i = 0; i < channelNames.size(); i++) {
-  //    Channel chnl;
-  //    chnl.name = channelNames[i];
-  //    chnl.hostPort = Chan[chnl.name].asString();
-  //    chnls.push_back(chnl);
-  //  }
-  //  return 0;
-  //}
-
-  //static int setupMsgHub(MsgHub &msgHub,Json::Value &jMsg) {
-  //  std::vector<Channel> chnls;
-  //  std::string bindPort;
-
-  //  getMsgHubConfig(chnls, bindPort,jMsg);
-  //  msgHub.init(chnls, bindPort);
-  //  return 0;
-  //}
-
-  ////for libconfig configure.
-  //static int getMsgHubConfigNew(std::vector<Channel> &chnls, 
-  //    std::string &bindPort) {
-  //  std::string configName = "MsgHub";
-  //  getMsgHubConfig(chnls, bindPort, configName);
-  //  return 0;
-  //}
-
-  //static int getMsgHubConfig(std::vector<Channel> &chnls, 
-  //    std::string &bindPort, std::string configName) {
-  //  ConfigGetString(configName + ".Port", bindPort);
-  //  std::cout << configName << " bind port " << bindPort << std::endl;
-  //  libconfig::Setting& subs = ConfigGetSetting(configName + ".Subscribe");
-
-  //  for (unsigned i = 0; i < subs.getLength(); i++) {
-  //    libconfig::Setting& sub = subs[i];
-  //    Channel chnl;
-  //    if (sub.lookupValue("name", chnl.name) 
-  //        && sub.lookupValue("hostPort", chnl.hostPort)) {
-  //      std::cout << configName << " subscribe " << chnl.name 
-  //        << " " << chnl.hostPort << std::endl;
-  //      chnls.push_back(chnl);
-  //    } else {
-  //      std::cout << "msghub try to subscribe a invalid host and port " 
-  //        << std::endl;
-  //      exit(2);
-  //    }
-  //  }
-  //  return 0;
-  //}
-
-  //static int setupMsgHubNew(MsgHub &msgHub) {
-  //  std::vector<Channel> chnls;
-  //  std::string bindPort;
-  //  getMsgHubConfigNew(chnls, bindPort);
-  //  msgHub.init(chnls, bindPort);
-  //  return 0;
-  //}
-
-  //static int setupMsgHubWithConfigName(MsgHub &msgHub, std::string configName) {
-  //  std::vector<Channel> chnls;
-  //  std::string bindPort;
-  //  getMsgHubConfig(chnls, bindPort, configName);
-  //  msgHub.init(chnls, bindPort);
-  //  return 0;
-  //}
-
-  //static NewOrderInfo returnInfoToNewOrderInfo(ReturnInfo &rtnInfo) {
-  //  NewOrderInfo ordInfo;
-  //  ordInfo.id = rtnInfo.id;
-  //  ordInfo.side = rtnInfo.side;
-  //  ordInfo.symbol = rtnInfo.symbol;
-  //  ordInfo.price = rtnInfo.price;
-  //  ordInfo.qty = rtnInfo.qty;
-
-  //  return ordInfo;
-  //}
-
-  //static ReturnInfo newOrderInfoToReturnInfo(NewOrderInfo &ordInfo) {
-  //  ReturnInfo rtnInfo;
-  //  rtnInfo.id = ordInfo.id;
-  //  rtnInfo.side = ordInfo.side;
-  //  rtnInfo.symbol = ordInfo.symbol;
-  //  rtnInfo.price = ordInfo.price;
-  //  rtnInfo.qty = ordInfo.qty;
-
-  //  return rtnInfo;
-  //}
-
-/*
-  static int initGlog(std::string program, int severity = google::GLOG_INFO) {
-#ifdef _WIN32
-    _mkdir("log");
-#endif
-#ifdef __linux
-    mkdir("log",0777);
-#endif
-    //system("mkdir -p log");
-    google::InitGoogleLogging(program.c_str());
-
-    FLAGS_log_dir="./log";
-    google::SetLogDestination(google::GLOG_INFO, 
-        ("./log/" + program + "_INFO_").c_str());
-    google::SetLogDestination(google::GLOG_WARNING, 
-        ("./log/" + program + "_WARNING_").c_str());
-    google::SetLogDestination(google::GLOG_ERROR, 
-        ("./log/" + program + "_ERROR_").c_str());
-    google::SetLogDestination(google::GLOG_FATAL, 
-        ("./log/" + program + "_FATAL_").c_str());
-    FLAGS_stderrthreshold = severity;
-
-    FLAGS_colorlogtostderr=true;
-    FLAGS_logbufsecs = 0;
-    FLAGS_max_log_size = 100;
-    FLAGS_stop_logging_if_full_disk = true;
-
-    return 0;
+  //this only get IPV4 addr, skip 127.0.0.1
+  static std::string getResponseAddr(std::string pullPort) {
+    std::string ipStr;
+    if (getHostIP(ipStr) != 0)
+      LOG(ERROR) << "can't this machine IP address";
+    return ipStr + ":" + pullPort;
   }
-*/
-
-  //static std::string returnTypeToString(ReturnType returnType) {
-  //  switch (returnType) {
-  //    case ReturnType::CONFIRM: return "CONFIRM";
-  //    case ReturnType::NEW_CONFIRM: return "NEW_CONFIRM";
-  //    case ReturnType::CANCEL_CONFIRM: return "CANCEL_CONFIRM";
-  //    case ReturnType::CEDAR_TRADE: return "CEDAR_TRADE";
-  //    case ReturnType::CEDAR_ERROR: return "CEDAR_ERROR";
-  //    default: return "Unknow";
-  //  }
-  //}
 
   static void getConfigRoot(std::string filepath, Json::Value& root) {
     std::ifstream config(filepath, std::ifstream::binary);
@@ -227,7 +77,7 @@ public:
   //return current local time HHMMSSmmm
   static std::string getCurTimeStamp(){
     char currentTime[10];
-#ifdef _WIN32 
+#ifdef _WIN32
     SYSTEMTIME st;
     GetLocalTime(&st);
     //sprintf(currentTime, "%02d%02d%02d%03d", st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
@@ -242,6 +92,40 @@ public:
 #endif
     return currentTime;
   }
+
+private:
+  static int getHostIP(std::string &ip) {
+    struct ifaddrs *ifAddrStruct = NULL;
+    struct ifaddrs *ifa = NULL;
+    void * tmpAddrPtr = NULL;
+
+    getifaddrs(&ifAddrStruct);
+    for (ifa = ifAddrStruct; ifa != NULL; ifa = ifa->ifa_next) {
+      if (!ifa->ifa_addr) {
+        continue;
+      }
+
+      if (ifa->ifa_addr->sa_family == AF_INET) {
+        // check it is IP4 is a valid IP4 Address
+        tmpAddrPtr=&((struct sockaddr_in *)ifa->ifa_addr)->sin_addr;
+        char addressBuffer[INET_ADDRSTRLEN];
+        inet_ntop(AF_INET, tmpAddrPtr, addressBuffer, INET_ADDRSTRLEN);
+
+        if (strcmp(addressBuffer ,"127.0.0.1") == 0) {
+          continue;
+        }
+
+        ip = std::string(addressBuffer);
+
+        if (ifAddrStruct != NULL)
+          freeifaddrs(ifAddrStruct);
+
+        return 0;
+      }
+    }
+    return -1;
+  }
+
 };
 
 #endif

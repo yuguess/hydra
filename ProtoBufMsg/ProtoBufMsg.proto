@@ -2,12 +2,12 @@ syntax = "proto3";
 
 enum MsgType {
   TYPE_DATAREQUEST = 0;
-  TYPE_MARKETUPDATE = 1; 
+  TYPE_MARKETUPDATE = 1;
   TYPE_TRANSACTION = 2;
   TYPE_INDEX_DATA = 3;
   TYPE_REPLAY_REQUEST= 4;
   TYPE_ORDER_REQUEST = 5;
-  TYPE_RETURN_MSG = 6;
+  TYPE_RESPONSE_MSG = 6;
 }
 
 message MessageBase {
@@ -32,20 +32,20 @@ message MarketUpdate {
   double close_price = 7;
   //lastest trading price
   double last_price = 8;
-  //this trading day 
-  double highest_price = 9; 
+  //this trading day
+  double highest_price = 9;
   double lowest_price = 10;
   double high_limit_price = 11;
   double low_limit_price = 12;
-  
-	//last trading day settle price
-	double pre_settlement_price = 13;
-	//this trading day settle price
-	double settlement_price = 14;
+
+  //last trading day settle price
+  double pre_settlement_price = 13;
+  //this trading day settle price
+  double settlement_price = 14;
   //this trading day avg price
-	double average_price = 15;
-	//last trading day open interest
-	int32 pre_open_interest = 16;
+  double average_price = 15;
+  //last trading day open interest
+  int32 pre_open_interest = 16;
   //last trading day open interest
   int32 open_interest = 17;
 
@@ -74,7 +74,7 @@ message MarketUpdate {
 
 message Transaction {
   string code = 1;
-  string symbol = 2;    
+  string symbol = 2;
   string exchange = 3;
 
   int32 action_day = 4;
@@ -125,7 +125,7 @@ message ReplayRequest {
 enum RequestType {
   TYPE_LIMIT_ORDER_REQUEST = 0;
   TYPE_MARKET_ORDER_REQUEST = 1;
-  TYPE_CANCEL_ORDER_REQUEST = 2; 
+  TYPE_CANCEL_ORDER_REQUEST = 2;
 }
 
 enum TradeDirection {
@@ -138,25 +138,27 @@ enum PositionDirection {
   CLOSE_POSITION = 1;
 }
 
-//New Order 
+//New Order
 //Cancel Order
 message OrderRequest {
-  
   RequestType type = 1;
+  //this field is required !
   //response address ip:port, format as 110.31.12.132:13213
+  //when requeset got feedback, for whom it should go to
   string response_address = 2;
-  string id = 1;
-  TradeDirection buy_sell = 3;
-  //
-  double limit_price = 4;
+  string id = 3;
+  TradeDirection buy_sell = 4;
+  //for limit order
+  double limit_price = 5;
   //Only for China futures market
-  PositionDirection open_close = 5;
+  PositionDirection open_close = 6;
 }
 
-enum ReturnMsgType {
+enum ResponseMsgType {
   TYPE_NEW_ORDER_CONFIRM = 0;
   TYPE_CANCEL_ORDER_CONFIRM = 1;
   TYPE_ERROR = 2;
+  //make sure to check qty, could be partial trade
   TYPE_TRADE = 3;
 }
 
@@ -164,8 +166,24 @@ enum ReturnMsgType {
 //Trade(Could be partial trade)
 //NewOrder Confirm
 //Cancel Confirm
-message ReturnMessage {
-  ReturnMsgType type = 1;
+message ResponseMessage {
+  ResponseMsgType type = 1;
+  string id = 2;
+  string refId = 3;
+
+  string code = 4;
+  string symbol = 5;
+  string exchange = 6;
+  double price = 7;
+  TradeDirection buy_sell = 8;
+  int32 trade_quantity = 9;
+  int32 error_code = 10;
+  int32 error_msg = 11;
+
+  //the ts that come with origianl tick data, format "09:30:00" --> "093000000"
+  string exchange_timestamp = 12;
+  //when our agent recv ts
+  string recv_timestamp = 13;
 }
 
 message ServiceOrder {

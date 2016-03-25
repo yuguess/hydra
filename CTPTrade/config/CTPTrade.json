@@ -1,0 +1,22 @@
+{
+  ////H002
+  //"CTP": {
+  //  "BrokerID": "8888",
+  //  "UserID": "2500017",
+  //  "Password": "743052",
+  //  "TradeFront": "tcp://27.115.57.20:41213"
+  //},
+
+  //Personal
+  "CTP": {
+    "BrokerID": "8000",
+    "UserID": "01620118",
+    "Password": "201212",
+    "TradeFront": "tcp://180.168.212.75:41205"
+  },
+
+  "MsgHub": {
+    "PublishPort":"15223",
+    "PullPort":"15224"
+  }
+}

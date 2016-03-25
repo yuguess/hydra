@@ -23,7 +23,7 @@ private:
   void OnFrontDisconnected(int nReason);
   void OnRspError(CThostFtdcRspInfoField *, int, bool);
   void OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketData);
-  void OnRspSubMarketData(CThostFtdcSpecificInstrumentField *,      
+  void OnRspSubMarketData(CThostFtdcSpecificInstrumentField *,
       CThostFtdcRspInfoField *, int , bool);
   void OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin,
       CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
@@ -33,7 +33,7 @@ private:
 
   int onMsg(MessageBase msg);
   bool ctpMDtoCedarMD(CThostFtdcDepthMarketDataField*, MarketUpdate&);
-  
+
   CThostFtdcMdApi *m_pUserMDApi;
 
   //const static int MAX_SYMBOL = 200;
