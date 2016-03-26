@@ -3,8 +3,6 @@
 
 #include <map>
 
-#include "Utils.h"
-
 #include "ProtoBufMsgHub.h"
 
 //#include "ThostFtdcMdApi.h"
@@ -25,7 +23,10 @@ public:
 
 private:
   int onMsg(MessageBase);
-  int getIncreaseID();
+  inline int getIncreaseID() {
+    int static id = 1;
+    return id++;
+  }
 
   //======= CTP API below ==========
   void OnFrontConnected();
@@ -276,25 +277,25 @@ private:
     //fn_printCout(__FUNCTION__);
   };
 
-
-  const static int ORDER_DIGIT = 6; 
-
   CThostFtdcTraderApi *pUserTradeApi;
   ProtoBufMsgHub msgHub;
+
   std::string brokerId;
   std::string password;
   std::string userId;
   TThostFtdcFrontIDType frontID;
   TThostFtdcSessionIDType	sessionID;
-  std::map<std::string, std::string> idMap;
 
-  CThostFtdcInputOrderField getEmptyReq();
+  std::map<std::string, int> internalIdToExternal;
+  std::map<int, std::string> externalIdToInternal;
+
+  int initReq(CThostFtdcInputOrderField&);
   void SendMsg(unsigned char type, char* pObj);
   void PrintOrder(CThostFtdcOrderField* pOda);
   void PrintTrade(CThostFtdcTradeField* pTda);
   //void PrintOrderInsertErr(OnRspOrderInsertMsg* pErr);
   //int sendCancelReq(NewOrderInfo &);
-  //int sendOrderReq(NewOrderInfo &);
+  int sendOrderReq(OrderRequest&);
   std::string concatOrderRef(std::string &);
   std::string extractInternalID(char *);
   int returnErrorInfo(CThostFtdcRspInfoField *);

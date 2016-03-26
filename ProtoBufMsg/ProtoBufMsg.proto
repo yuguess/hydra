@@ -136,6 +136,8 @@ enum TradeDirection {
 enum PositionDirection {
   OPEN_POSITION = 0;
   CLOSE_POSITION = 1;
+  //this is only for SH futures Market
+  CLOSE_YESTERDAY_POSITION = 2;
 }
 
 //New Order
@@ -146,12 +148,19 @@ message OrderRequest {
   //response address ip:port, format as 110.31.12.132:13213
   //when requeset got feedback, for whom it should go to
   string response_address = 2;
+
   string id = 3;
-  TradeDirection buy_sell = 4;
+  string code = 4;
+  string symbol = 5;
+  string exchange = 6;
+  TradeDirection buy_sell = 7;
   //for limit order
-  double limit_price = 5;
+  double limit_price = 8;
+  int32 trade_quantity = 9;
   //Only for China futures market
-  PositionDirection open_close = 6;
+  PositionDirection open_close = 10;
+  //the order id tries to cancel
+  string cancel_order_id = 11;
 }
 
 enum ResponseMsgType {
@@ -180,7 +189,8 @@ message ResponseMessage {
   int32 error_code = 10;
   int32 error_msg = 11;
 
-  //the ts that come with origianl tick data, format "09:30:00" --> "093000000"
+  //the ts that come with origianl tick data, 
+  //format "09:30:00" --> "093000000"
   string exchange_timestamp = 12;
   //when our agent recv ts
   string recv_timestamp = 13;
