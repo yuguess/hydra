@@ -58,21 +58,15 @@ void TradeHandler::OnRspUserLogin(
   frontID = pRspUserLogin->FrontID;
   sessionID = pRspUserLogin->SessionID;
 
-  //CThostFtdcSettlementInfoConfirmField pSettlementConfirm;
-  //strcpy(pSettlementConfirm.BrokerID, 
-  //    ConfigGetValue("CTP.BrokerID").c_str());
-  //strcpy(pSettlementConfirm.InvestorID, 
-  //    ConfigGetValue("CTP.UserID").c_str());
-  //pUserTradeApi->ReqSettlementInfoConfirm(&pSettlementConfirm,0);
-  
-
-  //fn_printCout(__FUNCTION__);
+  CThostFtdcSettlementInfoConfirmField pSettlementConfirm;
+  strcpy(pSettlementConfirm.BrokerID, brokerId.c_str());
+  strcpy(pSettlementConfirm.InvestorID, userId.c_str());
+  pUserTradeApi->ReqSettlementInfoConfirm(&pSettlementConfirm,0);
 }
 
 int TradeHandler::onMsg(MessageBase msg) {
   if (msg.type() == TYPE_ORDER_REQUEST) {
     OrderRequest orderReq = ProtoBufHelper::unwrapMsg<OrderRequest>(msg);
-
     //LOG(INFO) << "recv data request " << dataReq.code() << " into codes";
   } else {
     LOG(WARNING) << "recv invalid msg type " << msg.type();
@@ -99,31 +93,13 @@ int TradeHandler::initReq(CThostFtdcInputOrderField &req) {
 	///用户强评标志: 否
 	req.UserForceClose = 0;
 
-	/////GTD日期
-	//TThostFtdcDateType	GTDDate;
-	/////成交量类型
-	//TThostFtdcVolumeConditionType	VolumeCondition;
-
-	/////触发条件
-	//TThostFtdcContingentConditionType	ContingentCondition;
-	/////止损价
-	//TThostFtdcPriceType	StopPrice;
-
-	/////业务单元
-	//TThostFtdcBusinessUnitType	BusinessUnit;
-	/////请求编号
-	//TThostFtdcRequestIDType	RequestID;
-
-	/////互换单标志
-	//TThostFtdcBoolType	IsSwapOrder;
-
   return 0;
 }
 
 
 int TradeHandler::sendOrderReq(OrderRequest &req) {
 
-  if (req.type() == TYPE_LIMIT_ORDER_REQUEST || 
+  if (req.type() == TYPE_LIMIT_ORDER_REQUEST ||
       req.type() == TYPE_MARKET_ORDER_REQUEST) {
 
     int reqId = getIncreaseID();
@@ -153,6 +129,7 @@ int TradeHandler::sendOrderReq(OrderRequest &req) {
       ctpReq.OrderPriceType = THOST_FTDC_OPT_LimitPrice;
       ctpReq.TimeCondition = THOST_FTDC_TC_GFD;
       ctpReq.LimitPrice = req.limit_price();
+      LOG(INFO) << "recv new limit order";
     } else if (req.type() == TYPE_MARKET_ORDER_REQUEST) {
       ctpReq.OrderPriceType = THOST_FTDC_OPT_AnyPrice;
       ctpReq.TimeCondition = THOST_FTDC_TC_GFD;
@@ -161,10 +138,12 @@ int TradeHandler::sendOrderReq(OrderRequest &req) {
 
     pUserTradeApi->ReqOrderInsert(&ctpReq, 0);
 
-    //
+    //record in idmap
     std::string internalId = req.response_address() + "_" + req.id();
     internalIdToExternal[internalId] = reqId;  
     externalIdToInternal[reqId] = internalId;
+    LOG(INFO) << "recv new order req internal id " << internalId
+              << "external id" << reqId;
 
   } else if (req.type() == TYPE_CANCEL_ORDER_REQUEST) {
     int reqId = getIncreaseID();
@@ -189,7 +168,6 @@ int TradeHandler::sendOrderReq(OrderRequest &req) {
       return -1;
     }
 
-    //OrderRef
     //ExchangeID
     //OrderSysID
 
@@ -198,19 +176,12 @@ int TradeHandler::sendOrderReq(OrderRequest &req) {
     strcpy(cnclReq.InvestorID, userId.c_str());
     strcpy(cnclReq.InstrumentID, req.code().c_str());  
 
-  //cancelReq.LimitPrice = order.price;
-  //cancelReq.RequestID = getIncreaseID();
-  //cancelReq.VolumeChange = 0;
 
-  //cancelReq.OrderActionRef = std::stoi(order.id);
-  ////use idMap 
-
-
-  //printf("send cancel request\n");
-  //pUserTradeApi->ReqOrderAction(&cancelReq, 1);
+    //printf("send cancel request\n");
+    //pUserTradeApi->ReqOrderAction(&cancelReq, 1);
 
   } else {
-    //LOG(ERROR) 
+    LOG(ERROR) << "recv an invalid order req type" << req.type(); 
     return -1;
   }
 
