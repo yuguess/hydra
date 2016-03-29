@@ -4,12 +4,6 @@
     {"code":"000002", "exchange":"SZ", "code_type":"stock"},
     {"code":"000004", "exchange":"SZ", "code_type":"index"}
   ],
-
-  "DataServer": {
-    "serverAddr":"192.168.0.50:15222",
-    "boardcastAddr":"192.168.0.50:15221"
-  },
-
   "MsgHub": {
     "PullPort":"15217",
     "PublishPort":"15218"

@@ -10,8 +10,10 @@
 int initMap(std::map<std::string, StockProcessor> &map) {
   std::vector<std::string> codes;
   std::vector<std::string> exchanges;
-  CedarJsonConfig::getInstance().getStringArrayWithTag(codes, "Ticker", "code");
-  CedarJsonConfig::getInstance().getStringArrayWithTag(exchanges, "Ticker", "exchange");
+  CedarJsonConfig::getInstance().getStringArrayWithTag(codes, "Ticker", 
+      "code");
+  CedarJsonConfig::getInstance().getStringArrayWithTag(exchanges, "Ticker", 
+      "exchange");
 
   for (int i = 0; i < codes.size(); i++) {
     StockProcessor stk = StockProcessor();

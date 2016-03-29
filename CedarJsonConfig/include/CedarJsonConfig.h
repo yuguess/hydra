@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "CedarHelper.h"
+#include "easylogging++.h"
 
 #ifdef __linux
 	#include "json/reader.h"

@@ -9,10 +9,6 @@
 #include "ThostFtdcTraderApi.h"
 #include "ThostFtdcUserApiStruct.h"
 
-
-//#include "MarketUpdate.h"
-//#include "MsgHub.h"
-
 class TradeHandler : public CThostFtdcTraderSpi {
 
 public:
