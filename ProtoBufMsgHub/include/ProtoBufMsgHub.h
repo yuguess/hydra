@@ -278,6 +278,18 @@ public:
   }
 
   template<typename T>
+  static MessageBase toMessageBase(MsgType msgType, T &obj) {
+    std::string str;
+    obj.SerializeToString(&str);
+
+    MessageBase msgBase;
+    msgBase.set_type(msgType);
+    msgBase.set_msg(str);
+
+    return msgBase;
+  }
+
+  template<typename T>
   static std::string wrapMsg(MsgType msgType, T &obj) {
     std::string str;
     obj.SerializeToString(&str);

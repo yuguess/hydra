@@ -62,7 +62,7 @@ message MarketUpdate {
   int32 action_day = 27;
   //format as yyyymmdd like 20151201
   string trading_day = 28;
-  //the ts that come with origianl tick data, format "09:30:00" --> "093000000"
+  //ts s origianl tick data, format "09:30:00.0000" --> "093000000"
   string exchange_timestamp = 29;
   //when out agent recv ts
   string recv_timestamp = 30;

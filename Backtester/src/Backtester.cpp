@@ -18,6 +18,8 @@ int Backtester::run() {
   std::vector<std::shared_ptr<DataAdapter>> adapters;
   for (unsigned int i = 0; i < codes.size(); i++) {
     adapters.push_back(AdapterFactory::createAdapter(adapterTypes[i]));
+    orderbooks[codes[i]] = std::shared_ptr<OrderBook>(new OrderBook); 
+    orderbooks[codes[i]]->registerCallback(msgCallback);
   }
 
   for (unsigned int i = 0; i < adapters.size(); i++ ) {
@@ -29,31 +31,46 @@ int Backtester::run() {
     }
   }
 
-  MarketUpdate cur = pq.top();
+  MarketUpdate topMkt = pq.top();
+  boost::posix_time::ptime curTimestamp = toTimestamp(topMkt);
+  boost::posix_time::ptime topTimestamp = curTimestamp;
 
   do {
-    //while (pri,top() <= curtime) {
-    //  updateMatchingEngine();
-    //  callregister function;
-    //}
+    while (topTimestamp <= curTimestamp) {
+      orderbooks[topMkt.code()]->screenshotUpdate(topMkt);
 
-    curtime += 0.5
+      try {
+        msgCallback(ProtoBufHelper::toMessageBase<MarketUpdate>
+            (TYPE_MARKETUPDATE, topMkt));
+      } catch (const std::bad_function_call &e) {
+        LOG(ERROR) << "recv msg but msghub doesn't have register callback";
+        LOG(ERROR) << e.what();
+      } catch (...) {
+        LOG(ERROR) << "Msghub callback function error !";
+      }
+
+      pq.pop();
+      topMkt = pq.top();
+      topTimestamp = toTimestamp(topMkt);
+
+      //if (leap a day) {
+      // day event
+      //}
+
+    }
+    curTimestamp += boost::posix_time::millisec(precisionStep);
   } while (true);
 
-  //for (int i
-  //
-  //DataAdapter();
-  //init
-  //call get next data for every security
-  //push into pq
-  //set pq top as the starting time
-  //Stock market close
+  return 0;
+}
 
-  while (true) {
-    //getNextData();
-    //caculate ts put into priority queue
-    //get from top of priority queue
-    //call callback function
-    //
+int Backtester::sendRequest(OrderRequest &req) {
+  if (orderbooks.find(req.code()) == orderbooks.end()) {
+    LOG(FATAL) << " send an invalid order, code " << req.code() 
+              << " does not have order book ";
+    return -1;
   }
+
+  orderbooks[req.code()]->sendOrder(req); 
+  return 0;
 }
