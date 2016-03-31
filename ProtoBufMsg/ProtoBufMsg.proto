@@ -179,7 +179,8 @@ enum ResponseMsgType {
 message ResponseMessage {
   ResponseMsgType type = 1;
   string id = 2;
-  string refId = 3;
+  //which request it respond to 
+  string ref_id = 3;
 
   string code = 4;
   string symbol = 5;

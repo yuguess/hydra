@@ -4,10 +4,11 @@
 #include "CPlusPlusCode/ProtoBufMsg.pb.h"
 #include "ProtoBufMsgHub.h"
 #include <vector>
+#include <boost/heap/fibonacci_heap.hpp>
 
 class OrderBook {
 public:
-  OrderBook::OrderBook(int);
+  OrderBook(int);
   int screenshotUpdate(MarketUpdate &mktUpdt);
   int sendOrder(OrderRequest &);
   int registerCallback(ProtoBufMsgHub::MsgCallback callback) {
@@ -16,22 +17,22 @@ public:
   }
 
 private:
-  struct LessThanByAskPrice {
-    bool operator()(MarketUpdate &left, MarketUpdate &right) const {
-      return (left.limitPrice() < right.limitPrice());
+  struct LessThanByAsk {
+    bool operator()(OrderRequest &left, OrderRequest &right) const {
+      return (left.limit_price() < right.limit_price());
     }
   };
 
   struct MoreThanByBid {
     bool operator()(OrderRequest &left, OrderRequest &right) const {
-      return (left.limitPrice() > right.limitPrice());
+      return (left.limit_price() > right.limit_price());
     }
   };
 
-  std::priority_queue<OrderRequest,
-    std::vector<OrderRequest>, LessThanByAskPrice> bidLimitOrders;
-  std::priority_queue<OrderRequest,
-    std::vector<OrderRequest>, MoreThanByBidPrice> askLimitOrders;
+  boost::heap::fibonacci_heap<OrderRequest, 
+    boost::heap::compare<OrderBook::MoreThanByBid>> bidLimitOrders;
+  boost::heap::fibonacci_heap<OrderRequest, 
+    boost::heap::compare<OrderBook::LessThanByAsk>> askLimitOrders;
 
   ProtoBufMsgHub::MsgCallback msgCallback;
   std::vector<double> bidPrice, askPrice;
