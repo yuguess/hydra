@@ -17,6 +17,8 @@ public:
   }
 
 private:
+  int sendResp(OrderRequest &);
+
   struct LessThanByAsk {
     bool operator()(OrderRequest &left, OrderRequest &right) const {
       return (left.limit_price() < right.limit_price());
@@ -29,11 +31,12 @@ private:
     }
   };
 
-  boost::heap::fibonacci_heap<OrderRequest, 
+  boost::heap::fibonacci_heap<OrderRequest,
     boost::heap::compare<OrderBook::MoreThanByBid>> bidLimitOrders;
-  boost::heap::fibonacci_heap<OrderRequest, 
+  boost::heap::fibonacci_heap<OrderRequest,
     boost::heap::compare<OrderBook::LessThanByAsk>> askLimitOrders;
 
+  int respId;
   ProtoBufMsgHub::MsgCallback msgCallback;
   std::vector<double> bidPrice, askPrice;
   std::vector<int> bidVolume, askVolume;
