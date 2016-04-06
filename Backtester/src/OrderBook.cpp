@@ -18,11 +18,15 @@ int OrderBook::sendOrder(OrderRequest &orderReq) {
       LOG(ERROR) << "Invalid buy or sell flag " << orderReq.buy_sell();
     }
   } else if (orderReq.type() == TYPE_CANCEL_ORDER_REQUEST) {
-    auto it = std::find_if(bidLimitOrders.begin(), bidLimitOrders.end(), 
-        [orderReq](OrderRequest &req) {return req.id() == orderReq.id();});
-    if (it != 
-    it = std::find_if(bidLimitOrders.begin(), bidLimitOrders.end(), 
-        [orderReq](OrderRequest &req) {return req.id() == orderReq.id();});
+    auto bidIter = std::find_if(bidLimitOrders.begin(), bidLimitOrders.end(),
+        [&](OrderRequest &req) {return req.id() == orderReq.id();});
+    //if (bidIter != bidLimitOrders.end()) 
+      //bidLimitOrders.erase(bidIter);
+
+    auto askIter = std::find_if(askLimitOrders.begin(), askLimitOrders.end(), 
+        [&](OrderRequest &req) {return req.id() == orderReq.id();});
+    //if (askIter != askLimitOrders.end())
+      //askLimitOrders.erase(askIter);
 
     LOG(ERROR) << "";
   } else if (orderReq.type() == TYPE_MARKET_ORDER_REQUEST) {

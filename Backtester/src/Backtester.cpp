@@ -18,7 +18,7 @@ int Backtester::run() {
   std::vector<std::shared_ptr<DataAdapter>> adapters;
   for (unsigned int i = 0; i < codes.size(); i++) {
     adapters.push_back(AdapterFactory::createAdapter(adapterTypes[i]));
-    orderbooks[codes[i]] = std::shared_ptr<OrderBook>(new OrderBook); 
+    orderbooks[codes[i]] = std::shared_ptr<OrderBook>(new OrderBook);
     orderbooks[codes[i]]->registerCallback(msgCallback);
   }
 
