@@ -6,6 +6,7 @@
 class DataAdapter {
 
 public:
+  virtual int initWithArgList(std::string, std::string &) = 0;
   virtual int getNextData(MarketUpdate &) = 0;
   virtual int close() = 0;
 };

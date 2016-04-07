@@ -35,7 +35,8 @@ private:
       CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
   //预埋单录入请求响应
-	virtual void OnRspParkedOrderInsert(CThostFtdcParkedOrderField *pParkedOrder, 
+	virtual void OnRspParkedOrderInsert(
+      CThostFtdcParkedOrderField *pParkedOrder, 
       CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
 	//报单操作请求响应
@@ -76,10 +77,14 @@ private:
 	virtual void OnRtnTrade(CThostFtdcTradeField *pTrade);
 
 	///报单录入错误回报
-	virtual void OnErrRtnOrderInsert(CThostFtdcInputOrderField *pInputOrder, CThostFtdcRspInfoField *pRspInfo);
+	virtual void OnErrRtnOrderInsert(
+    CThostFtdcInputOrderField *pInputOrder, 
+    CThostFtdcRspInfoField *pRspInfo);
 
 	///报单操作错误回报
-	virtual void OnErrRtnOrderAction(CThostFtdcOrderActionField *pOrderAction, CThostFtdcRspInfoField *pRspInfo);
+	virtual void OnErrRtnOrderAction(
+    CThostFtdcOrderActionField *pOrderAction, 
+    CThostFtdcRspInfoField *pRspInfo);
 
 	///合约交易状态通知
 	virtual void OnRtnInstrumentStatus(

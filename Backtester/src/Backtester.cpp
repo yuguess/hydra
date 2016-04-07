@@ -8,16 +8,19 @@
 
 int Backtester::run() {
 
-  std::vector<std::string> codes;
-  std::vector<std::string> adapterTypes;
+  std::vector<std::string> codes, adapterTypes, arglists;
   CedarJsonConfig::getInstance().getStringArrayWithTag(codes,
-    "Backtester.Ticker", "code");
+    "Backtester.Ticker", "Code");
   CedarJsonConfig::getInstance().getStringArrayWithTag(adapterTypes,
-    "Backtester.Ticker", "adapter");
+    "Backtester.Ticker", "Adapter");
+  CedarJsonConfig::getInstance().getStringArrayWithTag(arglists,
+    "Backtester.Ticker", "Arglist");
 
   std::vector<std::shared_ptr<DataAdapter>> adapters;
   for (unsigned int i = 0; i < codes.size(); i++) {
-    adapters.push_back(AdapterFactory::createAdapter(adapterTypes[i]));
+    adapters.push_back(
+      AdapterFactory::createAdapter(adapterTypes[i], 
+        codes[i], arglists[i]));
     orderbooks[codes[i]] = std::shared_ptr<OrderBook>(new OrderBook);
     orderbooks[codes[i]]->registerCallback(msgCallback);
   }
@@ -43,13 +46,18 @@ int Backtester::run() {
         msgCallback(ProtoBufHelper::toMessageBase<MarketUpdate>
             (TYPE_MARKETUPDATE, topMkt));
       } catch (const std::bad_function_call &e) {
-        LOG(ERROR) << "recv msg but msghub doesn't have register callback";
+        LOG(ERROR) << "recv msg but msghub doesn't have" 
+                   <<"register callback";
         LOG(ERROR) << e.what();
       } catch (...) {
         LOG(ERROR) << "Msghub callback function error !";
       }
 
+      //
+      //get its data adapter getNextData and push into pq 
       pq.pop();
+      //check if zero
+      //we should make warning and break 
       topMkt = pq.top();
       topTimestamp = toTimestamp(topMkt);
 
