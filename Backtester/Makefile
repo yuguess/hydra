@@ -1,6 +1,6 @@
 # Makefile to build
 
-CC=g++ 
+CC=g++
 #CFLAGS=-std=c++0x -D_GLIBCXX_USE_SCHED_YIELD -DGCC_44 -D_THREAD_COUNT=2
 #CFLAGS=-std=c++0x -D_GLIBCXX_USE_SCHED_YIELD -DGCC_44 -D_TAIL_Q_START
 #CFLAGS=-O2 -std=c++0x  

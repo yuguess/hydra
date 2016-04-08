@@ -7,6 +7,10 @@
 class BasicFuturesDataAdapter : public DataAdapter {
 
 public:
+  int initWithArgList(std::string code, std::string &argList) {
+
+  }
+
   int getNextData(MarketUpdate &mktUpdt) {
     return 0;
   }

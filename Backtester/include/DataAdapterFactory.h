@@ -14,11 +14,11 @@ public:
 
     std::shared_ptr<DataAdapter> ptr;
     if (adapterType == "BasicFuturesDataAdapter") {
-      ptr = new BasicFuturesDataAdapter(); 
+      ptr = std::shared_ptr<DataAdapter>(new BasicFuturesDataAdapter()); 
     } else if (adapterType == "BasicStockDataAdapter") {
-      ptr = new BasicStockDataAdapter();
+      ptr = std::shared_ptr<DataAdapter>(new BasicStockDataAdapter());
     } else {
-      LOG(FATAL) << "Unsupport Data Adapter"; 
+      LOG(FATAL) << "Unsupport Data Adapter";
       return std::shared_ptr<DataAdapter>(NULL);
     }
 

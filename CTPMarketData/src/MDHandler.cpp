@@ -151,7 +151,7 @@ bool MDHandler::ctpMDtoCedarMD(CThostFtdcDepthMarketDataField *pMD,
 }
 
 int MDHandler::subscribeTicker(std::string ticker) {
-  static std::map<std::string, int> subTickers; 
+  static std::map<std::string, int> subTickers;
   static char *tmpTicker[1];
 
   if (subTickers.find(ticker) != subTickers.end()) {

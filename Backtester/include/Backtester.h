@@ -23,7 +23,10 @@ public:
 
 
 private:
-  static boost::posix_time::ptime toTimestamp(MarketUpdate &);
+  static boost::posix_time::ptime toTimestamp(MarketUpdate &mkt) {
+    return boost::posix_time::time_from_string(
+        mkt.trading_day() + mkt.exchange_timestamp());
+  }
 
   struct LessThanByTimestamp {
     bool operator()(MarketUpdate &left, MarketUpdate &right) const {

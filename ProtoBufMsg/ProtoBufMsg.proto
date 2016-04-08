@@ -60,9 +60,9 @@ message MarketUpdate {
   int32 yield_to_maturity = 26;
 
   int32 action_day = 27;
-  //format as yyyymmdd like 20151201
+  //format as yyyymmdd like 2015-12-01
   string trading_day = 28;
-  //ts s origianl tick data, format "09:30:00.0000" --> "093000000"
+  //ts s origianl tick data, format "09:30:00.000" --> "093000000"
   string exchange_timestamp = 29;
   //when out agent recv ts
   string recv_timestamp = 30;
