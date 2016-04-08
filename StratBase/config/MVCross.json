@@ -1,0 +1,49 @@
+{
+  ////H002
+  //"CTP": {
+  //  "BrokerID": "8888",
+  //  "UserID": "2500017",
+  //  "Password": "743052",
+  //  "TradeFront": "tcp://27.115.57.20:41213"
+  //},
+
+  //Personal
+  "CTP": {
+    "BrokerID": "8000",
+    "UserID": "01620118",
+    "Password": "201212",
+    "TradeFront": "tcp://180.168.212.75:41205"
+  },
+
+  "StratBase": {
+    //Backtest, LiveTrading
+    "Mode": "Backtest"
+  },
+
+  "Backtester": {
+    //2 options, Day, Tick, tick precision is 0.001s, 
+    "Precision": "Tick",
+    "Ticker":[
+      {"Code":"000001", "Adapter":"BasicStock", "Arglist":"SZ;Index"},
+      {"Code":"IF1603", "Adapter":"BasicFutures", "Arglist":""}
+    ],
+    "BasicStock":{
+      "Level": "5",
+      "DataHomeDir": "/home/yuguess/StockData"
+    },
+    "BasicFutures":{
+      "Level": "1
+    },
+    "StartDate": "20160301",
+    "Length": "3",
+    "BacktestEvent": [
+      {"StockOpen":"09:30:00", "RepeatFrequency":"3600 * 24 * 1000"},
+      {"FuturesOpen":"09:30:00", "RepeatFrequency":"3600 * 24 * 1000"}
+    ]
+  },
+
+  "MsgHub": {
+    "PublishPort":"15223",
+    "PullPort":"15224"
+  }
+}
