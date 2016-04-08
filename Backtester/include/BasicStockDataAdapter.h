@@ -51,7 +51,6 @@ public:
       }
       
     }
-
     
     //get home dir
     //build string path
@@ -67,14 +66,22 @@ public:
   }
 
 private:
-  int getNextDataFilePath(std::string &filePath) {
-    static std::string currentDay = startDate; 
+  boost::posix_time::ptime startDateToPTime() {
+    std::locale loc = std::locale(std::locale::classic(), 
+        new boost::posix_time::time_input_facet("%Y%m%d"));
+    std::isstringstream is(startDate);
+    is.imbue(loc);
 
+    return boost::posix_time::time_from_string(is);
+  }
+
+  int getNextDataFilePath(std::string &filePath) {
+    
+    static boost::posix_time::ptime currentPTime = startDateToPTime();
+    
     while (currentPTime < today()) {
-      std::string filePath;
       genFilePath(currentDay, filePath);
-      if access();  
-        nextTradingDay = currentDay; 
+      if check filePath exist 
         return 0;
       else
         currentPTime = curentPTime + 1;
@@ -85,7 +92,7 @@ private:
   }
 
   int genFilePath(std::string &dateString, std::string &filePath) {
-    homeDir + "/" + "Stk_Tick_" + 
+    filePath = homeDir + "/" + "Stk_Tick_" + ; 
   }
 
   std::string homeDir;
