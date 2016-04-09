@@ -3,7 +3,8 @@
 
 #include "CedarJsonConfig.h"
 #include "CPlusPlusCode/ProtoBufMsg.pb.h"
-#include "ProtoBufMsgHub.h" 
+#include "ProtoBufMsgHub.h"
+#include "Backtester.h"
 
 class StratBase {
 public:
@@ -15,7 +16,7 @@ public:
 
 private:
   std::string mode;
-  ProtoBufMsgHub msgHub
+  ProtoBufMsgHub msgHub;
   Backtester backtester;
 };
 

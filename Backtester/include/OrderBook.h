@@ -20,13 +20,13 @@ private:
   int sendResp(OrderRequest &);
 
   struct LessThanByAsk {
-    bool operator()(OrderRequest &left, OrderRequest &right) const {
+    bool operator()(const OrderRequest &left, const OrderRequest &right) const {
       return (left.limit_price() < right.limit_price());
     }
   };
 
   struct MoreThanByBid {
-    bool operator()(OrderRequest &left, OrderRequest &right) const {
+    bool operator()(const OrderRequest &left, const OrderRequest &right) const {
       return (left.limit_price() > right.limit_price());
     }
   };

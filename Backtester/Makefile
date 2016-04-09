@@ -7,8 +7,8 @@ CC=g++
 #CFLAGS=  -O3 -std=c++0x -DUSE_QUEUE
 
 INFRA=/home/yuguess
-CFLAGS=-std=c++0x 
-LDFLAGS = -L/usr/local/lib -L/usr/lib  -L$(INFRA)/CedarLib -lzmq -lthosttraderapi -ljsoncpp -lprotobuf
+CFLAGS=-std=c++0x -fPIC 
+LDFLAGS = -L/usr/local/lib -L/usr/lib  -L$(INFRA)/CedarLib -lzmq -lthosttraderapi -ljsoncpp -lprotobuf -lboost_system
 DEBUG = -g
 BIN=./bin
 SRC=./src
@@ -23,18 +23,18 @@ INCLUDE= -I/usr/include \
 
 PROTOBUF= ../ProtoBufMsg/CPlusPlusCode/ProtoBufMsg.pb.cc
 
-SOURCES= $(SRC)/Main.cpp $(SRC)/TradeHandler.cpp $(PROTOBUF)
+SOURCES= $(SRC)/Backtester.cpp $(SRC)/OrderBook.cpp $(PROTOBUF)
 OBJECTS=$(SOURCES:.cpp=.o)
-EXECUTABLE=$(BIN)/CTP_TRADE
+TARGET=$(BIN)/libBacktester.so
 
-all: $(EXECUTABLE)
+all: $(TARGET)
 
-$(EXECUTABLE): $(OBJECTS)
-	$(CC) $(OBJECTS) $(LDFLAGS) -o $@
+$(TARGET): $(OBJECTS)
+	$(CC) -fPIC -shared $(OBJECTS) -o $@
 
 .cpp.o:
 	$(CC) -c $(CFLAGS) $(DEBUG)  $(INCLUDE) $< -o $@
 
 # --- remove binary and executable files
 clean:
-	rm $(EXECUTABLE) $(SRC)/*.o
+	rm $(TARGET) $(SRC)/*.o

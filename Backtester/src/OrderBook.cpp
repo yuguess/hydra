@@ -19,7 +19,7 @@ int OrderBook::sendOrder(OrderRequest &orderReq) {
     }
   } else if (orderReq.type() == TYPE_CANCEL_ORDER_REQUEST) {
     auto bidIter = std::find_if(bidLimitOrders.begin(), bidLimitOrders.end(),
-        [&](OrderRequest &req) {return req.id() == orderReq.id();});
+        [&](const OrderRequest &req) {return req.id() == orderReq.id();});
     if (bidIter != bidLimitOrders.end()) {
       bidLimitOrders.erase(
         boost::heap::fibonacci_heap<OrderRequest, boost::heap::compare
@@ -27,7 +27,7 @@ int OrderBook::sendOrder(OrderRequest &orderReq) {
     }
 
     auto askIter = std::find_if(askLimitOrders.begin(), askLimitOrders.end(),
-        [&](OrderRequest &req) {return req.id() == orderReq.id();});
+        [&](const OrderRequest &req) {return req.id() == orderReq.id();});
     if (askIter != askLimitOrders.end()) {
       askLimitOrders.erase(
         boost::heap::fibonacci_heap<OrderRequest, boost::heap::compare

@@ -72,7 +72,7 @@ public:
         if (val[i].isString())
           tmp = val[i].asString();
         else
-          LOG(FATAL) << "array path " << arrayPath 
+          LOG(FATAL) << "array path " << arrayPath
             <<  " seems wrong, please check";
 
       } else {
@@ -117,7 +117,7 @@ public:
   }
 
   std::string valueToString(const Json::Value val) {
-    return fastWriter.write(val);    
+    return fastWriter.write(val);
   }
 
   //int loadConfigFile(std::string path) {
@@ -148,7 +148,7 @@ public:
   //  return 0;
   //}
 
-  //int getStringArrayWithTag(std::string arrayPath, std::string tagName, 
+  //int getStringArrayWithTag(std::string arrayPath, std::string tagName,
   //    std::vector<std::string> &results) {
 
   //  rapidjson::Value val;
@@ -158,7 +158,7 @@ public:
   //    LOG(FATAL) << "Get array failed, check your array path" << arrayPath;
 
   //  for (int i = 0; i < val.Size(); i++) {
-  //    if (val[i].HasMember(tagName.c_str()) 
+  //    if (val[i].HasMember(tagName.c_str())
   //        && val[i][tagName.c_str()].IsString()) {
 
   //      results.push_back(val[i][tagName.c_str()].GetString());

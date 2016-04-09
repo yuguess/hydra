@@ -21,7 +21,7 @@
   },
 
   "Backtester": {
-    //2 options, Day, Tick, tick precision is 0.001s, 
+    //2 options, Day, Tick, tick precision is 0.001s,
     "Precision": "Tick",
     "Ticker":[
       {"Code":"000001", "Adapter":"BasicStock", "Arglist":"SZ;Index"},
@@ -32,7 +32,7 @@
       "DataHomeDir": "/home/yuguess/StockData"
     },
     "BasicFutures":{
-      "Level": "1
+      "Level": "1"
     },
     "StartDate": "20160301",
     "Length": "3",

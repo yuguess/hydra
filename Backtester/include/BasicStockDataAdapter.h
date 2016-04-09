@@ -16,9 +16,9 @@ public:
     CedarJsonConfig::getInstance().getStringByPath("BasicStock.Length",
       backtestDaysStr);
 
-    backtestDays = std::stoi(backtestDaysStr);  
+    backtestDays = std::stoi(backtestDaysStr);
     std::vector<std::string> args;
-    boost::split(args, argList, ';');
+    boost::split(args, argList, boost::is_any_of(";"));
     exchange = args[0];
     dataType = args[1];
 
@@ -67,7 +67,7 @@ public:
 
   int lineToMarketUpdate(std::string &line, MarketUpdate &mkt) {
     std::vector<std::string> args;
-    boost::split(args, line, ',');
+    boost::split(args, line, boost::is_any_of(","));
     mkt.set_exchange(args[0]);
     mkt.set_code(args[1]);
     //args[2] format like YYYY-mm-dd HH:MM:SS.mmm

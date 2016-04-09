@@ -1,22 +1,19 @@
 #include <iostream>
-#include "TradeHandler.h"
 #include "CedarHelper.h"
 #include "CedarLogging.h"
 #include "ProtoBufMsgHub.h"
+#include "Backtester.h"
 
 int main() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-  CedarLogging::init("CTPTrade");
-  CedarJsonConfig::getInstance().loadConfigFile("./config/CTPTrade.json");
+  CedarLogging::init("Backtester");
+  CedarJsonConfig::getInstance().loadConfigFile("./config/Backtester.json");
 
-  TradeHandler trade;
-  trade.start();
+  Backtester bt;
 
   LOG(INFO) << "CTPTrade service online!";
   CedarHelper::blockSignalAndSuspend();
-
-  trade.close();
 
   LOG(INFO) << "init quiting procedures now!";
   google::protobuf::ShutdownProtobufLibrary();
