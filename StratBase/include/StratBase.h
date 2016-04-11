@@ -8,13 +8,14 @@
 
 class StratBase {
 public:
-  virtual int onMsg(MessageBase) = 0;
+  virtual int onMsg(MessageBase&) = 0;
 
   template<typename T>
   int sendRequest(MsgType type, T &obj);
   int run();
 
 private:
+  int onMsgWrapper(MessageBase);
   std::string mode;
   ProtoBufMsgHub msgHub;
   Backtester backtester;

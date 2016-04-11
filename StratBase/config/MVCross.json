@@ -20,7 +20,7 @@
     "Mode": "Backtest"
   },
 
-  "Backtester": {
+  "Backtest": {
     //2 options, Day, Tick, tick precision is 0.001s,
     "Precision": "Tick",
     "Ticker":[
