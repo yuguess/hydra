@@ -16,10 +16,10 @@ int Backtester::run() {
   CedarJsonConfig::getInstance().getStringArrayWithTag(arglists,
     "Backtester.Ticker", "Arglist");
 
-  std::vector<std::shared_ptr<DataAdapter>> adapters;
+  std::map<std::string, std::shared_ptr<DataAdapter>> adapters;
   for (unsigned int i = 0; i < codes.size(); i++) {
-    adapters.push_back(
-      AdapterFactory::createAdapter(adapterTypes[i], codes[i], arglists[i]));
+    adapters[codes[i]] =
+      AdapterFactory::createAdapter(adapterTypes[i], codes[i], arglists[i]);
 
     std::string level;
     CedarJsonConfig::getInstance().getStringByPath(
@@ -30,9 +30,9 @@ int Backtester::run() {
     orderbooks[codes[i]]->registerCallback(msgCallback);
   }
 
-  for (unsigned int i = 0; i < adapters.size(); i++ ) {
+  for (auto it = adapters.begin(); it != adapters.end(); it++) {
     MarketUpdate mktUpdt;
-    if (adapters[i]->getNextData(mktUpdt) != 0) {
+    if (adapters[it->first]->getNextData(mktUpdt) != 0) {
       LOG(ERROR) << "there is a emtpy data soruce";
     } else {
       pq.push(mktUpdt);
@@ -42,6 +42,7 @@ int Backtester::run() {
   MarketUpdate topMkt = pq.top();
   boost::posix_time::ptime curTimestamp = toTimestamp(topMkt);
   boost::posix_time::ptime topTimestamp = curTimestamp;
+  static boost::posix_time::ptime todayEnd = getTodayEnd();
 
   do {
     while (topTimestamp <= curTimestamp) {
@@ -58,32 +59,40 @@ int Backtester::run() {
         LOG(ERROR) << "Msghub callback function error !";
       }
 
-      //
-      //get its data adapter getNextData and push into pq
       pq.pop();
+
+      //get its data adapter getNextData and push into pq
+      if (adapters[topMkt.code()]->getNextData(topMkt) == -1)
+        LOG(INFO) << "code " << topMkt.code() << " Backtest data complete";
+      else
+        pq.push(topMkt);
+
       //check if zero
-      //we should make warning and break 
+      if (pq.empty()) {
+        LOG(INFO) << "Backtest data complete ";
+        break;
+      }
+
       topMkt = pq.top();
       topTimestamp = toTimestamp(topMkt);
 
       //if (leap a day) {
       // day event
       //}
-
     }
     curTimestamp += boost::posix_time::millisec(precisionStep);
-  } while (true);
+  } while (curTimestamp <= todayEnd);
 
   return 0;
 }
 
 int Backtester::sendRequest(OrderRequest &req) {
   if (orderbooks.find(req.code()) == orderbooks.end()) {
-    LOG(FATAL) << " send an invalid order, code " << req.code() 
+    LOG(FATAL) << " send an invalid order, code " << req.code()
               << " does not have order book ";
     return -1;
   }
 
-  orderbooks[req.code()]->sendOrder(req); 
+  orderbooks[req.code()]->sendOrder(req);
   return 0;
 }

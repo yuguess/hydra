@@ -61,7 +61,6 @@ public:
   }
 
   int close() {
-    //close fd
     return 0;
   }
 

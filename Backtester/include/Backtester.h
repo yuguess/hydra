@@ -21,8 +21,20 @@ public:
     return 0;
   }
 
-
 private:
+  static boost::posix_time::ptime getTodayEnd() {
+    boost::gregorian::days oneDay(1);
+
+    std::string dateStr = 
+      boost::gregorian::to_iso_extended_string(
+          boost::gregorian::day_clock::local_day());
+
+    boost::posix_time::ptime curTm = 
+      boost::posix_time::time_from_string(dateStr + " 00:00:00.000");
+
+    return curTm + oneDay;  
+  }
+
   static boost::posix_time::ptime toTimestamp(MarketUpdate &mkt) {
     return boost::posix_time::time_from_string(
         mkt.trading_day() + mkt.exchange_timestamp());
