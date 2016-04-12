@@ -17,10 +17,11 @@ int StratTemplate::onMsg(MessageBase &msg) {
 }
 
 int StratTemplate::fiveMinUpdate(RangeStatData &rng) {
-
-//update quick slow MA
-//check cross
-//emit buy or sell signal
-//send orderAgent buy
-//send orderAgent sell
+  //slow and quick
+  
+  //update quick slow MA
+  //check cross
+  //emit buy or sell signal
+  //send orderAgent buy
+  //send orderAgent sell
 }
