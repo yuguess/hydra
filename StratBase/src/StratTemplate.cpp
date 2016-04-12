@@ -17,7 +17,6 @@ int StratTemplate::onMsg(MessageBase &msg) {
 
 int StratTemplate::fiveMinUpdate(RangeStatData &rng) {
   //slow and quick
-  
   //update quick slow MA
   //check cross
   //emit buy or sell signal

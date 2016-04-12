@@ -32,6 +32,9 @@ public:
 
     if (diff > rangePeriod) {
       RangeStatData rng({open, high, low, close});
+
+      rngCallback(rng);
+
       resetRangeStat();
       open = mkt.last_price();
       close = mkt.last_price();
