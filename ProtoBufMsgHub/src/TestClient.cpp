@@ -61,7 +61,7 @@ public:
         mktUpdt.add_ask_price(genRandom(1, 10));
         mktUpdt.add_ask_volume(genRandom(1, 10));
       }
-      std::string res = 
+      std::string res =
         ProtoBufHelper::wrapMsg<MarketUpdate>(TYPE_MARKETUPDATE, mktUpdt);
       msgHub.boardcastMsg(code, res);
       LOG(INFO) << "boardcast " << res;

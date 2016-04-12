@@ -21,6 +21,11 @@ public:
     return 0;
   }
 
+  static boost::posix_time::ptime toTimestamp(MarketUpdate &mkt) {
+    return boost::posix_time::time_from_string(
+        mkt.trading_day() + mkt.exchange_timestamp());
+  }
+
 private:
   static boost::posix_time::ptime getTodayEnd() {
     boost::gregorian::days oneDay(1);
@@ -35,10 +40,7 @@ private:
     return curTm + oneDay;  
   }
 
-  static boost::posix_time::ptime toTimestamp(MarketUpdate &mkt) {
-    return boost::posix_time::time_from_string(
-        mkt.trading_day() + mkt.exchange_timestamp());
-  }
+  
 
   struct LessThanByTimestamp {
     bool operator()(MarketUpdate &left, MarketUpdate &right) const {

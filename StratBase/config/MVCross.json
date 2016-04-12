@@ -20,6 +20,15 @@
     "Mode": "Backtest"
   },
 
+  "LiveTrading": {
+    "PreMarket": "09:15:00",
+    "OpenCall": "09:25:00",
+    "MorningMarketOpen": "09:30:00",
+    "MorningMarketClose": "11:30:00",
+    "AfternoonMarketOpen": "13:00:00",
+    "AfternoonMarketClose": "15:00:00"
+  },
+
   "Backtest": {
     //2 options, Day, Tick, tick precision is 0.001s,
     "Precision": "Tick",
