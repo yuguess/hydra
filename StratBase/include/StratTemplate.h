@@ -7,9 +7,11 @@
 class StratTemplate : public StratBase {
 public:
   int onMsg(MessageBase&);
+  ~StratTemplate() {};
 
 private:
   int fiveMinUpdate(RangeStatData &rng);
+
 };
 
 #endif

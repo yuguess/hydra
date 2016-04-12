@@ -1,6 +1,5 @@
 #include "StratTemplate.h"
 
-
 int StratTemplate::onMsg(MessageBase &msg) {
 
   RangeStat fiveMin(300);
