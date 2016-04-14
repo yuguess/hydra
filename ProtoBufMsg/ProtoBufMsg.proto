@@ -10,6 +10,15 @@ enum MsgType {
   TYPE_RESPONSE_MSG = 6;
 }
 
+enum ExchangeType {
+  SHSE = 0;
+  SZSE = 1;
+  CFE = 2;
+  SHFE = 3;
+  DCE = 4;
+  ZCE = 5;
+}
+
 message MessageBase {
   MsgType type = 1;
   bytes msg = 2;
@@ -20,8 +29,7 @@ message MarketUpdate {
   string code = 1;
   //could be stock chinese name
   string symbol = 2;
-  //exchange id
-  string exchange = 3;
+  ExchangeType exchange = 3;
 
   int32 status = 4;
   //last trading day close pirce
@@ -76,7 +84,7 @@ message MarketUpdate {
 message Transaction {
   string code = 1;
   string symbol = 2;
-  string exchange = 3;
+  ExchangeType exchange = 3;
 
   int32 action_day = 4;
   int32 time = 5;
@@ -95,7 +103,7 @@ message Transaction {
 message IndexData {
   string code = 1;
   string symbol = 2;
-  string exchange = 3;
+  ExchangeType exchange = 3;
 
   int32 action_day = 4;
   int32 time = 5;
@@ -111,7 +119,7 @@ message IndexData {
 message DataRequest {
   string code = 1;
   string symbol = 2;
-  string exchange = 3;
+  ExchangeType exchange = 3;
   string data_type = 4;
 }
 
@@ -127,6 +135,7 @@ enum RequestType {
   TYPE_LIMIT_ORDER_REQUEST = 0;
   TYPE_MARKET_ORDER_REQUEST = 1;
   TYPE_CANCEL_ORDER_REQUEST = 2;
+  TYPE_AGENT_ORDER_REQUEST = 3;
 }
 
 enum TradeDirection {
@@ -153,7 +162,7 @@ message OrderRequest {
   string id = 3;
   string code = 4;
   string symbol = 5;
-  string exchange = 6;
+  ExchangeType exchange = 6;
   TradeDirection buy_sell = 7;
   //for limit order
   double limit_price = 8;
@@ -179,12 +188,12 @@ enum ResponseMsgType {
 message ResponseMessage {
   ResponseMsgType type = 1;
   string id = 2;
-  //which request id it respond to 
+  //which request id it respond to
   string ref_id = 3;
 
   string code = 4;
   string symbol = 5;
-  string exchange = 6;
+  ExchangeType exchange = 6;
   double price = 7;
   TradeDirection buy_sell = 8;
   int32 trade_quantity = 9;

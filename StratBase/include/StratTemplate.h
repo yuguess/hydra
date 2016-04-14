@@ -3,15 +3,18 @@
 
 #include "StratBase.h"
 #include "RangeStat.h"
+#include "PositionManager.h"
 
 class StratTemplate : public StratBase {
 public:
-  int onMsg(MessageBase&);
+  StratTemplate();
   ~StratTemplate() {};
+  int onMsg(MessageBase&);
 
 private:
-  int fiveMinUpdate(RangeStatData &rng);
-
+  int twoMinUpdate(RangeStatData &rng);
+  RangeStat twoMin;
+  PositionManager positionManager;
 };
 
 #endif

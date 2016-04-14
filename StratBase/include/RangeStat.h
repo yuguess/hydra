@@ -13,7 +13,7 @@ public:
   typedef std::function<int(RangeStatData&)> RangeStatCallback;
 
   //rng in seconds
-  RangeStat(int rng) {
+  int init(int rng) {
     rangePeriod = boost::posix_time::seconds(rng);
     resetRangeStat();
   }

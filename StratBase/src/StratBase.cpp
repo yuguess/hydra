@@ -29,11 +29,11 @@ int StratBase::onMsgWrapper(MessageBase msgBase) {
 template<typename T>
 int StratBase::sendRequest(MsgType type, T &obj) {
 
-  if (mode == "Backtest") {
+  if (mode == "Backtest" || mode == "LiveTest") {
     //goes to backtester
     //backtester.sendRequest();
   } else if (mode == "LiveTrading") {
-    //setup msghub
+    //send through orderAgent
   } else {
     LOG(FATAL) << "Invalid mode " << mode << "check your config please";
   }

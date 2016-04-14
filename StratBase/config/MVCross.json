@@ -20,6 +20,12 @@
     "Mode": "Backtest"
   },
 
+  "MarketData": {
+    "Ticker":[
+      {"Code":"JD1604", "Adapter":"BasicFutures", "Arglist":"DCE"}
+    ],
+  },
+
   "LiveTrading": {
     "PreMarket": "09:15:00",
     "OpenCall": "09:25:00",
@@ -32,10 +38,6 @@
   "Backtest": {
     //2 options, Day, Tick, tick precision is 0.001s,
     "Precision": "Tick",
-    "Ticker":[
-      {"Code":"000001", "Adapter":"BasicStock", "Arglist":"SZ;Index"},
-      {"Code":"IF1603", "Adapter":"BasicFutures", "Arglist":""}
-    ],
     "BasicStock":{
       "Level": "5",
       "DataHomeDir": "/home/yuguess/StockData"
