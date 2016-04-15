@@ -12,6 +12,7 @@ public:
   int onMsg(MessageBase&);
 
 private:
+  std::string tradeSecurity;
   int twoMinUpdate(RangeStatData &rng);
   RangeStat twoMin;
   PositionManager positionManager;

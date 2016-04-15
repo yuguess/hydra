@@ -3,6 +3,10 @@
 #include "TechnicalHelper.h"
 
 StratTemplate::StratTemplate() {
+  std::vector<std::string> codes;
+  CedarJsonConfig::getInstance().getStringArrayWithTag(codes, "Ticker", "code");
+  tradeSecurity = codes[0];
+
   twoMin.init(2 * 60);
   twoMin.registerCallback(std::bind(&StratTemplate::twoMinUpdate, this,
     std::placeholders::_1));
@@ -73,16 +77,13 @@ int StratTemplate::twoMinUpdate(RangeStatData &rng) {
       LOG(ERROR) << "";
     } else if (positionManager.getPosition() == PositionManager::SHORT_POSITION) {
 
-      ////flat short
-      //OrderRequest req;
-      //req.set_type(TYPE_AGENT_ORDER_REQUEST);
-      ////req.set_id();
+      //flat short
+      OrderRequest req;
+      req.set_type(TYPE_DELEGATE_ORDER_REQUEST);
       //req.set_code();
-      ////req.set_exchange();
-      ////req.set_buy_sell;
-      ////req.set_limit_price;
-      ////req.set_trade_quantity;
-      ////req.set_open_close;
+      req.set_buy_sell(LONG_BUY);
+      req.set_trade_quantity(1);
+      req.set_open_close(CLOSE_POSITION);
 
 
     } else if (positionManager.getPosition() == PositionManager::EMPTY) {
