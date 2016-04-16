@@ -4,6 +4,7 @@
 #include "StratBase.h"
 #include "RangeStat.h"
 #include "PositionManager.h"
+#include "OrderDelegate.h"
 
 class StratTemplate : public StratBase {
 public:
@@ -16,6 +17,7 @@ private:
   int twoMinUpdate(RangeStatData &rng);
   RangeStat twoMin;
   PositionManager positionManager;
+  OrderDelegate orderDelegate;
 };
 
 #endif

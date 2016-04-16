@@ -60,7 +60,7 @@ int main(int argc, char* argv[]) {
   MarketUpdate mktUpdt;
   mktUpdt.set_code("000001");
   mktUpdt.set_symbol("test");
-  mktUpdt.set_exchange("SH");
+  mktUpdt.set_exchange(SHSE);
   mktUpdt.set_exchange_timestamp("112233444");
 
   std::string mktStr;

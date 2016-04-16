@@ -80,11 +80,12 @@ int StratTemplate::twoMinUpdate(RangeStatData &rng) {
       //flat short
       OrderRequest req;
       req.set_type(TYPE_DELEGATE_ORDER_REQUEST);
-      //req.set_code();
+      req.set_code(tradeSecurity);
       req.set_buy_sell(LONG_BUY);
       req.set_trade_quantity(1);
       req.set_open_close(CLOSE_POSITION);
 
+      orderDelegate.sendRequest(req);
 
     } else if (positionManager.getPosition() == PositionManager::EMPTY) {
       //enter long
