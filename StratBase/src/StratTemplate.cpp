@@ -1,11 +1,17 @@
 #include <ta-lib/ta_libc.h>
 #include "StratTemplate.h"
 #include "TechnicalHelper.h"
+#include "EnumStringMap.h"
 
 StratTemplate::StratTemplate() {
   std::vector<std::string> codes;
-  CedarJsonConfig::getInstance().getStringArrayWithTag(codes, "Ticker", "code");
+  std::vector<std::string> argLists;
+  CedarJsonConfig::getInstance().getStringArrayWithTag(codes,
+      "Ticker", "Code");
+  CedarJsonConfig::getInstance().getStringArrayWithTag(codes,
+      "Ticker", "Arglist");
   tradeSecurity = codes[0];
+  exchange = argLists[0];
 
   twoMin.init(2 * 60);
   twoMin.registerCallback(std::bind(&StratTemplate::twoMinUpdate, this,
@@ -16,14 +22,15 @@ int StratTemplate::onMsg(MessageBase &msg) {
 
   if (msg.type() == TYPE_MARKETUPDATE) {
     MarketUpdate mktUpdt = ProtoBufHelper::unwrapMsg<MarketUpdate>(msg);
+    orderDelegate.onTickUpdate(mktUpdt);
     twoMin.onTickUpdate(mktUpdt);
   } else if (msg.type() == TYPE_RESPONSE_MSG) {
-
+    //need to figure out
   }
 
   //updatePNL
   //check stop loss/profit on every tick
-
+  //8% stop loss
   return 0;
 }
 
@@ -75,31 +82,42 @@ int StratTemplate::twoMinUpdate(RangeStatData &rng) {
 
     if (positionManager.getPosition() == PositionManager::LONG_POSITION) {
       LOG(ERROR) << "";
-    } else if (positionManager.getPosition() == PositionManager::SHORT_POSITION) {
-
-      //flat short
+    } else {
       OrderRequest req;
       req.set_type(TYPE_DELEGATE_ORDER_REQUEST);
+      req.set_exchange(exchangeStringToEnum[exchange]);
       req.set_code(tradeSecurity);
-      req.set_buy_sell(LONG_BUY);
       req.set_trade_quantity(1);
-      req.set_open_close(CLOSE_POSITION);
+      req.set_buy_sell(LONG_BUY);
 
+      if (positionManager.getPosition() == PositionManager::SHORT_POSITION) {
+        //flat pre short
+        req.set_open_close(CLOSE_POSITION);
+      } else if (positionManager.getPosition() == PositionManager::EMPTY) {
+        req.set_open_close(OPEN_POSITION);
+      }
       orderDelegate.sendRequest(req);
-
-    } else if (positionManager.getPosition() == PositionManager::EMPTY) {
-      //enter long
     }
 
   } else if (TechnicalHelper::checkCross(
         firBeg, firEnd, secBeg, secEnd) == DOWN_CROSS) {
 
-    if (positionManager.getPosition() == PositionManager::LONG_POSITION) {
-      //flat
-    } else if (positionManager.getPosition() == PositionManager::SHORT_POSITION) {
+    if (positionManager.getPosition() == PositionManager::SHORT_POSITION) {
       LOG(ERROR) << "";
-    } else if (positionManager.getPosition() == PositionManager::EMPTY) {
-      //enter short
+    } else {
+      OrderRequest req;
+      req.set_type(TYPE_DELEGATE_ORDER_REQUEST);
+      req.set_exchange(exchangeStringToEnum[exchange]);
+      req.set_code(tradeSecurity);
+      req.set_trade_quantity(1);
+      req.set_buy_sell(SHORT_SELL);
+
+      if (positionManager.getPosition() == PositionManager::LONG_POSITION) {
+        //flat pre long
+        req.set_open_close(CLOSE_POSITION);
+      } else if (positionManager.getPosition() == PositionManager::EMPTY) {
+        req.set_open_close(OPEN_POSITION);
+      }
     }
   }
 }
