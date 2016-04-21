@@ -3,7 +3,9 @@
 #include "TechnicalHelper.h"
 #include "EnumStringMap.h"
 
-StratTemplate::StratTemplate() {
+StratTemplate::StratTemplate() :
+  orderDelegate(std::shared_ptr<StratBase>(this)) {
+
   std::vector<std::string> codes;
   std::vector<std::string> argLists;
   CedarJsonConfig::getInstance().getStringArrayWithTag(codes,
@@ -16,6 +18,7 @@ StratTemplate::StratTemplate() {
   twoMin.init(2 * 60);
   twoMin.registerCallback(std::bind(&StratTemplate::twoMinUpdate, this,
     std::placeholders::_1));
+
 }
 
 int StratTemplate::onMsg(MessageBase &msg) {
@@ -24,13 +27,17 @@ int StratTemplate::onMsg(MessageBase &msg) {
     MarketUpdate mktUpdt = ProtoBufHelper::unwrapMsg<MarketUpdate>(msg);
     orderDelegate.onTickUpdate(mktUpdt);
     twoMin.onTickUpdate(mktUpdt);
+    positionManager.onTickUpdate(mktUpdt);
+
   } else if (msg.type() == TYPE_RESPONSE_MSG) {
-    //need to figure out
+    ResponseMessage respMsg = ProtoBufHelper::unwrapMsg<ResponseMessage>(msg);
+    //update orderDelegate
+    orderDelegate.onOrderResponseUpdate(respMsg);
+    positionManager.onOrderResponseUpdate(respMsg);
   }
 
-  //updatePNL
-  //check stop loss/profit on every tick
-  //8% stop loss
+  //check stop profit/loss on every tick
+
   return 0;
 }
 
@@ -75,12 +82,13 @@ int StratTemplate::twoMinUpdate(RangeStatData &rng) {
   double secBeg = quickMARes[quickEndIdx];
   double secEnd = slowMARes[slowEndIdx];
 
+  ItemPosition pos  = positionManager.getPosition().begin()->second;
   if (TechnicalHelper::checkCross(firBeg, firEnd, secBeg, secEnd) == NO_CROSS) {
     return 0;
   } else if (TechnicalHelper::checkCross(
         firBeg, firEnd, secBeg, secEnd) == UP_CROSS) {
 
-    if (positionManager.getPosition() == PositionManager::LONG_POSITION) {
+    if (pos.netPosition > 0) {
       LOG(ERROR) << "";
     } else {
       OrderRequest req;
@@ -90,10 +98,10 @@ int StratTemplate::twoMinUpdate(RangeStatData &rng) {
       req.set_trade_quantity(1);
       req.set_buy_sell(LONG_BUY);
 
-      if (positionManager.getPosition() == PositionManager::SHORT_POSITION) {
+      if (pos.netPosition < 0) {
         //flat pre short
         req.set_open_close(CLOSE_POSITION);
-      } else if (positionManager.getPosition() == PositionManager::EMPTY) {
+      } else if (pos.netPosition == 0) {
         req.set_open_close(OPEN_POSITION);
       }
       orderDelegate.sendRequest(req);
@@ -102,7 +110,7 @@ int StratTemplate::twoMinUpdate(RangeStatData &rng) {
   } else if (TechnicalHelper::checkCross(
         firBeg, firEnd, secBeg, secEnd) == DOWN_CROSS) {
 
-    if (positionManager.getPosition() == PositionManager::SHORT_POSITION) {
+    if (pos.netPosition < 0) {
       LOG(ERROR) << "";
     } else {
       OrderRequest req;
@@ -112,10 +120,10 @@ int StratTemplate::twoMinUpdate(RangeStatData &rng) {
       req.set_trade_quantity(1);
       req.set_buy_sell(SHORT_SELL);
 
-      if (positionManager.getPosition() == PositionManager::LONG_POSITION) {
+      if (pos.netPosition > 0) {
         //flat pre long
         req.set_open_close(CLOSE_POSITION);
-      } else if (positionManager.getPosition() == PositionManager::EMPTY) {
+      } else if (pos.netPosition == 0) {
         req.set_open_close(OPEN_POSITION);
       }
     }

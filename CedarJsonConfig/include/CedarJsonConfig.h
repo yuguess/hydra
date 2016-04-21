@@ -6,7 +6,6 @@
 #include <boost/algorithm/string.hpp>
 #include <vector>
 
-#include "CedarHelper.h"
 #include "easylogging++.h"
 
 #ifdef __linux

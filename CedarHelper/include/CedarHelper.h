@@ -20,8 +20,6 @@
 #include "CedarJsonConfig.h"
 #include "easylogging++.h"
 
-class CedarJsonConfig;
-
 class CedarHelper {
 
 public:
@@ -61,11 +59,13 @@ public:
   }
 
   //this only get IPV4 addr, skip 127.0.0.1
-  static std::string getResponseAddr(std::string pullPort) {
+  static std::string getResponseAddr() {
+    std::string pull;
+    CedarJsonConfig::getInstance().getStringByPath("MsgHub.PullPort", pull);
     std::string ipStr;
     if (getHostIP(ipStr) != 0)
-      LOG(ERROR) << "can't this machine IP address";
-    return ipStr + ":" + pullPort;
+      LOG(ERROR) << "can't get this machine IP address";
+    return ipStr + ":" + pull;
   }
 
   static void getConfigRoot(std::string filepath, Json::Value& root) {
@@ -80,7 +80,6 @@ public:
 #ifdef _WIN32
     SYSTEMTIME st;
     GetLocalTime(&st);
-    //sprintf(currentTime, "%02d%02d%02d%03d", st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
 #endif
 #ifdef __linux
     struct timeval curTime;
