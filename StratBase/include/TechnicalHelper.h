@@ -1,8 +1,6 @@
 #ifndef TECHNICAL_HELPER_H
 #define TECHNICAL_HELPER_H
 
-#include "CedarLogging.h"
-
 enum CrossStatus {
   NO_CROSS = 0,
   UP_CROSS, 
@@ -15,7 +13,7 @@ public:
   static CrossStatus checkCross(double firBeg, double firEnd,
       double secBeg, double secEnd) {
     if (firBeg == secBeg) {
-      LOG(ERROR) << "checkCross error, begin point overlap"; 
+      LOG(ERROR) << "checkCross error, begin point overlap";
     }
 
     if (firBeg < secBeg && firEnd >= secEnd) {

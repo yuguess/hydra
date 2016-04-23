@@ -8,7 +8,7 @@ CC=g++
 
 INFRA=/home/yuguess
 CFLAGS=-std=c++0x
-LDFLAGS = -L/usr/local/lib -L/usr/lib  -L$(INFRA)/CedarLib -L/home/yuguess/hydra/Backtester/bin -lzmq -lthosttraderapi -ljsoncpp -lprotobuf -lboost_date_time -lBacktester
+LDFLAGS = -L/usr/local/lib -L/usr/lib  -L$(INFRA)/CedarLib -L/home/yuguess/hydra/Backtester/bin -lzmq -lthosttraderapi -ljsoncpp -lprotobuf -lboost_date_time -lBacktester -lta_lib
 DEBUG = -g
 BIN=./bin
 SRC=./src
@@ -24,7 +24,8 @@ INCLUDE= -I/usr/include \
 
 PROTOBUF= ../ProtoBufMsg/CPlusPlusCode/ProtoBufMsg.pb.cc
 
-SOURCES= $(SRC)/MVCross.cpp $(SRC)/StratTemplate.cpp $(SRC)/StratBase.cpp $(PROTOBUF)
+SOURCES= $(SRC)/MVCross.cpp $(SRC)/StratTemplate.cpp $(SRC)/StratBase.cpp  \
+				 $(SRC)/OrderDelegate.cpp $(PROTOBUF)
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=$(BIN)/MVCross
 
