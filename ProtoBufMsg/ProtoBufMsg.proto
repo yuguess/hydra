@@ -146,8 +146,9 @@ enum TradeDirection {
 enum PositionDirection {
   OPEN_POSITION = 0;
   CLOSE_POSITION = 1;
-  //this is only for SH futures Market
-  CLOSE_YESTERDAY_POSITION = 2;
+  //below 2 only for SH futures Market
+  CLOSE_TODAY_POSITION = 2;
+  CLOSE_YESTERDAY_POSITION = 3;
 }
 
 //New Order

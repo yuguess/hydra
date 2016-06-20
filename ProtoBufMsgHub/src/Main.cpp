@@ -49,7 +49,7 @@ int main() {
 
   DataRequest mdReq;
   mdReq.set_code("000001");
-  mdReq.set_exchange("SZ");
+  //mdReq.set_exchange("SZ");
 
   pushAddr = "127.0.0.1:15216";
   publishAddr = "127.0.0.1:15215";

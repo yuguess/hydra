@@ -9,10 +9,10 @@
 #include "easylogging++.h"
 
 #ifdef __linux
-	#include "json/reader.h"
-    #include "json/writer.h"
+  #include "json/reader.h"
+  #include "json/writer.h"
 #elif  _WIN32
-	#include "json/json.h"
+  #include "json/json.h"
 #endif
 
 class CedarJsonConfig {
@@ -30,7 +30,7 @@ public:
       LOG(FATAL) << "Parse config file " << path << " error, "
         << "check your path or config file format";
 
-	return 0;
+  return 0;
   }
 
   int getStringByPath(std::string path, std::string &result) {
