@@ -33,7 +33,7 @@ message MarketUpdate {
 
   int32 status = 4;
   //last trading day close pirce
-  int32 pre_close_price = 5;
+  double pre_close_price = 5;
   //this trading day open price
   double open_price = 6;
   //this trading day close price
