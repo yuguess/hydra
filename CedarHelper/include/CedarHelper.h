@@ -92,6 +92,36 @@ public:
     return currentTime;
   }
 
+  static std::string exchangeTypeToString(ExchangeType exchange) {
+    switch (exchange) {
+      case SHSE: return "SHSE";
+      case SZSE: return "SZSE";
+      case CFE: return "CFE";
+      case SHFE: return "SHFE";
+      case DCE: return "DCE";
+      case ZCE: return "ZCE";
+      default:
+        LOG(ERROR) << "Invalid exchange type";
+    }
+  }
+
+  static ExchangeType stringToExchangeType(std::string exchange) {
+    if (exchange == "SHSE")
+      return ExchangeType::SHSE;
+    else if (exchange == "SZSE")
+      return ExchangeType::SZSE;
+    else if (exchange == "CFE")
+      return ExchangeType::CFE;
+    else if (exchange == "SHFE")
+      return ExchangeType::SHFE;
+    else if (exchange == "DCE")
+      return ExchangeType::DCE;
+    else if (exchange == "ZCE")
+      return ExchangeType::ZCE;
+    else
+      LOG(ERROR) << "Invalid exchange string";
+  }
+
 private:
   static int getHostIP(std::string &ip) {
     struct ifaddrs *ifAddrStruct = NULL;
