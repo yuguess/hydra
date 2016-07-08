@@ -18,7 +18,7 @@
 #include <direct.h>
 #endif
 #include "CedarJsonConfig.h"
-#include "easylogging++.h"
+#include "CPlusPlusCode/ProtoBufMsg.pb.h"
 
 class CedarHelper {
 
@@ -120,6 +120,12 @@ public:
       return ExchangeType::ZCE;
     else
       LOG(ERROR) << "Invalid exchange string";
+  }
+
+  static std::string getOrderId() {
+    static std::string respAddr = getResponseAddr();
+    static int id = 0;
+    return respAddr + "_" + std::to_string(++id);
   }
 
 private:
