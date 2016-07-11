@@ -28,10 +28,7 @@ OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=$(BIN)/CTP_MD
 DUMMY=$(BIN)/dummyStrat
 
-all: $(EXECUTABLE) $(DUMMY)
-
-$(DUMMY):
-	$(CC) $(CFLAGS) $(DEBUG) $(INCLUDE) src/DummyStrat.cpp $(PROTOBUF) $(LDFLAGS) -o $@ 
+all: $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(OBJECTS) $(LDFLAGS) -o $@
@@ -41,4 +38,4 @@ $(EXECUTABLE): $(OBJECTS)
 
 # --- remove binary and executable files
 clean:
-	rm $(EXECUTABLE) $(DUMMY) $(SRC)/*.o
+	rm $(EXECUTABLE) $(SRC)/*.o

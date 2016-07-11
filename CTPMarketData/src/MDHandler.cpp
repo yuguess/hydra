@@ -2,7 +2,7 @@
 //#include <string.h>
 //#include <stdio.h>
 //#include "NewCedarConfig.h"
-//#include "CedarHelper.h"
+#include "CedarHelper.h"
 
 MDHandler::MDHandler() {
   m_pUserMDApi = CThostFtdcMdApi::CreateFtdcMdApi();
@@ -11,7 +11,7 @@ MDHandler::MDHandler() {
   //ConfigGetString("dataPath", m_dataPath);
 
   ProtoBufHelper::setupProtoBufMsgHub(msgHub);
-  msgHub.registerCallback(std::bind(&MDHandler::onMsg, 
+  msgHub.registerCallback(std::bind(&MDHandler::onMsg,
         this, std::placeholders::_1));
 }
 
@@ -46,7 +46,6 @@ void MDHandler::MarketOpenClose(int opencloseflag) {
   //CDXSHAREDOBJ* pCEM = g_ShareMem.m_pSharedObj;
 
   //for(int acctID = 0;acctID<CDX_ACCOUNT_CNT;acctID++) {
-  //  int AcctActive = (int)boost::interprocess::ipcdetail::atomic_read32(&pCEM->REGISTEREDACCT[acctID].active);
   //  if(AcctActive == 1) {
   //    pCEM->REGISTEREDACCT[acctID].MD.push(MD);
   //  }
@@ -74,7 +73,7 @@ void MDHandler::OnFrontDisconnected(int nReason) {
   LOG(WARNING) <<"Futures Market disconnected, OnFrontDisconnected!";
 }
 
-void MDHandler::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, 
+void MDHandler::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin,
     CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
 
   LOG(INFO) << "Login ErrorCode:" << pRspInfo->ErrorID 
@@ -117,7 +116,7 @@ bool MDHandler::ctpMDtoCedarMD(CThostFtdcDepthMarketDataField *pMD,
 
   md.set_trading_day(pMD->TradingDay);
   md.set_code(pMD->InstrumentID);
-  md.set_exchange(pMD->ExchangeID);
+  //md.set_exchange(pMD->ExchangeID);
   md.set_recv_timestamp(CedarHelper::getCurTimeStamp());
 
 	md.set_last_price(pMD->LastPrice);
@@ -191,7 +190,7 @@ void MDHandler::OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pMD) {
 void MDHandler::OnRspError(CThostFtdcRspInfoField *pRspInfo,
     int nRequestID, bool bIsLast) {
   if (pRspInfo->ErrorID != 0) {
-    LOG(ERROR) << "Recv resp error " << " ErrorCode:" 
+    LOG(ERROR) << "Recv resp error " << " ErrorCode:"
                 << pRspInfo->ErrorID << " ErrorMsg:" << pRspInfo->ErrorMsg;
   }
 }

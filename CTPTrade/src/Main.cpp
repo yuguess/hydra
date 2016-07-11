@@ -13,7 +13,7 @@ int main() {
   TradeHandler trade;
   trade.start();
 
-  LOG(INFO) << "CTPTrade service online!";
+  LOG(INFO) << "CTPTrade service online";
   CedarHelper::blockSignalAndSuspend();
 
   trade.close();

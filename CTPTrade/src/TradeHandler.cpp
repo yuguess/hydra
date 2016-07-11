@@ -1,19 +1,18 @@
 #include "TradeHandler.h"
 #include "CedarHelper.h"
-//#include "MarketUpdate.h"
 
 TradeHandler::TradeHandler() {
   pUserTradeApi = CThostFtdcTraderApi::CreateFtdcTraderApi();
 
   ProtoBufHelper::setupProtoBufMsgHub(msgHub);
-  msgHub.registerCallback(std::bind(&TradeHandler::onMsg, 
-        this, std::placeholders::_1));
+  msgHub.registerCallback(std::bind(&TradeHandler::onMsg,
+      this, std::placeholders::_1));
 }
 
 int TradeHandler::start() {
   std::string tradeFront;
   CedarJsonConfig::getInstance().getStringByPath("CTP.TradeFront", tradeFront);
-  LOG(INFO) << tradeFront;
+  LOG(INFO) << "connect to trade front" << tradeFront;
   pUserTradeApi->RegisterSpi(this);
 
   pUserTradeApi->SubscribePrivateTopic(THOST_TERT_QUICK);
@@ -25,7 +24,6 @@ int TradeHandler::start() {
 
 void TradeHandler::OnFrontConnected() {
   LOG(INFO) << "FrontConnected";
-  
   CedarJsonConfig::getInstance().getStringByPath("CTP.UserID", userId);
   CedarJsonConfig::getInstance().getStringByPath("CTP.BrokerID", brokerId);
   CedarJsonConfig::getInstance().getStringByPath("CTP.Password", password);
@@ -39,12 +37,12 @@ void TradeHandler::OnFrontConnected() {
 }
 
 void TradeHandler::OnRspUserLogin(
-    CThostFtdcRspUserLoginField *pRspUserLogin, 
+    CThostFtdcRspUserLoginField *pRspUserLogin,
     CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
 
   if (pRspInfo->ErrorID != 0) {
     // fail to login !!!
-    LOG(ERROR) << "Failed to login !!!";
+    LOG(ERROR) << "Failed to login !";
     LOG(ERROR) << "Login ErrorCode:" << pRspInfo->ErrorID
               << " ErrorMsg:" << pRspInfo->ErrorMsg
               << " RequestID:" << nRequestID
@@ -52,7 +50,7 @@ void TradeHandler::OnRspUserLogin(
     exit(-1);
   }
 
-  LOG(INFO) <<">>>>>>> China Future Trade API: Login Successfully";
+  LOG(INFO) <<">>>> CTP Trade API: Login Successfully";
 
   //memcpy(&g_Login, pRspUserLogin, sizeof(CThostFtdcRspUserLoginField));
   frontID = pRspUserLogin->FrontID;
@@ -62,12 +60,15 @@ void TradeHandler::OnRspUserLogin(
   strcpy(pSettlementConfirm.BrokerID, brokerId.c_str());
   strcpy(pSettlementConfirm.InvestorID, userId.c_str());
   pUserTradeApi->ReqSettlementInfoConfirm(&pSettlementConfirm,0);
+
+  LOG(INFO) << "brokerId " << brokerId;
+  LOG(INFO) << "userId " << userId;
 }
 
 int TradeHandler::onMsg(MessageBase msg) {
   if (msg.type() == TYPE_ORDER_REQUEST) {
     OrderRequest orderReq = ProtoBufHelper::unwrapMsg<OrderRequest>(msg);
-    //LOG(INFO) << "recv data request " << dataReq.code() << " into codes";
+    sendOrderReq(orderReq);
   } else {
     LOG(WARNING) << "recv invalid msg type " << msg.type();
   }
@@ -76,123 +77,120 @@ int TradeHandler::onMsg(MessageBase msg) {
 }
 
 int TradeHandler::initReq(CThostFtdcInputOrderField &req) {
-  memset(&req, 0, sizeof(req));
+  req.TimeCondition = THOST_FTDC_TC_GFD;
+  strcpy(req.GTDDate, "");
+
+  //hedge flag
+  req.CombHedgeFlag[0] = THOST_FTDC_HF_Speculation;
+  //volume condition
+  req.VolumeCondition = THOST_FTDC_VC_AV;
+  //minimum volume : 1
+  req.MinVolume = 1;
+  req.ContingentCondition = THOST_FTDC_CC_Immediately;
+  req.StopPrice = 0;
+  //reason of forcible of close
+  req.ForceCloseReason = THOST_FTDC_FCC_NotForceClose;
+  //is auto suspend
+  req.IsAutoSuspend = 0;
+	//is forcible close
+	req.UserForceClose = 0;
 
   strcpy(req.BrokerID, brokerId.c_str());
   strcpy(req.InvestorID, userId.c_str());
   strcpy(req.UserID, userId.c_str());
 
-  //成交量类型: 任何数量
-	req.VolumeCondition = THOST_FTDC_VC_AV;
-	//最小成交量: 1
-	req.MinVolume = 1;
-  ///强平原因: 非强平
-	req.ForceCloseReason = THOST_FTDC_FCC_NotForceClose;
-  ///自动挂起标志: 否
-	req.IsAutoSuspend = 0;
-	///用户强评标志: 否
-	req.UserForceClose = 0;
-
   return 0;
 }
-
 
 int TradeHandler::sendOrderReq(OrderRequest &req) {
 
   if (req.type() == TYPE_LIMIT_ORDER_REQUEST ||
       req.type() == TYPE_MARKET_ORDER_REQUEST) {
 
-    int reqId = getIncreaseID();
+    std::string reqId = getIncreaseID();
+
     CThostFtdcInputOrderField ctpReq;
+    memset(&ctpReq, 0, sizeof(ctpReq));
+
     initReq(ctpReq);
+
     strcpy(ctpReq.InstrumentID, req.code().c_str());
-    
-    sprintf(ctpReq.OrderRef, "%12d", reqId);
+    strcpy(ctpReq.OrderRef, reqId.c_str());
 
-    ctpReq.Direction = (req.buy_sell() == LONG_BUY ? 
-      THOST_FTDC_D_Buy : THOST_FTDC_D_Sell); 
+    ctpReq.RequestID = std::atoi(reqId.c_str());
+    ctpReq.Direction =
+      (req.buy_sell() == LONG_BUY ? THOST_FTDC_D_Buy : THOST_FTDC_D_Sell);
 
-    //组合投机套保标志
-	  ctpReq.CombHedgeFlag[0] = THOST_FTDC_HF_Speculation;
-	  ctpReq.VolumeTotalOriginal = req.trade_quantity();
+    ctpReq.VolumeTotalOriginal = req.trade_quantity();
 
     if (req.open_close() == OPEN_POSITION)
       ctpReq.CombOffsetFlag[0]  = THOST_FTDC_OF_Open;
-    else if (req.open_close() == CLOSE_POSITION) 
+    else if (req.open_close() == CLOSE_TODAY_POSITION)
+      ctpReq.CombOffsetFlag[0] = THOST_FTDC_OF_CloseToday;
+    else if (req.open_close() == CLOSE_POSITION)
       ctpReq.CombOffsetFlag[0] = THOST_FTDC_OF_Close;
-    else if (req.open_close() == CLOSE_YESTERDAY_POSITION) 
+    else if (req.open_close() == CLOSE_YESTERDAY_POSITION)
       ctpReq.CombOffsetFlag[0] = THOST_FTDC_OF_CloseYesterday;
-    else  
+    else {
       LOG(ERROR) << "Recv Invalid open_close in new order request";
-  
+      //need to send response
+    }
+
     if (req.type() == TYPE_LIMIT_ORDER_REQUEST) {
       ctpReq.OrderPriceType = THOST_FTDC_OPT_LimitPrice;
-      ctpReq.TimeCondition = THOST_FTDC_TC_GFD;
       ctpReq.LimitPrice = req.limit_price();
       LOG(INFO) << "recv new limit order";
     } else if (req.type() == TYPE_MARKET_ORDER_REQUEST) {
       ctpReq.OrderPriceType = THOST_FTDC_OPT_AnyPrice;
-      ctpReq.TimeCondition = THOST_FTDC_TC_GFD;
       ctpReq.LimitPrice = 0;
     }
 
-    pUserTradeApi->ReqOrderInsert(&ctpReq, 0);
+    pUserTradeApi->ReqOrderInsert(&ctpReq, 1);
 
     //record in idmap
-    std::string internalId = req.response_address() + "_" + req.id();
-    internalIdToExternal[internalId] = reqId;  
-    externalIdToInternal[reqId] = internalId;
-    LOG(INFO) << "recv new order req internal id " << internalId
-              << "external id" << reqId;
+    std::string inId = req.id();
+    inIdToExId[inId] = reqId;
+    exIdToInId[reqId] = inId;
+    CTPUserRequest uReq = {
+      inId, req.response_address(), req.type(), req.cancel_order_id(),
+      req.trade_quantity(), req.trade_quantity() };
+    inToCTPReq[inId] = uReq;
+
+    LOG(INFO) << "recv new order req inID " << inId << " exID " << reqId;
+    LOG(INFO) << "user ctp request " << req.DebugString();
 
   } else if (req.type() == TYPE_CANCEL_ORDER_REQUEST) {
-    int reqId = getIncreaseID();
     CThostFtdcInputOrderActionField cnclReq;
     memset(&cnclReq, 0, sizeof(cnclReq));
 
-    cnclReq.OrderActionRef = reqId;
-    cnclReq.ActionFlag = THOST_FTDC_AF_Delete;
+    std::string reqId = getIncreaseID();
 
+    std::string toCancelInId = req.cancel_order_id();
+    std::string toCancelExId = inIdToExId[toCancelInId];
+    cnclReq.OrderActionRef = std::atoi(toCancelExId.c_str());
+
+    cnclReq.ActionFlag = THOST_FTDC_AF_Delete;
     cnclReq.FrontID = frontID;
     cnclReq.SessionID = sessionID;
-
-    std::string internalId = req.response_address() + "_" 
-      + req.cancel_order_id();
-    if (internalIdToExternal.find(internalId) != 
-        internalIdToExternal.end()) {  
-      sprintf(cnclReq.OrderRef, "%12d", internalIdToExternal[internalId]);
-    } else {
-    //TODO serisouly error !!!
-      LOG(ERROR) << "Try to cancel an order with internal id"
-        << internalId << " , but can't locate the external id";
-      return -1;
-    }
-
-    //ExchangeID
-    //OrderSysID
 
     strcpy(cnclReq.BrokerID, brokerId.c_str());
     strcpy(cnclReq.UserID, userId.c_str());
     strcpy(cnclReq.InvestorID, userId.c_str());
-    strcpy(cnclReq.InstrumentID, req.code().c_str());  
+    strcpy(cnclReq.InstrumentID, req.code().c_str());
 
+    pUserTradeApi->ReqOrderAction(&cnclReq, 1);
 
-    //printf("send cancel request\n");
-    //pUserTradeApi->ReqOrderAction(&cancelReq, 1);
-
+    LOG(INFO) << "send cancel request";
+    LOG(INFO) << "user ctp cancel request " << req.DebugString();
   } else {
-    LOG(ERROR) << "recv an invalid order req type" << req.type(); 
+    LOG(ERROR) << "recv an invalid order req type" << req.type();
     return -1;
   }
-
-   
-  
 
   //enter map
   //orderRef
 
   //req enter map
-  
   ////报单价格条件: 限价
   //if (order.type == LIMIT) {
   //  ctpReq.OrderPriceType = THOST_FTDC_OPT_LimitPrice;
@@ -202,7 +200,7 @@ int TradeHandler::sendOrderReq(OrderRequest &req) {
   //} else if (order.type == MARKET) {
 
   //} else {
-  //  //TODO use log to record 
+  //  //TODO use log to record
   //}
 
   ////组合开平标志: 开仓
@@ -219,95 +217,201 @@ int TradeHandler::sendOrderReq(OrderRequest &req) {
   ////数量
   //ctpReq.VolumeTotalOriginal = order.qty;
 
-  //std::string ctpOrderRef = concatOrderRef(order.id); 
-  //strcpy(ctpReq.OrderRef, ctpOrderRef.c_str()); 
+  //std::string ctpOrderRef = concatOrderRef(order.id);
+  //strcpy(ctpReq.OrderRef, ctpOrderRef.c_str());
   //ctpReq.RequestID = getIncreaseID();
 
   //printf("CTP reqID %d, OrderRef %s, Direction %s, Qty %d, Price %f, Broker %s,"
-  //    "Investor %s, UserID %s, InstrumentID %s\n", 
+  //    "Investor %s, UserID %s, InstrumentID %s\n",
   //    ctpReq.RequestID, ctpReq.OrderRef,
-  //    ctpReq.Direction == THOST_FTDC_D_Buy ? "BUY":"SELL", ctpReq.VolumeTotalOriginal, 
+  //    ctpReq.Direction == THOST_FTDC_D_Buy ? "BUY":"SELL", ctpReq.VolumeTotalOriginal,
   //    ctpReq.LimitPrice, ctpReq.BrokerID, ctpReq.InvestorID, ctpReq.UserID, ctpReq.InstrumentID);
 
   return 0;
 }
 
-//THost check error, this function will be called !!!
 void TradeHandler::OnRspOrderInsert(
-    CThostFtdcInputOrderField *pInputOrder, 
-    CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-  
-  //LOG(ERROR) << __FUNCTION__ << std::endl;
-  //returnErrorInfo(pRspInfo);
+  CThostFtdcInputOrderField *pInputOrder,
+  CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
 
-  //fn_printCout(__FUNCTION__);
-  //LOG(ERROR) << << ;
+  LOG(INFO) << __FUNCTION__ << std::endl;
 
-  //OnRspOrderInsertMsg msg;
-  //memcpy(&msg.InputOrder, pInputOrder, sizeof(CThostFtdcInputOrderField));
-  //memcpy(&msg.RspInfo, pRspInfo, sizeof(CThostFtdcRspInfoField));
-  //msg.RequestID = nRequestID;
-  //msg.IsLast = bIsLast;
-
-  //SendMsg(TD_OnRspOrderInsert, (char*)&msg);
+  sendErrorResponse(pInputOrder, pRspInfo);
 }
 
+int TradeHandler::recycleID(std::string &exId, std::string &inId) {
+  if (exIdToInId.find(exId) == exIdToInId.end()) {
+    LOG(WARNING) << "Can't find exId " << exId << " and mapping inId";
+  } else {
+    exIdToInId.erase(exId);
+  }
+
+  if (inToCTPReq.find(inId) == inToCTPReq.end()) {
+    LOG(WARNING) << "Can't find inId" << exId << " and mapping OrderRequest";
+  } else {
+    inToCTPReq.erase(inId);
+  }
+
+  if (inIdToExId.find(inId) == inIdToExId.end()) {
+    LOG(WARNING) << "Can't find inId" << exId << " and mapping ExId";
+  } else {
+    inIdToExId.erase(inId);
+  }
+
+  return 0;
+}
+
+std::string orderStatusToString(TThostFtdcOrderStatusType status) {
+  switch (status) {
+    case '0':
+      return "AllTraded";
+    case '1':
+      return "PartTradedQueueing";
+    case '2':
+      return "PartTradedNotQueueing";
+    case '3':
+      return "NoTradeQueueing";
+    case '4':
+      return "NoTradeNotQueueing";
+    case '5':
+      return "Cancel";
+    case 'a':
+      return "Unknown";
+    case 'b':
+      return "NotTouched";
+    case 'c':
+      return "Touched";
+  }
+  return "Error";
+}
+
+std::string submitStatusTypeToString(TThostFtdcOrderSubmitStatusType status) {
+  switch (status) {
+    case '0':
+      return "InsertSubmitted";
+    case '1':
+      return "CancelSubmitted";
+    case '2':
+      return "ModifySubmitted";
+    case '3':
+      return "Accepted";
+    case '4':
+      return "InsertRejected";
+    case '5':
+      return "CancelRejected";
+    case '6':
+      return "ModifyRejected";
+  }
+  return "Error";
+}
 
 void TradeHandler::OnRtnOrder(CThostFtdcOrderField *pOrder) {
-  //LOG(INFO) << "CTP OnRtnORder| " <<  "reqID:" << pOrder->RequestID << ",OrderRef:" <<  pOrder->OrderRef
-  //           << ",Direction:" << (pOrder->Direction == THOST_FTDC_D_Buy ? "BUY":"SELL") 
-  //           << ",OrderStatus:" << pOrder->OrderStatus << ",SubmitStatus:" 
-  //           << pOrder->OrderSubmitStatus << std::endl; 
+  LOG(INFO) << __FUNCTION__ << std::endl;
+  LOG(INFO) << std::endl <<
+    "OrderRef: " <<  pOrder->OrderRef << std::endl <<
+    ",Direction:" << (pOrder->Direction == THOST_FTDC_D_Buy ? "BUY":"SELL") <<
+    ",OrderStatus:" << orderStatusToString(pOrder->OrderStatus) <<
+    ",SubmitStatus:"<<
+      submitStatusTypeToString(pOrder->OrderSubmitStatus) << std::endl <<
+    "InvestorID:" << pOrder->InvestorID << std::endl <<
+    "Code:" << pOrder->InstrumentID << std::endl <<
+    "UserID:" << pOrder->UserID << std::endl;
 
-  //std::string chan = C_CTPTradeReturn;
+  if (pOrder->OrderSubmitStatus == THOST_FTDC_OSS_Accepted &&
+    pOrder->OrderStatus == THOST_FTDC_OST_NoTradeQueueing) {
+
+    ResponseMessage rsp;
+    std::string exId = pOrder->OrderRef;
+
+    rsp.set_type(TYPE_NEW_ORDER_CONFIRM);
+    rsp.set_ref_id(exId);
+
+    if (exIdToInId.find(exId) == exIdToInId.end()) {
+      LOG(WARNING) << "Can't find exId" << exId << " and inId";
+      return;
+    }
+    std::string inId = exIdToInId[exId];
+
+    if (inToCTPReq.find(inId) == inToCTPReq.end()) {
+      LOG(WARNING) << "Can't find inId" << exId << " and mapping OrderRequest";
+      return;
+    }
+
+    msgHub.pushMsg(inToCTPReq[inId].responseAddr,
+      ProtoBufHelper::wrapMsg(TYPE_RESPONSE_MSG, rsp));
+
+    return;
+  } else if (pOrder->OrderStatus == THOST_FTDC_OST_Canceled) {
+
+    //CANCEL CONFIRM
+  }
+
+
+  //if (pOrder->OrderSubmitStatus == THOST_FTDC_OSS_InsertRejected
+  //  || pOrder->OrderSubmitStatus == THOST_FTDC_OSS_CancelRejected
+  //  || pOrder->OrderSubmitStatus == THOST_FTDC_OSS_ModifyRejected) {
+
+  //  std::string exId = pOrder->OrderRef;
+  //
+  //  sendErrorResponse();
+
+  //  return ;
+  //} else if (pOrder->OrderSubmitStatus == THOST_FTDC_OSS_Accepted &&
+  //  pOrder->OrderStatus == THOST_FTDC_OST_NoTradeQueueing) {
+
+  //  //NEW CONFIRM
+  //  return
+  //} else if (pOrder->OrderStatus == THOST_FTDC_OST_Canceled)) {
+  //  //CANCEL CONFIRM
+  //}
 
   //ReturnInfo rtnInfo;
   //rtnInfo.id = extractInternalID(pOrder->OrderRef);
   //rtnInfo.symbol = std::string(pOrder->InstrumentID);
   //rtnInfo.price = pOrder->LimitPrice;
-  //rtnInfo.qty = pOrder->VolumeTotalOriginal; 
+  //rtnInfo.qty = pOrder->VolumeTotalOriginal;
   //if (pOrder->Direction == THOST_FTDC_D_Buy) {
-  //  rtnInfo.side = Direction::BUY;  
+  //  rtnInfo.side = Direction::BUY;
   //} else if (pOrder->Direction == THOST_FTDC_D_Sell) {
   //  rtnInfo.side = Direction::SELL;
   //}
 
-  //if (pOrder->OrderSubmitStatus == THOST_FTDC_OSS_Accepted && 
+  //if (pOrder->OrderSubmitStatus == THOST_FTDC_OSS_Accepted &&
   //    pOrder->OrderStatus == THOST_FTDC_OST_NoTradeQueueing) {
   //  //NEW_CONFIRM
   //  rtnInfo.type = ReturnType::NEW_CONFIRM;
-  //  std::string msg = rtnInfo.serialize(); 
+  //  std::string msg = rtnInfo.serialize();
 
-  //  msgHub.send(chan, msg); 
+  //  msgHub.send(chan, msg);
   //  idMap[rtnInfo.id] = pOrder->OrderRef;
 
   //} else if (pOrder->OrderSubmitStatus == THOST_FTDC_OSS_Accepted &&
   //    pOrder->OrderStatus == THOST_FTDC_OST_AllTraded) {
 
   //  idMap.erase(rtnInfo.id);
-  //  
+  //
   //} else if (pOrder->OrderSubmitStatus == THOST_FTDC_OSS_Accepted &&
   //    pOrder->OrderStatus == THOST_FTDC_OST_AllTraded) {
 
   //  if (pOrder->VolumeTotal == 0) {
   //    idMap.erase(rtnInfo.id);
   //  }
-  //  
-  //} else if ((pOrder->OrderSubmitStatus == THOST_FTDC_OSS_Accepted && 
-  //  pOrder->OrderStatus == THOST_FTDC_OST_Canceled) || 
+  //
+  //} else if ((pOrder->OrderSubmitStatus == THOST_FTDC_OSS_Accepted &&
+  //  pOrder->OrderStatus == THOST_FTDC_OST_Canceled) ||
   //  (pOrder->OrderSubmitStatus == THOST_FTDC_OSS_Accepted &&
-  //  pOrder->OrderStatus == THOST_FTDC_OST_PartTradedNotQueueing)) { 
+  //  pOrder->OrderStatus == THOST_FTDC_OST_PartTradedNotQueueing)) {
 
   //  //CANCEL_CONFIRM
   //  rtnInfo.type = ReturnType::CANCEL_CONFIRM;
-  //  std::string tmpMsg = rtnInfo.serialize(); 
-  //  msgHub.send(chan, tmpMsg); 
+  //  std::string tmpMsg = rtnInfo.serialize();
+  //  msgHub.send(chan, tmpMsg);
 
   //  //idMap delete;
   //  idMap.erase(rtnInfo.id);
 
-  //}  else if (pOrder->OrderSubmitStatus == THOST_FTDC_OSS_InsertRejected 
-  //    || pOrder->OrderSubmitStatus == THOST_FTDC_OSS_CancelRejected 
+  //}  else if (pOrder->OrderSubmitStatus == THOST_FTDC_OSS_InsertRejected
+  //    || pOrder->OrderSubmitStatus == THOST_FTDC_OSS_CancelRejected
   //    || pOrder->OrderSubmitStatus == THOST_FTDC_OSS_ModifyRejected) {
 
   //  rtnInfo.type = ReturnType::ERROR;
@@ -319,12 +423,12 @@ void TradeHandler::OnRtnOrder(CThostFtdcOrderField *pOrder) {
   //  } else if (pOrder->OrderSubmitStatus == THOST_FTDC_OSS_ModifyRejected) {
   //    rtnInfo.msg = "CTPRequest Modify Reject";
   //  }
-  //  
+  //
   //  std::string errorMsg = rtnInfo.serialize();
-  //  msgHub.send(chan, errorMsg); 
+  //  msgHub.send(chan, errorMsg);
   //}
 
-  //LOG(INFO) << "OnRtnOrder send to OrderHub msg " << rtnInfo.serialize() << std::endl;
+  //LOG(INFO) << "OnRtnOrder send to OrderHub msg " << rtnInfo.serialize();
 }
 
 
@@ -343,9 +447,9 @@ void TradeHandler::OnRtnOrder(CThostFtdcOrderField *pOrder) {
   //cancelReq.VolumeChange = 0;
 
   //cancelReq.OrderActionRef = std::stoi(order.id);
-  ////use idMap 
-  //if (idMap.find(order.id) != idMap.end()) {  
-  //  strcpy(cancelReq.OrderRef, idMap[order.id].c_str()); 
+  ////use idMap
+  //if (idMap.find(order.id) != idMap.end()) {
+  //  strcpy(cancelReq.OrderRef, idMap[order.id].c_str());
   //} else {
   //  //TODO serisouly error !!!
   //  printf("id not found, error !!!!!!!!!!\n");
@@ -360,7 +464,7 @@ void TradeHandler::OnRtnOrder(CThostFtdcOrderField *pOrder) {
   //return 0;
 //}
 
-std::string TradeHandler::concatOrderRef(std::string &internalID) {
+//std::string TradeHandler::concatOrderRef(std::string &internalID) {
   //static int orderRefID = 0;
   //char tmp[ORDER_DIGIT + 1];
   //++orderRefID;
@@ -368,69 +472,88 @@ std::string TradeHandler::concatOrderRef(std::string &internalID) {
   ////====ORDER_DIGIT====
   //sprintf(tmp, "%6d", orderRefID);
 
-  //return std::string(tmp) + internalID; 
-}
+  //return std::string(tmp) + internalID;
+//}
 
 int TradeHandler::close() {
   //release
   return 0;
 }
 
-
-
 void TradeHandler::OnFrontDisconnected(int nReason) {
-  //// 当发生这个情况后，API会自动重新连接，客户端可不做处理
-  //fn_printCout(__FUNCTION__);
-  //std::cout<<">>>>>>> Trade API Logged Out!"<<std::endl;
   LOG(WARNING) << "Front Disconnected"<<std::endl;
 }
 
 int TradeHandler::returnErrorInfo(CThostFtdcRspInfoField *pRspInfo) {
-  //LOG(ERROR) << __FUNCTION__ << "ErrorCode: " 
-  //  << pRspInfo->ErrorID << " ErrorMsg:" << pRspInfo->ErrorMsg << std::endl;
-
-  //ReturnInfo rtnInfo;
-  //rtnInfo.type = ReturnType::ERROR;
-  //rtnInfo.msg = "ErrorID:" + std::to_string(pRspInfo->ErrorID) + 
-  //  "," + std::string(pRspInfo->ErrorMsg);
-
-  //std::string msg = rtnInfo.serialize();
-  //std::string chan = C_CTPTradeReturn;
-  //msgHub.send(chan, msg); 
-
-  //return 0;
+  LOG(ERROR) << __FUNCTION__ << "ErrorCode: " << pRspInfo->ErrorID
+            << " ErrorMsg:" << pRspInfo->ErrorMsg;
 }
 
+int TradeHandler::sendErrorResponse(CThostFtdcInputOrderField *pInputOrder,
+  CThostFtdcRspInfoField *pRspInfo) {
 
+  std::string exId = pInputOrder->OrderRef;
+  if (exIdToInId.find(exId) == exIdToInId.end()) {
+    LOG(WARNING) << "Can't find exId " << exId << " and mapping inId";
+    return -1;
+  }
 
-void TradeHandler::OnErrRtnOrderInsert(CThostFtdcInputOrderField *pInputOrder, CThostFtdcRspInfoField *pRspInfo) {
-  //LOG(ERROR) << __FUNCTION__ << std::endl;
+  std::string inId = exIdToInId[exId];
+  if (inToCTPReq.find(inId) == inToCTPReq.end()) {
+    LOG(WARNING) << "Can't find inId" << exId << " and mapping OrderRequest";
+    return -1;
+  }
+
+  CTPUserRequest req = inToCTPReq[inId];
+  ResponseMessage rsp;
+  rsp.set_type(TYPE_ERROR);
+  rsp.set_ref_id(inId);
+  rsp.set_error_code(pRspInfo->ErrorID);
+  rsp.set_error_msg("Check error msg in log file");
+
+  LOG(INFO) << "Error Msg:" << pRspInfo->ErrorMsg;
+  LOG(INFO) << rsp.DebugString();
+
+  msgHub.pushMsg(req.responseAddr,
+    ProtoBufHelper::wrapMsg(TYPE_RESPONSE_MSG, rsp));
+
+  recycleID(exId, inId);
+
+  return 0;
+}
+
+void TradeHandler::OnErrRtnOrderInsert(CThostFtdcInputOrderField *pInputOrder,
+  CThostFtdcRspInfoField *pRspInfo) {
+  sendErrorResponse(pInputOrder, pRspInfo);
+  return;
+}
+
+void TradeHandler::OnErrRtnOrderAction(
+  CThostFtdcOrderActionField *pOrderAction, CThostFtdcRspInfoField *pRspInfo) {
+
+  LOG(INFO) << __FUNCTION__ << std::endl;
   //returnErrorInfo(pRspInfo);
 
-  //printf("ErrorCode=[%d], ErrorMsg=[%s]\n", pRspInfo->ErrorID, pRspInfo->ErrorMsg);
-	//fn_printCout(__FUNCTION__);
-}
-
-void TradeHandler::OnErrRtnOrderAction(CThostFtdcOrderActionField *pOrderAction, CThostFtdcRspInfoField *pRspInfo) {
-  //LOG(ERROR) << __FUNCTION__ << std::endl;
-  //returnErrorInfo(pRspInfo);
-
-	//printf("ErrorCode=[%d], ErrorMsg=[%s]\n", pRspInfo->ErrorID, pRspInfo->ErrorMsg);
-	////fprintf(f_errorLog,"%d ErrorCode=[%d], ErrorMsg=[%s]\n", dataLength, pRspInfo->ErrorID, pRspInfo->ErrorMsg);
-	////fflush(f_errorLog);
-	//fn_printCout(__FUNCTION__);
-}
-
-void TradeHandler::OnRspParkedOrderInsert(
-    CThostFtdcParkedOrderField *pParkedOrder, 
-    CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-
-  //printf("ErrorCode=[%d], ErrorMsg=[%s]\n", pRspInfo->ErrorID, pRspInfo->ErrorMsg);
+  //printf("ErrorCode=[%d], ErrorMsg=[%s]\n", pRspInfo->ErrorID,
+  //pRspInfo->ErrorMsg);
+  ////fprintf(f_errorLog,"%d ErrorCode=[%d], ErrorMsg=[%s]\n", dataLength,
+  //pRspInfo->ErrorID, pRspInfo->ErrorMsg);
+  //fflush(f_errorLog);
   //fn_printCout(__FUNCTION__);
 }
 
-//报单操作请求响应
-void TradeHandler::OnRspOrderAction(CThostFtdcInputOrderActionField *pInputOrderAction, 
+void TradeHandler::OnRspParkedOrderInsert(
+    CThostFtdcParkedOrderField *pParkedOrder,
+    CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+
+  //printf("ErrorCode=[%d], ErrorMsg=[%s]\n",
+  //pRspInfo->ErrorID, pRspInfo->ErrorMsg);
+  //fn_printCout(__FUNCTION__);
+}
+
+//onRspfor cancel an order
+void TradeHandler::OnRspOrderAction(
+    CThostFtdcInputOrderActionField *pInputOrderAction,
     CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
 
   printf("ErrorCode=[%d], ErrorMsg=[%s]\n", pRspInfo->ErrorID, pRspInfo->ErrorMsg);
@@ -440,23 +563,25 @@ void TradeHandler::OnRspOrderAction(CThostFtdcInputOrderActionField *pInputOrder
 }
 
 ///请求查询报单响应
-void TradeHandler::OnRspQryOrder(CThostFtdcOrderField *pOrder, 
-    CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-    printf("ErrorCode=[%d], ErrorMsg=[%s]\n", pRspInfo->ErrorID, pRspInfo->ErrorMsg);
+void TradeHandler::OnRspQryOrder(CThostFtdcOrderField *pOrder,
+  CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+
+  printf("ErrorCode=[%d], ErrorMsg=[%s]\n",
+        pRspInfo->ErrorID, pRspInfo->ErrorMsg);
     //fprintf(f_errorLog,"%d ErrorCode=[%d], ErrorMsg=[%s]\n", dataLength, pRspInfo->ErrorID, pRspInfo->ErrorMsg);
     //fflush(f_errorLog);
     //fn_printCout(__FUNCTION__);
 }
 
 ///请求查询成交响应
-void TradeHandler::OnRspQryTrade(CThostFtdcTradeField *pTrade, 
+void TradeHandler::OnRspQryTrade(CThostFtdcTradeField *pTrade,
     CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
     printf("ErrorCode=[%d], ErrorMsg=[%s]\n", pRspInfo->ErrorID, pRspInfo->ErrorMsg);
     //fn_printCout(__FUNCTION__);
 }
 
 ///请求查询合约响应
-void TradeHandler::OnRspQryInstrument(CThostFtdcInstrumentField *pInstrument, 
+void TradeHandler::OnRspQryInstrument(CThostFtdcInstrumentField *pInstrument,
     CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
 //	if (pInstrument->ProductClass == THOST_FTDC_PC_Futures)
 //	{
@@ -477,7 +602,8 @@ void TradeHandler::OnRspQryInstrument(CThostFtdcInstrumentField *pInstrument,
 };
 
 ///请求查询行情响应
-void TradeHandler::OnRspQryDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketData, 
+void TradeHandler::OnRspQryDepthMarketData(
+    CThostFtdcDepthMarketDataField *pDepthMarketData,
     CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
 
   printf("ErrorCode=[%d], ErrorMsg=[%s]\n", pRspInfo->ErrorID, pRspInfo->ErrorMsg);
@@ -486,7 +612,7 @@ void TradeHandler::OnRspQryDepthMarketData(CThostFtdcDepthMarketDataField *pDept
 
 ///请求查询结算信息确认响应
 void TradeHandler::OnRspQrySettlementInfoConfirm(
-    CThostFtdcSettlementInfoConfirmField *pSettlementInfoConfirm, 
+    CThostFtdcSettlementInfoConfirmField *pSettlementInfoConfirm,
     CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
 
   //fn_printCout(__FUNCTION__);
@@ -494,7 +620,8 @@ void TradeHandler::OnRspQrySettlementInfoConfirm(
   //if (pRspInfo->ErrorID != 0) {
   //  // Confirm Settlement Failed
   //  std::cout<<">>>>>>> Trade API Failure"<<std::endl;
-  //  printf("Failed to confirm settlement, errorcode=%d errormsg=%s requestid=%d chain=%d", 
+  //  printf("Failed to confirm settlement, errorcode=%d errormsg=%s
+  //  requestid=%d chain=%d",
   //      pRspInfo->ErrorID, pRspInfo->ErrorMsg, nRequestID, bIsLast);
   //} else {
   //  // Confirm Settlement Failed
@@ -503,7 +630,8 @@ void TradeHandler::OnRspQrySettlementInfoConfirm(
 };
 
 ///错误应答
-void TradeHandler::OnRspError(CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+void TradeHandler::OnRspError(
+  CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
   printf("ErrorCode=[%d], ErrorMsg=[%s]\n", pRspInfo->ErrorID, pRspInfo->ErrorMsg);
   //fn_printCout(__FUNCTION__);
 };
@@ -514,24 +642,23 @@ void TradeHandler::OnRspError(CThostFtdcRspInfoField *pRspInfo, int nRequestID, 
 //}
 
 void TradeHandler::OnRtnTrade(CThostFtdcTradeField *pTrade) {
-  //std::string chan = "CTPTradeReturn";
+  ResponseMessage rsp;
 
-  //ReturnInfo rtnInfo;
-  //rtnInfo.id = extractInternalID(pTrade->OrderRef);
-  //rtnInfo.symbol = std::string(pTrade->InstrumentID);
-  //rtnInfo.price = pTrade->Price;
-  //rtnInfo.qty = pTrade->Volume; 
+  std::string exId = pTrade->OrderRef;
 
-  //if (pTrade->Direction == THOST_FTDC_D_Buy) {
-  //  rtnInfo.side = Direction::BUY;  
-  //} else if (pTrade->Direction == THOST_FTDC_D_Sell) {
-  //  rtnInfo.side = Direction::SELL;
-  //}
+  rsp.set_type(TYPE_TRADE);
+  rsp.set_code(pTrade->InstrumentID);
+  rsp.set_price(pTrade->Price);
+  rsp.set_trade_quantity(pTrade->Volume);
 
-  //rtnInfo.type = ReturnType::TRADE;
-  //std::string msg = rtnInfo.serialize(); 
-  //msgHub.send(chan, msg);
+  if (pTrade->Direction == THOST_FTDC_D_Buy) {
+    rsp.set_buy_sell(TradeDirection::LONG_BUY);
+  } else if (pTrade->Direction == THOST_FTDC_D_Sell) {
+    rsp.set_buy_sell(TradeDirection::SHORT_SELL);
+  }
 
+  //msgHub.pushMsg(req.response_address(),
+      //ProtoBufHelper::wrapMsg(TYPE_RESPONSE_MSG, rsp));
   //LOG(INFO) << "OnRtnOrder send to OrderHub msg " << msg << std::endl;
 }
 
@@ -596,58 +723,59 @@ void TradeHandler::SendMsg(unsigned char type, char* pObj) {
 }
 
 void TradeHandler::PrintOrder(CThostFtdcOrderField* pOda) {
-	//fprintf(stdout, "%s,%s,%s,%s,%d,%s,%d,%d,%d,%s,%s,%.3f,%d,%d,%d\n",
-	//					pOda->InstrumentID,
-	//					pOda->Direction == THOST_FTDC_D_Buy ? "BUY" : "SELL",
-	//					pOda->TradingDay,
-	//					pOda->InsertTime,
-	//					pOda->RequestID,
-	//					pOda->OrderRef,
-	//					pOda->BrokerOrderSeq,
-	//					pOda->SequenceNo,
-	//					pOda->NotifySequence,
-	//					CTPOrderStatToString(pOda->OrderStatus).c_str(),
-	//					CTPOrderSubmitStatToString(pOda->OrderSubmitStatus).c_str(),
+  //fprintf(stdout, "%s,%s,%s,%s,%d,%s,%d,%d,%d,%s,%s,%.3f,%d,%d,%d\n",
+  //					pOda->InstrumentID,
+  //					pOda->Direction == THOST_FTDC_D_Buy ? "BUY" : "SELL",
+  //					pOda->TradingDay,
+  //					pOda->InsertTime,
+  //					pOda->RequestID,
+  //					pOda->OrderRef,
+  //					pOda->BrokerOrderSeq,
+  //					pOda->SequenceNo,
+  //					pOda->NotifySequence,
+  //					CTPOrderStatToString(pOda->OrderStatus).c_str(),
+  //					CTPOrderSubmitStatToString(pOda->OrderSubmitStatus).c_str(),
   //                      pOda->LimitPrice,
-	//					pOda->VolumeTotalOriginal,
-	//					pOda->VolumeTraded,
-	//					pOda->VolumeTotal);
-	//fflush(g_CDXLog.m_pOrderLogFile);
+  //					pOda->VolumeTotalOriginal,
+  //					pOda->VolumeTraded,
+  //					pOda->VolumeTotal);
+  //fflush(g_CDXLog.m_pOrderLogFile);
 
-	//CDX_LOGINFO log;
-	//log.LOGTYPE = 1;
-	//log.INFOTYPE= INFO_LIVE;
-	//memcpy(&log.rtnOrder,pOda,sizeof(log.rtnOrder));
-	//g_public_chan->RSLT_QUEUE.push(log);
+//CDX_LOGINFO log;
+//log.LOGTYPE = 1;
+//log.INFOTYPE= INFO_LIVE;
+//memcpy(&log.rtnOrder,pOda,sizeof(log.rtnOrder));
+//g_public_chan->RSLT_QUEUE.push(log);
 }
 
 void TradeHandler::PrintTrade(CThostFtdcTradeField* pTda) {
-	//fprintf(g_CDXLog.m_pTradeLogFile, "%s,%s,%d,%d,%s,%s,%s,%.3f,%d,%s,%s\n",
-	//					pTda->OrderRef,
-	//					pTda->TradeID,
-	//					pTda->SequenceNo,
-	//					pTda->BrokerOrderSeq,
-	//					CTPHedgeFlagToString(pTda->OffsetFlag).c_str(),
-	//					pTda->Direction == THOST_FTDC_D_Buy ? "BUY" : "SELL",
-	//					pTda->InstrumentID,
-	//					pTda->Price,
-	//					pTda->Volume,
-	//					pTda->TradeDate,
-	//					pTda->TradeTime);
-	//fflush(g_CDXLog.m_pTradeLogFile);
-	//CDX_LOGINFO log;
-	//log.LOGTYPE = 2;
-	//log.INFOTYPE= INFO_LIVE;
-	//memcpy(&log.rtnTrade,pTda,sizeof(log.rtnTrade));
-	//g_public_chan->RSLT_QUEUE.push(log);
+//fprintf(g_CDXLog.m_pTradeLogFile, "%s,%s,%d,%d,%s,%s,%s,%.3f,%d,%s,%s\n",
+//					pTda->OrderRef,
+//					pTda->TradeID,
+//					pTda->SequenceNo,
+//					pTda->BrokerOrderSeq,
+//					CTPHedgeFlagToString(pTda->OffsetFlag).c_str(),
+//					pTda->Direction == THOST_FTDC_D_Buy ? "BUY" : "SELL",
+//					pTda->InstrumentID,
+//					pTda->Price,
+//					pTda->Volume,
+//					pTda->TradeDate,
+//					pTda->TradeTime);
+//fflush(g_CDXLog.m_pTradeLogFile);
+//CDX_LOGINFO log;
+//log.LOGTYPE = 2;
+//log.INFOTYPE= INFO_LIVE;
+//memcpy(&log.rtnTrade,pTda,sizeof(log.rtnTrade));
+//g_public_chan->RSLT_QUEUE.push(log);
 }
 
 //void TradeHandler::PrintOrderInsertErr(OnRspOrderInsertMsg* pErr) {
   //char ErrTime[10] = {0};
   //time_t t =time(NULL);
-	//struct tm *ti;
-	//ti = localtime(&t);
-	//int ErrDate = (ti->tm_year + 1900) * 10000 + (ti->tm_mon + 1) * 100 + ti->tm_mday;
+  //struct tm *ti;
+  //ti = localtime(&t);
+  //int ErrDate = (ti->tm_year + 1900) * 10000 +
+  //(ti->tm_mon + 1) * 100 + ti->tm_mday;
   //  strftime(ErrTime,sizeof(ErrTime),"%H:%M:%S",ti);
 
   //  fprintf(g_CDXLog.m_pErrorLogFile,"%d,%s,%d,%s,%s,%d,%f,%d,%s\n",
@@ -661,9 +789,8 @@ void TradeHandler::PrintTrade(CThostFtdcTradeField* pTda) {
   //                      pErr->RspInfo.ErrorID,
   //                      pErr->RspInfo.ErrorMsg);
   //  fflush(g_CDXLog.m_pErrorLogFile);
-	//CDX_LOGINFO log;
 	//log.LOGTYPE = 3;
-	//log.INFOTYPE= INFO_LIVE;
+  //log.INFOTYPE= INFO_LIVE;
 	//memcpy(&log.rtnInputOrder,pErr,sizeof(log.rtnInputOrder));
 	//g_public_chan->RSLT_QUEUE.push(log);
 //}
