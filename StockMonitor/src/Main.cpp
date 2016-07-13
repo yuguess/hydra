@@ -8,11 +8,10 @@
 #include "CedarLogging.h"
 
 int initMap(std::map<std::string, StockProcessor> &map) {
-  std::vector<std::string> codes;
-  std::vector<std::string> exchanges;
-  CedarJsonConfig::getInstance().getStringArrayWithTag(codes, "Ticker", 
+  std::vector<std::string> codes, exchanges;
+  CedarJsonConfig::getInstance().getStringArrayWithTag(codes, "Ticker",
       "code");
-  CedarJsonConfig::getInstance().getStringArrayWithTag(exchanges, "Ticker", 
+  CedarJsonConfig::getInstance().getStringArrayWithTag(exchanges, "Ticker",
       "exchange");
 
   for (int i = 0; i < codes.size(); i++) {
@@ -36,13 +35,18 @@ int onMsg(MessageBase msg) {
 
   if (msg.type() == TYPE_MARKETUPDATE) {
     MarketUpdate mkt = ProtoBufHelper::unwrapMsg<MarketUpdate>(msg);
-    std::string chan = mkt.code() + "." + mkt.exchange();
-    if (codeToProcessor.find(chan) == codeToProcessor.end()) {
-      LOG(WARNING) << "recv invalid mkt update with code" << chan;
-    } else {
-      //LOG(INFO) << "recv " << chan << " update";
-      codeToProcessor[chan].onMarketUpdate(mkt);
-    }
+    std::string chan = mkt.code() + "." +
+      CedarHelper::exchangeTypeToString(mkt.exchange());
+    LOG(INFO) << mkt.DebugString();
+
+
+
+    //if (codeToProcessor.find(chan) == codeToProcessor.end()) {
+    //  LOG(WARNING) << "recv invalid mkt update with code" << chan;
+    //} else {
+    //  //LOG(INFO) << "recv " << chan << " update";
+    //  codeToProcessor[chan].onMarketUpdate(mkt);
+    //}
 
   } else
     LOG(WARNING) << "Recv invalid msg with type " << msg.type();
@@ -68,36 +72,30 @@ int main() {
 
   std::string dataServerAddr;
   std::string boardcastAddr;
-  CedarJsonConfig::getInstance().getStringByPath("DataServer.serverAddr", 
+  CedarJsonConfig::getInstance().getStringByPath("DataServer.serverAddr",
       dataServerAddr);
-  CedarJsonConfig::getInstance().getStringByPath("DataServer.boardcastAddr", 
+  CedarJsonConfig::getInstance().getStringByPath("DataServer.boardcastAddr",
       boardcastAddr);
   LOG(INFO) << "data server addr" << dataServerAddr;
 
   for (int i = 0; i < codes.size(); i++) {
     DataRequest mdReq;
     mdReq.set_code(codes[i]);
-    mdReq.set_exchange(exchanges[i]);
+    mdReq.set_exchange(CedarHelper::stringToExchangeType(exchanges[i]));
 
-    //std::string pushAddr = "127.0.0.1:15213";
-    //std::string publishAddr = "127.0.0.1:15212";
-    //msgHub.pushMsg(pushAddr, 
-    //    ProtoBufHelper::wrapMsg(TYPE_DATAREQUEST, mdReq));
+    LOG(INFO) << "push msg to dataServer addr" << dataServerAddr;
 
-    ////std::string chan = mdReq.code() + "." + mdReq.exchange();
-    //msgHub.addSubscription(publishAddr, mdReq.code());
-    
-    msgHub.pushMsg(dataServerAddr, 
+    msgHub.pushMsg(dataServerAddr,
         ProtoBufHelper::wrapMsg(TYPE_DATAREQUEST, mdReq));
 
-    std::string chan = mdReq.code() + "." + mdReq.exchange();
+    std::string chan = mdReq.code() + "." + exchanges[i];
     msgHub.addSubscription(boardcastAddr, mdReq.code());
   }
 
-  LOG(INFO) << "StockMonitor service online!"; 
+  LOG(INFO) << "StockMonitor service online!";
   CedarHelper::blockSignalAndSuspend();
 
-  LOG(INFO) << "init quiting procedures now!"; 
+  LOG(INFO) << "init quiting procedures now!";
   google::protobuf::ShutdownProtobufLibrary();
   msgHub.close();
 }

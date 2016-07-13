@@ -139,7 +139,6 @@ int TradeHandler::sendOrderReq(OrderRequest &req) {
     if (req.type() == TYPE_LIMIT_ORDER_REQUEST) {
       ctpReq.OrderPriceType = THOST_FTDC_OPT_LimitPrice;
       ctpReq.LimitPrice = req.limit_price();
-      LOG(INFO) << "recv new limit order";
     } else if (req.type() == TYPE_MARKET_ORDER_REQUEST) {
       ctpReq.OrderPriceType = THOST_FTDC_OPT_AnyPrice;
       ctpReq.LimitPrice = 0;
@@ -149,25 +148,34 @@ int TradeHandler::sendOrderReq(OrderRequest &req) {
 
     //record in idmap
     std::string inId = req.id();
-    inIdToExId[inId] = reqId;
-    exIdToInId[reqId] = inId;
+    inIdToExId[req.id()] = reqId;
+    exIdToInId[reqId] = req.id();
     CTPUserRequest uReq = {
-      inId, req.response_address(), req.type(), req.cancel_order_id(),
+      req.id(), req.response_address(), req.type(), req.cancel_order_id(),
       req.trade_quantity(), req.trade_quantity() };
-    inToCTPReq[inId] = uReq;
+    inToCTPReq[req.id()] = uReq;
 
-    LOG(INFO) << "recv new order req inID " << inId << " exID " << reqId;
+    LOG(INFO) << "request ID" << ctpReq.RequestID << std::endl;
+    LOG(INFO) << "recv new order req inID " << req.id() << " exID " << reqId;
     LOG(INFO) << "user ctp request " << req.DebugString();
 
   } else if (req.type() == TYPE_CANCEL_ORDER_REQUEST) {
+
     CThostFtdcInputOrderActionField cnclReq;
     memset(&cnclReq, 0, sizeof(cnclReq));
 
-    std::string reqId = getIncreaseID();
-
     std::string toCancelInId = req.cancel_order_id();
-    std::string toCancelExId = inIdToExId[toCancelInId];
-    cnclReq.OrderActionRef = std::atoi(toCancelExId.c_str());
+    if (inIdToExId.find(toCancelInId) == inIdToExId.end()) {
+      LOG(ERROR) << "Can't find exId for canceling !";
+      return -1;
+    }
+
+    if (inToCTPReq.find(toCancelInId) == inToCTPReq.end()) {
+      LOG(ERROR) << "Can't find inId for object to get orderSysId!";
+      return -1;
+    }
+    strcpy(cnclReq.ExchangeID, inToCTPReq[toCancelInId].exchangeId);
+    strcpy(cnclReq.OrderSysID, inToCTPReq[toCancelInId].orderSysId);
 
     cnclReq.ActionFlag = THOST_FTDC_AF_Delete;
     cnclReq.FrontID = frontID;
@@ -178,9 +186,10 @@ int TradeHandler::sendOrderReq(OrderRequest &req) {
     strcpy(cnclReq.InvestorID, userId.c_str());
     strcpy(cnclReq.InstrumentID, req.code().c_str());
 
-    pUserTradeApi->ReqOrderAction(&cnclReq, 1);
+    pUserTradeApi->ReqOrderAction(&cnclReq, 2);
 
-    LOG(INFO) << "send cancel request";
+    LOG(INFO) << "send CTP request orderRef:" << cnclReq.OrderRef
+      << " actionOrdRef:" << cnclReq.OrderActionRef;
     LOG(INFO) << "user ctp cancel request " << req.DebugString();
   } else {
     LOG(ERROR) << "recv an invalid order req type" << req.type();
@@ -240,6 +249,8 @@ void TradeHandler::OnRspOrderInsert(
 }
 
 int TradeHandler::recycleID(std::string &exId, std::string &inId) {
+  LOG(INFO) << "recycle all exId, inId" << std::endl;
+
   if (exIdToInId.find(exId) == exIdToInId.end()) {
     LOG(WARNING) << "Can't find exId " << exId << " and mapping inId";
   } else {
@@ -315,7 +326,8 @@ void TradeHandler::OnRtnOrder(CThostFtdcOrderField *pOrder) {
       submitStatusTypeToString(pOrder->OrderSubmitStatus) << std::endl <<
     "InvestorID:" << pOrder->InvestorID << std::endl <<
     "Code:" << pOrder->InstrumentID << std::endl <<
-    "UserID:" << pOrder->UserID << std::endl;
+    "UserID:" << pOrder->UserID << std::endl <<
+    "RequestID:" << pOrder->RequestID << std::endl;
 
   if (pOrder->OrderSubmitStatus == THOST_FTDC_OSS_Accepted &&
     pOrder->OrderStatus == THOST_FTDC_OST_NoTradeQueueing) {
@@ -337,13 +349,40 @@ void TradeHandler::OnRtnOrder(CThostFtdcOrderField *pOrder) {
       return;
     }
 
+    strcpy(inToCTPReq[inId].exchangeId, pOrder->ExchangeID);
+    strcpy(inToCTPReq[inId].orderSysId, pOrder->OrderSysID);
+
     msgHub.pushMsg(inToCTPReq[inId].responseAddr,
       ProtoBufHelper::wrapMsg(TYPE_RESPONSE_MSG, rsp));
 
-    return;
-  } else if (pOrder->OrderStatus == THOST_FTDC_OST_Canceled) {
+    LOG(INFO) << "send to addr " << inToCTPReq[inId].responseAddr;
+    LOG(INFO) << "send NewOrderConfirm " << rsp.DebugString();
 
-    //CANCEL CONFIRM
+    return;
+  } else if (pOrder->OrderStatus == THOST_FTDC_OST_Canceled &&
+      pOrder->OrderSubmitStatus == THOST_FTDC_OSS_Accepted) {
+
+    ResponseMessage rsp;
+    std::string exId = pOrder->OrderRef;
+    if (exIdToInId.find(exId) == exIdToInId.end()) {
+      LOG(WARNING) << "Can't find exId" << exId << " and inId";
+      return;
+    }
+
+    std::string inId = exIdToInId[exId];
+    if (inToCTPReq.find(inId) == inToCTPReq.end()) {
+      LOG(WARNING) << "Can't find inId" << exId << " and mapping OrderRequest";
+      return;
+    }
+
+    rsp.set_type(TYPE_CANCEL_ORDER_CONFIRM);
+    rsp.set_id(getIncreaseID());
+    rsp.set_ref_id(inToCTPReq[inId].cancel_id);
+
+    msgHub.pushMsg(inToCTPReq[inId].responseAddr,
+      ProtoBufHelper::wrapMsg(TYPE_RESPONSE_MSG, rsp));
+
+    LOG(INFO) << "send CancelConfirm" << rsp.DebugString();
   }
 
 
@@ -481,7 +520,8 @@ int TradeHandler::close() {
 }
 
 void TradeHandler::OnFrontDisconnected(int nReason) {
-  LOG(WARNING) << "Front Disconnected"<<std::endl;
+  LOG(WARNING) << "Front Disconnected, quit "<<std::endl;
+  exit(-1);
 }
 
 int TradeHandler::returnErrorInfo(CThostFtdcRspInfoField *pRspInfo) {
@@ -642,9 +682,21 @@ void TradeHandler::OnRspError(
 //}
 
 void TradeHandler::OnRtnTrade(CThostFtdcTradeField *pTrade) {
+  LOG(INFO) << __FUNCTION__;
+
   ResponseMessage rsp;
 
   std::string exId = pTrade->OrderRef;
+  if (exIdToInId.find(exId) == exIdToInId.end()) {
+    LOG(WARNING) << "Can't find exId" << exId << " and inId";
+    return;
+  }
+  std::string inId = exIdToInId[exId];
+
+  if (inToCTPReq.find(inId) == inToCTPReq.end()) {
+    LOG(WARNING) << "Can't find inId" << exId << " and mapping OrderRequest";
+    return;
+  }
 
   rsp.set_type(TYPE_TRADE);
   rsp.set_code(pTrade->InstrumentID);
@@ -657,9 +709,14 @@ void TradeHandler::OnRtnTrade(CThostFtdcTradeField *pTrade) {
     rsp.set_buy_sell(TradeDirection::SHORT_SELL);
   }
 
-  //msgHub.pushMsg(req.response_address(),
-      //ProtoBufHelper::wrapMsg(TYPE_RESPONSE_MSG, rsp));
-  //LOG(INFO) << "OnRtnOrder send to OrderHub msg " << msg << std::endl;
+  msgHub.pushMsg(inToCTPReq[inId].responseAddr,
+      ProtoBufHelper::wrapMsg(TYPE_RESPONSE_MSG, rsp));
+  LOG(INFO) << "OnRtnTrade send trade " << rsp.DebugString() << std::endl;
+
+  inToCTPReq[inId].leftQty -= pTrade->Volume;
+  if (inToCTPReq[inId].leftQty == 0) {
+    recycleID(exId, inId);
+  }
 }
 
 void TradeHandler::SendMsg(unsigned char type, char* pObj) {

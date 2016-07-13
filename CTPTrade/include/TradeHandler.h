@@ -16,6 +16,8 @@ struct CTPUserRequest {
   std::string cancel_id;
   int originalQty;
   int leftQty;
+  TThostFtdcExchangeIDType exchangeId;
+  TThostFtdcOrderSysIDType	orderSysId;
 };
 
 class TradeHandler : public CThostFtdcTraderSpi {
@@ -30,7 +32,7 @@ private:
   int onMsg(MessageBase);
 
   inline std::string getIncreaseID() {
-    int static id = 11;
+    int static id = 0;
     return std::to_string(++id);
   }
 

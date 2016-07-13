@@ -7,7 +7,6 @@
   //  "TradeFront": "tcp://27.115.57.20:41213"
   //},
 
-  //Personal
   "CTP": {
     "BrokerID": "8000",
     "UserID": "01620118",

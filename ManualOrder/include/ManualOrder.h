@@ -5,6 +5,17 @@
 #include "ProtoBufMsgHub.h"
 #include "CedarHelper.h"
 
+struct DataServer {
+  std::string name;
+  std::string serverAddr;
+  std::string boardcastAddr;
+};
+
+struct TradeServer {
+  std::string name;
+  std::string address;
+};
+
 class ManualOrder {
 
 public:
@@ -20,17 +31,20 @@ private:
   double queryPrice();
   int queryOrderQty();
   int queryCancelOrder();
+  std::string queryAccount();
   std::string queryID();
   std::string queryRefID();
   std::string queryCode();
-  std::string queryChan();
-  //ReturnType queryRtnType();
+  std::string queryCancelID();
   RequestType queryOrdType();
   PositionDirection queryOrdPosition();
-  //OrderAction queryOrdAction();
+  ExchangeType queryExchange();
+  int queryDataRequest();
+
   int onMsg(MessageBase);
 
-  std::string sendAddr;
+  std::vector<DataServer> dataServers;
+  std::vector<TradeServer> tradeServers;
 };
 
 #endif
