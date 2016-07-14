@@ -154,11 +154,19 @@ message ResponseMessage {
   string code = 5;
   string symbol = 6;
   ExchangeType exchange = 7;
+<<<<<<< HEAD
+=======
+  //trade price
+>>>>>>> 854bf1ca6b236981047b28d13d22107336e77721
   double price = 8;
   TradeDirection buy_sell = 9;
   int32 trade_quantity = 10;
   int32 error_code = 11;
+<<<<<<< HEAD
   int32 error_msg = 12;
+=======
+  string error_msg = 12;
+>>>>>>> 854bf1ca6b236981047b28d13d22107336e77721
 
   //the ts that come with origianl tick data,
   //format "09:30:00" --> "093000000"

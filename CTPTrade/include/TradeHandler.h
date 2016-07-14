@@ -9,6 +9,17 @@
 #include "ThostFtdcTraderApi.h"
 #include "ThostFtdcUserApiStruct.h"
 
+struct CTPUserRequest {
+  std::string id;
+  std::string responseAddr;
+  RequestType type;
+  std::string cancel_id;
+  int originalQty;
+  int leftQty;
+  TThostFtdcExchangeIDType exchangeId;
+  TThostFtdcOrderSysIDType	orderSysId;
+};
+
 class TradeHandler : public CThostFtdcTraderSpi {
 
 public:
@@ -19,55 +30,56 @@ public:
 
 private:
   int onMsg(MessageBase);
-  inline int getIncreaseID() {
-    int static id = 1;
-    return id++;
+
+  inline std::string getIncreaseID() {
+    int static id = 0;
+    return std::to_string(++id);
   }
 
   //======= CTP API below ==========
   void OnFrontConnected();
   void OnFrontDisconnected(int nReason);
-	void OnRspUserLogin(CThostFtdcRspUserLoginField *,CThostFtdcRspInfoField *, 
+  void OnRspUserLogin(CThostFtdcRspUserLoginField *,CThostFtdcRspInfoField *,
       int nRequestID, bool bIsLast);
 
   //报单录入请求响应
-	virtual void OnRspOrderInsert(CThostFtdcInputOrderField *pInputOrder, 
+	virtual void OnRspOrderInsert(CThostFtdcInputOrderField *pInputOrder,
       CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
   //预埋单录入请求响应
 	virtual void OnRspParkedOrderInsert(
-      CThostFtdcParkedOrderField *pParkedOrder, 
+      CThostFtdcParkedOrderField *pParkedOrder,
       CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
 	//报单操作请求响应
 	virtual void OnRspOrderAction(
-      CThostFtdcInputOrderActionField *pInputOrderAction, 
+      CThostFtdcInputOrderActionField *pInputOrderAction,
       CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
 	//请求查询报单响应
-	virtual void OnRspQryOrder(CThostFtdcOrderField *pOrder, 
+	virtual void OnRspQryOrder(CThostFtdcOrderField *pOrder,
       CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
 	///请求查询成交响应
-	virtual void OnRspQryTrade(CThostFtdcTradeField *pTrade, 
+	virtual void OnRspQryTrade(CThostFtdcTradeField *pTrade,
       CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
 	///请求查询合约响应
-	virtual void OnRspQryInstrument(CThostFtdcInstrumentField *pInstrument, 
+	virtual void OnRspQryInstrument(CThostFtdcInstrumentField *pInstrument,
       CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
 	///请求查询行情响应
 	virtual void OnRspQryDepthMarketData(
-      CThostFtdcDepthMarketDataField *pDepthMarketData, 
+      CThostFtdcDepthMarketDataField *pDepthMarketData,
       CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
 	///请求查询结算信息确认响应
 	virtual void OnRspQrySettlementInfoConfirm(
-      CThostFtdcSettlementInfoConfirmField *pSettlementInfoConfirm, 
+      CThostFtdcSettlementInfoConfirmField *pSettlementInfoConfirm,
       CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
 	///错误应答
-	virtual void OnRspError(CThostFtdcRspInfoField *pRspInfo, 
+	virtual void OnRspError(CThostFtdcRspInfoField *pRspInfo,
       int nRequestID, bool bIsLast);
 
 	///报单通知
@@ -78,12 +90,12 @@ private:
 
 	///报单录入错误回报
 	virtual void OnErrRtnOrderInsert(
-    CThostFtdcInputOrderField *pInputOrder, 
+    CThostFtdcInputOrderField *pInputOrder,
     CThostFtdcRspInfoField *pRspInfo);
 
 	///报单操作错误回报
 	virtual void OnErrRtnOrderAction(
-    CThostFtdcOrderActionField *pOrderAction, 
+    CThostFtdcOrderActionField *pOrderAction,
     CThostFtdcRspInfoField *pRspInfo);
 
 	///合约交易状态通知
@@ -122,58 +134,61 @@ private:
   }
 
   ///登出请求响应
-  void OnRspUserLogout(CThostFtdcUserLogoutField *pUserLogout, CThostFtdcRspInfoField *pRspInfo, 
-    int nRequestID, bool bIsLast) {
+  void OnRspUserLogout(CThostFtdcUserLogoutField *pUserLogout,
+    CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
     //fn_printCout(__FUNCTION__);
   }
 
 	///请求查询预埋单响应
-	virtual void OnRspQryParkedOrder(CThostFtdcParkedOrderField *pParkedOrder, 
+	virtual void OnRspQryParkedOrder(CThostFtdcParkedOrderField *pParkedOrder,
       CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
 		//fn_printCout(__FUNCTION__);
 	};
 
 	///请求查询预埋撤单响应
 	virtual void OnRspQryParkedOrderAction(
-      CThostFtdcParkedOrderActionField *pParkedOrderAction, 
+      CThostFtdcParkedOrderActionField *pParkedOrderAction,
       CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
 		//fn_printCout(__FUNCTION__);
 	};
 
 	///请求查询交易通知响应
 	virtual void OnRspQryTradingNotice(
-      CThostFtdcTradingNoticeField *pTradingNotice, 
+      CThostFtdcTradingNoticeField *pTradingNotice,
       CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
 		//fn_printCout(__FUNCTION__);
 	};
 
 	///请求查询经纪公司交易参数响应
-	virtual void OnRspQryBrokerTradingParams(CThostFtdcBrokerTradingParamsField *pBrokerTradingParams, 
+	virtual void OnRspQryBrokerTradingParams(
+      CThostFtdcBrokerTradingParamsField *pBrokerTradingParams,
       CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
 		//fn_printCout(__FUNCTION__);
 	};
 
 	///请求查询经纪公司交易算法响应
-	virtual void OnRspQryBrokerTradingAlgos(CThostFtdcBrokerTradingAlgosField *pBrokerTradingAlgos, 
+	virtual void OnRspQryBrokerTradingAlgos(
+      CThostFtdcBrokerTradingAlgosField *pBrokerTradingAlgos,
       CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
 		//fn_printCout(__FUNCTION__);
 	};
 
   //预埋撤单录入请求响应
-  void OnRspParkedOrderAction(CThostFtdcParkedOrderActionField *pParkedOrderAction, 
+  void OnRspParkedOrderAction(
+      CThostFtdcParkedOrderActionField *pParkedOrderAction,
       CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
     //fn_printCout(__FUNCTION__);
   };
 
   ///请求查询投资者结算结果响应
-  void OnRspQrySettlementInfo(CThostFtdcSettlementInfoField *pSettlementInfo, 
+  void OnRspQrySettlementInfo(CThostFtdcSettlementInfoField *pSettlementInfo,
       CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
 
     //fn_printCout(__FUNCTION__);
   };
 
   ///请求查询转帐银行响应
-  void OnRspQryTransferBank(CThostFtdcTransferBankField *pTransferBank, 
+  void OnRspQryTransferBank(CThostFtdcTransferBankField *pTransferBank,
       CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
 
     //fn_printCout(__FUNCTION__);
@@ -181,100 +196,106 @@ private:
 
   ///请求查询投资者持仓明细响应
   void OnRspQryInvestorPositionDetail(
-    CThostFtdcInvestorPositionDetailField *pInvestorPositionDetail, CThostFtdcRspInfoField *pRspInfo, 
-    int nRequestID, bool bIsLast) {
+    CThostFtdcInvestorPositionDetailField *pInvestorPositionDetail,
+    CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
 
     //fn_printCout(__FUNCTION__);
   };
 
   ///请求查询客户通知响应
-  void OnRspQryNotice(CThostFtdcNoticeField *pNotice, 
+  void OnRspQryNotice(CThostFtdcNoticeField *pNotice,
     CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
 
     //fn_printCout(__FUNCTION__);
   };
 
   ///请求查询投资者持仓响应
-  void OnRspQryInvestorPosition(CThostFtdcInvestorPositionField *pInvestorPosition, 
-      CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+  void OnRspQryInvestorPosition(
+    CThostFtdcInvestorPositionField *pInvestorPosition,
+    CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
 
     //fn_printCout(__FUNCTION__);
   };
 
   ///请求查询资金账户响应
-  void OnRspQryTradingAccount(CThostFtdcTradingAccountField *pTradingAccount, 
-      CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+  void OnRspQryTradingAccount(
+    CThostFtdcTradingAccountField *pTradingAccount,
+    CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
     //fn_printCout(__FUNCTION__);
   };
 
   ///请求查询投资者响应
-  void OnRspQryInvestor(CThostFtdcInvestorField *pInvestor, 
-      CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+  void OnRspQryInvestor(
+    CThostFtdcInvestorField *pInvestor,
+    CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
 
     //fn_printCout(__FUNCTION__);
   };
 
   ///请求查询交易编码响应
-  void OnRspQryTradingCode(CThostFtdcTradingCodeField *pTradingCode, 
+  void OnRspQryTradingCode(CThostFtdcTradingCodeField *pTradingCode,
       CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
 
     //fn_printCout(__FUNCTION__);
   };
 
   ///请求查询合约保证金率响应
-  void OnRspQryInstrumentMarginRate(CThostFtdcInstrumentMarginRateField *pInstrumentMarginRate, 
-      CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+  void OnRspQryInstrumentMarginRate(
+    CThostFtdcInstrumentMarginRateField *pInstrumentMarginRate,
+    CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
 
     //fn_printCout(__FUNCTION__);
   };
 
   ///请求查询合约手续费率响应
   void OnRspQryInstrumentCommissionRate(
-      CThostFtdcInstrumentCommissionRateField *pInstrumentCommissionRate, 
-      CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+    CThostFtdcInstrumentCommissionRateField *pInstrumentCommissionRate,
+    CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
 
     //fn_printCout(__FUNCTION__);
   };
 
   ///请求查询交易所响应
-  void OnRspQryExchange(CThostFtdcExchangeField *pExchange, 
-      CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-
+  void OnRspQryExchange(
+    CThostFtdcExchangeField *pExchange,
+    CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
     //fn_printCout(__FUNCTION__);
   };
 
   //查询最大报单数量响应
-  void OnRspQueryMaxOrderVolume(CThostFtdcQueryMaxOrderVolumeField *pQueryMaxOrderVolume,
+  void OnRspQueryMaxOrderVolume(
+    CThostFtdcQueryMaxOrderVolumeField *pQueryMaxOrderVolume,
     CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
     //fn_printCout(__FUNCTION__);
   };
 
   //投资者结算结果确认响应
-  void OnRspSettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField *pSettlementInfoConfirm, 
-      CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+  void OnRspSettlementInfoConfirm(
+    CThostFtdcSettlementInfoConfirmField *pSettlementInfoConfirm,
+    CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
 
     //fn_printCout(__FUNCTION__);
   };
 
   //删除预埋单响应
-  void OnRspRemoveParkedOrder(CThostFtdcRemoveParkedOrderField *pRemoveParkedOrder, 
-      CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+  void OnRspRemoveParkedOrder(
+    CThostFtdcRemoveParkedOrderField *pRemoveParkedOrder,
+    CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
 
     //fn_printCout(__FUNCTION__);
   };
 
   //删除预埋撤单响应
-  void OnRspRemoveParkedOrderAction(CThostFtdcRemoveParkedOrderActionField *pRemoveParkedOrderAction, 
-      CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-
+  void OnRspRemoveParkedOrderAction(
+    CThostFtdcRemoveParkedOrderActionField *pRemoveParkedOrderAction,
+    CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
     //fn_printCout(__FUNCTION__);
   };
 
   ///请求查询投资者持仓明细响应
   void OnRspQryInvestorPositionCombineDetail(
-    CThostFtdcInvestorPositionCombineDetailField *pInvestorPositionCombineDetail, 
-    CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-
+  CThostFtdcInvestorPositionCombineDetailField *pInvestorPositionCombineDetail,
+  CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
     //fn_printCout(__FUNCTION__);
   };
 
@@ -287,8 +308,9 @@ private:
   TThostFtdcFrontIDType frontID;
   TThostFtdcSessionIDType	sessionID;
 
-  std::map<std::string, int> internalIdToExternal;
-  std::map<int, std::string> externalIdToInternal;
+  std::map<std::string, std::string> inIdToExId;
+  std::map<std::string, std::string> exIdToInId;
+  std::map<std::string, CTPUserRequest> inToCTPReq;
 
   int initReq(CThostFtdcInputOrderField&);
   void SendMsg(unsigned char type, char* pObj);
@@ -297,9 +319,11 @@ private:
   //void PrintOrderInsertErr(OnRspOrderInsertMsg* pErr);
   //int sendCancelReq(NewOrderInfo &);
   int sendOrderReq(OrderRequest&);
-  std::string concatOrderRef(std::string &);
-  std::string extractInternalID(char *);
+  //std::string concatOrderRef(std::string &);
+  //std::string extractInternalID(char *);
   int returnErrorInfo(CThostFtdcRspInfoField *);
+  int recycleID(std::string&, std::string&);
+  int sendErrorResponse(CThostFtdcInputOrderField*, CThostFtdcRspInfoField*);
 };
 
 #endif

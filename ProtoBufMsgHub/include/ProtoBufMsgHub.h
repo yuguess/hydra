@@ -131,8 +131,6 @@ public:
       pushSock = std::shared_ptr<void>(pushSockPtr);
       pullerAddrs[addr] = pushSock;
 
-      LOG(INFO) << "init new sock";
-
     } else {
       pushSock = pullerAddrs[addr];
     }
@@ -143,7 +141,7 @@ public:
       return -1;
     }
 
-    LOG(INFO) << "PushMsg complete";
+    //LOG(INFO) << "PushMsg complete";
 
     return 0;
   }

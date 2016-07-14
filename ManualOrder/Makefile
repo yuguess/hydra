@@ -7,20 +7,13 @@ CC=g++
 #CFLAGS=  -O3 -std=c++0x -DUSE_QUEUE
 
 CFLAGS=-std=c++0x 
-#LDFLAGS = -L/usr/local/lib -L/usr/lib -L/bld/dev_multi -llzo2 -lpthread -lrt -lconnector -llogger -lxsim -ldatamanip -lcommonutils /usr/local/lib/libsnappy.a 
-LDFLAGS = -L/usr/local/lib -L/usr/lib  -L$(HOME)/CedarLib -lboost_system -lboost_thread -lglog -ljsoncpp -lprotobuf -lzmq
+LDFLAGS = -L/usr/local/lib -L$(HOME)/CedarLib -ljsoncpp -lprotobuf -lzmq
 DEBUG = -g
 BIN=./bin
 SRC=./src
 
-INCLUDE= -I/usr/include \
-	 	-I$(HOME)/CedarInclude/Core \
-	 	-I$(HOME)/CedarInclude/CTP \
-	 	-I$(HOME)/CedarInclude/Common \
-	 	-I$(HOME)/CedarInclude/Connection \
-	 	-I./include \
+INCLUDE= -I./include \
 		-I../ProtoBufMsg \
-		-I../MsgHub/include \
 		-I../CedarHelper/include \
 	 	-I../CedarJsonConfig/include \
 		-I../ProtoBufMsgHub/include \

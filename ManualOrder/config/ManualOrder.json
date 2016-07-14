@@ -1,6 +1,28 @@
 {
+<<<<<<< HEAD
   "SendToAddress":"192.168.1.102:15228", 
   "PublisherAddress":"192.168.1.102:15227", 
+=======
+  "SendToAddress":"127.0.0.1:15224",
+  "DataServer": [
+    {
+      "name":"stock",
+      "serverAddr":"192.168.1.102:15228",
+      "boardcastAddr":"15227"
+    },
+    {
+      "name":"futures",
+      "serverAddr":"192.168.0.66:15214",
+      "boardcastAddr":"192.168.0.66:15213"
+    }
+  ],
+
+  "TradeServer": [
+    {"name":"2001_Stock", "address":"192.168.1.102:15230"},
+    {"name":"2001_Futures", "address":"192.168.1.102:15230"}
+  ],
+
+>>>>>>> 854bf1ca6b236981047b28d13d22107336e77721
   "MsgHub": {
     "PublishPort":"15214",
     "PullPort":"15213"

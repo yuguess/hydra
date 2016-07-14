@@ -62,7 +62,7 @@ public:
     symlinkFile = program + ".WARN";
     oldSymLink = destDir + symlinkFile;
     remove(oldSymLink.c_str());
-		
+
 #ifdef __linux
 		if (symlinkat(filename.c_str(), fd, symlinkFile.c_str()) != 0) {
 			LOG(ERROR) << ".WARN symlink set fail!";
@@ -74,13 +74,13 @@ public:
     symlinkFile = program + ".ERROR";
     oldSymLink = destDir + symlinkFile;
     remove(oldSymLink.c_str());
-		
+
 #ifdef __linux
     if (symlinkat(filename.c_str(), fd, symlinkFile.c_str()) != 0)
       LOG(ERROR) << ".ERROR symlink set fail!";
 #endif
-    
-		filename = l->typedConfigurations()->filename(el::Level::Fatal);
+
+    filename = l->typedConfigurations()->filename(el::Level::Fatal);
     filename.erase(0, destDir.length());
     symlinkFile = program + ".FATAL";
     oldSymLink = destDir + symlinkFile;

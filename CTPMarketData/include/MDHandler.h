@@ -44,6 +44,8 @@ private:
   ProtoBufMsgHub msgHub;
   std::string m_TradingDay;
   std::string m_dataPath;
+
+  std::map<std::string, std::string> codeToEx;
 };
 
 #endif

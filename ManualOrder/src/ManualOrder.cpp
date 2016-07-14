@@ -8,6 +8,7 @@ ManualOrder::ManualOrder() {
   msgHub.registerCallback(std::bind(&ManualOrder::onUpdateMsg, this,
         std::placeholders::_1));
 
+<<<<<<< HEAD
   CedarJsonConfig::getInstance().getStringByPath("SendToAddress", sendAddr);
   CedarJsonConfig::getInstance().getStringByPath("PublisherAddress", pubAddr);
 }
@@ -79,22 +80,68 @@ int ManualOrder::onUpdateMsg(MessageBase msg) {
 
   LOG(INFO) << "[REALTIMETEST]id:" << mUpdate.code()  << "|last price:" << mUpdate.last_price();
 
+=======
+  std::vector<std::string> names, srvAddrs, bcstAddrs;
+  CedarJsonConfig::getInstance().getStringArrayWithTag(names, "DataServer",
+      "name");
+  CedarJsonConfig::getInstance().getStringArrayWithTag(srvAddrs, "DataServer",
+      "serverAddr");
+  CedarJsonConfig::getInstance().getStringArrayWithTag(bcstAddrs, "DataServer",
+      "boardcastAddr");
+  for (int i = 0; i < names.size(); i++) {
+    dataServers.push_back({names[i], srvAddrs[i], bcstAddrs[i]});
+  }
+
+  std::vector<std::string> tnames, addrs;
+  CedarJsonConfig::getInstance().getStringArrayWithTag(tnames, "TradeServer",
+      "name");
+  CedarJsonConfig::getInstance().getStringArrayWithTag(addrs, "TradeServer",
+      "address");
+  for (int i = 0; i < names.size(); i++) {
+    TradeServer tmp = {tnames[i], addrs[i]};
+    tradeServers.push_back(tmp);
+  }
+}
+
+int ManualOrder::onMsg(MessageBase msg) {
+  LOG(INFO) << "Manualorder onMsg";
+  LOG(INFO) << "MessageBase:" << msg.type();
+
+  if (msg.type() == TYPE_RESPONSE_MSG) {
+    ResponseMessage rspMsg = ProtoBufHelper::unwrapMsg<ResponseMessage>(msg);
+    LOG(INFO) << rspMsg.DebugString();
+  } else if (msg.type() == TYPE_MARKETUPDATE) {
+    MarketUpdate mkt = ProtoBufHelper::unwrapMsg<MarketUpdate>(msg);
+    LOG(INFO) << mkt.DebugString();
+  } else {
+    LOG(INFO) << "Invalid msg type " << msg.type();
+  }
+>>>>>>> 854bf1ca6b236981047b28d13d22107336e77721
 }
 
 
 
 void ManualOrder::run() {
   while (true) {
-    char action = queryAction();
-    if (action == '1')
-      queryEnterOrder();
-    else if (action == '2')
-      queryCancelOrder();
-    else if (action == '3')
-      break;
+    char value;
+    std::cout << std::endl
+      << "1) Enter OrderRequest NewOrder/FirstLevel/SmartOrder" << std::endl
+      << "2) Enter DataRequest" << std::endl;
+    std::cin >> value;
+    switch (value) {
+      case '1':
+        queryEnterOrder();
+        break;
+      case '2':
+        queryDataRequest();
+        break;
+
+      default: throw std::exception();
+    }
   }
 }
 
+<<<<<<< HEAD
 void ManualOrder::sendSingleOrder(string id, string code, TradeDirection buy_sell, int quantity) {
   OrderRequest order;
   order.set_response_address(CedarHelper::getResponseAddr());
@@ -241,53 +288,38 @@ void ManualOrder::autorun() {
 //    case '2': return CANCEL;
 //  }
 //}
+=======
+int ManualOrder::queryDataRequest() {
+  std::cout << "Send DataRequest\n";
+  static std::string respAddr = CedarHelper::getResponseAddr();
+>>>>>>> 854bf1ca6b236981047b28d13d22107336e77721
 
+  DataRequest req;
+  std::string code = queryCode();
+  ExchangeType xchg = queryExchange();
+  req.set_code(code);
+  req.set_exchange(xchg);
 
-std::string ManualOrder::queryChan(){
-  char value;
-  std::cout << std::endl
-  << "1) FemasTradeRequest" << std::endl
-  << "2) CTPTradeReturn" << std::endl
-  << "3) FemasTradeReturn" << std::endl
-  << "4) OrderHubReturn" << std::endl
-  << "5) StatusMsg" << std::endl
-  << "6) SymbolPosition" << std::endl
-  << "7) GUICmdRequest" << std::endl
-  << "8) ManualOrder" << std::endl
-  << "Channel name: ";
+  int value;
+  std::cout << std::endl;
+  for (int i = 0; i < dataServers.size(); i++)
+    std::cout << i <<") Enter dataServer " << dataServers[i].name << std::endl;
 
   std::cin >> value;
-  switch (value) {
-    case '1': return "FemasTradeRequest" ;
-    case '2': return "CTPTradeReturn";
-    case '3': return "FemasTradeReturn";
-    case '4': return "OrderHubReturn" ;
-    case '5': return "OrderHubStatusMsg" ;
-    case '6': return "SymbolPosition" ;
-    case '7': return "GUICmdRequest" ;
-    case '8': return "ManualOrder" ;
-  }
-}
+  std::string sendAddr = dataServers[value].serverAddr;
+  std::string boardcastAddr = dataServers[value].boardcastAddr;
 
-//ReturnType ManualOrder::queryRtnType(){
-//  char value;
-//  std::cout << std::endl
-//  << "1) CONFIRM" << std::endl
-//  << "2) NEW_CONFIRM" << std::endl
-//  << "3) CANCEL_CONFIRM" << std::endl
-//  << "4) TRADE" << std::endl
-//  << "5) ERROR" << std::endl
-//  << "ReturnType: ";
-//
-//  std::cin >> value;
-//  switch (value) {
-//    case '1': return CONFIRM;
-//    case '2': return NEW_CONFIRM;
-//    case '3': return CANCEL_CONFIRM;
-//    case '4': return CEDAR_TRADE;
-//    case '5': return CEDAR_ERROR;
-//  }
-//}
+  LOG(INFO) << "send msg to " << sendAddr;
+  LOG(INFO) << req.DebugString();
+  msgHub.pushMsg(sendAddr, ProtoBufHelper::wrapMsg(TYPE_DATAREQUEST, req));
+
+  std::string chan = code + "." + CedarHelper::exchangeTypeToString(xchg);
+  LOG(INFO) << "subscripe " << boardcastAddr;
+  LOG(INFO) << "subscripe channel " << chan;
+  msgHub.addSubscription(boardcastAddr, chan);
+
+  return 0;
+}
 
 
 std::string ManualOrder::queryCancelID() {
@@ -322,7 +354,7 @@ int ManualOrder::queryCancelOrder() {
 int ManualOrder::queryAction() {
   char value;
   std::cout << std::endl
-  << "1) Enter New Order Request" << std::endl
+  << "1) Enter NewOrder/FirstLevel/SmartOrder Request" << std::endl
   << "2) Enter Cancel Order Request (not support right now)" << std::endl
   << "3) Quit" << std::endl;
   std::cin >> value;
@@ -338,14 +370,7 @@ int ManualOrder::queryAction() {
 
 std::string ManualOrder::queryCode() {
   std::string value;
-  std::cout << std::endl << "Code (format like 000001): ";
-  std::cin >> value;
-  return value;
-}
-
-std::string ManualOrder::queryID() {
-  std::string value;
-  std::cout << std::endl << "ID: ";
+  std::cout << std::endl << "Code (stock 000001, futures jd1609): ";
   std::cin >> value;
   return value;
 }
@@ -379,6 +404,74 @@ int ManualOrder::queryOrderQty() {
   return qty;
 }
 
+std::string ManualOrder::queryAccount() {
+
+  char value;
+  std::cout << "support options below:" << std::endl
+            << "1) 2001_Stock" << std::endl
+            << "2) 2001_Futures" << std::endl;
+  std::cin >> value;
+  switch (value) {
+    case '1': return "2001_Stock";
+    case '2': return "2001_Futures";
+    default: throw std::exception();
+  }
+}
+
+ExchangeType ManualOrder::queryExchange() {
+
+  char value;
+  std::cout << "Support exchanges below:" << std::endl
+            << "1) SHSE" << std::endl
+            << "2) SZSE" << std::endl
+            << "3) CFE" << std::endl
+            << "4) SHFE" << std::endl
+            << "5) DCE" << std::endl
+            << "6) ZCE" << std::endl;
+
+  std::cin >> value;
+  switch (value) {
+    case '1': return SHSE;
+    case '2': return SZSE;
+    case '3': return CFE;
+    case '4': return SHFE;
+    case '5': return DCE;
+    case '6': return ZCE;
+    default: throw std::exception();
+  }
+}
+
+RequestType ManualOrder::queryOrdType() {
+  char value;
+  std::cout << std::endl
+  << "1) Limit" << std::endl
+<<<<<<< HEAD
+  << "2) Market" << std::endl
+  << "3) Cancel" << std::endl
+=======
+  << "2) Cancel" << std::endl
+  << "3) Market" << std::endl
+  << "4) SmartOrder" << std::endl
+  << "5) FirstLevel" << std::endl
+>>>>>>> 854bf1ca6b236981047b28d13d22107336e77721
+  << "OrdType: ";
+
+  std::cin >> value;
+  switch (value) {
+    case '1': return RequestType::TYPE_LIMIT_ORDER_REQUEST;
+<<<<<<< HEAD
+    case '2': return RequestType::TYPE_MARKET_ORDER_REQUEST;
+    case '3': return RequestType::TYPE_CANCEL_ORDER_REQUEST;
+=======
+    case '2': return RequestType::TYPE_CANCEL_ORDER_REQUEST;
+    case '3': return RequestType::TYPE_MARKET_ORDER_REQUEST;
+    case '4': return RequestType::TYPE_SMART_ORDER_REQUEST;
+    case '5': return RequestType::TYPE_FIRST_LEVEL_ORDER_REQUEST;
+>>>>>>> 854bf1ca6b236981047b28d13d22107336e77721
+    default: throw std::exception();
+  }
+}
+
 double ManualOrder::queryPrice() {
   double value;
   std::cout << std::endl << "Price (only valid for certain order like limit): ";
@@ -386,38 +479,65 @@ double ManualOrder::queryPrice() {
   return value;
 }
 
-RequestType ManualOrder::queryOrdType() {
-  char value;
-  std::cout << std::endl
-  << "1) Limit" << std::endl
-  << "2) Market" << std::endl
-  << "3) Cancel" << std::endl
-  << "OrdType: ";
-
-  std::cin >> value;
-  switch (value) {
-    case '1': return RequestType::TYPE_LIMIT_ORDER_REQUEST;
-    case '2': return RequestType::TYPE_MARKET_ORDER_REQUEST;
-    case '3': return RequestType::TYPE_CANCEL_ORDER_REQUEST;
-    default: throw std::exception();
-  }
-}
-
 int ManualOrder::queryEnterOrder() {
-  std::cout << "\nNewOrder Request\n";
+  std::cout << "Send Msg Type\n";
   static std::string respAddr = CedarHelper::getResponseAddr();
 
   OrderRequest order;
   order.set_response_address(respAddr);
+  order.set_id(CedarHelper::getOrderId());
 
-  order.set_id(queryID());
-  order.set_code(queryCode());
-  order.set_buy_sell(querySide());
-  order.set_trade_quantity(queryOrderQty());
   order.set_type(queryOrdType());
+<<<<<<< HEAD
   order.set_limit_price(queryPrice());
   order.set_open_close(queryOrdPosition());
   order.set_exchange(SZSE);
+=======
+
+  int value;
+  std::cout << std::endl;
+  for (int i = 0; i < dataServers.size(); i++) {
+    std::cout << i <<") for "
+      << tradeServers[i].name << std::endl;
+  }
+  std::cin >> value;
+  if (value < 0 || value >= tradeServers.size()) {
+    std::cout << "input index out of range" << std::endl;
+    return -1;
+  }
+  std::string sendAddr = tradeServers[value].address;
+
+  switch (order.type()) {
+    case TYPE_LIMIT_ORDER_REQUEST:
+      order.set_code(queryCode());
+      order.set_exchange(queryExchange());
+      order.set_buy_sell(querySide());
+      order.set_trade_quantity(queryOrderQty());
+      order.set_limit_price(queryPrice());
+      order.set_open_close(queryOrdPosition());
+      break;
+
+    case TYPE_MARKET_ORDER_REQUEST:
+      break;
+
+    case TYPE_CANCEL_ORDER_REQUEST:
+      order.set_cancel_order_id(queryCancelID());
+      break;
+
+    case TYPE_SMART_ORDER_REQUEST:
+      break;
+
+    case TYPE_FIRST_LEVEL_ORDER_REQUEST:
+      order.set_code(queryCode());
+      order.set_exchange(queryExchange());
+      order.set_buy_sell(querySide());
+      order.set_trade_quantity(queryOrderQty());
+      break;
+  }
+
+  LOG(INFO) << "send msg to " << sendAddr;
+  LOG(INFO) << order.DebugString();
+>>>>>>> 854bf1ca6b236981047b28d13d22107336e77721
   msgHub.pushMsg(sendAddr, ProtoBufHelper::wrapMsg(TYPE_ORDER_REQUEST, order));
 
   return 0;
@@ -441,4 +561,12 @@ PositionDirection ManualOrder::queryOrdPosition() {
     case 4: return PositionDirection::CLOSE_YESTERDAY_POSITION;
     default: throw std::exception();
   }
+}
+
+std::string ManualOrder::queryCancelID() {
+  static std::string respAddr = CedarHelper::getResponseAddr();
+  std::string value;
+  std::cout << std::endl << "Cancel ID:";
+  std::cin >> value;
+  return respAddr + "_" + value;
 }

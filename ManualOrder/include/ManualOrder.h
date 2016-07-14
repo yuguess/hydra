@@ -7,6 +7,17 @@
 using namespace std;
 
 
+struct DataServer {
+  std::string name;
+  std::string serverAddr;
+  std::string boardcastAddr;
+};
+
+struct TradeServer {
+  std::string name;
+  std::string address;
+};
+
 class ManualOrder {
 
 public:
@@ -30,23 +41,35 @@ private:
   double queryPrice();
   int queryOrderQty();
   int queryCancelOrder();
+  std::string queryAccount();
   std::string queryID();
   std::string queryRefID();
   std::string queryCode();
+<<<<<<< HEAD
   std::string queryChan();
   std::string queryCancelID();
   //ReturnType queryRtnType();
+=======
+  std::string queryCancelID();
+>>>>>>> 854bf1ca6b236981047b28d13d22107336e77721
   RequestType queryOrdType();
   PositionDirection queryOrdPosition();
-  //OrderAction queryOrdAction();
+  ExchangeType queryExchange();
+  int queryDataRequest();
+
   int onMsg(MessageBase);
   int onUpdateMsg(MessageBase);
   int onMsgTest(MessageBase);
 
+<<<<<<< HEAD
   void updateTestBoardcast();
   
   std::string sendAddr;
   std::string pubAddr;
+=======
+  std::vector<DataServer> dataServers;
+  std::vector<TradeServer> tradeServers;
+>>>>>>> 854bf1ca6b236981047b28d13d22107336e77721
 };
 
 #endif
