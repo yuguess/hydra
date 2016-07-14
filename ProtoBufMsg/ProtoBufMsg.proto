@@ -3,11 +3,8 @@ syntax = "proto3";
 enum MsgType {
   TYPE_DATAREQUEST = 0;
   TYPE_MARKETUPDATE = 1;
-  TYPE_TRANSACTION = 2;
-  TYPE_INDEX_DATA = 3;
-  TYPE_REPLAY_REQUEST= 4;
-  TYPE_ORDER_REQUEST = 5;
-  TYPE_RESPONSE_MSG = 6;
+  TYPE_ORDER_REQUEST = 2;
+  TYPE_RESPONSE_MSG = 3;
 }
 
 enum ExchangeType {
@@ -88,21 +85,6 @@ message DataRequest {
   string data_type = 4;
 }
 
-message ReplayRequest {
-  repeated string wind_code = 1;
-  string start_date = 2;
-  string end_date = 3;
-  string day_length = 4;
-  int32 replay_rate = 5;
-}
-
-enum RequestType {
-  TYPE_LIMIT_ORDER_REQUEST = 0;
-  TYPE_MARKET_ORDER_REQUEST = 1;
-  TYPE_CANCEL_ORDER_REQUEST = 2;
-  TYPE_DELEGATE_ORDER_REQUEST = 3;
-}
-
 enum TradeDirection {
   LONG_BUY = 0;
   SHORT_SELL = 1;
@@ -116,27 +98,37 @@ enum PositionDirection {
   CLOSE_YESTERDAY_POSITION = 3;
 }
 
-//New Order
-//Cancel Order
+enum RequestType {
+  TYPE_LIMIT_ORDER_REQUEST = 0;
+  TYPE_MARKET_ORDER_REQUEST = 1;
+  TYPE_CANCEL_ORDER_REQUEST = 2;
+  TYPE_SMART_ORDER_REQUEST = 3;
+  TYPE_FIRST_LEVEL_ORDER_REQUEST = 4;
+}
+
 message OrderRequest {
   RequestType type = 1;
   //this field is required !
   //response address ip:port, format as 110.31.12.132:13213
   //when requeset got feedback, for whom it should go to
   string response_address = 2;
+  //which acc does it belong to
+  string account = 3;
 
-  string id = 3;
-  string code = 4;
-  string symbol = 5;
-  ExchangeType exchange = 6;
-  TradeDirection buy_sell = 7;
+  string id = 4;
+  string code = 5;
+  string symbol = 6;
+  ExchangeType exchange = 7;
+  TradeDirection buy_sell = 8;
   //for limit order
-  double limit_price = 8;
-  int32 trade_quantity = 9;
+  double limit_price = 9;
+  int32 trade_quantity = 10;
   //Only for China futures market
-  PositionDirection open_close = 10;
+  PositionDirection open_close = 11;
   //the order id tries to cancel
-  string cancel_order_id = 11;
+  string cancel_order_id = 12;
+  //this is for smart order, argument is seperate by ',', like 1,LINK,3
+  string argument_list = 13;
 }
 
 enum ResponseMsgType {
@@ -149,26 +141,28 @@ enum ResponseMsgType {
 
 //Error
 //Trade(Could be partial trade)
-//NewOrder Confirm
-//Cancel Confirm
+//NewOrder Request Confirm
+//Cancel Request Confirm
 message ResponseMessage {
   ResponseMsgType type = 1;
   string id = 2;
-  //which request id it respond to
+  //ref_id refer to the previous order request id,
+  //this cancel response cancelled
   string ref_id = 3;
+  string account = 4;
 
-  string code = 4;
-  string symbol = 5;
-  ExchangeType exchange = 6;
-  double price = 7;
-  TradeDirection buy_sell = 8;
-  int32 trade_quantity = 9;
-  int32 error_code = 10;
-  int32 error_msg = 11;
+  string code = 5;
+  string symbol = 6;
+  ExchangeType exchange = 7;
+  double price = 8;
+  TradeDirection buy_sell = 9;
+  int32 trade_quantity = 10;
+  int32 error_code = 11;
+  int32 error_msg = 12;
 
   //the ts that come with origianl tick data,
   //format "09:30:00" --> "093000000"
-  string exchange_timestamp = 12;
+  string exchange_timestamp = 13;
   //when our agent recv ts
-  string recv_timestamp = 13;
+  string recv_timestamp = 14;
 }
