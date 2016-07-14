@@ -102,4 +102,3 @@ class protoBufHelper:
     PushPort = data["PythonMsgHub"]["PushPort"]
     SubPort = data["PythonMsgHub"]["SubPort"]
     msgHub.init(PushPort, SubPort)
-
