@@ -1,20 +1,18 @@
 #include <iostream>
 #include "ManualOrder.h"
 #include <unistd.h>
-#include "BatTest.h"
 
 ManualOrder::ManualOrder() {
   ProtoBufHelper::setupProtoBufMsgHub(msgHub);
   msgHub.registerCallback(std::bind(&ManualOrder::onUpdateMsg, this,
         std::placeholders::_1));
 
-<<<<<<< HEAD
   CedarJsonConfig::getInstance().getStringByPath("SendToAddress", sendAddr);
   CedarJsonConfig::getInstance().getStringByPath("PublisherAddress", pubAddr);
 }
 
 int ManualOrder::onMsg(MessageBase msg) {
-  MsgType type = msg.type();
+  CedarMsgType type = msg.type();
   ResponseMessage rmsg = ProtoBufHelper::unwrapMsg<ResponseMessage>(msg);
 
   std::cout << "type:" << rmsg.type() << std::endl;
@@ -27,7 +25,7 @@ int ManualOrder::onMsg(MessageBase msg) {
 
 
 int ManualOrder::onMsgTest(MessageBase msg) {
-  MsgType type = msg.type();
+  CedarMsgType type = msg.type();
   ResponseMessage rmsg = ProtoBufHelper::unwrapMsg<ResponseMessage>(msg);
 
   LOG(INFO) << "id" << rmsg.id();
@@ -35,7 +33,7 @@ int ManualOrder::onMsgTest(MessageBase msg) {
 
 int ManualOrder::onUpdateMsg(MessageBase msg) {
   std::cout<< "*" << std::endl;
-  MsgType type= msg.type();
+  CedarMsgType type= msg.type();
   MarketUpdate mUpdate = ProtoBufHelper::unwrapMsg<MarketUpdate>(msg);
   std::cout << "code:" <<mUpdate.code() << std::endl;
   std::cout << "exchange:" <<mUpdate.exchange() << std::endl;
@@ -80,7 +78,6 @@ int ManualOrder::onUpdateMsg(MessageBase msg) {
 
   LOG(INFO) << "[REALTIMETEST]id:" << mUpdate.code()  << "|last price:" << mUpdate.last_price();
 
-=======
   std::vector<std::string> names, srvAddrs, bcstAddrs;
   CedarJsonConfig::getInstance().getStringArrayWithTag(names, "DataServer",
       "name");
@@ -103,24 +100,6 @@ int ManualOrder::onUpdateMsg(MessageBase msg) {
   }
 }
 
-int ManualOrder::onMsg(MessageBase msg) {
-  LOG(INFO) << "Manualorder onMsg";
-  LOG(INFO) << "MessageBase:" << msg.type();
-
-  if (msg.type() == TYPE_RESPONSE_MSG) {
-    ResponseMessage rspMsg = ProtoBufHelper::unwrapMsg<ResponseMessage>(msg);
-    LOG(INFO) << rspMsg.DebugString();
-  } else if (msg.type() == TYPE_MARKETUPDATE) {
-    MarketUpdate mkt = ProtoBufHelper::unwrapMsg<MarketUpdate>(msg);
-    LOG(INFO) << mkt.DebugString();
-  } else {
-    LOG(INFO) << "Invalid msg type " << msg.type();
-  }
->>>>>>> 854bf1ca6b236981047b28d13d22107336e77721
-}
-
-
-
 void ManualOrder::run() {
   while (true) {
     char value;
@@ -141,7 +120,6 @@ void ManualOrder::run() {
   }
 }
 
-<<<<<<< HEAD
 void ManualOrder::sendSingleOrder(string id, string code, TradeDirection buy_sell, int quantity) {
   OrderRequest order;
   order.set_response_address(CedarHelper::getResponseAddr());
@@ -288,11 +266,9 @@ void ManualOrder::autorun() {
 //    case '2': return CANCEL;
 //  }
 //}
-=======
 int ManualOrder::queryDataRequest() {
   std::cout << "Send DataRequest\n";
   static std::string respAddr = CedarHelper::getResponseAddr();
->>>>>>> 854bf1ca6b236981047b28d13d22107336e77721
 
   DataRequest req;
   std::string code = queryCode();
@@ -337,7 +313,7 @@ int ManualOrder::queryCancelOrder() {
   OrderRequest order;
   order.set_response_address(respAddr);
 
-  order.set_id(queryID());
+  //order.set_id(queryID());
   order.set_code(queryCode());
   order.set_buy_sell(querySide());
   order.set_trade_quantity(queryOrderQty());
@@ -445,29 +421,19 @@ RequestType ManualOrder::queryOrdType() {
   char value;
   std::cout << std::endl
   << "1) Limit" << std::endl
-<<<<<<< HEAD
   << "2) Market" << std::endl
   << "3) Cancel" << std::endl
-=======
-  << "2) Cancel" << std::endl
-  << "3) Market" << std::endl
   << "4) SmartOrder" << std::endl
   << "5) FirstLevel" << std::endl
->>>>>>> 854bf1ca6b236981047b28d13d22107336e77721
   << "OrdType: ";
 
   std::cin >> value;
   switch (value) {
     case '1': return RequestType::TYPE_LIMIT_ORDER_REQUEST;
-<<<<<<< HEAD
     case '2': return RequestType::TYPE_MARKET_ORDER_REQUEST;
     case '3': return RequestType::TYPE_CANCEL_ORDER_REQUEST;
-=======
-    case '2': return RequestType::TYPE_CANCEL_ORDER_REQUEST;
-    case '3': return RequestType::TYPE_MARKET_ORDER_REQUEST;
     case '4': return RequestType::TYPE_SMART_ORDER_REQUEST;
     case '5': return RequestType::TYPE_FIRST_LEVEL_ORDER_REQUEST;
->>>>>>> 854bf1ca6b236981047b28d13d22107336e77721
     default: throw std::exception();
   }
 }
@@ -488,11 +454,9 @@ int ManualOrder::queryEnterOrder() {
   order.set_id(CedarHelper::getOrderId());
 
   order.set_type(queryOrdType());
-<<<<<<< HEAD
   order.set_limit_price(queryPrice());
   order.set_open_close(queryOrdPosition());
   order.set_exchange(SZSE);
-=======
 
   int value;
   std::cout << std::endl;
@@ -537,7 +501,6 @@ int ManualOrder::queryEnterOrder() {
 
   LOG(INFO) << "send msg to " << sendAddr;
   LOG(INFO) << order.DebugString();
->>>>>>> 854bf1ca6b236981047b28d13d22107336e77721
   msgHub.pushMsg(sendAddr, ProtoBufHelper::wrapMsg(TYPE_ORDER_REQUEST, order));
 
   return 0;
@@ -563,10 +526,3 @@ PositionDirection ManualOrder::queryOrdPosition() {
   }
 }
 
-std::string ManualOrder::queryCancelID() {
-  static std::string respAddr = CedarHelper::getResponseAddr();
-  std::string value;
-  std::cout << std::endl << "Cancel ID:";
-  std::cin >> value;
-  return respAddr + "_" + value;
-}

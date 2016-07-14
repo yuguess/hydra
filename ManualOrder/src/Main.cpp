@@ -12,6 +12,6 @@ int main() {
   CedarJsonConfig::getInstance().loadConfigFile("./config/ManualOrder.json");
 
   ManualOrder manualOrder;
-  manualOrder.run();
+  manualOrder.autorun();
   return 0;
 }

@@ -45,13 +45,9 @@ private:
   std::string queryID();
   std::string queryRefID();
   std::string queryCode();
-<<<<<<< HEAD
   std::string queryChan();
   std::string queryCancelID();
   //ReturnType queryRtnType();
-=======
-  std::string queryCancelID();
->>>>>>> 854bf1ca6b236981047b28d13d22107336e77721
   RequestType queryOrdType();
   PositionDirection queryOrdPosition();
   ExchangeType queryExchange();
@@ -61,15 +57,12 @@ private:
   int onUpdateMsg(MessageBase);
   int onMsgTest(MessageBase);
 
-<<<<<<< HEAD
   void updateTestBoardcast();
   
   std::string sendAddr;
   std::string pubAddr;
-=======
   std::vector<DataServer> dataServers;
   std::vector<TradeServer> tradeServers;
->>>>>>> 854bf1ca6b236981047b28d13d22107336e77721
 };
 
 #endif
