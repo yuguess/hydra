@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-enum MsgType {
+enum CedarMsgType {
   TYPE_DATAREQUEST = 0;
   TYPE_MARKETUPDATE = 1;
   TYPE_ORDER_REQUEST = 2;
@@ -17,7 +17,7 @@ enum ExchangeType {
 }
 
 message MessageBase {
-  MsgType type = 1;
+  CedarMsgType type = 1;
   bytes msg = 2;
 }
 
