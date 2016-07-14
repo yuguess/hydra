@@ -276,7 +276,7 @@ public:
   }
 
   template<typename T>
-  static MessageBase toMessageBase(MsgType msgType, T &obj) {
+  static MessageBase toMessageBase(CedarMsgType msgType, T &obj) {
     std::string str;
     obj.SerializeToString(&str);
 
@@ -288,7 +288,7 @@ public:
   }
 
   template<typename T>
-  static std::string wrapMsg(MsgType msgType, T &obj) {
+  static std::string wrapMsg(CedarMsgType msgType, T &obj) {
     std::string str;
     obj.SerializeToString(&str);
 
