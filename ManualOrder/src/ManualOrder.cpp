@@ -255,11 +255,7 @@ int ManualOrder::queryEnterOrder() {
   OrderRequest order;
   order.set_response_address(respAddr);
   order.set_id(CedarHelper::getOrderId());
-
   order.set_type(queryOrdType());
-  order.set_limit_price(queryPrice());
-  order.set_open_close(queryOrdPosition());
-  order.set_exchange(SZSE);
 
   int value;
   std::cout << std::endl;
