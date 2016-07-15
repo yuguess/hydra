@@ -313,7 +313,6 @@ private:
   std::map<std::string, CTPUserRequest> inToCTPReq;
 
   int initReq(CThostFtdcInputOrderField&);
-  void SendMsg(unsigned char type, char* pObj);
   void PrintOrder(CThostFtdcOrderField* pOda);
   void PrintTrade(CThostFtdcTradeField* pTda);
   //void PrintOrderInsertErr(OnRspOrderInsertMsg* pErr);

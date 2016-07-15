@@ -21,14 +21,20 @@ INCLUDE= -I./include \
 PROTOBUF= ../ProtoBufMsg/CPlusPlusCode/ProtoBufMsg.pb.cc
 
 SOURCES= $(SRC)/Main.cpp $(SRC)/ManualOrder.cpp  $(PROTOBUF)
-
 OBJECTS=$(SOURCES:.cpp=.o)
-EXECUTABLE=$(BIN)/ManualOrder
+EXECUTABLE=$(BIN)/ManualOrder 
 
-all: $(EXECUTABLE)  
+TESTCASE_SRC= $(SRC)/Testcase.cpp $(PROTOBUF)
+TESTCASE_OBJECTS=$(TESTCASE_SRC:.cpp=.o)
+TESTCASE=$(BIN)/Testcase
+
+all: $(EXECUTABLE) $(TESTCASE) 
 
 $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(OBJECTS) $(LDFLAGS) -o $@
+
+$(TESTCASE): $(TESTCASE_OBJECTS)
+	$(CC) $(TESTCASE_OBJECTS) $(LDFLAGS) -o $@
 
 .cpp.o:
 	$(CC) -c $(CFLAGS) $(DEBUG)  $(INCLUDE) $< -o $@

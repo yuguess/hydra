@@ -92,8 +92,8 @@ int TradeHandler::initReq(CThostFtdcInputOrderField &req) {
   req.ForceCloseReason = THOST_FTDC_FCC_NotForceClose;
   //is auto suspend
   req.IsAutoSuspend = 0;
-	//is forcible close
-	req.UserForceClose = 0;
+  //is forcible close
+  req.UserForceClose = 0;
 
   strcpy(req.BrokerID, brokerId.c_str());
   strcpy(req.InvestorID, userId.c_str());
@@ -150,12 +150,12 @@ int TradeHandler::sendOrderReq(OrderRequest &req) {
     std::string inId = req.id();
     inIdToExId[req.id()] = reqId;
     exIdToInId[reqId] = req.id();
-    CTPUserRequest uReq = {
+
+    inToCTPReq[req.id()] = {
       req.id(), req.response_address(), req.type(), req.cancel_order_id(),
       req.trade_quantity(), req.trade_quantity() };
-    inToCTPReq[req.id()] = uReq;
 
-    LOG(INFO) << "request ID" << ctpReq.RequestID << std::endl;
+    LOG(INFO) << "request ID " << ctpReq.RequestID << std::endl;
     LOG(INFO) << "recv new order req inID " << req.id() << " exID " << reqId;
     LOG(INFO) << "user ctp request " << req.DebugString();
 
@@ -167,11 +167,13 @@ int TradeHandler::sendOrderReq(OrderRequest &req) {
     std::string toCancelInId = req.cancel_order_id();
     if (inIdToExId.find(toCancelInId) == inIdToExId.end()) {
       LOG(ERROR) << "Can't find exId for canceling !";
+
       return -1;
     }
 
     if (inToCTPReq.find(toCancelInId) == inToCTPReq.end()) {
       LOG(ERROR) << "Can't find inId for object to get orderSysId!";
+
       return -1;
     }
     strcpy(cnclReq.ExchangeID, inToCTPReq[toCancelInId].exchangeId);
@@ -196,46 +198,6 @@ int TradeHandler::sendOrderReq(OrderRequest &req) {
     return -1;
   }
 
-  //enter map
-  //orderRef
-
-  //req enter map
-  ////报单价格条件: 限价
-  //if (order.type == LIMIT) {
-  //  ctpReq.OrderPriceType = THOST_FTDC_OPT_LimitPrice;
-  //  printf("Limit order\n");
-  //  //价格
-  //  ctpReq.LimitPrice = order.price;
-  //} else if (order.type == MARKET) {
-
-  //} else {
-  //  //TODO use log to record
-  //}
-
-  ////组合开平标志: 开仓
-  //ctpReq.CombOffsetFlag[0] = (order.orderPosition);
-  ////组合投机套保标志
-  //ctpReq.CombHedgeFlag[0] = '1';
-
-  ////买卖方向:
-  //if (order.side == Direction::BUY) {
-  //  ctpReq.Direction = THOST_FTDC_D_Buy;
-  //} else if (order.side == Direction::SELL) {
-  //  ctpReq.Direction = THOST_FTDC_D_Sell;
-  //}
-  ////数量
-  //ctpReq.VolumeTotalOriginal = order.qty;
-
-  //std::string ctpOrderRef = concatOrderRef(order.id);
-  //strcpy(ctpReq.OrderRef, ctpOrderRef.c_str());
-  //ctpReq.RequestID = getIncreaseID();
-
-  //printf("CTP reqID %d, OrderRef %s, Direction %s, Qty %d, Price %f, Broker %s,"
-  //    "Investor %s, UserID %s, InstrumentID %s\n",
-  //    ctpReq.RequestID, ctpReq.OrderRef,
-  //    ctpReq.Direction == THOST_FTDC_D_Buy ? "BUY":"SELL", ctpReq.VolumeTotalOriginal,
-  //    ctpReq.LimitPrice, ctpReq.BrokerID, ctpReq.InvestorID, ctpReq.UserID, ctpReq.InstrumentID);
-
   return 0;
 }
 
@@ -249,22 +211,22 @@ void TradeHandler::OnRspOrderInsert(
 }
 
 int TradeHandler::recycleID(std::string &exId, std::string &inId) {
-  LOG(INFO) << "recycle all exId, inId" << std::endl;
+  LOG(INFO) << "recycle all exId:" << exId << ", inId:" << inId << std::endl;
 
   if (exIdToInId.find(exId) == exIdToInId.end()) {
-    LOG(WARNING) << "Can't find exId " << exId << " and mapping inId";
+    LOG(WARNING) << "Can't find exId [" << exId << "] and mapping inId";
   } else {
     exIdToInId.erase(exId);
   }
 
   if (inToCTPReq.find(inId) == inToCTPReq.end()) {
-    LOG(WARNING) << "Can't find inId" << exId << " and mapping OrderRequest";
+    LOG(WARNING) << "Can't find inId " << inId << " and mapping OrderRequest";
   } else {
     inToCTPReq.erase(inId);
   }
 
   if (inIdToExId.find(inId) == inIdToExId.end()) {
-    LOG(WARNING) << "Can't find inId" << exId << " and mapping ExId";
+    LOG(WARNING) << "Can't find inId " << inId << " and mapping ExId";
   } else {
     inIdToExId.erase(inId);
   }
@@ -383,136 +345,37 @@ void TradeHandler::OnRtnOrder(CThostFtdcOrderField *pOrder) {
       ProtoBufHelper::wrapMsg(TYPE_RESPONSE_MSG, rsp));
 
     LOG(INFO) << "send CancelConfirm" << rsp.DebugString();
+    return;
+
+  } else if (pOrder->OrderSubmitStatus == THOST_FTDC_OSS_InsertRejected) {
+    ResponseMessage rsp;
+    std::string exId = pOrder->OrderRef;
+    if (exIdToInId.find(exId) == exIdToInId.end()) {
+      LOG(WARNING) << "Can't find exId" << exId << " and inId";
+      return;
+    }
+    std::string inId = exIdToInId[exId];
+    if (inToCTPReq.find(inId) == inToCTPReq.end()) {
+      LOG(WARNING) << "Can't find inId" << exId << " and mapping OrderRequest";
+      return;
+    }
+
+    rsp.set_type(TYPE_ERROR);
+    rsp.set_id(getIncreaseID());
+    rsp.set_ref_id(inId);
+    rsp.set_error_msg("CTP order insert reject");
+
+    msgHub.pushMsg(inToCTPReq[inId].responseAddr,
+      ProtoBufHelper::wrapMsg(TYPE_RESPONSE_MSG, rsp));
+
+    recycleID(exId, inId);
+
+  } else if (pOrder->OrderSubmitStatus == THOST_FTDC_OSS_CancelRejected) {
+    ResponseMessage rsp;
+    rsp.set_type(TYPE_ERROR);
+    rsp.ref_id();
   }
-
-
-  //if (pOrder->OrderSubmitStatus == THOST_FTDC_OSS_InsertRejected
-  //  || pOrder->OrderSubmitStatus == THOST_FTDC_OSS_CancelRejected
-  //  || pOrder->OrderSubmitStatus == THOST_FTDC_OSS_ModifyRejected) {
-
-  //  std::string exId = pOrder->OrderRef;
-  //
-  //  sendErrorResponse();
-
-  //  return ;
-  //} else if (pOrder->OrderSubmitStatus == THOST_FTDC_OSS_Accepted &&
-  //  pOrder->OrderStatus == THOST_FTDC_OST_NoTradeQueueing) {
-
-  //  //NEW CONFIRM
-  //  return
-  //} else if (pOrder->OrderStatus == THOST_FTDC_OST_Canceled)) {
-  //  //CANCEL CONFIRM
-  //}
-
-  //ReturnInfo rtnInfo;
-  //rtnInfo.id = extractInternalID(pOrder->OrderRef);
-  //rtnInfo.symbol = std::string(pOrder->InstrumentID);
-  //rtnInfo.price = pOrder->LimitPrice;
-  //rtnInfo.qty = pOrder->VolumeTotalOriginal;
-  //if (pOrder->Direction == THOST_FTDC_D_Buy) {
-  //  rtnInfo.side = Direction::BUY;
-  //} else if (pOrder->Direction == THOST_FTDC_D_Sell) {
-  //  rtnInfo.side = Direction::SELL;
-  //}
-
-  //if (pOrder->OrderSubmitStatus == THOST_FTDC_OSS_Accepted &&
-  //    pOrder->OrderStatus == THOST_FTDC_OST_NoTradeQueueing) {
-  //  //NEW_CONFIRM
-  //  rtnInfo.type = ReturnType::NEW_CONFIRM;
-  //  std::string msg = rtnInfo.serialize();
-
-  //  msgHub.send(chan, msg);
-  //  idMap[rtnInfo.id] = pOrder->OrderRef;
-
-  //} else if (pOrder->OrderSubmitStatus == THOST_FTDC_OSS_Accepted &&
-  //    pOrder->OrderStatus == THOST_FTDC_OST_AllTraded) {
-
-  //  idMap.erase(rtnInfo.id);
-  //
-  //} else if (pOrder->OrderSubmitStatus == THOST_FTDC_OSS_Accepted &&
-  //    pOrder->OrderStatus == THOST_FTDC_OST_AllTraded) {
-
-  //  if (pOrder->VolumeTotal == 0) {
-  //    idMap.erase(rtnInfo.id);
-  //  }
-  //
-  //} else if ((pOrder->OrderSubmitStatus == THOST_FTDC_OSS_Accepted &&
-  //  pOrder->OrderStatus == THOST_FTDC_OST_Canceled) ||
-  //  (pOrder->OrderSubmitStatus == THOST_FTDC_OSS_Accepted &&
-  //  pOrder->OrderStatus == THOST_FTDC_OST_PartTradedNotQueueing)) {
-
-  //  //CANCEL_CONFIRM
-  //  rtnInfo.type = ReturnType::CANCEL_CONFIRM;
-  //  std::string tmpMsg = rtnInfo.serialize();
-  //  msgHub.send(chan, tmpMsg);
-
-  //  //idMap delete;
-  //  idMap.erase(rtnInfo.id);
-
-  //}  else if (pOrder->OrderSubmitStatus == THOST_FTDC_OSS_InsertRejected
-  //    || pOrder->OrderSubmitStatus == THOST_FTDC_OSS_CancelRejected
-  //    || pOrder->OrderSubmitStatus == THOST_FTDC_OSS_ModifyRejected) {
-
-  //  rtnInfo.type = ReturnType::ERROR;
-
-  //  if (pOrder->OrderSubmitStatus == THOST_FTDC_OSS_InsertRejected) {
-  //    rtnInfo.msg = "CTPRequest Insert Reject";
-  //  } else if (pOrder->OrderSubmitStatus == THOST_FTDC_OSS_CancelRejected) {
-  //    rtnInfo.msg = "CTPRequest Cancel Reject";
-  //  } else if (pOrder->OrderSubmitStatus == THOST_FTDC_OSS_ModifyRejected) {
-  //    rtnInfo.msg = "CTPRequest Modify Reject";
-  //  }
-  //
-  //  std::string errorMsg = rtnInfo.serialize();
-  //  msgHub.send(chan, errorMsg);
-  //}
-
-  //LOG(INFO) << "OnRtnOrder send to OrderHub msg " << rtnInfo.serialize();
 }
-
-
-//int TradeHandler::sendCancelReq(NewOrderInfo &order) {
-  //CThostFtdcInputOrderActionField cancelReq;
-  //memset(&cancelReq, 0, sizeof(cancelReq));
-  //strcpy(cancelReq.BrokerID, brokerId.c_str());
-  //strcpy(cancelReq.InvestorID, userId.c_str());
-  //strcpy(cancelReq.UserID, userId.c_str());
-
-  //cancelReq.FrontID = frontID;
-  //cancelReq.SessionID = sessionID;
-  //cancelReq.ActionFlag = THOST_FTDC_AF_Delete;
-  //cancelReq.LimitPrice = order.price;
-  //cancelReq.RequestID = getIncreaseID();
-  //cancelReq.VolumeChange = 0;
-
-  //cancelReq.OrderActionRef = std::stoi(order.id);
-  ////use idMap
-  //if (idMap.find(order.id) != idMap.end()) {
-  //  strcpy(cancelReq.OrderRef, idMap[order.id].c_str());
-  //} else {
-  //  //TODO serisouly error !!!
-  //  printf("id not found, error !!!!!!!!!!\n");
-  //  return -1;
-  //}
-
-  //strcpy(cancelReq.InstrumentID, order.symbol.c_str());
-
-  //printf("send cancel request\n");
-  //pUserTradeApi->ReqOrderAction(&cancelReq, 1);
-
-  //return 0;
-//}
-
-//std::string TradeHandler::concatOrderRef(std::string &internalID) {
-  //static int orderRefID = 0;
-  //char tmp[ORDER_DIGIT + 1];
-  //++orderRefID;
-
-  ////====ORDER_DIGIT====
-  //sprintf(tmp, "%6d", orderRefID);
-
-  //return std::string(tmp) + internalID;
-//}
 
 int TradeHandler::close() {
   //release
@@ -551,7 +414,6 @@ int TradeHandler::sendErrorResponse(CThostFtdcInputOrderField *pInputOrder,
   rsp.set_error_code(pRspInfo->ErrorID);
   rsp.set_error_msg("Check error msg in log file");
 
-  LOG(INFO) << "Error Msg:" << pRspInfo->ErrorMsg;
   LOG(INFO) << rsp.DebugString();
 
   msgHub.pushMsg(req.responseAddr,
@@ -564,6 +426,9 @@ int TradeHandler::sendErrorResponse(CThostFtdcInputOrderField *pInputOrder,
 
 void TradeHandler::OnErrRtnOrderInsert(CThostFtdcInputOrderField *pInputOrder,
   CThostFtdcRspInfoField *pRspInfo) {
+
+  LOG(INFO) << __FUNCTION__ << std::endl;
+
   sendErrorResponse(pInputOrder, pRspInfo);
   return;
 }
@@ -719,66 +584,6 @@ void TradeHandler::OnRtnTrade(CThostFtdcTradeField *pTrade) {
   }
 }
 
-void TradeHandler::SendMsg(unsigned char type, char* pObj) {
-  //CDX_INFO* new_info = new CDX_INFO();
-  //CThostFtdcOrderField* pOrder = NULL;
-  //CThostFtdcTradeField* pTrade = NULL;
-  //OnRspOrderInsertMsg* pOnRspOrderInsertMsg = NULL;
-  //pSharedCEM = g_ShareMem.m_pSharedObj;
-  //char tempOrderRef[9];
-
-  //int reqID = 0;
-  //int exeOrderRef = 0;
-
-  //switch (type) {
-  //case TD_OnRtnOrder:
-  //    pOrder = (CThostFtdcOrderField*)pObj;
-  //    PrintOrder(pOrder);
-  //    strcpy(tempOrderRef,pOrder->OrderRef+5);
-  //    exeOrderRef = atoi(tempOrderRef);
-  //    sprintf(pOrder->OrderRef,"%d",exeOrderRef);
-  //    memcpy(&new_info->rtnOrder,pOrder,sizeof(new_info->rtnOrder));
-  //    new_info->info_type = TD_OnRtnOrder;
-  //    break;
-
-  //case TD_OnRtnTrade:
-  //    pTrade = (CThostFtdcTradeField*)pObj;
-  //    PrintTrade(pTrade);
-  //    strcpy(tempOrderRef,pTrade->OrderRef+5);
-  //    exeOrderRef = atoi(tempOrderRef);
-  //    sprintf(pTrade->OrderRef,"%d",exeOrderRef);
-  //    memcpy(&new_info->rtnTrade,pTrade,sizeof(new_info->rtnTrade));
-  //    new_info->info_type = TD_OnRtnTrade;
-  //    break;
-
-  //case TD_OnRspOrderInsert:
-  //    pOnRspOrderInsertMsg = (OnRspOrderInsertMsg*)pObj;
-  //    PrintOrderInsertErr(pOnRspOrderInsertMsg);
-  //    strcpy(tempOrderRef,pOnRspOrderInsertMsg->InputOrder.OrderRef+5);
-  //    exeOrderRef = atoi(tempOrderRef);
-  //    sprintf(pOnRspOrderInsertMsg->InputOrder.OrderRef,"%d",exeOrderRef);
-  //    memcpy(&new_info->rtnInputOrder,pOnRspOrderInsertMsg,sizeof(new_info->rtnInputOrder));
-  //    new_info->info_type = TD_OnRspOrderInsert;
-  //    break;
-
-  //default:
-  //    break;
-  //}
-
-  //reqID = exeOrderRef % 10000;
-  //if(reqID > 0 && reqID < CDX_ACCOUNT_CNT && pSharedCEM->AcctExist(reqID))
-  //{
-  //    pSharedCEM->REGISTEREDACCT[reqID].INFO.push(*new_info);
-  //    //printf("PUSH ALGO ORDER RTN to ACCT: %d\n",reqID);
-  //}
-  //else
-  //{
-  //    printf("MANUAL TRADE/ORDER, NOT BELONG TO ALGOS\n");
-  //}
-
-  //delete new_info;
-}
-
 void TradeHandler::PrintOrder(CThostFtdcOrderField* pOda) {
   //fprintf(stdout, "%s,%s,%s,%s,%d,%s,%d,%d,%d,%s,%s,%.3f,%d,%d,%d\n",
   //					pOda->InstrumentID,
@@ -825,29 +630,3 @@ void TradeHandler::PrintTrade(CThostFtdcTradeField* pTda) {
 //memcpy(&log.rtnTrade,pTda,sizeof(log.rtnTrade));
 //g_public_chan->RSLT_QUEUE.push(log);
 }
-
-//void TradeHandler::PrintOrderInsertErr(OnRspOrderInsertMsg* pErr) {
-  //char ErrTime[10] = {0};
-  //time_t t =time(NULL);
-  //struct tm *ti;
-  //ti = localtime(&t);
-  //int ErrDate = (ti->tm_year + 1900) * 10000 +
-  //(ti->tm_mon + 1) * 100 + ti->tm_mday;
-  //  strftime(ErrTime,sizeof(ErrTime),"%H:%M:%S",ti);
-
-  //  fprintf(g_CDXLog.m_pErrorLogFile,"%d,%s,%d,%s,%s,%d,%f,%d,%s\n",
-  //                      pErr->InputOrder.RequestID,
-  //                      pErr->InputOrder.OrderRef,
-  //                      ErrDate,
-  //                      ErrTime,
-  //                      pErr->InputOrder.Direction == THOST_FTDC_D_Buy ? "BUY":"SELL",
-  //                      pErr->InputOrder.VolumeTotalOriginal,
-  //                      pErr->InputOrder.LimitPrice,
-  //                      pErr->RspInfo.ErrorID,
-  //                      pErr->RspInfo.ErrorMsg);
-  //  fflush(g_CDXLog.m_pErrorLogFile);
-	//log.LOGTYPE = 3;
-  //log.INFOTYPE= INFO_LIVE;
-	//memcpy(&log.rtnInputOrder,pErr,sizeof(log.rtnInputOrder));
-	//g_public_chan->RSLT_QUEUE.push(log);
-//}

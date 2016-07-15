@@ -27,14 +27,6 @@ public:
 private:
   ProtoBufMsgHub msgHub;
 
-  void test1(); 
-  void test2();
-  void sendSingleOrder(string id, string code, TradeDirection buy_sell, int quantity); 
-  void cancelSingleOrder(string id, string ref_id);
-  
-  void updataTest();
-
-
   int queryAction();
   int queryEnterOrder();
   TradeDirection querySide();

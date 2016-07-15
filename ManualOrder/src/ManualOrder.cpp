@@ -26,7 +26,7 @@ ManualOrder::ManualOrder() {
       "name");
   CedarJsonConfig::getInstance().getStringArrayWithTag(addrs, "TradeServer",
       "address");
-  for (int i = 0; i < names.size(); i++) {
+  for (int i = 0; i < tnames.size(); i++) {
     TradeServer tmp = {tnames[i], addrs[i]};
     tradeServers.push_back(tmp);
   }
@@ -45,7 +45,7 @@ int ManualOrder::onMsg(MessageBase msg) {
     ResponseMessage rmsg = ProtoBufHelper::unwrapMsg<ResponseMessage>(msg);
     LOG(INFO) << rmsg.DebugString();
   }
-  
+
   return 0;
 }
 

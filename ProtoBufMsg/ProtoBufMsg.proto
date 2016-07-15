@@ -127,7 +127,7 @@ message OrderRequest {
   PositionDirection open_close = 11;
   //the order id tries to cancel
   string cancel_order_id = 12;
-  //this is for smart order, argument is seperate by ',', like 1,LINK,3
+  //this is for smart order, argument is seperate by ',', like "arg1,arg2,arg3"
   string argument_list = 13;
 }
 
