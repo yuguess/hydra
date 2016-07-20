@@ -1,0 +1,28 @@
+{
+  "Backtest":{
+    "Streams": ["IF", "IC", "500"],
+    "IF": {
+      "Range": {"Start":"20110101", "End": "20141231"},
+      "Type": "BasicFuturesDataAdapter",
+      "Code": "IF",
+      "FileAddress": "/home/yuguess/StockTickData"
+    },
+    "IC": {
+      "Range": {"Start":"20110101", "End": "20141231"},
+      "Type": "BasicFuturesDataAdapter",
+      "Code": "IC",
+      "FileAddress": "/home/yuguess/StockTickData"
+    },
+    "500": {
+      "Range": {"Start":"20110101", "End": "20141231"},
+      "Type": "BasicStockDataAdapter",
+      "Code": "399905.SZ",
+      "FileAddress": "/home/yuguess/StockTickData"
+    }
+  },
+
+  "MsgHub": {
+    "PublishPort":"15223",
+    "PullPort":"15224"
+  }
+}

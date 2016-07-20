@@ -8,21 +8,22 @@
 class AdapterFactory {
 
 public:
-  static std::shared_ptr<DataAdapter> 
-    createAdapter(std::string adapterType, 
-      std::string code, std::string &argList) {
+  static std::shared_ptr<DataAdapter> createAdapter(std::string stream,
+      Json::Value &jsonConfigObj) {
 
     std::shared_ptr<DataAdapter> ptr;
+    std::string adapterType = jsonConfigObj["Type"].asString();
     if (adapterType == "BasicFuturesDataAdapter") {
-      ptr = std::shared_ptr<DataAdapter>(new BasicFuturesDataAdapter()); 
+      ptr = std::shared_ptr<DataAdapter>(new BasicFuturesDataAdapter());
     } else if (adapterType == "BasicStockDataAdapter") {
       ptr = std::shared_ptr<DataAdapter>(new BasicStockDataAdapter());
     } else {
-      LOG(FATAL) << "Unsupport Data Adapter";
+      LOG(FATAL) << "Unsupport Data Adapter " << adapterType;
       return std::shared_ptr<DataAdapter>(NULL);
     }
+    ptr->init(stream, jsonConfigObj);
 
-    ptr->initWithArgList(code, argList);
+    return ptr;
   }
 };
 

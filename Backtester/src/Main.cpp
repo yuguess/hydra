@@ -6,14 +6,11 @@
 
 int main() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
-
   CedarLogging::init("Backtester");
   CedarJsonConfig::getInstance().loadConfigFile("./config/Backtester.json");
 
   Backtester bt;
-
-  LOG(INFO) << "CTPTrade service online!";
-  CedarHelper::blockSignalAndSuspend();
+  bt.run();
 
   LOG(INFO) << "init quiting procedures now!";
   google::protobuf::ShutdownProtobufLibrary();
