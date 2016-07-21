@@ -7,9 +7,6 @@ ManualOrder::ManualOrder() {
   msgHub.registerCallback(std::bind(&ManualOrder::onMsg, this,
         std::placeholders::_1));
 
-  CedarJsonConfig::getInstance().getStringByPath("SendToAddress", sendAddr);
-  CedarJsonConfig::getInstance().getStringByPath("PublisherAddress", pubAddr);
-
   std::vector<std::string> names, srvAddrs, bcstAddrs;
   CedarJsonConfig::getInstance().getStringArrayWithTag(names, "DataServer",
       "name");
