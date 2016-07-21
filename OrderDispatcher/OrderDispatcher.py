@@ -3,12 +3,15 @@ import zmq
 import json
 import signal
 import sys
-sys.path.append('/home/hydra/ProtoBufMsg/PythonCode/')
+import logging
+from datetime import datetime as dt
+
+sys.path.append('~/hydra/ProtoBufMsg/PythonCode')
 import ProtoBufMsg_pb2 as protoMsg
 
-idCount = 0
-
 jsonFile = "config/OrderDispatcher.json"
+
+idCount = 0
 
 posDirectionDict = {
     "Open" : protoMsg.OPEN_POSITION,
@@ -24,7 +27,6 @@ requestTypeDict = {
     "Smart":protoMsg.TYPE_SMART_ORDER_REQUEST,
     "FirstLevel":protoMsg.TYPE_FIRST_LEVEL_ORDER_REQUEST
 }
-TradeServer = {}
 
 def idGenerator():
     global idCount
@@ -42,7 +44,7 @@ def setOrderRequest(orderRequest, act):
         orderRequest.buy_sell = protoMsg.LONG_BUY
     else:
         orderRequest.buy_sell = protoMsg.SHORT_SELL
-    orderRequest.argument_list = str(act["Arg1"])
+    orderRequest.argument_list = str(act["Args"])
     orderRequest.open_close = posDirectionDict[act["OpenClose"]]
     return
 
@@ -54,8 +56,19 @@ def wrapMsg(msgType, obj):
 
 
 if __name__ == '__main__':
+
+    logFile = "Logs/" + dt.now().strftime('%Y%m%d_%H%M%S') + '.log'
+    logger = logging.getLogger('OrderDispatcher')
+    handler = logging.FileHandler(logFile)
+    formatter = logging.Formatter('%(levelname)s - %(asctime)s - %(message)s')
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    logger.setLevel(logging.DEBUG)
+
+    tradeServer = {}
+
     jsonConfig = json.load(file(jsonFile))
-    pull_Addr = "tcp://192.168.0.66:" + jsonConfig["Msghub"]["PullPort"]
+    pull_Addr = "tcp://192.168.0.66:" + jsonConfig["MsgHub"]["PullPort"]
     dispatcherServer = jsonConfig["TradeServer"]
 
     context = zmq.Context()
@@ -67,14 +80,15 @@ if __name__ == '__main__':
         targetSocket.connect("tcp://" + serverStat["address"])
         tradeServer[serverStat["name"]] = targetSocket
 
-    print("OrderDispatcher service online")
+    logger.info("OrderDispatcher service online")
     while True:
         actions = orderRecv.recv_json()
         for act in actions:
             if (act["ActionType"] == "BatchTrade"):
+                logger.info(",".join((act["ActionType"], act["User"], act["Account"], act["Ticker"], str(act["Qty"]), act["ExecutionType"], act["OpenClose"], str(act["Args"]))));
                 orderRequest = protoMsg.OrderRequest()
                 setOrderRequest(orderRequest, act)
                 msg = wrapMsg(protoMsg.TYPE_ORDER_REQUEST, orderRequest)
                 if msg != None:
-                    TradeServer[act["Account"]].send(msg)
-                    print ("push msg: %s", msg)
+                    tradeServer[act["Account"]].send(msg)
+                    logger.info("push msg: %s", msg)
