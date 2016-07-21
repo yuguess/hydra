@@ -5,13 +5,14 @@ import signal
 import sys
 import logging
 from datetime import datetime as dt
-
 sys.path.append('/home/yuguess/hydra/ProtoBufMsg/PythonCode')
 import ProtoBufMsg_pb2 as protoMsg
 
+########config goes below###############
 jsonFile = "config/OrderDispatcher.json"
-
+localAddr = "192.168.0.66"
 idCount = 0
+#######################################
 
 posDirectionDict = {
     "Open" : protoMsg.OPEN_POSITION,
@@ -33,19 +34,26 @@ def idGenerator():
     idCount = idCount + 1
     return idCount
 
-def setOrderRequest(orderRequest, act):
-    orderRequest.type = requestTypeDict[act["ExecutionType"]]
+def setOrderRequest(orderRequest, req):
+    orderRequest.type = requestTypeDict[req["ExecutionType"]]
     orderRequest.response_address = "192.168.0.66:50000"
-    orderRequest.account = str(act["Account"])
+    orderRequest.account = str(req["Account"])
     orderRequest.id = str(idGenerator())
-    orderRequest.code = act["Ticker"]
-    orderRequest.trade_quantity = act["Qty"]
-    if act["Qty"] >= 0:
+    orderRequest.code = req["Code"]
+    orderRequest.trade_quantity = req["Qty"]
+    if req["Qty"] >= 0:
         orderRequest.buy_sell = protoMsg.LONG_BUY
     else:
         orderRequest.buy_sell = protoMsg.SHORT_SELL
-    orderRequest.argument_list = str(act["Args"])
-    orderRequest.open_close = posDirectionDict[act["OpenClose"]]
+    orderRequest.argument_list = str(req["Args"])
+    orderRequest.open_close = posDirectionDict[req["OpenClose"]]
+
+    if (orderRequest.code[0].isdigit()):
+        if (int(orderRequest.code[0]) >= 5):
+            orderRequest.exchange = protoMsg.SHSE
+        else:
+            orderRequest.exchange = protoMsg.SZSE
+
     return
 
 def wrapMsg(msgType, obj):
@@ -54,26 +62,27 @@ def wrapMsg(msgType, obj):
     msgBase.msg = obj.SerializeToString()
     return msgBase.SerializeToString()
 
-
 if __name__ == '__main__':
-
     logFile = "logs/" + dt.now().strftime('%Y%m%d_%H%M%S') + '.log'
     logger = logging.getLogger('OrderDispatcher')
     handler = logging.FileHandler(logFile)
+    console = logging.StreamHandler()
     formatter = logging.Formatter('%(levelname)s - %(asctime)s - %(message)s')
     handler.setFormatter(formatter)
     logger.addHandler(handler)
+    console.setFormatter(formatter)
+    logger.addHandler(console)
     logger.setLevel(logging.DEBUG)
 
     tradeServer = {}
 
     jsonConfig = json.load(file(jsonFile))
-    pull_Addr = "tcp://192.168.0.66:" + jsonConfig["MsgHub"]["PullPort"]
+    pullAddr = "tcp://" + localAddr + ":" + jsonConfig["MsgHub"]["PullPort"]
     dispatcherServer = jsonConfig["TradeServer"]
 
     context = zmq.Context()
     orderRecv = context.socket(zmq.PULL)
-    orderRecv.bind(pull_Addr)
+    orderRecv.bind(pullAddr)
 
     for serverStat in dispatcherServer:
         targetSocket = context.socket(zmq.PUSH)
@@ -84,13 +93,19 @@ if __name__ == '__main__':
     while True:
         actions = orderRecv.recv_json()
         for act in actions:
-            if (act["ActionType"] == "BatchTrade"):
-                logger.info(",".join((act["ActionType"], act["User"],
-                    act["Account"], act["Ticker"], str(act["Qty"]),
-                    act["ExecutionType"], act["OpenClose"], str(act["Args"]))));
+            if (act["ActionType"] != "BatchTrade"):
+                continue
 
-                orderRequest = protoMsg.OrderRequest()
-                setOrderRequest(orderRequest, act)
-                msg = wrapMsg(protoMsg.TYPE_ORDER_REQUEST, orderRequest)
-                if msg != None:
-                    tradeServer[act["Account"]].send(msg)
+            logger.info(",".join((act["ActionType"], act["User"],
+               act["Account"], act["Code"], str(act["Qty"]),
+               act["ExecutionType"], act["OpenClose"], act["Args"])));
+
+            req = protoMsg.OrderRequest()
+            setOrderRequest(orderRequest, act)
+
+            execType = act["ExecutionType"]
+            if (execType == "FirstLevel" or execType == "SmartOrder"):
+                tradeServer["SmartOrderService"].send(
+                        wrapMsg(protoMsg.TYPE_ORDER_REQUEST, req))
+            elif (execType  == "Limit"):
+                tradeServer[act["Account"]].send(msg)

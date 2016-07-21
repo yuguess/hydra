@@ -96,7 +96,7 @@ public:
     boost::split(strs, path, boost::is_any_of("."));
 
     if ((val = root[strs[0]]) == Json::nullValue) {
-      LOG(FATAL) << "Input path is empty, Check !!!!";
+      LOG(FATAL) << "Input path is empty, Check path " << path;
     }
 
     if (strs.size() == 1)
