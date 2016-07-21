@@ -118,8 +118,9 @@ public:
       return ExchangeType::DCE;
     else if (exchange == "ZCE")
       return ExchangeType::ZCE;
-    else
-      LOG(ERROR) << "Invalid exchange string";
+    else {
+      LOG(FATAL) << "Invalid exchange string";
+    }
   }
 
   static std::string getOrderId() {
