@@ -6,7 +6,7 @@ import sys
 import logging
 from datetime import datetime as dt
 
-sys.path.append('~/hydra/ProtoBufMsg/PythonCode')
+sys.path.append('/home/yuguess/hydra/ProtoBufMsg/PythonCode')
 import ProtoBufMsg_pb2 as protoMsg
 
 jsonFile = "config/OrderDispatcher.json"
@@ -57,7 +57,7 @@ def wrapMsg(msgType, obj):
 
 if __name__ == '__main__':
 
-    logFile = "Logs/" + dt.now().strftime('%Y%m%d_%H%M%S') + '.log'
+    logFile = "logs/" + dt.now().strftime('%Y%m%d_%H%M%S') + '.log'
     logger = logging.getLogger('OrderDispatcher')
     handler = logging.FileHandler(logFile)
     formatter = logging.Formatter('%(levelname)s - %(asctime)s - %(message)s')
@@ -85,10 +85,12 @@ if __name__ == '__main__':
         actions = orderRecv.recv_json()
         for act in actions:
             if (act["ActionType"] == "BatchTrade"):
-                logger.info(",".join((act["ActionType"], act["User"], act["Account"], act["Ticker"], str(act["Qty"]), act["ExecutionType"], act["OpenClose"], str(act["Args"]))));
+                logger.info(",".join((act["ActionType"], act["User"],
+                    act["Account"], act["Ticker"], str(act["Qty"]),
+                    act["ExecutionType"], act["OpenClose"], str(act["Args"]))));
+
                 orderRequest = protoMsg.OrderRequest()
                 setOrderRequest(orderRequest, act)
                 msg = wrapMsg(protoMsg.TYPE_ORDER_REQUEST, orderRequest)
                 if msg != None:
                     tradeServer[act["Account"]].send(msg)
-                    logger.info("push msg: %s", msg)
