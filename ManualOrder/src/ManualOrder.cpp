@@ -243,7 +243,8 @@ RequestType ManualOrder::queryOrdType() {
 
 double ManualOrder::queryPrice() {
   double value;
-  std::cout << std::endl << "Price (only valid for certain order like limit): ";
+  std::cout << std::endl << 
+      "Price (only valid for certain order like limit): ";
   std::cin >> value;
   return value;
 }

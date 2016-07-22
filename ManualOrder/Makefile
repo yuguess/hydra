@@ -20,7 +20,7 @@ INCLUDE= -I./include \
 
 PROTOBUF= ../ProtoBufMsg/CPlusPlusCode/ProtoBufMsg.pb.cc
 
-SOURCES= $(SRC)/Main.cpp $(SRC)/ManualOrder.cpp  $(PROTOBUF)
+SOURCES= $(SRC)/Main.cpp $(SRC)/ManualOrder.cpp  $(PROTOBUF) $(SRC)/SimpleTester.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=$(BIN)/ManualOrder 
 
