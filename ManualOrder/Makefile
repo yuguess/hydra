@@ -7,7 +7,7 @@ CC=g++
 #CFLAGS=  -O3 -std=c++0x -DUSE_QUEUE
 
 CFLAGS=-std=c++0x 
-LDFLAGS = -L/usr/local/lib -L$(HOME)/CedarLib -ljsoncpp -lprotobuf -lzmq
+LDFLAGS = -L/usr/local/lib -L$(HOME)/CedarLib -ljsoncpp -lprotobuf -lzmq -lpthread
 DEBUG = -g
 BIN=./bin
 SRC=./src
@@ -31,10 +31,10 @@ TESTCASE=$(BIN)/Testcase
 all: $(EXECUTABLE) $(TESTCASE) 
 
 $(EXECUTABLE): $(OBJECTS)
-	$(CC) $(OBJECTS) $(LDFLAGS) -o $@
+	$(CC) $(OBJECTS)  -o $@ $(LDFLAGS)
 
 $(TESTCASE): $(TESTCASE_OBJECTS)
-	$(CC) $(TESTCASE_OBJECTS) $(LDFLAGS) -o $@
+	$(CC) $(TESTCASE_OBJECTS)  -o $@ $(LDFLAGS)
 
 .cpp.o:
 	$(CC) -c $(CFLAGS) $(DEBUG)  $(INCLUDE) $< -o $@

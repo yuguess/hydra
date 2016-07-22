@@ -9,9 +9,9 @@
 
   "CTP": {
     "BrokerID": "8000",
-    "UserID": "01620118",
-    "Password": "201212",
-    "TradeFront": "tcp://180.168.212.75:41205"
+    "UserID": "91010081",
+    "Password": "805891",
+    "TradeFront": "tcp://180.168.212.70:41205"
   },
 
   "MsgHub": {

@@ -26,7 +26,9 @@ ManualOrder::ManualOrder() {
   for (int i = 0; i < tnames.size(); i++) {
     TradeServer tmp = {tnames[i], addrs[i]};
     tradeServers.push_back(tmp);
+    LOG(INFO) << "TradeServer name:" << tnames[i] << "," << addrs[i];
   }
+
 }
 
 int ManualOrder::onMsg(MessageBase msg) {
@@ -256,7 +258,7 @@ int ManualOrder::queryEnterOrder() {
 
   int value;
   std::cout << std::endl;
-  for (int i = 0; i < dataServers.size(); i++) {
+  for (int i = 0; i < tradeServers.size(); i++) {
     std::cout << i <<") for "
       << tradeServers[i].name << std::endl;
   }

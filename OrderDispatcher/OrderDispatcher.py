@@ -9,103 +9,114 @@ sys.path.append('/home/yuguess/hydra/ProtoBufMsg/PythonCode')
 import ProtoBufMsg_pb2 as protoMsg
 
 ########config goes below###############
-jsonFile = "config/OrderDispatcher.json"
+jsonFile = "./config/OrderDispatcher.json"
 localAddr = "192.168.0.66"
 idCount = 0
 #######################################
 
 posDirectionDict = {
-    "Open" : protoMsg.OPEN_POSITION,
-    "Close" : protoMsg.CLOSE_POSITION,
-    "Close_Today" : protoMsg.CLOSE_TODAY_POSITION,
-    "Close_Yesterday" : protoMsg.CLOSE_YESTERDAY_POSITION
+  "Open" : protoMsg.OPEN_POSITION,
+  "Close" : protoMsg.CLOSE_POSITION,
+  "Close_Today" : protoMsg.CLOSE_TODAY_POSITION,
+  "Close_Yesterday" : protoMsg.CLOSE_YESTERDAY_POSITION
 }
 
 requestTypeDict = {
-    "Limit":protoMsg.TYPE_LIMIT_ORDER_REQUEST,
-    "Market":protoMsg.TYPE_MARKET_ORDER_REQUEST,
-    "Cancel":protoMsg.TYPE_CANCEL_ORDER_REQUEST,
-    "Smart":protoMsg.TYPE_SMART_ORDER_REQUEST,
-    "FirstLevel":protoMsg.TYPE_FIRST_LEVEL_ORDER_REQUEST
+  "Limit":protoMsg.TYPE_LIMIT_ORDER_REQUEST,
+  "Market":protoMsg.TYPE_MARKET_ORDER_REQUEST,
+  "Cancel":protoMsg.TYPE_CANCEL_ORDER_REQUEST,
+  "Smart":protoMsg.TYPE_SMART_ORDER_REQUEST,
+  "FirstLevel":protoMsg.TYPE_FIRST_LEVEL_ORDER_REQUEST
 }
 
 def idGenerator():
-    global idCount
-    idCount = idCount + 1
-    return idCount
+  global idCount
+  idCount = idCount + 1
+  return idCount
 
 def setOrderRequest(orderRequest, req):
-    orderRequest.type = requestTypeDict[req["ExecutionType"]]
-    orderRequest.response_address = "192.168.0.66:50000"
-    orderRequest.account = str(req["Account"])
-    orderRequest.id = str(idGenerator())
-    orderRequest.code = req["Code"]
-    orderRequest.trade_quantity = req["Qty"]
-    if req["Qty"] >= 0:
-        orderRequest.buy_sell = protoMsg.LONG_BUY
+  orderRequest.type = requestTypeDict[req["ExecutionType"]]
+  orderRequest.response_address = "192.168.0.66:50001"
+  orderRequest.account = str(req["Account"])
+  orderRequest.id = str(idGenerator())
+  orderRequest.code = req["Code"]
+  orderRequest.trade_quantity = req["Qty"]
+  if req["Qty"] >= 0:
+    orderRequest.buy_sell = protoMsg.LONG_BUY
+  else:
+    orderRequest.buy_sell = protoMsg.SHORT_SELL
+  orderRequest.argument_list = str(req["Args"])
+  orderRequest.open_close = posDirectionDict[req["OpenClose"]]
+
+  if (orderRequest.code[0].isdigit()):
+    if (int(orderRequest.code[0]) >= 5):
+      orderRequest.exchange = protoMsg.SHSE
     else:
-        orderRequest.buy_sell = protoMsg.SHORT_SELL
-    orderRequest.argument_list = str(req["Args"])
-    orderRequest.open_close = posDirectionDict[req["OpenClose"]]
+      orderRequest.exchange = protoMsg.SZSE
 
-    if (orderRequest.code[0].isdigit()):
-        if (int(orderRequest.code[0]) >= 5):
-            orderRequest.exchange = protoMsg.SHSE
-        else:
-            orderRequest.exchange = protoMsg.SZSE
-
-    return
+  return
 
 def wrapMsg(msgType, obj):
-    msgBase = protoMsg.MessageBase()
-    msgBase.type = msgType
-    msgBase.msg = obj.SerializeToString()
-    return msgBase.SerializeToString()
+  msgBase = protoMsg.MessageBase()
+  msgBase.type = msgType
+  msgBase.msg = obj.SerializeToString()
+  return msgBase.SerializeToString()
 
 if __name__ == '__main__':
-    logFile = "logs/" + dt.now().strftime('%Y%m%d_%H%M%S') + '.log'
-    logger = logging.getLogger('OrderDispatcher')
-    handler = logging.FileHandler(logFile)
-    console = logging.StreamHandler()
-    formatter = logging.Formatter('%(levelname)s - %(asctime)s - %(message)s')
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-    console.setFormatter(formatter)
-    logger.addHandler(console)
-    logger.setLevel(logging.DEBUG)
+  logFile = "logs/" + dt.now().strftime('%Y%m%d_%H%M%S') + '.log'
+  logger = logging.getLogger('OrderDispatcher')
+  handler = logging.FileHandler(logFile)
+  console = logging.StreamHandler()
+  fmt = '%(levelname)s_%(asctime)s_%(filename)s:%(lineno)d]%(message)s'
+  formatter = logging.Formatter(fmt, "%H:%M:%S")
+  handler.setFormatter(formatter)
+  logger.addHandler(handler)
+  console.setFormatter(formatter)
+  logger.addHandler(console)
+  logger.setLevel(logging.DEBUG)
 
-    tradeServer = {}
+  tradeServer = {}
 
-    jsonConfig = json.load(file(jsonFile))
-    pullAddr = "tcp://" + localAddr + ":" + jsonConfig["MsgHub"]["PullPort"]
-    dispatcherServer = jsonConfig["TradeServer"]
+  jsonConfig = json.load(file(jsonFile))
+  pullAddr = "tcp://" + localAddr + ":" + jsonConfig["MsgHub"]["PullPort"]
+  dispatcherServer = jsonConfig["TradeServer"]
 
-    context = zmq.Context()
-    orderRecv = context.socket(zmq.PULL)
-    orderRecv.bind(pullAddr)
+  context = zmq.Context()
+  orderRecv = context.socket(zmq.PULL)
+  orderRecv.bind(pullAddr)
 
-    for serverStat in dispatcherServer:
-        targetSocket = context.socket(zmq.PUSH)
-        targetSocket.connect("tcp://" + serverStat["address"])
-        tradeServer[serverStat["name"]] = targetSocket
+  for serverStat in dispatcherServer:
+    targetSocket = context.socket(zmq.PUSH)
+    targetSocket.connect("tcp://" + serverStat["address"])
+    tradeServer[serverStat["name"]] = targetSocket
 
-    logger.info("OrderDispatcher service online")
-    while True:
-        actions = orderRecv.recv_json()
-        for act in actions:
-            if (act["ActionType"] != "BatchTrade"):
-                continue
+  logger.info("OrderDispatcher service online")
+  while True:
+    actions = orderRecv.recv_json()
+    for act in actions:
+      if (act["ActionType"] != "BatchTrade"):
+        continue
 
-            logger.info(",".join((act["ActionType"], act["User"],
-               act["Account"], act["Code"], str(act["Qty"]),
-               act["ExecutionType"], act["OpenClose"], act["Args"])));
+      logger.info(",".join((act["ActionType"], act["User"],
+        act["Account"], act["Code"], str(act["Qty"]),
+        act["ExecutionType"], act["OpenClose"], act["Args"])));
 
-            req = protoMsg.OrderRequest()
-            setOrderRequest(orderRequest, act)
+      req = protoMsg.OrderRequest()
+      setOrderRequest(req, act)
 
-            execType = act["ExecutionType"]
-            if (execType == "FirstLevel" or execType == "SmartOrder"):
-                tradeServer["SmartOrderService"].send(
-                        wrapMsg(protoMsg.TYPE_ORDER_REQUEST, req))
-            elif (execType  == "Limit"):
-                tradeServer[act["Account"]].send(msg)
+      execType = act["ExecutionType"]
+      if (execType == "FirstLevel" or execType == "SmartOrder"):
+        tradeServer["SmartOrderService"].send(
+            wrapMsg(protoMsg.TYPE_ORDER_REQUEST, req))
+      elif (execType  == "Limit"):
+        try:
+          req.limit_price = float(act["Args"])
+        except ValueError:
+          logger.error("limit order wth an invalid price")
+          continue
+        try:
+          tradeServer[act["Account"]].send(
+            wrapMsg(protoMsg.TYPE_ORDER_REQUEST, req))
+        except KeyError:
+          logger.error(act["Account"] + " do not exist")
+          continue
