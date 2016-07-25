@@ -7,34 +7,29 @@ CC=g++
 #CFLAGS=  -O3 -std=c++0x -DUSE_QUEUE
 
 CFLAGS=-std=c++0x 
-LDFLAGS = -L/usr/local/lib -L$(HOME)/CedarLib -ljsoncpp -lprotobuf -lzmq -lpthread
+LDFLAGS = -L/usr/local/lib -L$(HOME)/CedarLib  -ljsoncpp -lprotobuf -lzmq -lpthread
 DEBUG = -g
 BIN=./bin
 SRC=./src
 
 INCLUDE= -I./include \
 		-I../ProtoBufMsg \
+		-I../MsgHub/include \
 		-I../CedarHelper/include \
 	 	-I../CedarJsonConfig/include \
 		-I../ProtoBufMsgHub/include \
 
 PROTOBUF= ../ProtoBufMsg/CPlusPlusCode/ProtoBufMsg.pb.cc
 
-SOURCES= $(SRC)/Main.cpp $(SRC)/ManualOrder.cpp  $(PROTOBUF) $(SRC)/SimpleTester.cpp
+SOURCES= $(SRC)/Main.cpp $(SRC)/FirstLevelOrder.cpp $(SRC)/SmartOrder.cpp $(SRC)/SmartOrderService.cpp $(PROTOBUF)
+
 OBJECTS=$(SOURCES:.cpp=.o)
-EXECUTABLE=$(BIN)/ManualOrder 
+EXECUTABLE=$(BIN)/SmartOrderService
 
-TESTCASE_SRC= $(SRC)/Testcase.cpp $(PROTOBUF)
-TESTCASE_OBJECTS=$(TESTCASE_SRC:.cpp=.o)
-TESTCASE=$(BIN)/Testcase
-
-all: $(EXECUTABLE) $(TESTCASE) 
+all: $(EXECUTABLE)  
 
 $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(OBJECTS) $(LDFLAGS) -o $@
-
-$(TESTCASE): $(TESTCASE_OBJECTS)
-	$(CC) $(TESTCASE_OBJECTS) $(LDFLAGS) -o $@
 
 .cpp.o:
 	$(CC) -c $(CFLAGS) $(DEBUG)  $(INCLUDE) $< -o $@

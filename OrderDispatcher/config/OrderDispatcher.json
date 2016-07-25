@@ -2,7 +2,8 @@
   "TradeServer": [
     {"name":"2001_Stock", "address":"192.168.1.102:15230"},
     {"name":"2001_Futures", "address":"192.168.0.66:15224"},
-    {"name":"MannualOrder", "address":"192.168.0.66:15111"}
+    {"name":"ManualOrder", "address":"192.168.0.66:15213"},
+    {"name":"SmartOrderService", "address":"192.168.0.66:15231"}
   ],
   "MsgHub": {
     "PublishPort":"15232",

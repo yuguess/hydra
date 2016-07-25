@@ -1,6 +1,9 @@
 {
+<<<<<<< HEAD
   "SendToAddress": "192.168.1.102:15230",
   "PublisherAddress":"192.168.1.102:15227", 
+=======
+>>>>>>> origin
   "DataServer": [
     {
       "name":"stock",
