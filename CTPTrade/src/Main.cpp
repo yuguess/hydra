@@ -1,14 +1,38 @@
 #include <iostream>
+#include <unistd.h>
 #include "TradeHandler.h"
 #include "CedarHelper.h"
 #include "CedarLogging.h"
 #include "ProtoBufMsgHub.h"
 
-int main() {
-  GOOGLE_PROTOBUF_VERIFY_VERSION;
+int printHelp() {
+  std::cout << "\t-f (default with ./config/config file)\n"
+      << "\t-n application name\n"
+      << "\t-h print help message\n";
+  return 0;
+}
 
-  CedarLogging::init("CTPTrade");
-  CedarJsonConfig::getInstance().loadConfigFile("./config/CTPTrade.json");
+int main(int argc, char *argv[]) {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+  std::string appName = "CTPTrade";
+  std::string configPath =  "./config/CTPTrade.json";
+  int opt = 0;
+  while((opt = getopt(argc, argv, ":f:n:h")) != -1) {
+    switch(opt) {
+      case 'f':
+        configPath = optarg;
+        break;
+      case 'n':
+        appName = optarg;
+        break;
+      case 'h':
+        printHelp();
+        break;
+    }
+  }
+
+  CedarLogging::init(appName);
+  CedarJsonConfig::getInstance().loadConfigFile(configPath);
 
   TradeHandler trade;
   trade.start();

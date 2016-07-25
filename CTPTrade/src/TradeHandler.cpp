@@ -481,7 +481,8 @@ void TradeHandler::OnRspQryOrder(CThostFtdcOrderField *pOrder,
 ///请求查询成交响应
 void TradeHandler::OnRspQryTrade(CThostFtdcTradeField *pTrade,
     CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-    printf("ErrorCode=[%d], ErrorMsg=[%s]\n", pRspInfo->ErrorID, pRspInfo->ErrorMsg);
+    LOG(ERROR) << "ErrorCode=[" << pRspInfo->ErrorID << "], ErrorMsg=["
+      << pRspInfo->ErrorMsg << "]";
     //fn_printCout(__FUNCTION__);
 }
 
@@ -510,9 +511,8 @@ void TradeHandler::OnRspQryInstrument(CThostFtdcInstrumentField *pInstrument,
 void TradeHandler::OnRspQryDepthMarketData(
     CThostFtdcDepthMarketDataField *pDepthMarketData,
     CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-
-  printf("ErrorCode=[%d], ErrorMsg=[%s]\n", pRspInfo->ErrorID, pRspInfo->ErrorMsg);
-  //fn_printCout(__FUNCTION__);
+  LOG(ERROR) << "ErrorCode=[" << pRspInfo->ErrorID << "], ErrorMsg=["
+    << pRspInfo->ErrorMsg << "]";
 };
 
 ///请求查询结算信息确认响应
@@ -537,8 +537,8 @@ void TradeHandler::OnRspQrySettlementInfoConfirm(
 ///错误应答
 void TradeHandler::OnRspError(
   CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-  printf("ErrorCode=[%d], ErrorMsg=[%s]\n", pRspInfo->ErrorID, pRspInfo->ErrorMsg);
-  //fn_printCout(__FUNCTION__);
+  LOG(ERROR) << "ErrorCode=[" << pRspInfo->ErrorID << "], ErrorMsg=["
+    << pRspInfo->ErrorMsg << "]";
 };
 
 //std::string TradeHandler::extractInternalID(char *orderRef) {

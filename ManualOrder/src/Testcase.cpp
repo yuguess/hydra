@@ -23,6 +23,8 @@ public:
     for (int i = 0; i < tnames.size(); i++) {
       tradeServerMap[tnames[i]]= addrs[i];
     }
+
+    respAddr = CedarHelper::getResponseAddr();
   }
 
   int onMsg(MessageBase msg) {
@@ -98,19 +100,64 @@ public:
 
     for (int i = 0; i < ids.size(); i++) {
       OrderRequest req;
-      req.set_type(TYPE_LIMIT_ORDER_REQUEST);
+      req.set_type(TYPE_CANCEL_ORDER_REQUEST);
       req.set_id(CedarHelper::getOrderId());
       req.set_cancel_order_id(ids[i]);
       LOG(INFO) << "Cancel order " << ids[i] << std::endl;
-      msgHub.pushMsg(sendAddr, 
+      msgHub.pushMsg(sendAddr,
           ProtoBufHelper::wrapMsg(TYPE_ORDER_REQUEST, req));
     }
 
     return 0;
   }
 
+  int testFuturesToMultiAccount() {
+    int numOrder = 1;
+    int limitPrice = 3799;
+    std::string code = "jd1609";
+    std::vector<std::string> des ={"1002_Futures",
+      "1005_Futures","3002_Futures"};
+
+    OrderRequest req;
+    req.set_response_address(respAddr);
+    std::string id = CedarHelper::getOrderId();
+    req.set_id(id);
+    req.set_code(code);
+    req.set_type(TYPE_LIMIT_ORDER_REQUEST);
+    req.set_limit_price(limitPrice);
+    req.set_buy_sell(LONG_BUY);
+    req.set_trade_quantity(1);
+    req.set_open_close(PositionDirection::OPEN_POSITION);
+
+    for (int i = 0; i < des.size(); i++) {
+      LOG(INFO) << "send order " << tradeServerMap[des[i]];
+      msgHub.pushMsg(tradeServerMap[des[i]],
+          ProtoBufHelper::wrapMsg(TYPE_ORDER_REQUEST, req));
+    }
+
+    sleep(5);
+
+    OrderRequest cncl;
+    cncl.set_type(TYPE_CANCEL_ORDER_REQUEST);
+    cncl.set_id(CedarHelper::getOrderId());
+    cncl.set_cancel_order_id(id);
+
+    for (int i = 0; i < des.size(); i++) {
+      LOG(INFO) << "cancel order " << tradeServerMap[des[i]];
+      msgHub.pushMsg(tradeServerMap[des[i]],
+        ProtoBufHelper::wrapMsg(TYPE_ORDER_REQUEST, cncl));
+    }
+
+    return 0;
+  }
+
+  int testToMultiAccount() {
+
+    return 0;
+  }
+
   int run() {
-    testcase1();
+    //testcase1();
 
     LOG(INFO) << "all sent" << std::endl;
   }
@@ -118,6 +165,7 @@ public:
 private:
   ProtoBufMsgHub msgHub;
   std::map<std::string, std::string> tradeServerMap;
+  std::string respAddr;
 };
 
 int main() {

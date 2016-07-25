@@ -19,7 +19,13 @@
 
   "TradeServer": [
     {"name":"2001_Stock", "address":"192.168.1.102:15230"},
-    {"name":"2001_Futures", "address":"192.168.0.66:15224"}
+    {"name":"CTPTradeTest", "address":"192.168.0.66:15224"},
+    {"name":"0001_Futures", "address":"192.168.0.66:15235"},
+    {"name":"1002_Futures", "address":"192.168.0.66:15237"},
+    {"name":"1005_Futures", "address":"192.168.0.66:15239"},
+    {"name":"2001_Futures", "address":"192.168.0.66:15243"},
+    {"name":"2002_Futures", "address":"192.168.0.66:15245"},
+    {"name":"3002_Futures", "address":"192.168.0.66:15241"}
   ],
 
   "MsgHub": {

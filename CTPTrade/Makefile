@@ -8,7 +8,7 @@ CC=g++
 
 INFRA=/home/yuguess
 CFLAGS=-std=c++0x 
-LDFLAGS = -L/usr/local/lib -L/usr/lib  -L$(INFRA)/CedarLib -lzmq -lthosttraderapi -ljsoncpp -lprotobuf
+LDFLAGS = -L/usr/local/lib -L/usr/lib  -L$(INFRA)/CedarLib -lzmq -lthosttraderapi -ljsoncpp -lprotobuf -lpthread
 DEBUG = -g
 BIN=./bin
 SRC=./src

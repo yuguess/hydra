@@ -31,10 +31,10 @@ TESTCASE=$(BIN)/Testcase
 all: $(EXECUTABLE) $(TESTCASE) 
 
 $(EXECUTABLE): $(OBJECTS)
-	$(CC) $(OBJECTS) $(LDFLAGS) -o $@
+	$(CC) $(OBJECTS)  -o $@ $(LDFLAGS)
 
 $(TESTCASE): $(TESTCASE_OBJECTS)
-	$(CC) $(TESTCASE_OBJECTS) $(LDFLAGS) -o $@
+	$(CC) $(TESTCASE_OBJECTS)  -o $@ $(LDFLAGS)
 
 .cpp.o:
 	$(CC) -c $(CFLAGS) $(DEBUG)  $(INCLUDE) $< -o $@
