@@ -1,5 +1,6 @@
 #include "TradeHandler.h"
 #include "CedarHelper.h"
+#include "LogHelper.h"
 
 TradeHandler::TradeHandler() {
   pUserTradeApi = CThostFtdcTraderApi::CreateFtdcTraderApi();
@@ -166,8 +167,7 @@ int TradeHandler::sendOrderReq(OrderRequest &req) {
 
     std::string toCancelInId = req.cancel_order_id();
     if (inIdToExId.find(toCancelInId) == inIdToExId.end()) {
-      LOG(ERROR) << "Can't find exId for canceling !";
-
+      LOG(ERROR) << "Can't find exId " << toCancelInId << " for canceling !";
       return -1;
     }
 
@@ -314,11 +314,12 @@ void TradeHandler::OnRtnOrder(CThostFtdcOrderField *pOrder) {
     strcpy(inToCTPReq[inId].exchangeId, pOrder->ExchangeID);
     strcpy(inToCTPReq[inId].orderSysId, pOrder->OrderSysID);
 
-    msgHub.pushMsg(inToCTPReq[inId].responseAddr,
-      ProtoBufHelper::wrapMsg(TYPE_RESPONSE_MSG, rsp));
+    std::string rspStr = ProtoBufHelper::wrapMsg(TYPE_RESPONSE_MSG, rsp);
+    msgHub.pushMsg(inToCTPReq[inId].responseAddr, rspStr);
 
     LOG(INFO) << "send to addr " << inToCTPReq[inId].responseAddr;
     LOG(INFO) << "send NewOrderConfirm " << rsp.DebugString();
+    LOG(INFO) << "<<<" << rspStr << ">>>" << std::endl;
 
     return;
   } else if (pOrder->OrderStatus == THOST_FTDC_OST_Canceled &&
@@ -341,10 +342,11 @@ void TradeHandler::OnRtnOrder(CThostFtdcOrderField *pOrder) {
     rsp.set_id(getIncreaseID());
     rsp.set_ref_id(inToCTPReq[inId].cancel_id);
 
-    msgHub.pushMsg(inToCTPReq[inId].responseAddr,
-      ProtoBufHelper::wrapMsg(TYPE_RESPONSE_MSG, rsp));
+    std::string rspStr = ProtoBufHelper::wrapMsg(TYPE_RESPONSE_MSG, rsp);
+    msgHub.pushMsg(inToCTPReq[inId].responseAddr, rspStr);
 
     LOG(INFO) << "send CancelConfirm" << rsp.DebugString();
+    LOG(INFO) << "<<<" << rspStr << ">>>" << std::endl;
     return;
 
   } else if (pOrder->OrderSubmitStatus == THOST_FTDC_OSS_InsertRejected) {
@@ -365,10 +367,11 @@ void TradeHandler::OnRtnOrder(CThostFtdcOrderField *pOrder) {
     rsp.set_ref_id(inId);
     rsp.set_error_msg("CTP order insert reject");
 
-    msgHub.pushMsg(inToCTPReq[inId].responseAddr,
-      ProtoBufHelper::wrapMsg(TYPE_RESPONSE_MSG, rsp));
-
+    std::string rspStr = ProtoBufHelper::wrapMsg(TYPE_RESPONSE_MSG, rsp);
+    msgHub.pushMsg(inToCTPReq[inId].responseAddr, rspStr);
     recycleID(exId, inId);
+
+    LOG(INFO) << "<<<" << rspStr << ">>>" << std::endl;
 
   } else if (pOrder->OrderSubmitStatus == THOST_FTDC_OSS_CancelRejected) {
     ResponseMessage rsp;
@@ -416,11 +419,11 @@ int TradeHandler::sendErrorResponse(CThostFtdcInputOrderField *pInputOrder,
 
   LOG(INFO) << rsp.DebugString();
 
-  msgHub.pushMsg(req.responseAddr,
-    ProtoBufHelper::wrapMsg(TYPE_RESPONSE_MSG, rsp));
-
+  std::string rspStr = ProtoBufHelper::wrapMsg(TYPE_RESPONSE_MSG, rsp);
+  msgHub.pushMsg(req.responseAddr, rspStr);
   recycleID(exId, inId);
 
+  LOG(INFO) << "<<<" << rspStr << ">>>" << std::endl;
   return 0;
 }
 
@@ -573,10 +576,11 @@ void TradeHandler::OnRtnTrade(CThostFtdcTradeField *pTrade) {
   } else if (pTrade->Direction == THOST_FTDC_D_Sell) {
     rsp.set_buy_sell(TradeDirection::SHORT_SELL);
   }
-
-  msgHub.pushMsg(inToCTPReq[inId].responseAddr,
-      ProtoBufHelper::wrapMsg(TYPE_RESPONSE_MSG, rsp));
+  std::string rspStr = ProtoBufHelper::wrapMsg(TYPE_RESPONSE_MSG, rsp);
+  msgHub.pushMsg(inToCTPReq[inId].responseAddr, rspStr);
   LOG(INFO) << "OnRtnTrade send trade " << rsp.DebugString() << std::endl;
+
+  LogHelper::logObject(rsp);
 
   inToCTPReq[inId].leftQty -= pTrade->Volume;
   if (inToCTPReq[inId].leftQty == 0) {

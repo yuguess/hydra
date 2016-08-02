@@ -101,49 +101,12 @@ int ManualOrder::queryDataRequest() {
 
 
 std::string ManualOrder::queryCancelID() {
+  static std::string respAddr = CedarHelper::getResponseAddr();
+
   std::string ID;
   std::cout << "CancelID:" << std::endl;
   std::cin >> ID;
-  return ID;
-}
-
-
-int ManualOrder::queryCancelOrder() {
-  std::cout << "\nNewOrder Request\n";
-  static std::string respAddr = CedarHelper::getResponseAddr();
-
-  OrderRequest order;
-  order.set_response_address(respAddr);
-
-  //order.set_id(queryID());
-  order.set_code(queryCode());
-  order.set_buy_sell(querySide());
-  order.set_trade_quantity(queryOrderQty());
-  order.set_type(queryOrdType());
-  order.set_limit_price(queryPrice());
-  order.set_open_close(queryOrdPosition());
-  order.set_cancel_order_id(queryCancelID());
-
-  msgHub.pushMsg(sendAddr, ProtoBufHelper::wrapMsg(TYPE_ORDER_REQUEST, order));
-
-  return 0;
-}
-
-int ManualOrder::queryAction() {
-  char value;
-  std::cout << std::endl
-  << "1) Enter NewOrder/FirstLevel/SmartOrder Request" << std::endl
-  << "2) Enter Cancel Order Request (not support right now)" << std::endl
-  << "3) Quit" << std::endl;
-  std::cin >> value;
-  switch (value) {
-    case '1': return '1';
-    case '2': return '2';
-    case '3': return '3';
-    default: throw std::exception();
-  }
-
-  return 0;
+  return respAddr + "_" + ID;
 }
 
 std::string ManualOrder::queryCode() {
@@ -180,20 +143,6 @@ int ManualOrder::queryOrderQty() {
   std::cout << std::endl << "OrderQty: ";
   std::cin >> qty;
   return qty;
-}
-
-std::string ManualOrder::queryAccount() {
-
-  char value;
-  std::cout << "support options below:" << std::endl
-            << "1) 2001_Stock" << std::endl
-            << "2) 2001_Futures" << std::endl;
-  std::cin >> value;
-  switch (value) {
-    case '1': return "2001_Stock";
-    case '2': return "2001_Futures";
-    default: throw std::exception();
-  }
 }
 
 ExchangeType ManualOrder::queryExchange() {

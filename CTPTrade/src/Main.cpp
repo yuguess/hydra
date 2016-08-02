@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
   std::string appName = "CTPTrade";
   std::string configPath =  "./config/CTPTrade.json";
   int opt = 0;
-  while((opt = getopt(argc, argv, ":f:n:h")) != -1) {
+  while ((opt = getopt(argc, argv, ":f:n:h")) != -1) {
     switch(opt) {
       case 'f':
         configPath = optarg;
@@ -27,10 +27,9 @@ int main(int argc, char *argv[]) {
         break;
       case 'h':
         printHelp();
-        break;
+        return 0;
     }
   }
-
   CedarLogging::init(appName);
   CedarJsonConfig::getInstance().loadConfigFile(configPath);
 
