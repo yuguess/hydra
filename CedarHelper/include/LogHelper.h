@@ -12,7 +12,7 @@ class LogHelper {
 public:
   static bool logObject(ResponseMessage &rsp) {
     Json::Value jMsg;
-    jMsg["msg_type"] =  cedarMsgTypeToString[TYPE_RESPONSE_MSG];
+    jMsg["cedar_msg_type"] =  cedarMsgTypeToString[TYPE_RESPONSE_MSG];
     jMsg["id"] = rsp.id();
     jMsg["ref_id"] = rsp.ref_id();
     jMsg["type"] = rspMsgTypeToString[rsp.type()];
@@ -28,6 +28,7 @@ public:
     return true;
   }
 
+private:
   static inline void toLogFile(Json::Value &jMsg) {
     static Json::FastWriter fastWriter;
     LOG(INFO) << LOG_TAG_HEADER << fastWriter.write(jMsg) << LOG_TAG_FOOTER;

@@ -21,7 +21,7 @@ protected:
   OrderReactor(OrderRequest &req, SmartOrderService *srvc) :
     orderRequest(req), service(srvc), recycleFlag(false) {}
 
-  inline int setRecycle() { recycleFlag = true;}
+  inline void setRecycle() {recycleFlag = true;}
 
   OrderRequest orderRequest;
   SmartOrderService *service;

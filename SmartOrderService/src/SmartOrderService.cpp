@@ -22,7 +22,7 @@ SmartOrderService::SmartOrderService() {
   CedarJsonConfig::getInstance().getStringArrayWithTag(addrs, "TradeServer",
       "address");
 
-  for (int i = 0; i < names.size(); i++) {
+  for (unsigned i = 0; i < names.size(); i++) {
     accToAddr[names[i]] = addrs[i];
   }
 }
