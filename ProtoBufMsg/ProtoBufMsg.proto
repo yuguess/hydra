@@ -55,7 +55,7 @@ message MarketUpdate {
   int32 open_interest = 17;
 
   int32 num_trades = 18;
-  double turnover = 19;
+  int64 turnover = 19;
   int64 volume = 20;
   int64 total_bid_vol = 21;
   int64 total_ask_vol = 22;
@@ -65,7 +65,7 @@ message MarketUpdate {
   int32 yield_to_maturity = 26;
 
   int32 action_day = 27;
-  //format as yyyymmdd like 2015-12-01
+  //format as yyyymmdd like 20151201
   string trading_day = 28;
   //ts s origianl tick data, format "09:30:00.000" --> "093000000"
   string exchange_timestamp = 29;
@@ -157,11 +157,12 @@ message ResponseMessage {
   //trade price
   double price = 8;
   TradeDirection buy_sell = 9;
+  //how many does this order trade
   int32 trade_quantity = 10;
   int32 error_code = 11;
   string error_msg = 12;
 
-  //the ts that come with origianl tick data,
+  //the ts that come with origianl market update,
   //format "09:30:00" --> "093000000"
   string exchange_timestamp = 13;
   //when our agent recv ts

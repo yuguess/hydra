@@ -27,19 +27,15 @@ public:
 private:
   ProtoBufMsgHub msgHub;
 
-  int queryAction();
   int queryEnterOrder();
   TradeDirection querySide();
   double queryPrice();
   int queryOrderQty();
-  int queryCancelOrder();
-  std::string queryAccount();
   std::string queryID();
   std::string queryRefID();
   std::string queryCode();
   std::string queryChan();
   std::string queryCancelID();
-  //ReturnType queryRtnType();
   RequestType queryOrdType();
   PositionDirection queryOrdPosition();
   ExchangeType queryExchange();
@@ -50,7 +46,6 @@ private:
   int onMsgTest(MessageBase);
 
   void updateTestBoardcast();
-  
   std::string sendAddr;
   std::string pubAddr;
   std::vector<DataServer> dataServers;
