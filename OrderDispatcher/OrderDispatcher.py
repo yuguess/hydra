@@ -40,11 +40,13 @@ def setOrderRequest(orderRequest, req):
   orderRequest.account = str(req["Account"])
   orderRequest.id = str(idGenerator())
   orderRequest.code = req["Code"]
-  orderRequest.trade_quantity = req["Qty"]
+
   if req["Qty"] >= 0:
     orderRequest.buy_sell = protoMsg.LONG_BUY
+    orderRequest.trade_quantity = req["Qty"]
   else:
     orderRequest.buy_sell = protoMsg.SHORT_SELL
+    orderRequest.trade_quantity = -req["Qty"]
   orderRequest.argument_list = str(req["Args"])
   orderRequest.open_close = posDirectionDict[req["OpenClose"]]
 

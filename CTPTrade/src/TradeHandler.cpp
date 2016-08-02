@@ -314,12 +314,12 @@ void TradeHandler::OnRtnOrder(CThostFtdcOrderField *pOrder) {
     strcpy(inToCTPReq[inId].exchangeId, pOrder->ExchangeID);
     strcpy(inToCTPReq[inId].orderSysId, pOrder->OrderSysID);
 
-    std::string rspStr = ProtoBufHelper::wrapMsg(TYPE_RESPONSE_MSG, rsp);
-    msgHub.pushMsg(inToCTPReq[inId].responseAddr, rspStr);
+    msgHub.pushMsg(inToCTPReq[inId].responseAddr,
+        ProtoBufHelper::wrapMsg(TYPE_RESPONSE_MSG, rsp));
 
     LOG(INFO) << "send to addr " << inToCTPReq[inId].responseAddr;
     LOG(INFO) << "send NewOrderConfirm " << rsp.DebugString();
-    LOG(INFO) << "<<<" << rspStr << ">>>" << std::endl;
+    LogHelper::logObject(rsp);
 
     return;
   } else if (pOrder->OrderStatus == THOST_FTDC_OST_Canceled &&
@@ -342,11 +342,11 @@ void TradeHandler::OnRtnOrder(CThostFtdcOrderField *pOrder) {
     rsp.set_id(getIncreaseID());
     rsp.set_ref_id(inToCTPReq[inId].cancel_id);
 
-    std::string rspStr = ProtoBufHelper::wrapMsg(TYPE_RESPONSE_MSG, rsp);
-    msgHub.pushMsg(inToCTPReq[inId].responseAddr, rspStr);
+    msgHub.pushMsg(inToCTPReq[inId].responseAddr,
+        ProtoBufHelper::wrapMsg(TYPE_RESPONSE_MSG, rsp));
 
     LOG(INFO) << "send CancelConfirm" << rsp.DebugString();
-    LOG(INFO) << "<<<" << rspStr << ">>>" << std::endl;
+    LogHelper::logObject(rsp);
     return;
 
   } else if (pOrder->OrderSubmitStatus == THOST_FTDC_OSS_InsertRejected) {
@@ -367,11 +367,10 @@ void TradeHandler::OnRtnOrder(CThostFtdcOrderField *pOrder) {
     rsp.set_ref_id(inId);
     rsp.set_error_msg("CTP order insert reject");
 
-    std::string rspStr = ProtoBufHelper::wrapMsg(TYPE_RESPONSE_MSG, rsp);
-    msgHub.pushMsg(inToCTPReq[inId].responseAddr, rspStr);
+    msgHub.pushMsg(inToCTPReq[inId].responseAddr,
+        ProtoBufHelper::wrapMsg(TYPE_RESPONSE_MSG, rsp));
     recycleID(exId, inId);
-
-    LOG(INFO) << "<<<" << rspStr << ">>>" << std::endl;
+    LogHelper::logObject(rsp);
 
   } else if (pOrder->OrderSubmitStatus == THOST_FTDC_OSS_CancelRejected) {
     ResponseMessage rsp;
@@ -419,11 +418,12 @@ int TradeHandler::sendErrorResponse(CThostFtdcInputOrderField *pInputOrder,
 
   LOG(INFO) << rsp.DebugString();
 
-  std::string rspStr = ProtoBufHelper::wrapMsg(TYPE_RESPONSE_MSG, rsp);
-  msgHub.pushMsg(req.responseAddr, rspStr);
+  msgHub.pushMsg(req.responseAddr,
+      ProtoBufHelper::wrapMsg(TYPE_RESPONSE_MSG, rsp));
   recycleID(exId, inId);
 
-  LOG(INFO) << "<<<" << rspStr << ">>>" << std::endl;
+  LogHelper::logObject(rsp);
+
   return 0;
 }
 
@@ -576,8 +576,9 @@ void TradeHandler::OnRtnTrade(CThostFtdcTradeField *pTrade) {
   } else if (pTrade->Direction == THOST_FTDC_D_Sell) {
     rsp.set_buy_sell(TradeDirection::SHORT_SELL);
   }
-  std::string rspStr = ProtoBufHelper::wrapMsg(TYPE_RESPONSE_MSG, rsp);
-  msgHub.pushMsg(inToCTPReq[inId].responseAddr, rspStr);
+
+  msgHub.pushMsg(inToCTPReq[inId].responseAddr,
+      ProtoBufHelper::wrapMsg(TYPE_RESPONSE_MSG, rsp));
   LOG(INFO) << "OnRtnTrade send trade " << rsp.DebugString() << std::endl;
 
   LogHelper::logObject(rsp);
