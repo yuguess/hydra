@@ -36,9 +36,9 @@ public:
 
     facet->format(fmt.c_str());
     ss << pt;
-
     std::string tsStr = ss.str();
-    ss.clear();
+
+    ss.str("");
     return tsStr;
   }
 };

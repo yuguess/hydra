@@ -16,7 +16,7 @@ int Backtester::run() {
     CedarJsonConfig::getInstance().getJsonValueByPath("Backtest." + streams[i],
       jsonConfigObj);
     nameToAdapter[streams[i]] =
-      AdapterFactory::createAdapter(streams[i], jsonConfigObj);
+      DataAdapterFactory::createAdapter(streams[i], jsonConfigObj);
   }
 
   //std::map<std::string, std::shared_ptr<DataAdapter>> streams;
@@ -42,6 +42,7 @@ int Backtester::run() {
   for (auto it = nameToAdapter.begin(); it != nameToAdapter.end(); it++) {
     TimeSeriesData tsData;
     if (it->second->getNextData(tsData)) {
+      LOG(INFO) << it->first;
       pq.push(tsData);
     } else {
       LOG(ERROR) << "data stream " << it->first << " is empty ";

@@ -3,8 +3,10 @@
 
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>
+#include <boost/algorithm/string.hpp>
 #include "CPlusPlusCode/ProtoBufMsg.pb.h"
-#include "DataAdapterHelper.h"
+#include "CedarTimeHelper.h"
+#include "CedarHelper.h"
 
 namespace fs = boost::filesystem;
 namespace pt = boost::posix_time;
@@ -16,11 +18,13 @@ public:
     std::string startStr = jsonConfigObj["Range"]["Start"].asString();
     std::string endStr = jsonConfigObj["Range"]["End"].asString();
 
-    startDate = DataAdapterHelper::strToPTime("%Y%m%d", startStr);
-    endDate = DataAdapterHelper::strToPTime("%Y%m%d", endStr);
+    startDate = CedarTimeHelper::strToPTime("%Y%m%d", startStr);
+    endDate = CedarTimeHelper::strToPTime("%Y%m%d", endStr);
+    code = jsonConfigObj["Code"].asString();
 
-    std::string code = jsonConfigObj["Code"].asString();
     std::string homeDir = jsonConfigObj["FileAddress"].asString();
+    exchange = CedarHelper::stringToExchangeType(
+        jsonConfigObj["Exchange"].asString());
 
     streamName = stream;
 
@@ -30,17 +34,20 @@ public:
   }
 
   bool getNextData(TimeSeriesData &tsData) {
-    static boost::posix_time::ptime curDate = startDate;
+    static pt::ptime curDate = startDate;
+    static std::string curDateStr =
+      CedarTimeHelper::ptimeToStr("%Y%m%d", curDate);
     static boost::gregorian::days oneDay(1);
-    static std::ifstream ifs(getDataFileStr(curDate), std::ifstream::in);
+    static std::ifstream ifs(getDataFileStr(startDate), std::ifstream::in);
     std::string line;
 
-    LOG(INFO) << "getNext for BasicFutuersData";
     while (true) {
       if (ifs.good()) {
         getline(ifs, line);
-        lineToMarketUpdate(line, tsData);
-        return true;
+        if (lineToMarketUpdate(line, tsData, curDateStr))
+          return true;
+        else
+          continue;
       }
 
       if (ifs.is_open()) {
@@ -48,11 +55,12 @@ public:
       }
 
       curDate += oneDay;
+      curDateStr = CedarTimeHelper::ptimeToStr("%Y%m%d", curDate);
 
       if (curDate > endDate)
         break;
 
-      ifs.open(getDataFileStr(startDate), std::ifstream::in);
+      ifs.open(getDataFileStr(curDate), std::ifstream::in);
     }
     return false;
   }
@@ -63,12 +71,10 @@ public:
 
 private:
   std::string getDataFileStr(boost::posix_time::ptime date) {
-    std::string dateStr = DataAdapterHelper::ptimeToStr("%Y%m%d", date);
-    //std::string fileStr = homeDir + "/" + exchange + code + "/" + dateStr +
-    //  "_" + exchange + code + "_" + exchangeAbbr + "_L1.txt";
-    //LOG(INFO) << fileStr;
-    //getchar();
-    return dateStr;
+    std::string dateStr = CedarTimeHelper::ptimeToStr("%Y%m%d", date);
+    if (dateToFile.find(dateStr) == dateToFile.end())
+      return "";
+    return dateToFile[dateStr];
   }
 
   int setupDateToFileMap(std::string dirPath) {
@@ -78,52 +84,57 @@ private:
 
     fs::directory_iterator end;
     for (fs::directory_iterator it(dirPath); it != end; it++) {
-      LOG(INFO) << it->path().filename();
+      //name format is like 20110101_IF1503_CFFEX_L1.txt
+      std::string dateStr = it->path().filename().string();
+      dateToFile[dateStr.substr(0, 8)] =  dirPath + "/" + dateStr;
     }
 
-    getchar();
     return 0;
   }
 
-  int lineToMarketUpdate(std::string &line, TimeSeriesData &tsData) {
+  bool lineToMarketUpdate(std::string &line,
+      TimeSeriesData &tsData, std::string &dateStr) {
     LOG(INFO) << line;
-    getchar();
-    //MarketUpdate mkt;
-    //std::vector<std::string> args;
-    //boost::split(args, line, boost::is_any_of(","));
-    ////mkt.set_exchange(args[0]);
-    //mkt.set_code(args[1]);
-    ////args[2] format like YYYY-mm-dd HH:MM:SS.mmm
-    //mkt.set_trading_day(args[2].substr(0, 10));
-    //mkt.set_exchange_timestamp(args[2].substr(11, 12));
 
-    //mkt.set_last_price(std::stoi(args[3]));
-    //mkt.set_num_trades(std::stoi(args[4]));
-    //mkt.set_turnover(std::stof(args[5]));
-    //mkt.set_volume(std::stoi(args[6]));
+    MarketUpdate mkt;
+    std::vector<std::string> args;
+    boost::split(args, line, boost::is_any_of(" "), boost::token_compress_on);
 
-    //for (unsigned int i = 0; i < LEVEL; i++)
-    //  mkt.add_bid_price(std::stof(args[8 + i]));
+    LOG(INFO) << args.size();
+    if (args.size() == 1)
+      return false;
 
-    //for (unsigned int i = 0; i < LEVEL; i++)
-    //  mkt.add_ask_price(std::stof(args[13 + i]));
+    mkt.set_code(code);
+    mkt.set_exchange(exchange);
+    mkt.set_last_price(std::stof(args[0]));
+    mkt.set_highest_price(std::stof(args[1]));
+    mkt.set_lowest_price(std::stof(args[2]));
+    mkt.set_volume(std::stol(args[3]));
+    mkt.set_turnover(std::stol(args[4]));
+    mkt.set_trading_day(dateStr);
 
-    //for (unsigned int i = 0; i < LEVEL; i++)
-    //  mkt.add_bid_volume(std::stoi(args[18 + i]));
+    mkt.add_bid_price(std::stof(args[9]));
+    mkt.add_bid_volume(std::stoi(args[10]));
+    mkt.add_ask_price(std::stof(args[11]));
+    mkt.add_ask_volume(std::stoi(args[12]));
 
-    //for (unsigned int i = 0; i < LEVEL; i++)
-    //  mkt.add_ask_volume(std::stoi(args[23 + i]));
+    std::string tsStr = dateStr + " " + args[8];
+    tsData.ts = CedarTimeHelper::strToPTime("%Y%m%d %H:%M:%S", tsStr) +
+      pt::milliseconds(std::stoi(args[9]));
 
-    //tsData.msg =
-    //  ProtoBufHelper::toMessageBase<MarketUpdate>(TYPE_MARKETUPDATE, mkt);
-    //tsData.streamName = streamName;
-    //tsData.ts = boost::posix_time::time_from_string(args[2]);
+    tsData.msg =
+      ProtoBufHelper::toMessageBase<MarketUpdate>(TYPE_MARKETUPDATE, mkt);
+    tsData.streamName = streamName;
+
+    return true;
   }
 
-
+  std::map<std::string, std::string> dateToFile;
   pt::ptime startDate;
   pt::ptime endDate;
   std::string streamName;
+  std::string code;
+  ExchangeType exchange;
 };
 
 #endif

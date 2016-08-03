@@ -2,7 +2,7 @@
 #define BASIC_STOCK_DATA_ADAPTER_H
 
 #include "CPlusPlusCode/ProtoBufMsg.pb.h"
-#include "DataAdapter.h"
+#include "CedarTimeHelper.h"
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <fstream>
 
@@ -12,8 +12,8 @@ public:
     std::string startStr = jsonConfigObj["Range"]["Start"].asString();
     std::string endStr = jsonConfigObj["Range"]["End"].asString();
 
-    startDate = DataAdapterHelper::strToPTime("%Y%m%d", startStr);
-    endDate = DataAdapterHelper::strToPTime("%Y%m%d", endStr);
+    startDate = CedarTimeHelper::strToPTime("%Y%m%d", startStr);
+    endDate = CedarTimeHelper::strToPTime("%Y%m%d", endStr);
 
     //code is like 000001.SZ format
     code = jsonConfigObj["Code"].asString().substr(0, 6);
@@ -28,7 +28,7 @@ public:
   bool getNextData(TimeSeriesData &tsData) {
     static boost::posix_time::ptime curDate = startDate;
     static boost::gregorian::days oneDay(1);
-    static std::ifstream ifs(getDataFileStr(curDate), std::ifstream::in);
+    static std::ifstream ifs(getDataFileStr(startDate), std::ifstream::in);
     static bool processFirstLineFlag = false;
     std::string line;
 
@@ -48,7 +48,7 @@ public:
       if (curDate > endDate)
         break;
 
-      ifs.open(getDataFileStr(startDate), std::ifstream::in);
+      ifs.open(getDataFileStr(curDate), std::ifstream::in);
     }
 
     return false;
@@ -93,7 +93,8 @@ private:
   }
 
   std::string getDataFileStr(boost::posix_time::ptime date) {
-    std::string dateStr = DataAdapterHelper::ptimeToStr("%Y%m%d", date);
+    std::string dateStr = CedarTimeHelper::ptimeToStr("%Y%m%d", date);
+    LOG(INFO) << dateStr;
     std::string fileStr = homeDir + "/" + exchange + code + "/" + dateStr +
       "_" + exchange + code + "_" + exchangeAbbr + "_L1.txt";
     LOG(INFO) << fileStr;

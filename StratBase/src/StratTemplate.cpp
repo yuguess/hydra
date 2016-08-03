@@ -25,15 +25,15 @@ int StratTemplate::onMsg(MessageBase &msg) {
 
   if (msg.type() == TYPE_MARKETUPDATE) {
     MarketUpdate mktUpdt = ProtoBufHelper::unwrapMsg<MarketUpdate>(msg);
-    orderDelegate.onTickUpdate(mktUpdt);
-    twoMin.onTickUpdate(mktUpdt);
-    positionManager.onTickUpdate(mktUpdt);
+    //orderDelegate.onTickUpdate(mktUpdt);
+    //twoMin.onTickUpdate(mktUpdt);
+    //positionManager.onTickUpdate(mktUpdt);
 
   } else if (msg.type() == TYPE_RESPONSE_MSG) {
-    ResponseMessage respMsg = ProtoBufHelper::unwrapMsg<ResponseMessage>(msg);
-    //update orderDelegate
-    orderDelegate.onOrderResponseUpdate(respMsg);
-    positionManager.onOrderResponseUpdate(respMsg);
+    //ResponseMessage respMsg = ProtoBufHelper::unwrapMsg<ResponseMessage>(msg);
+    ////update orderDelegate
+    //orderDelegate.onOrderResponseUpdate(respMsg);
+    //positionManager.onOrderResponseUpdate(respMsg);
   }
 
   //check stop profit/loss on every tick
@@ -92,7 +92,7 @@ int StratTemplate::twoMinUpdate(RangeStatData &rng) {
       LOG(ERROR) << "";
     } else {
       OrderRequest req;
-      req.set_type(TYPE_DELEGATE_ORDER_REQUEST);
+      //req.set_type(TYPE_DELEGATE_ORDER_REQUEST);
       req.set_exchange(exchangeStringToEnum[exchange]);
       req.set_code(tradeSecurity);
       req.set_trade_quantity(1);
@@ -114,7 +114,7 @@ int StratTemplate::twoMinUpdate(RangeStatData &rng) {
       LOG(ERROR) << "";
     } else {
       OrderRequest req;
-      req.set_type(TYPE_DELEGATE_ORDER_REQUEST);
+      //req.set_type(TYPE_DELEGATE_ORDER_REQUEST);
       req.set_exchange(exchangeStringToEnum[exchange]);
       req.set_code(tradeSecurity);
       req.set_trade_quantity(1);
