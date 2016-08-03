@@ -12,10 +12,10 @@ class LogHelper {
 public:
   static bool logObject(ResponseMessage &rsp) {
     Json::Value jMsg;
-    jMsg["cedar_msg_type"] =  cedarMsgTypeToString[TYPE_RESPONSE_MSG];
+    jMsg["cedar_msg_type"] = EnumToString::toString(TYPE_RESPONSE_MSG);
     jMsg["id"] = rsp.id();
     jMsg["ref_id"] = rsp.ref_id();
-    jMsg["type"] = rspMsgTypeToString[rsp.type()];
+    jMsg["type"] = EnumToString::toString(rsp.type());
     jMsg["trade_quantity"] = rsp.trade_quantity();
     jMsg["error_code"] = rsp.error_code();
     jMsg["error_msg"] = rsp.error_msg();
