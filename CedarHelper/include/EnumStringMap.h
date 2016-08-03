@@ -48,6 +48,44 @@ public:
       LOG(FATAL) << " invalid response msg type " << rspMsgType;
     return rspMsgTypeToString[rspMsgType];
   }
+
+  static std::string toString(RequestType reqType) {
+    static std::map<RequestType, std::string> reqMsgTypeToString = {
+      {TYPE_LIMIT_ORDER_REQUEST, "TYPE_LIMIT_ORDER_REQUEST"},
+      {TYPE_MARKET_ORDER_REQUEST, "TYPE_MARKET_ORDER_REQUEST"},
+      {TYPE_CANCEL_ORDER_REQUEST, "TYPE_CANCEL_ORDER_REQUEST"},
+      {TYPE_SMART_ORDER_REQUEST, "TYPE_SMART_ORDER_REQUEST"},
+      {TYPE_FIRST_LEVEL_ORDER_REQUEST, "TYPE_FIRST_LEVEL_ORDER_REQUEST"},
+    };
+
+    if (reqMsgTypeToString.find(reqType) == reqMsgTypeToString.end())
+      LOG(FATAL) << " invalid request msg type " << reqType;
+    return reqMsgTypeToString[reqType];
+  }
+
+  static std::string toString(TradeDirection tradeDir) {
+    static std::map<TradeDirection, std::string> tradeDirToString = {
+      {LONG_BUY, "LONG_BUY"},
+      {SHORT_SELL, "SHORT_SELL"},
+    };
+
+    if (tradeDirToString.find(tradeDir) == tradeDirToString.end())
+      LOG(FATAL) << " Invalid trade dir " << tradeDir;
+    return tradeDirToString[tradeDir];
+  }
+
+  static std::string toString(PositionDirection posDir) {
+    static std::map<PositionDirection, std::string> posDirToString = {
+      {OPEN_POSITION, "OPEN"},
+      {CLOSE_POSITION, "CLOSE"},
+      {CLOSE_TODAY_POSITION, "CLOSE_TODAY"},
+      {CLOSE_YESTERDAY_POSITION, "CLOSE_YESTERDAY"},
+    };
+
+    if (posDirToString.find(posDir) == posDirToString.end())
+      LOG(FATAL) << " Invalid trade dir " << posDir;
+    return posDirToString[posDir];
+  }
+
 };
 #endif
-

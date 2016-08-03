@@ -25,15 +25,26 @@ public:
   }
 
   static bool logObject(OrderRequest &req) {
+    Json::Value jMsg;
+    jMsg["cedar_msg_type"] = EnumToString::toString(TYPE_ORDER_REQUEST);
+    jMsg["id"] = req.id();
+    jMsg["type"] = EnumToString::toString(req.type());
+    jMsg["account"] = req.account();
+    jMsg["code"] = req.code();
+    jMsg["buy_sell"] = EnumToString::toString(req.buy_sell());
+    jMsg["trade_quantity"] = req.trade_quantity();
+    jMsg["limit_price"] = std::to_string(req.limit_price());
+    jMsg["open_close"] = EnumToString::toString(req.open_close);
+    jMsg["argument_list"] = rsp.error_msg();
+
+    toLogFile(jMsg);
     return true;
   }
 
 private:
   static inline void toLogFile(Json::Value &jMsg) {
-    static Json::StreamWriterBuilder builder;
-    builder.settings_["indentation"] = "";
-    LOG(INFO) << LOG_TAG_HEADER
-      << Json::writeString(builder, jMsg) << LOG_TAG_FOOTER;
+    static Json::FastWriter fastWriter;
+    LOG(INFO) << LOG_TAG_HEADER << fastWriter.write(jMsg) << LOG_TAG_FOOTER;
   }
 
 };
