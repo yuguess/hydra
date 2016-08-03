@@ -34,8 +34,8 @@ public:
     jMsg["buy_sell"] = EnumToString::toString(req.buy_sell());
     jMsg["trade_quantity"] = req.trade_quantity();
     jMsg["limit_price"] = std::to_string(req.limit_price());
-    jMsg["open_close"] = EnumToString::toString(req.open_close);
-    jMsg["argument_list"] = rsp.error_msg();
+    jMsg["open_close"] = EnumToString::toString(req.open_close());
+    jMsg["argument_list"] = req.argument_list();
 
     toLogFile(jMsg);
     return true;
