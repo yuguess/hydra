@@ -34,6 +34,7 @@ int FirstLevelOrder::onMsg(MessageBase &msg) {
       req.set_type(TYPE_LIMIT_ORDER_REQUEST);
       req.set_limit_price(currentLevelPrice);
       req.set_id(outOrderId);
+      req.set_buy_sell(orderRequest.buy_sell());
       service->sendRequest(getOrderReactorID(), req);
       orderState = Sending;
 
