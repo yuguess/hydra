@@ -42,11 +42,12 @@ public:
   }
 
 private:
-  static inline void toLogFile(Json::Value &jMsg) {
-    static Json::FastWriter fastWriter;
-    LOG(INFO) << LOG_TAG_HEADER << fastWriter.write(jMsg) << LOG_TAG_FOOTER;
+  static inline bool toLogFile(Json::Value &jMsg) {
+    static Json::StreamWriterBuilder builder;
+    builder.settings_["indentation"] = "";
+    LOG(INFO) << LOG_TAG_HEADER
+      << Json::writeString(builder, jMsg) << LOG_TAG_FOOTER;
   }
-
 };
 
 #endif
