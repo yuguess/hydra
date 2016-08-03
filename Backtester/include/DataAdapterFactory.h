@@ -5,7 +5,7 @@
 #include "BasicStockDataAdapter.h"
 #include "CPlusPlusCode/ProtoBufMsg.pb.h"
 
-class AdapterFactory {
+class DataAdapterFactory {
 
 public:
   static std::shared_ptr<DataAdapter> createAdapter(std::string stream,

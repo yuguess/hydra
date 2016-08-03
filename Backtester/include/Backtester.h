@@ -42,7 +42,7 @@ private:
 
   struct LessThanByTimestamp {
     bool operator()(TimeSeriesData&left, TimeSeriesData &right) const {
-      return (left.ts < right.ts);
+      return (left.ts > right.ts);
     }
   };
 

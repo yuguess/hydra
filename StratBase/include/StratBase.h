@@ -11,7 +11,7 @@ public:
   virtual int onMsg(MessageBase&) = 0;
 
   template<typename T>
-  int sendRequest(MsgType type, T &obj) {
+  int sendRequest(CedarMsgType type, T &obj) {
     if (mode == "Backtest" || mode == "LiveTest") {
       //goes to backtester
       //backtester.sendRequest();

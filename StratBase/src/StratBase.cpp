@@ -2,7 +2,7 @@
 
 int StratBase::run() {
   //Backtest, Livetest, LiveTrading
-  CedarJsonConfig::getInstance().getStringByPath("StratBase.Mode", mode);
+  CedarJsonConfig::getInstance().getStringByPath("Strategy.Mode", mode);
   if (mode == "Backtest") {
     //setup backtester
     backtester.registerCallback(std::bind(&StratBase::onMsgWrapper,
