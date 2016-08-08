@@ -29,12 +29,41 @@ int FirstLevelOrder::onMsg(MessageBase &msg) {
       outOrderId = CedarHelper::getOrderId();
       placePrice = currentLevelPrice;
 
+      //orderRequest is from original orderRequest
       OrderRequest req = orderRequest;
       req.set_response_address(respAddr);
       req.set_type(TYPE_LIMIT_ORDER_REQUEST);
       req.set_limit_price(currentLevelPrice);
       req.set_id(outOrderId);
       req.set_buy_sell(orderRequest.buy_sell());
+
+      if (orderRequest.buy_sell() == LONG_BUY) {
+        if (CedarHelper::isStock(req.code())) {
+          //round up for buying
+          leftQty /= stockMinimumQty;
+          leftQty = leftQty * stockMinimumQty + stockMinimumQty;
+        }
+      } else if (orderRequest.buy_sell() == SHORT_SELL) {
+        //round  down for selling
+        if (CedarHelper::isStock(req.code())) {
+          leftQty /= stockMinimumQty;
+          leftQty *= stockMinimumQty;
+          if (leftQty == 0) {
+            LOG(INFO) << "sell again with qty < 100, just recycle";
+            setRecycle();
+            return 0;
+          }
+        }
+      }
+      req.set_trade_quantity(leftQty);
+
+      //usually caused by reaching highlimit or lowlimit
+      if (req.limit_price() == 0.0) {
+        LOG(INFO) << "probably touching highlimit or lowlimit";
+        setRecycle();
+        return 0;
+      }
+
       service->sendRequest(getOrderReactorID(), req);
       orderState = Sending;
 
@@ -90,4 +119,5 @@ int FirstLevelOrder::cancelOrder() {
   req.set_type(TYPE_CANCEL_ORDER_REQUEST);
   req.set_cancel_order_id(outOrderId);
   service->sendRequest(getOrderReactorID(), req);
+  return 0;
 }

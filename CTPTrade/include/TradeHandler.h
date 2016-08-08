@@ -43,26 +43,26 @@ private:
       int nRequestID, bool bIsLast);
 
   //报单录入请求响应
-	virtual void OnRspOrderInsert(CThostFtdcInputOrderField *pInputOrder,
+  virtual void OnRspOrderInsert(CThostFtdcInputOrderField *pInputOrder,
       CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
   //预埋单录入请求响应
-	virtual void OnRspParkedOrderInsert(
-      CThostFtdcParkedOrderField *pParkedOrder,
-      CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+  virtual void OnRspParkedOrderInsert(
+    CThostFtdcParkedOrderField *pParkedOrder,
+    CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
-	//报单操作请求响应
-	virtual void OnRspOrderAction(
-      CThostFtdcInputOrderActionField *pInputOrderAction,
-      CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+  //报单操作请求响应
+  virtual void OnRspOrderAction(
+    CThostFtdcInputOrderActionField *pInputOrderAction,
+    CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
 	//请求查询报单响应
 	virtual void OnRspQryOrder(CThostFtdcOrderField *pOrder,
-      CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+    CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
 	///请求查询成交响应
 	virtual void OnRspQryTrade(CThostFtdcTradeField *pTrade,
-      CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+    CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
 	///请求查询合约响应
 	virtual void OnRspQryInstrument(CThostFtdcInstrumentField *pInstrument,
@@ -313,13 +313,7 @@ private:
   std::map<std::string, CTPUserRequest> inToCTPReq;
 
   int initReq(CThostFtdcInputOrderField&);
-  void PrintOrder(CThostFtdcOrderField* pOda);
-  void PrintTrade(CThostFtdcTradeField* pTda);
-  //void PrintOrderInsertErr(OnRspOrderInsertMsg* pErr);
-  //int sendCancelReq(NewOrderInfo &);
   int sendOrderReq(OrderRequest&);
-  //std::string concatOrderRef(std::string &);
-  //std::string extractInternalID(char *);
   int returnErrorInfo(CThostFtdcRspInfoField *);
   int recycleID(std::string&, std::string&);
   int sendErrorResponse(CThostFtdcInputOrderField*, CThostFtdcRspInfoField*);
