@@ -28,6 +28,7 @@ public:
     Json::Value jMsg;
     jMsg["cedar_msg_type"] = EnumToString::toString(TYPE_ORDER_REQUEST);
     jMsg["id"] = req.id();
+    jMsg["ref_id"] = req.ref_id();
     jMsg["type"] = EnumToString::toString(req.type());
     jMsg["account"] = req.account();
     jMsg["code"] = req.code();
