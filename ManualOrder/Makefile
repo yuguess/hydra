@@ -20,15 +20,19 @@ INCLUDE= -I./include \
 
 PROTOBUF= ../ProtoBufMsg/CPlusPlusCode/ProtoBufMsg.pb.cc
 
-SOURCES= $(SRC)/Main.cpp $(SRC)/ManualOrder.cpp  $(PROTOBUF) $(SRC)/SimpleTester.cpp
+SOURCES=$(SRC)/Main.cpp $(SRC)/ManualOrder.cpp  $(PROTOBUF) $(SRC)/SimpleTester.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=$(BIN)/ManualOrder 
 
-TESTCASE_SRC= $(SRC)/Testcase.cpp $(PROTOBUF)
+TESTCASE_SRC=$(SRC)/Testcase.cpp $(PROTOBUF)
 TESTCASE_OBJECTS=$(TESTCASE_SRC:.cpp=.o)
 TESTCASE=$(BIN)/Testcase
 
-all: $(EXECUTABLE) $(TESTCASE) 
+TDXTEST_SRC=$(SRC)/TdxTest.cpp $(SRC)/ManualOrder.cpp  $(PROTOBUF) $(SRC)/SimpleTester.cpp
+TDXTEST_OBJECTS=$(TDXTEST_SRC:.cpp=.o)
+TDXTEST=$(BIN)/TdxTest
+
+all: $(EXECUTABLE) $(TESTCASE) $(TDXTEST) 
 
 $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(OBJECTS)  -o $@ $(LDFLAGS)
@@ -36,9 +40,12 @@ $(EXECUTABLE): $(OBJECTS)
 $(TESTCASE): $(TESTCASE_OBJECTS)
 	$(CC) $(TESTCASE_OBJECTS)  -o $@ $(LDFLAGS)
 
+$(TDXTEST): $(TDXTEST_OBJECTS)
+	$(CC) $(TDXTEST_OBJECTS)  -o $@ $(LDFLAGS)
+
 .cpp.o:
 	$(CC) -c $(CFLAGS) $(DEBUG)  $(INCLUDE) $< -o $@
 
 # --- remove binary and executable files
 clean:
-	rm $(EXECUTABLE) $(SRC)/*.o
+	rm $(EXECUTABLE) $(TESTCASE) $(TDX_TEST) $(SRC)/*.o

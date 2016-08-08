@@ -43,6 +43,7 @@ public:
 			LOG(FATAL) << appName << " symlink set fail!";
 		}
 #else
+
 //put win create file link imple here
 #endif
     return 0;
