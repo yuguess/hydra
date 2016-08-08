@@ -2,7 +2,11 @@
 #define CMD_LINE_PARSER_H
 
 #include <iostream>
+#ifdef __linux
 #include <unistd.h>
+#else
+#include "WinGetOpt.h"
+#endif
 
 class CmdLineParser {
 public:

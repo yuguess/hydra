@@ -47,6 +47,7 @@ private:
     builder.settings_["indentation"] = "";
     LOG(INFO) << LOG_TAG_HEADER
       << Json::writeString(builder, jMsg) << LOG_TAG_FOOTER;
+	return true;
   }
 };
 

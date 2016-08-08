@@ -52,7 +52,7 @@ public:
     ss << sec;
     return ss.str();
   }
-
+#ifdef __linux
   //this only get IPV4 addr, skip 127.0.0.1
   static std::string getResponseAddr() {
     std::string pull;
@@ -62,6 +62,7 @@ public:
       LOG(ERROR) << "can't get this machine IP address";
     return ipStr + ":" + pull;
   }
+#endif
 
   static void getConfigRoot(std::string filepath, Json::Value& root) {
     std::ifstream config(filepath, std::ifstream::binary);
@@ -111,6 +112,8 @@ public:
   }
 
 private:
+
+#ifdef __linux
   static int getHostIP(std::string &ip) {
     struct ifaddrs *ifAddrStruct = NULL;
     struct ifaddrs *ifa = NULL;
@@ -142,6 +145,7 @@ private:
     }
     return -1;
   }
+#endif
 
 };
 
