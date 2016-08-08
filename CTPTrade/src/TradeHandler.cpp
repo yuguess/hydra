@@ -156,7 +156,6 @@ int TradeHandler::sendOrderReq(OrderRequest &req) {
       req.id(), req.response_address(), req.type(), req.cancel_order_id(),
       req.trade_quantity(), req.trade_quantity() };
 
-    LogHelper::logObject(ctpReq);
     LOG(INFO) << "request ID " << ctpReq.RequestID << std::endl;
     LOG(INFO) << "recv new order req inID " << req.id() << " exID " << reqId;
     LOG(INFO) << "user ctp request " << req.DebugString();
@@ -198,6 +197,7 @@ int TradeHandler::sendOrderReq(OrderRequest &req) {
     return -1;
   }
 
+  LogHelper::logObject(req);
   return 0;
 }
 

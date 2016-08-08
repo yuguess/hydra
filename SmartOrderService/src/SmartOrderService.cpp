@@ -1,6 +1,7 @@
 #include "SmartOrderService.h"
 #include "SmartOrder.h"
 #include "FirstLevelOrder.h"
+#include "EnumStringMap.h"
 
 SmartOrderService::SmartOrderService() {
   ProtoBufHelper::setupProtoBufMsgHub(msgHub);
@@ -28,8 +29,7 @@ SmartOrderService::SmartOrderService() {
 }
 
 int SmartOrderService::onMktUpdate(MarketUpdate &mkt, MessageBase &msg) {
-  std::string chan = mkt.code() + "." +
-    CedarHelper::exchangeTypeToString(mkt.exchange());
+  std::string chan = mkt.code() + "." + EnumToString::toString(mkt.exchange());
 
   if (mktDriver.find(chan) == mktDriver.end()) {
     LOG(INFO) << "invalid " << chan << " for mktDriver";
@@ -71,8 +71,7 @@ int SmartOrderService::onOrderRequest(OrderRequest &req, MessageBase &msg) {
   }
 
   orderReactorIDtoObj[reactor->getOrderReactorID()] = reactor;
-  std::string key = req.code() + "." +
-    CedarHelper::exchangeTypeToString(req.exchange());
+  std::string key = req.code() + "." + EnumToString::toString(req.exchange());
   addReactorToMktDriver(key, reactor);
   subscribeTicker(req.code(), req.exchange());
 
@@ -209,7 +208,7 @@ int SmartOrderService::subscribeTicker(std::string code, ExchangeType xchg) {
 
   msgHub.pushMsg(targetAddr,
     ProtoBufHelper::wrapMsg(TYPE_DATAREQUEST, mdReq));
-  std::string chan = code + "." + CedarHelper::exchangeTypeToString(xchg);
+  std::string chan = code + "." + EnumToString::toString(xchg);
 
   msgHub.addSubscription(targetBoardcastAddr, chan);
 

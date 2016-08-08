@@ -25,6 +25,21 @@ public:
 
 class EnumToString {
 public:
+  static std::string toString(ExchangeType exchangeType) {
+    std::map<ExchangeType, std::string> exchangeTypeToString = {
+      {SHSE, "SHSE"},
+      {SZSE, "SZSE"},
+      {CFE, "CFE"},
+      {SHFE, "SHFE"},
+      {DCE, "DCE"},
+      {ZCE, "ZCE"},
+    };
+
+    if (exchangeTypeToString.find(exchangeType) == exchangeTypeToString.end())
+      LOG(FATAL) << " invalid cedar msg type " << exchangeType;
+    return exchangeTypeToString[exchangeType];
+  }
+
   static std::string toString(CedarMsgType cedarMsgType) {
     std::map<CedarMsgType, std::string> cedarMsgTypeToString = {
       {TYPE_ORDER_REQUEST, "TYPE_ORDER_REQUEST"},
