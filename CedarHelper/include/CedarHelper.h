@@ -4,6 +4,7 @@
 #include "json/json.h"
 #include <signal.h>
 #include <fstream>
+#include <ctype.h>
 #ifdef __linux
 #include <sys/time.h>
 #include <sys/stat.h>
@@ -19,24 +20,18 @@
 #endif
 #include "CedarJsonConfig.h"
 #include "CPlusPlusCode/ProtoBufMsg.pb.h"
+#include "CmdLineParser.h"
+#include "CedarLogger.h"
 
 class CedarHelper {
 
 public:
-  static int blockSignalAndSuspend() {
-    int sig = 0, s = 0;
-#ifdef __linux
-    sigset_t sigSet;
-    sigemptyset(&sigSet);
-    sigaddset(&sigSet, SIGINT);
-    sigaddset(&sigSet, SIGTERM);
-    sigaddset(&sigSet, SIGKILL);
-    sigprocmask(SIG_BLOCK, &sigSet, NULL);
-
-    if ((s = sigwait(&sigSet, &sig)) != 0)
-      perror("sigwait error\n");
-#endif
-    return 0;
+  static int cedarAppInit(int argc, char *argv[]) {
+    GOOGLE_PROTOBUF_VERIFY_VERSION;
+    std::string configPath;
+    configPath = CmdLineParser::getConfigPathFromCmd(argc, argv);
+    CedarJsonConfig::getInstance().loadConfigFile(configPath);
+    CedarLogger::init();
   }
 
   static int stringSplit(std::string str,
@@ -74,59 +69,45 @@ public:
     reader.parse(config, root, false);
   }
 
+#ifdef __linux
+  static int blockSignalAndSuspend() {
+    int sig = 0, s = 0;
+    sigset_t sigSet;
+    sigemptyset(&sigSet);
+    sigaddset(&sigSet, SIGINT);
+    sigaddset(&sigSet, SIGTERM);
+    sigaddset(&sigSet, SIGKILL);
+    sigprocmask(SIG_BLOCK, &sigSet, NULL);
+
+    if ((s = sigwait(&sigSet, &sig)) != 0)
+      perror("sigwait error\n");
+    return 0;
+  }
+
   //return current local time HHMMSSmmm
   static std::string getCurTimeStamp(){
     char currentTime[10];
-#ifdef _WIN32
-    SYSTEMTIME st;
-    GetLocalTime(&st);
-#endif
-#ifdef __linux
     struct timeval curTime;
     gettimeofday(&curTime, NULL);
     int milli = curTime.tv_usec / 1000;
     char buffer [10];
     strftime(buffer, sizeof(buffer), "%H%M%S", localtime(&curTime.tv_sec));
     sprintf(currentTime, "%s%d", buffer, milli);
-#endif
+
     return currentTime;
   }
 
-  static std::string exchangeTypeToString(ExchangeType exchange) {
-    switch (exchange) {
-      case SHSE: return "SHSE";
-      case SZSE: return "SZSE";
-      case CFE: return "CFE";
-      case SHFE: return "SHFE";
-      case DCE: return "DCE";
-      case ZCE: return "ZCE";
-      default:
-        LOG(ERROR) << "Invalid exchange type";
-    }
-  }
-
-  static ExchangeType stringToExchangeType(std::string exchange) {
-    if (exchange == "SHSE")
-      return ExchangeType::SHSE;
-    else if (exchange == "SZSE")
-      return ExchangeType::SZSE;
-    else if (exchange == "CFE")
-      return ExchangeType::CFE;
-    else if (exchange == "SHFE")
-      return ExchangeType::SHFE;
-    else if (exchange == "DCE")
-      return ExchangeType::DCE;
-    else if (exchange == "ZCE")
-      return ExchangeType::ZCE;
-    else {
-      LOG(FATAL) << "Invalid exchange string";
-    }
-  }
-
   static std::string getOrderId() {
-    static std::string respAddr = getResponseAddr();
-    static int id = 0;
-    return respAddr + "_" + std::to_string(++id);
+    struct timeval curTime;
+    gettimeofday(&curTime, NULL);
+    return std::to_string(curTime.tv_sec) + std::to_string(curTime.tv_usec);
+  }
+#endif
+
+  static bool isStock(std::string code) {
+    if (code.size() == 6 && isdigit(code[0]))
+      return true;
+    return false;
   }
 
 private:

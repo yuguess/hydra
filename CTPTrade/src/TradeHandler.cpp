@@ -156,6 +156,7 @@ int TradeHandler::sendOrderReq(OrderRequest &req) {
       req.id(), req.response_address(), req.type(), req.cancel_order_id(),
       req.trade_quantity(), req.trade_quantity() };
 
+    LogHelper::logObject(ctpReq);
     LOG(INFO) << "request ID " << ctpReq.RequestID << std::endl;
     LOG(INFO) << "recv new order req inID " << req.id() << " exID " << reqId;
     LOG(INFO) << "user ctp request " << req.DebugString();
@@ -173,7 +174,6 @@ int TradeHandler::sendOrderReq(OrderRequest &req) {
 
     if (inToCTPReq.find(toCancelInId) == inToCTPReq.end()) {
       LOG(ERROR) << "Can't find inId for object to get orderSysId!";
-
       return -1;
     }
     strcpy(cnclReq.ExchangeID, inToCTPReq[toCancelInId].exchangeId);
@@ -438,8 +438,8 @@ void TradeHandler::OnErrRtnOrderInsert(CThostFtdcInputOrderField *pInputOrder,
 
 void TradeHandler::OnErrRtnOrderAction(
   CThostFtdcOrderActionField *pOrderAction, CThostFtdcRspInfoField *pRspInfo) {
-
   LOG(INFO) << __FUNCTION__ << std::endl;
+
   //returnErrorInfo(pRspInfo);
 
   //printf("ErrorCode=[%d], ErrorMsg=[%s]\n", pRspInfo->ErrorID,
@@ -544,11 +544,6 @@ void TradeHandler::OnRspError(
     << pRspInfo->ErrorMsg << "]";
 };
 
-//std::string TradeHandler::extractInternalID(char *orderRef) {
-//  std::string tmp(orderRef + ORDER_DIGIT);
-//  return tmp;
-//}
-
 void TradeHandler::OnRtnTrade(CThostFtdcTradeField *pTrade) {
   LOG(INFO) << __FUNCTION__;
 
@@ -580,58 +575,10 @@ void TradeHandler::OnRtnTrade(CThostFtdcTradeField *pTrade) {
   msgHub.pushMsg(inToCTPReq[inId].responseAddr,
       ProtoBufHelper::wrapMsg(TYPE_RESPONSE_MSG, rsp));
   LOG(INFO) << "OnRtnTrade send trade " << rsp.DebugString() << std::endl;
-
   LogHelper::logObject(rsp);
 
   inToCTPReq[inId].leftQty -= pTrade->Volume;
   if (inToCTPReq[inId].leftQty == 0) {
     recycleID(exId, inId);
   }
-}
-
-void TradeHandler::PrintOrder(CThostFtdcOrderField* pOda) {
-  //fprintf(stdout, "%s,%s,%s,%s,%d,%s,%d,%d,%d,%s,%s,%.3f,%d,%d,%d\n",
-  //					pOda->InstrumentID,
-  //					pOda->Direction == THOST_FTDC_D_Buy ? "BUY" : "SELL",
-  //					pOda->TradingDay,
-  //					pOda->InsertTime,
-  //					pOda->RequestID,
-  //					pOda->OrderRef,
-  //					pOda->BrokerOrderSeq,
-  //					pOda->SequenceNo,
-  //					pOda->NotifySequence,
-  //					CTPOrderStatToString(pOda->OrderStatus).c_str(),
-  //					CTPOrderSubmitStatToString(pOda->OrderSubmitStatus).c_str(),
-  //                      pOda->LimitPrice,
-  //					pOda->VolumeTotalOriginal,
-  //					pOda->VolumeTraded,
-  //					pOda->VolumeTotal);
-  //fflush(g_CDXLog.m_pOrderLogFile);
-
-//CDX_LOGINFO log;
-//log.LOGTYPE = 1;
-//log.INFOTYPE= INFO_LIVE;
-//memcpy(&log.rtnOrder,pOda,sizeof(log.rtnOrder));
-//g_public_chan->RSLT_QUEUE.push(log);
-}
-
-void TradeHandler::PrintTrade(CThostFtdcTradeField* pTda) {
-//fprintf(g_CDXLog.m_pTradeLogFile, "%s,%s,%d,%d,%s,%s,%s,%.3f,%d,%s,%s\n",
-//					pTda->OrderRef,
-//					pTda->TradeID,
-//					pTda->SequenceNo,
-//					pTda->BrokerOrderSeq,
-//					CTPHedgeFlagToString(pTda->OffsetFlag).c_str(),
-//					pTda->Direction == THOST_FTDC_D_Buy ? "BUY" : "SELL",
-//					pTda->InstrumentID,
-//					pTda->Price,
-//					pTda->Volume,
-//					pTda->TradeDate,
-//					pTda->TradeTime);
-//fflush(g_CDXLog.m_pTradeLogFile);
-//CDX_LOGINFO log;
-//log.LOGTYPE = 2;
-//log.INFOTYPE= INFO_LIVE;
-//memcpy(&log.rtnTrade,pTda,sizeof(log.rtnTrade));
-//g_public_chan->RSLT_QUEUE.push(log);
 }

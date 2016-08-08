@@ -3,7 +3,8 @@
 #include "CedarLogging.h"
 #include "SmartOrderService.h"
 
-int main() {
+int main(int argc, char *argv[]) {
+  CedarHelper::cedarAppInit(argc, argv);
   GOOGLE_PROTOBUF_VERIFY_VERSION;
   CedarLogging::init("SmartOrderService");
   CedarJsonConfig::getInstance().loadConfigFile(
