@@ -4,11 +4,11 @@ import getopt
 import os
 
 def start():
-  subprocess.Popen(['/home/infra/logstash-2.3.3/bin/logstash', '-f', '/home/infra/logstash-2.3.3/configure/receive.conf'])
+  subprocess.Popen(['/home/infra/logstash-2.3.3/bin/logstash', '-f', '/home/infra/hydra/ShareConfig/receive.conf'])
   subprocess.Popen(['python', '/home/infra/hydra/LogMonitor/MonitorServer.py'])
 
 def stop():
-  subprocess.call('/home/infra/logstash-2.3.3/stop.sh')
+  subprocess.call('/home/infra/hydra/ShareConfig/stopLogStash.sh')
   subprocess.call('/home/infra/hydra/LogMonitor/stop.sh')
 
 def service(argv):
