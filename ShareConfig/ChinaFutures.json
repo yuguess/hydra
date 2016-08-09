@@ -1,0 +1,47 @@
+{
+  "cu": {
+    "Exchange": "SHFE",
+    "StartDate": "20000101",
+    "FixCostOpen": "0.0",
+    "FixClose": "0.0",
+    "FixCloseToday": "0.0",
+    "FloatCostOpen": "0.0",
+    "FloatCostClose": "0.0",
+    "FloatCostCloseToday": "0.0",
+    "MarginRatio": "0.0",
+    "TickSize":"10",
+    "LotSize":"5",
+    "VolumeSide":"",
+    "MaxCancel":""
+  },
+  "al": {
+    "Exchange": "SHFE",
+    "StartDate": "20000101",
+    "FixCostOpen": "201212",
+    "FixClose": "0.0",
+    "FixCloseToday": "",
+    "FloatCostOpen": "",
+    "FloatCostClose": "",
+    "FloatCostCloseToday": "",
+    "MarginRatio": "",
+    "TickSize":"",
+    "LotSize":"",
+    "VolumeSide":"",
+    "MaxCancel":""
+  },
+  "zn": {
+    "Exchange": "SHFE",
+    "StartDate": "20000101",
+    "FixCostOpen": "201212",
+    "FixClose": "0.0",
+    "FixCloseToday": "",
+    "FloatCostOpen": "",
+    "FloatCostClose": "",
+    "FloatCostCloseToday": "",
+    "MarginRatio": "",
+    "TickSize":"",
+    "LotSize":"",
+    "VolumeSide":"",
+    "MaxCancel":""
+  },
+}
