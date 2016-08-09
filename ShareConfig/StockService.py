@@ -5,11 +5,11 @@ import os
 
 def start():
   subprocess.Popen(['/home/infra/logstash-2.3.3/bin/logstash', '-f', '/home/infra/hydra/ShareConfig/receive.conf'])
-  subprocess.Popen(['python', '/home/infra/hydra/LogMonitor/MonitorServer.py'])
+  subprocess.Popen(['/home/infra/hydra/LogMonitor/MonitorServer.py'])
 
 def stop():
   subprocess.call('/home/infra/hydra/ShareConfig/stopLogStash.sh')
-  subprocess.call('/home/infra/hydra/LogMonitor/stop.sh')
+  subprocess.call('pkill MonitorServer.py')
 
 def service(argv):
   try:
