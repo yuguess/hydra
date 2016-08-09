@@ -9,7 +9,7 @@ def start():
 
 def stop():
   subprocess.call('/home/infra/hydra/ShareConfig/stopLogStash.sh')
-  subprocess.call('pkill MonitorServer.py')
+  subprocess.call(['pkill', 'MonitorServer'])
 
 def service(argv):
   try:

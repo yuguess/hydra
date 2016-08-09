@@ -11,7 +11,7 @@ import tornado.websocket
 from threading import Thread
 
 #######config ###############
-logFile = "../logstash-2.3.3/7.55"
+logFile = "/home/infra/CedarLog/" + time.strftime("%Y-%m-%d")
 listenPort = "8000"
 #############################
 
