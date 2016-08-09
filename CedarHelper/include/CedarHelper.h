@@ -32,6 +32,8 @@ public:
     configPath = CmdLineParser::getConfigPathFromCmd(argc, argv);
     CedarJsonConfig::getInstance().loadConfigFile(configPath);
     CedarLogger::init();
+
+    return 0;
   }
 
   static int stringSplit(std::string str,

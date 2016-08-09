@@ -5,7 +5,7 @@
 
 class DualRSI : public StratBase {
 public:
-  DualRSI();
+  DualRSI() {};
   virtual ~DualRSI() {};
   int onMsg(MessageBase&);
 };

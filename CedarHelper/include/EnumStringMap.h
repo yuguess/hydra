@@ -7,7 +7,7 @@
 
 class StringToEnum {
 public:
-  static ExchangeType stringToExchangeType(std::string &exchange) {
+  static ExchangeType toExchangeType(std::string &exchange) {
     std::map<std::string, ExchangeType> exchangeStringToEnum = {
       {"SHSE", SHSE},
       {"SZSE", SZSE},
