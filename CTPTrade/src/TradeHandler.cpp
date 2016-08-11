@@ -21,6 +21,8 @@ int TradeHandler::start() {
 
   pUserTradeApi->RegisterFront(const_cast<char*>(tradeFront.c_str()));
   pUserTradeApi->Init();
+
+  return 0;
 }
 
 void TradeHandler::OnFrontConnected() {
@@ -34,7 +36,7 @@ void TradeHandler::OnFrontConnected() {
   strcpy(req.UserID, userId.c_str());
   strcpy(req.Password, password.c_str());
 
-  int result = pUserTradeApi->ReqUserLogin(&req, 0);
+  pUserTradeApi->ReqUserLogin(&req, 0);
 }
 
 void TradeHandler::OnRspUserLogin(
@@ -392,6 +394,7 @@ void TradeHandler::OnFrontDisconnected(int nReason) {
 int TradeHandler::returnErrorInfo(CThostFtdcRspInfoField *pRspInfo) {
   LOG(ERROR) << __FUNCTION__ << "ErrorCode: " << pRspInfo->ErrorID
             << " ErrorMsg:" << pRspInfo->ErrorMsg;
+  return 0;
 }
 
 int TradeHandler::sendErrorResponse(CThostFtdcInputOrderField *pInputOrder,

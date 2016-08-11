@@ -18,7 +18,7 @@ public:
     //code is like 000001.SZ format
     code = jsonConfigObj["Code"].asString().substr(0, 6);
     exchange = jsonConfigObj["Code"].asString().substr(7, 2);
-    exchangeAbbr = (exchange == "SZ" ? "SZSE" : "SSE");
+    freq = jsonConfigObj["Frequency"].asString();
     homeDir = jsonConfigObj["FileAddress"].asString();
     streamName = stream;
 
@@ -64,41 +64,40 @@ private:
     std::vector<std::string> args;
     boost::split(args, line, boost::is_any_of(","));
     //mkt.set_exchange(args[0]);
-    mkt.set_code(args[1]);
-    //args[2] format like YYYY-mm-dd HH:MM:SS.mmm
-    mkt.set_trading_day(args[2].substr(0, 10));
-    mkt.set_exchange_timestamp(args[2].substr(11, 12));
+    //mkt.set_code();
+    ////args[2] format like YYYY-mm-dd HH:MM:SS.mmm
+    //mkt.set_trading_day(args[2].substr(0, 10));
+    //mkt.set_exchange_timestamp(args[2].substr(11, 12));
 
-    mkt.set_last_price(std::stoi(args[3]));
-    mkt.set_num_trades(std::stoi(args[4]));
-    mkt.set_turnover(std::stof(args[5]));
-    mkt.set_volume(std::stoi(args[6]));
+    //mkt.set_last_price(std::stoi(args[3]));
+    //mkt.set_num_trades(std::stoi(args[4]));
+    //mkt.set_turnover(std::stof(args[5]));
+    //mkt.set_volume(std::stoi(args[6]));
 
-    for (unsigned int i = 0; i < LEVEL; i++)
-      mkt.add_bid_price(std::stof(args[8 + i]));
+    //for (unsigned int i = 0; i < LEVEL; i++)
+    //  mkt.add_bid_price(std::stof(args[8 + i]));
 
-    for (unsigned int i = 0; i < LEVEL; i++)
-      mkt.add_ask_price(std::stof(args[13 + i]));
+    //for (unsigned int i = 0; i < LEVEL; i++)
+    //  mkt.add_ask_price(std::stof(args[13 + i]));
 
-    for (unsigned int i = 0; i < LEVEL; i++)
-      mkt.add_bid_volume(std::stoi(args[18 + i]));
+    //for (unsigned int i = 0; i < LEVEL; i++)
+    //  mkt.add_bid_volume(std::stoi(args[18 + i]));
 
-    for (unsigned int i = 0; i < LEVEL; i++)
-      mkt.add_ask_volume(std::stoi(args[23 + i]));
+    //for (unsigned int i = 0; i < LEVEL; i++)
+    //  mkt.add_ask_volume(std::stoi(args[23 + i]));
 
-    tsData.msg =
-      ProtoBufHelper::toMessageBase<MarketUpdate>(TYPE_MARKETUPDATE, mkt);
-    tsData.streamName = streamName;
-    tsData.ts = boost::posix_time::time_from_string(args[2]);
+    //tsData.msg =
+    //  ProtoBufHelper::toMessageBase<MarketUpdate>(TYPE_MARKETUPDATE, mkt);
+    //tsData.streamName = streamName;
+    //tsData.ts = boost::posix_time::time_from_string(args[2]);
   }
 
   std::string getDataFileStr(boost::posix_time::ptime date) {
     std::string dateStr = CedarTimeHelper::ptimeToStr("%Y%m%d", date);
     LOG(INFO) << dateStr;
-    std::string fileStr = homeDir + "/" + exchange + code + "/" + dateStr +
-      "_" + exchange + code + "_" + exchangeAbbr + "_L1.txt";
+    std::string fileStr =
+      homeDir + "/" + freq + "/" + dateStr + "/" + code + "." + exchange;
     LOG(INFO) << fileStr;
-    getchar();
     return fileStr;
   }
 
@@ -108,9 +107,9 @@ private:
   boost::posix_time::ptime endDate;
   std::string homeDir;
   std::string exchange;
-  std::string exchangeAbbr;
   std::string code;
   std::string streamName;
+  std::string freq;
   int backtestDays;
 };
 

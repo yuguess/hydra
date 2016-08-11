@@ -7,6 +7,7 @@
 #include "CPlusPlusCode/ProtoBufMsg.pb.h"
 #include "CedarTimeHelper.h"
 #include "CedarHelper.h"
+#include "EnumStringMap.h"
 
 namespace fs = boost::filesystem;
 namespace pt = boost::posix_time;
@@ -23,8 +24,8 @@ public:
     code = jsonConfigObj["Code"].asString();
 
     std::string homeDir = jsonConfigObj["FileAddress"].asString();
-    exchange = CedarHelper::stringToExchangeType(
-        jsonConfigObj["Exchange"].asString());
+    std::string exchangeStr = jsonConfigObj["Exchange"].asString();
+    exchange = StringToEnum::toExchangeType(exchangeStr);
 
     streamName = stream;
 
@@ -94,13 +95,10 @@ private:
 
   bool lineToMarketUpdate(std::string &line,
       TimeSeriesData &tsData, std::string &dateStr) {
-    LOG(INFO) << line;
-
     MarketUpdate mkt;
     std::vector<std::string> args;
     boost::split(args, line, boost::is_any_of(" "), boost::token_compress_on);
 
-    LOG(INFO) << args.size();
     if (args.size() == 1)
       return false;
 

@@ -2,9 +2,9 @@
 #include <vector>
 
 #include "CPlusPlusCode/ProtoBufMsg.pb.h"
-#include "CedarJsonConfig.h"
 #include "ProtoBufMsgHub.h"
-#include "CedarLogging.h"
+#include "CedarHelper.h"
+#include "IncludeOnlyInMain.h"
 
 inline double genRandom(int min, int max) {
   if (max < min)
@@ -77,12 +77,8 @@ private:
 
 };
 
-int main() {
-  GOOGLE_PROTOBUF_VERIFY_VERSION;
-
-  CedarLogging::init("TestClient");
-
-  CedarJsonConfig::getInstance().loadConfigFile("../config/TestClient.json");
+int main(int argc, char *argv[]) {
+  CedarHelper::cedarAppInit(argc, argv);
 
   Tester tester;
 
