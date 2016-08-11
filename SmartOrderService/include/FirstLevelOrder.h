@@ -22,7 +22,6 @@ public:
 
 private:
   int cancelOrder();
-
   const static int stockMinimumQty = 100;
 
   OrderState orderState;

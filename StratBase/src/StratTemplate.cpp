@@ -58,8 +58,8 @@ int StratTemplate::twoMinUpdate(RangeStatData &rng) {
     return 0;
   }
 
-  TA_MA(tickIdx, tickIdx, quickMAInput, quickMAPeriod,
-      TA_MAType_SMA, &outBeg, &outNbElement, quickMAOutput);
+  //TA_MA(tickIdx, tickIdx, quickMAInput, quickMAPeriod,
+      //TA_MAType_SMA, &outBeg, &outNbElement, quickMAOutput);
   quickMARes.push_back(quickMAOutput[0]);
 
   if (tickIdx < slowMAPeriod - 1) {
@@ -67,8 +67,8 @@ int StratTemplate::twoMinUpdate(RangeStatData &rng) {
     return 0;
   }
 
-  TA_MA(tickIdx, tickIdx, slowMAInput, slowMAPeriod,
-      TA_MAType_SMA, &outBeg, &outNbElement, slowMAOutput);
+  //TA_MA(tickIdx, tickIdx, slowMAInput, slowMAPeriod,
+      //TA_MAType_SMA, &outBeg, &outNbElement, slowMAOutput);
   slowMARes.push_back(slowMAOutput[0]);
 
   int quickEndIdx = quickMARes.size() - 1;
@@ -93,7 +93,7 @@ int StratTemplate::twoMinUpdate(RangeStatData &rng) {
     } else {
       OrderRequest req;
       //req.set_type(TYPE_DELEGATE_ORDER_REQUEST);
-      req.set_exchange(exchangeStringToEnum[exchange]);
+      req.set_exchange(StringToEnum::toExchangeType(exchange));
       req.set_code(tradeSecurity);
       req.set_trade_quantity(1);
       req.set_buy_sell(LONG_BUY);
@@ -115,7 +115,7 @@ int StratTemplate::twoMinUpdate(RangeStatData &rng) {
     } else {
       OrderRequest req;
       //req.set_type(TYPE_DELEGATE_ORDER_REQUEST);
-      req.set_exchange(exchangeStringToEnum[exchange]);
+      req.set_exchange(StringToEnum::toExchangeType(exchange));
       req.set_code(tradeSecurity);
       req.set_trade_quantity(1);
       req.set_buy_sell(SHORT_SELL);

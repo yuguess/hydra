@@ -1,6 +1,5 @@
 #include "FirstLevelOrder.h"
 #include "CedarHelper.h"
-#include "easylogging++.h"
 
 FirstLevelOrder::FirstLevelOrder(OrderRequest &req,
     SmartOrderService *srcv):OrderReactor(req, srcv),
@@ -94,8 +93,9 @@ int FirstLevelOrder::onMsg(MessageBase &msg) {
 
     } else if (rsp.type() == TYPE_TRADE) {
       leftQty -= rsp.trade_quantity();
-      if (leftQty < stockMinimumQty && (orderRequest.exchange() == SHSE ||
-            orderRequest.exchange() == SZSE)) {
+      if (CedarHelper::isStock(orderRequest.code())
+          && leftQty < stockMinimumQty) {
+
         if (leftQty == 0) {
           setRecycle();
           return 0;
