@@ -4,7 +4,6 @@
 #include "BasicRSI.h"
 
 int BasicRSI::onMsg(MessageBase &msg) {
-
   if (msg.type() == TYPE_MARKETUPDATE) {
     MarketUpdate mktUpdt = ProtoBufHelper::unwrapMsg<MarketUpdate>(msg);
 

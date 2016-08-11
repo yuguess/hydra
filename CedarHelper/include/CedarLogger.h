@@ -1,3 +1,6 @@
+#ifndef CEDAR_LOGGER_H
+#define CEDAR_LOGGER_H
+
 #include "easylogging++.h"
 #include <fcntl.h>
 #ifdef __linux
@@ -49,3 +52,5 @@ public:
     return 0;
   }
 };
+
+#endif

@@ -11,6 +11,7 @@ SmartOrder::SmartOrder(OrderRequest &req, SmartOrderService *srvc):
 int SmartOrder::onMsg(MessageBase &msg) {
   if (msg.type() == TYPE_MARKETUPDATE) {
     MarketUpdate mkt = ProtoBufHelper::unwrapMsg<MarketUpdate>(msg);
+    //TODO filter out invalid mkt update, ensure no mkt has 0 vol
     onMktUpdate(mkt);
   } else if (msg.type() == TYPE_RESPONSE_MSG) {
     ResponseMessage rsp = ProtoBufHelper::unwrapMsg<ResponseMessage>(msg);
@@ -65,6 +66,7 @@ bool SmartOrder::isPriceExpire() {
 bool SmartOrder::sendNewLimitOrder(MarketUpdate &mkt) {
   outOrderId = CedarHelper::getOrderId();
   double limitPrice = calWeightPrice(mkt);
+
   OrderRequest req = orderRequest;
   req.set_response_address(respAddr);
   req.set_type(TYPE_LIMIT_ORDER_REQUEST);

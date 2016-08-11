@@ -1,13 +1,13 @@
 #include <iostream>
 #include "CedarHelper.h"
-#include "CedarLogging.h"
 #include "ProtoBufMsgHub.h"
 #include "Backtester.h"
+#include "IncludeOnlyInMain.h"
 
 int onMsg(MessageBase msg) {
   if (msg.type() == TYPE_MARKETUPDATE) {
     MarketUpdate mkt = ProtoBufHelper::unwrapMsg<MarketUpdate>(msg);
-    //LOG(INFO) << mkt.DebugString();
+    LOG(INFO) << mkt.DebugString();
   } if (msg.type() == TYPE_ORDER_REQUEST) {
     OrderRequest req = ProtoBufHelper::unwrapMsg<OrderRequest>(msg);
     LOG(INFO) << req.DebugString();
@@ -19,10 +19,8 @@ int onMsg(MessageBase msg) {
   return 0;
 }
 
-int main() {
-  GOOGLE_PROTOBUF_VERIFY_VERSION;
-  CedarLogging::init("Backtester");
-  CedarJsonConfig::getInstance().loadConfigFile("./config/Backtester.json");
+int main(int argc, char *argv[]) {
+  CedarHelper::cedarAppInit(argc, argv);
 
   Backtester bt;
   bt.registerCallback(std::bind(&onMsg, std::placeholders::_1));

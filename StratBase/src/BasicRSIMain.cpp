@@ -11,4 +11,3 @@ int main(int argc, char *argv[]) {
   LOG(INFO) << "init quiting procedures now!";
   google::protobuf::ShutdownProtobufLibrary();
 }
-

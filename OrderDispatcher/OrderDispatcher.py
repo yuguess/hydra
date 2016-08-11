@@ -4,6 +4,7 @@ import json
 import signal
 import sys
 import logging
+import datetime
 from datetime import datetime as dt
 sys.path.append('/home/yuguess/hydra/ProtoBufMsg/PythonCode')
 import ProtoBufMsg_pb2 as protoMsg
@@ -25,14 +26,12 @@ requestTypeDict = {
   "Limit":protoMsg.TYPE_LIMIT_ORDER_REQUEST,
   "Market":protoMsg.TYPE_MARKET_ORDER_REQUEST,
   "Cancel":protoMsg.TYPE_CANCEL_ORDER_REQUEST,
-  "Smart":protoMsg.TYPE_SMART_ORDER_REQUEST,
+  "SmartOrder":protoMsg.TYPE_SMART_ORDER_REQUEST,
   "FirstLevel":protoMsg.TYPE_FIRST_LEVEL_ORDER_REQUEST
 }
 
 def idGenerator():
-  global idCount
-  idCount = idCount + 1
-  return idCount
+  return datetime.datetime.now().strftime("%H:%M:%S.%f")
 
 def setOrderRequest(orderRequest, req):
   orderRequest.type = requestTypeDict[req["ExecutionType"]]

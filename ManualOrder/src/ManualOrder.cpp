@@ -1,6 +1,7 @@
 #include <iostream>
 #include "ManualOrder.h"
 #include <unistd.h>
+#include "EnumStringMap.h"
 
 ManualOrder::ManualOrder() {
   ProtoBufHelper::setupProtoBufMsgHub(msgHub);
@@ -23,7 +24,7 @@ ManualOrder::ManualOrder() {
       "name");
   CedarJsonConfig::getInstance().getStringArrayWithTag(addrs, "TradeServer",
       "address");
-  for (int i = 0; i < tnames.size(); i++) {
+  for (unsigned i = 0; i < tnames.size(); i++) {
     TradeServer tmp = {tnames[i], addrs[i]};
     tradeServers.push_back(tmp);
     LOG(INFO) << "TradeServer name:" << tnames[i] << "," << addrs[i];
@@ -91,7 +92,7 @@ int ManualOrder::queryDataRequest() {
   LOG(INFO) << req.DebugString();
   msgHub.pushMsg(sendAddr, ProtoBufHelper::wrapMsg(TYPE_DATAREQUEST, req));
 
-  std::string chan = code + "." + CedarHelper::exchangeTypeToString(xchg);
+  std::string chan = code + "." + EnumToString::toString(xchg);
   LOG(INFO) << "subscripe " << boardcastAddr;
   LOG(INFO) << "subscripe channel " << chan;
   msgHub.addSubscription(boardcastAddr, chan);
@@ -191,7 +192,7 @@ RequestType ManualOrder::queryOrdType() {
 
 double ManualOrder::queryPrice() {
   double value;
-  std::cout << std::endl << 
+  std::cout << std::endl <<
       "Price (only valid for certain order like limit): ";
   std::cin >> value;
   return value;
@@ -237,13 +238,14 @@ int ManualOrder::queryEnterOrder() {
       break;
 
     case TYPE_SMART_ORDER_REQUEST:
-      break;
-
     case TYPE_FIRST_LEVEL_ORDER_REQUEST:
       order.set_code(queryCode());
       order.set_exchange(queryExchange());
       order.set_buy_sell(querySide());
       order.set_trade_quantity(queryOrderQty());
+      break;
+
+    default:
       break;
   }
 

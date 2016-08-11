@@ -1,8 +1,8 @@
 #include "CedarHelper.h"
-#include "CedarLogging.h"
 #include "CedarStringHelper.h"
 #include "LogHelper.h"
 #include "CPlusPlusCode/ProtoBufMsg.pb.h"
+#include "IncludeOnlyInMain.h"
 #include <chrono>
 
 bool testLogHelper() {
