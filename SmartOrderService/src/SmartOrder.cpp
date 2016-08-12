@@ -1,17 +1,23 @@
 #include "SmartOrder.h"
 #include "CedarHelper.h"
+#include "MarketSpecHelper.h"
 
 SmartOrder::SmartOrder(OrderRequest &req, SmartOrderService *srvc):
   OrderReactor(req, srvc), state(Init) {
 
   respAddr = CedarHelper::getResponseAddr();
   leftQty = req.trade_quantity();
+  oneTick = MarketSpecHelper::getOneTick(req.code());
 }
 
 int SmartOrder::onMsg(MessageBase &msg) {
   if (msg.type() == TYPE_MARKETUPDATE) {
     MarketUpdate mkt = ProtoBufHelper::unwrapMsg<MarketUpdate>(msg);
+
     //TODO filter out invalid mkt update, ensure no mkt has 0 vol
+    if (!isValidMkt(mkt))
+      return 0;
+
     onMktUpdate(mkt);
   } else if (msg.type() == TYPE_RESPONSE_MSG) {
     ResponseMessage rsp = ProtoBufHelper::unwrapMsg<ResponseMessage>(msg);
@@ -19,6 +25,15 @@ int SmartOrder::onMsg(MessageBase &msg) {
   }
 
   return 0;
+}
+
+bool SmartOrder::isValidMkt(MarketUpdate &mkt) {
+  if (mkt.ask_volume(0) == 0 || mkt.bid_volume(0) == 0 ||
+    mkt.ask_price(0) == 0.0 || mkt.bid_price(0) == 0.0) {
+    return false;
+  }
+
+  return true;
 }
 
 int SmartOrder::onMktUpdate(MarketUpdate &mkt) {
@@ -156,49 +171,18 @@ double SmartOrder::calWeightPrice(MarketUpdate &mkt) {
   LOG(INFO) << "askVol " << askVol;
   LOG(INFO) << "weight " << weightPrice;
 
-  return roundToLadder(weightPrice, mkt);
+  return (orderRequest.buy_sell() == LONG_BUY) ?
+    roundUpLadder(weightPrice) : roundDownLadder(weightPrice);
 }
 
-double SmartOrder::roundToLadder(double price, MarketUpdate &mkt) {
-  double topAsk = mkt.ask_price(0);
-  double topBid = mkt.bid_price(0);
-  TradeDirection buySell = orderRequest.buy_sell();
-  std::string code = orderRequest.code();
-
-  if (price > topAsk) {
-    return (buySell == LONG_BUY) ? topAsk : roundDownAskLadder(price, mkt);
-  } else if (price < topBid) {
-    return (buySell == LONG_BUY) ? roundUpBidLadder(price, mkt) : topBid;
-  }
-
-  return (buySell == LONG_BUY) ? topAsk : topBid;
-  //return (buySell == LONG_BUY) ?
-  //    topBid + oneTickPrice(code) : topAsk - oneTickPrice(code);
+double SmartOrder::roundUpLadder(double price) {
+  int intPart = price / oneTick;
+  return static_cast<double>(intPart) * oneTick + oneTick;
 }
 
-double SmartOrder::roundUpBidLadder(double price, MarketUpdate &mkt) {
-  double roundPrice = mkt.bid_price(0);
-  int idx = 1;
-  while (idx < mkt.bid_price_size() && price < mkt.bid_price(idx)) {
-    roundPrice = mkt.bid_price(idx);
-    idx++;
-  }
-  return roundPrice;
-}
-
-double SmartOrder::roundDownAskLadder(double price, MarketUpdate &mkt) {
-  double roundPrice = mkt.ask_price(0);
-  int idx = 1;
-  while (idx < mkt.ask_price_size() && price > mkt.ask_price(idx)) {
-    roundPrice = mkt.ask_price(idx);
-    idx++;
-  }
-  return roundPrice;
-}
-
-double SmartOrder::oneTickPrice(std::string &code) {
-  //TODO fix this later
-  return 0.01;
+double SmartOrder::roundDownLadder(double price) {
+  int intPart = price / oneTick;
+  return static_cast<double>(intPart) * oneTick - oneTick;
 }
 
 double SmartOrder::avgBidPrice(MarketUpdate &mkt) {

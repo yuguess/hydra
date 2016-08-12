@@ -32,25 +32,24 @@ private:
 
   double calReferencePrice(MarketUpdate &);
   double calWeightPrice(MarketUpdate &);
-  int cancelOrder();
   double avgBidPrice(MarketUpdate&);
   double avgAskPrice(MarketUpdate&);
   int totalBidVol(MarketUpdate&);
   int totalAskVol(MarketUpdate&);
-  double roundToLadder(double, MarketUpdate&);
-  double roundDownAskLadder(double, MarketUpdate&);
-  double roundUpBidLadder(double, MarketUpdate&);
-  double oneTickPrice(std::string&);
   bool isOnlyOneInTopLadder(int);
   bool sendNewLimitOrder(MarketUpdate&);
+  int cancelOrder();
   bool isPriceExpire();
+  double roundUpLadder(double);
+  double roundDownLadder(double);
+  bool isValidMkt(MarketUpdate&);
 
   SmartOrderState state;
   double referencePrice;
   int leftQty;
   std::string outOrderId;
   std::string respAddr;
-
+  double oneTick;
   double lastOrderPrice;
   std::chrono::system_clock::time_point lastOrderTs;
 };

@@ -54,6 +54,19 @@ public:
     ss << sec;
     return ss.str();
   }
+
+  static void getConfigRoot(std::string filepath, Json::Value& root) {
+    std::ifstream config(filepath, std::ifstream::binary);
+    Json::Reader reader;
+    reader.parse(config, root, false);
+  }
+
+  static bool isStock(std::string code) {
+    if (code.size() == 6 && isdigit(code[0]))
+      return true;
+    return false;
+  }
+
 #ifdef __linux
   //this only get IPV4 addr, skip 127.0.0.1
   static std::string getResponseAddr() {
@@ -64,15 +77,7 @@ public:
       LOG(ERROR) << "can't get this machine IP address";
     return ipStr + ":" + pull;
   }
-#endif
 
-  static void getConfigRoot(std::string filepath, Json::Value& root) {
-    std::ifstream config(filepath, std::ifstream::binary);
-    Json::Reader reader;
-    reader.parse(config, root, false);
-  }
-
-#ifdef __linux
   static int blockSignalAndSuspend() {
     int sig = 0, s = 0;
     sigset_t sigSet;
@@ -106,12 +111,6 @@ public:
     return std::to_string(curTime.tv_sec) + std::to_string(curTime.tv_usec);
   }
 #endif
-
-  static bool isStock(std::string code) {
-    if (code.size() == 6 && isdigit(code[0]))
-      return true;
-    return false;
-  }
 
 private:
 
