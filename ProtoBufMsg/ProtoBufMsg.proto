@@ -28,7 +28,7 @@ message MarketUpdate {
   string symbol = 2;
   ExchangeType exchange = 3;
 
-  int32 status = 4;
+  uint32 batch_id = 4;
   //last trading day close pirce
   double pre_close_price = 5;
   //this trading day open price

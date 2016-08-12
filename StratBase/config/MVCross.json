@@ -15,15 +15,9 @@
     "TradeFront": "tcp://180.168.212.75:41205"
   },
 
-  "StratBase": {
-    //Backtest, LiveTrading
+  "Strategy": {
+    //Backtest, LiveTest, LiveTrading
     "Mode": "Backtest"
-  },
-
-  "MarketData": {
-    "Ticker":[
-      {"Code":"JD1604", "Adapter":"BasicFutures", "Arglist":"DCE"}
-    ],
   },
 
   "LiveTrading": {
@@ -35,22 +29,29 @@
     "AfternoonMarketClose": "15:00:00"
   },
 
-  "Backtest": {
-    //2 options, Day, Tick, tick precision is 0.001s,
-    "Precision": "Tick",
-    "BasicStock":{
-      "Level": "5",
-      "DataHomeDir": "/home/yuguess/StockData"
+  "Backtest":{
+    "Streams": ["IF", "IC", "500ETF"],
+    "IF": {
+      "Range": {"Start":"20110101", "End": "20141231"},
+      "Type": "StockAdapter",
+      "Code": "399905.SZ",
+      "Frequency": "5min",
+      "FileAddress": "/home/yuguess/ProcessFile/"
     },
-    "BasicFutures":{
-      "Level": "1"
+    "IC": {
+      "Range": {"Start":"20110101", "End": "20141231"},
+      "Type": "StockAdapter",
+      "Code": "399905.SZ",
+      "Frequency": "15min",
+      "FileAddress": "/home/yuguess/ProcessFile/"
     },
-    "StartDate": "20160301",
-    "Length": "3",
-    "BacktestEvent": [
-      {"StockOpen":"09:30:00", "RepeatFrequency":"3600 * 24 * 1000"},
-      {"FuturesOpen":"09:30:00", "RepeatFrequency":"3600 * 24 * 1000"}
-    ]
+    "500ETF": {
+      "Range": {"Start":"20110101", "End": "20141231"},
+      "Type": "StockAdapter",
+      "Code": "399905.SZ",
+      "Frequency": "Day",
+      "FileAddress": "/home/yuguess/ProcessFile/"
+    }
   },
 
   "MsgHub": {

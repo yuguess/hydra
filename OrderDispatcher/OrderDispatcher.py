@@ -39,6 +39,7 @@ def setOrderRequest(orderRequest, req):
   orderRequest.account = str(req["Account"])
   orderRequest.id = str(idGenerator())
   orderRequest.code = req["Code"]
+  orderRequest.bactch_id = req["BatchId"]
 
   if req["Qty"] >= 0:
     orderRequest.buy_sell = protoMsg.LONG_BUY

@@ -1,7 +1,12 @@
 {
+  "CedarLogger": {
+    "AppName": "SmartOrderService",  
+    "LogDir": "/home/yuguess/CedarLog/"
+  },
+
   "StockDataServer": {
-    "serverAddr": "192.168.1.102:15228",
-    "boardcastAddr": "192.168.1.102:15227"
+    "serverAddr": "192.168.0.61:15228",
+    "boardcastAddr": "192.168.0.61:15227"
   },
   "FuturesDataServer": {
     "serverAddr": "192.168.1.102:15228",
@@ -9,7 +14,7 @@
   },
 
   "TradeServer": [
-    {"name":"2001_Stock", "address":"192.168.1.102:15230"},
+    {"name":"2001_Stock", "address":"192.168.0.61:15230"},
     {"name":"2001_Futures", "address":"192.168.1.102:15230"}
   ],
 
