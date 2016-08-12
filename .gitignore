@@ -4,3 +4,5 @@
 CPlusPlusCode
 PythonCode
 *.con
+build
+*.pyc

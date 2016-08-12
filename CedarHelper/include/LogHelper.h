@@ -37,6 +37,7 @@ public:
     jMsg["limit_price"] = std::to_string(req.limit_price());
     jMsg["open_close"] = EnumToString::toString(req.open_close());
     jMsg["argument_list"] = req.argument_list();
+    jMsg["batch_id"] = req.batch_id();
 
     toLogFile(jMsg);
     return true;
@@ -48,7 +49,7 @@ private:
     builder.settings_["indentation"] = "";
     LOG(INFO) << LOG_TAG_HEADER
       << Json::writeString(builder, jMsg) << LOG_TAG_FOOTER;
-	return true;
+    return true;
   }
 };
 

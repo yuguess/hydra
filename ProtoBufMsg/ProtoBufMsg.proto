@@ -28,7 +28,7 @@ message MarketUpdate {
   string symbol = 2;
   ExchangeType exchange = 3;
 
-  uint32 batch_id = 4;
+  string status = 4;
   //last trading day close pirce
   double pre_close_price = 5;
   //this trading day open price
@@ -129,6 +129,8 @@ message OrderRequest {
   string cancel_order_id = 12;
   //this is for smart order, argument is seperate by ',', like "arg1,arg2,arg3"
   string argument_list = 13;
+  //
+  string batch_id = 14;
 }
 
 enum ResponseMsgType {
