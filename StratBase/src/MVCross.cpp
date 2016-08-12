@@ -8,8 +8,7 @@
 
 int main() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
-  CedarLogging::init("MVCross");
-  assert(TA_Initialize() == TA_SUCCESS);
+  //CedarLogging::init("MVCross");
   CedarJsonConfig::getInstance().loadConfigFile("./config/MVCross.json");
 
   StratTemplate mvCross;

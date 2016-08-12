@@ -3,10 +3,11 @@
 
 #include "CedarJsonConfig.h"
 #include "CedarHelper.h"
-#include "CedarLogging.h"
+#include "CedarLogger.h"
 #include "CPlusPlusCode/ProtoBufMsg.pb.h"
 #include "ProtoBufMsgHub.h"
 #include "CedarHelper.h"
+#include "IncludeOnlyInMain.h"
 
 class Tester {
 public:
@@ -152,7 +153,6 @@ public:
   }
 
   int testToMultiAccount() {
-
     return 0;
   }
 
@@ -160,6 +160,7 @@ public:
     //testcase1();
 
     LOG(INFO) << "all sent" << std::endl;
+    return 0;
   }
 
 private:
@@ -168,10 +169,8 @@ private:
   std::string respAddr;
 };
 
-int main() {
-  GOOGLE_PROTOBUF_VERIFY_VERSION;
-  CedarLogging::init("Testcase");
-  CedarJsonConfig::getInstance().loadConfigFile("./config/ManualOrder.json");
+int main(int argc, char *argv[]) {
+  CedarHelper::cedarAppInit(argc, argv);
 
   Tester tester;
   tester.run();
