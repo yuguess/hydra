@@ -2,6 +2,7 @@
 #define ORDER_REACTOR_H
 
 #include "CPlusPlusCode/ProtoBufMsg.pb.h"
+#include "CedarHelper.h"
 
 class SmartOrderService;
 
@@ -19,7 +20,9 @@ public:
 
 protected:
   OrderReactor(OrderRequest &req, SmartOrderService *srvc) :
-    orderRequest(req), service(srvc), recycleFlag(false) {}
+    orderRequest(req), service(srvc), recycleFlag(false) {
+    req.set_alg_order_id(CedarHelper::getOrderId());
+  }
 
   inline void setRecycle() {recycleFlag = true;}
 

@@ -53,5 +53,4 @@ private:
   double lastOrderPrice;
   std::chrono::system_clock::time_point lastOrderTs;
 };
-
 #endif
