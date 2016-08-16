@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import os
 import zmq
 import json
@@ -6,14 +7,9 @@ import sys
 import logging
 import datetime
 from datetime import datetime as dt
-sys.path.append('/home/yuguess/hydra/ProtoBufMsg/PythonCode')
+sys.path.append(os.environ['HOME'] + '/hydra/ProtoBufMsg/PythonCode')
 import ProtoBufMsg_pb2 as protoMsg
-
-########config goes below###############
-jsonFile = "./config/OrderDispatcher.json"
-localAddr = "192.168.0.66"
-idCount = 0
-#######################################
+import getopt
 
 posDirectionDict = {
   "Open" : protoMsg.OPEN_POSITION,
@@ -39,7 +35,7 @@ def setOrderRequest(orderRequest, req):
   orderRequest.account = str(req["Account"])
   orderRequest.id = str(idGenerator())
   orderRequest.code = req["Code"]
-  orderRequest.bactch_id = req["BatchId"]
+  orderRequest.batch_id = req["BatchId"]
 
   if req["Qty"] >= 0:
     orderRequest.buy_sell = protoMsg.LONG_BUY
@@ -64,9 +60,35 @@ def wrapMsg(msgType, obj):
   msgBase.msg = obj.SerializeToString()
   return msgBase.SerializeToString()
 
+def helpMsg():
+  print "parameter not recognized!"
+  print "OrderDispatcher.py -f /path/to/configFile"
+
 if __name__ == '__main__':
-  logFile = "logs/" + dt.now().strftime('%Y%m%d_%H%M%S') + '.log'
-  logger = logging.getLogger('OrderDispatcher')
+  jsonFile = ""
+  if (len(sys.argv) < 2):
+    helpMsg()
+    sys.exit(0)
+
+  try:
+    opts, args = getopt.getopt(sys.argv[1:], "f:", ["config="])
+  except getopt.GetoptError:
+    helpMsg()
+    sys.exit(2)
+
+  for opt, arg in opts:
+    if opt in ("-f", "--config"):
+      jsonFile = arg
+    else:
+      helpMsg()
+      sys.exit(2)
+
+  jsonConfig = json.load(file(jsonFile))
+  logPath = jsonConfig["CedarLogger"]["LogDir"]
+  logApp = jsonConfig["CedarLogger"]["AppName"]
+
+  logFile = logPath + logApp + "_" + dt.now().strftime('%Y%m%d_%H%M%S') + '.log'
+  logger = logging.getLogger(logApp)
   handler = logging.FileHandler(logFile)
   console = logging.StreamHandler()
   fmt = '%(levelname)s_%(asctime)s_%(filename)s:%(lineno)d]%(message)s'
@@ -79,8 +101,7 @@ if __name__ == '__main__':
 
   tradeServer = {}
 
-  jsonConfig = json.load(file(jsonFile))
-  pullAddr = "tcp://" + localAddr + ":" + jsonConfig["MsgHub"]["PullPort"]
+  pullAddr = "tcp://" + jsonConfig["BindAddress"]
   dispatcherServer = jsonConfig["TradeServer"]
 
   context = zmq.Context()
