@@ -54,7 +54,9 @@ int SmartOrderService::onMktUpdate(MarketUpdate &mkt, MessageBase &msg) {
 }
 
 int SmartOrderService::onOrderRequest(OrderRequest &req, MessageBase &msg) {
+  req.set_alg_order_id(CedarHelper::getOrderId());
   LOG(INFO) << "recv order request" << std::endl << req.DebugString();
+  
 
   std::shared_ptr<OrderReactor> reactor;
   if (req.type() == TYPE_SMART_ORDER_REQUEST) {
@@ -75,8 +77,6 @@ int SmartOrderService::onOrderRequest(OrderRequest &req, MessageBase &msg) {
   std::string key = req.code() + "." + EnumToString::toString(req.exchange());
   addReactorToMktDriver(key, reactor);
   subscribeTicker(req.code(), req.exchange());
-
-  LogHelper::logObject(req);
 
   return 0;
 }
