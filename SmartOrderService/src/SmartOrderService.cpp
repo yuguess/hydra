@@ -2,6 +2,7 @@
 #include "SmartOrder.h"
 #include "FirstLevelOrder.h"
 #include "EnumStringMap.h"
+#include "LogHelper.h"
 
 SmartOrderService::SmartOrderService() {
   ProtoBufHelper::setupProtoBufMsgHub(msgHub);
@@ -74,6 +75,8 @@ int SmartOrderService::onOrderRequest(OrderRequest &req, MessageBase &msg) {
   std::string key = req.code() + "." + EnumToString::toString(req.exchange());
   addReactorToMktDriver(key, reactor);
   subscribeTicker(req.code(), req.exchange());
+
+  LogHelper::logObject(req);
 
   return 0;
 }
