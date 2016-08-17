@@ -68,7 +68,6 @@ int Backtester::run() {
       LOG(INFO) << "finish stream " << top.streamName;
     }
   }
-
   //TimeSeriesData topMkt = pq.top();
   //boost::posix_time::ptime curTimestamp = toTimestamp(topMkt);
   //boost::posix_time::ptime topTimestamp = curTimestamp;

@@ -5,6 +5,7 @@ enum CedarMsgType {
   TYPE_MARKETUPDATE = 1;
   TYPE_ORDER_REQUEST = 2;
   TYPE_RESPONSE_MSG = 3;
+  TYPE_APP_STATUS_MSG = 4;
 }
 
 enum ExchangeType {
@@ -129,8 +130,11 @@ message OrderRequest {
   string cancel_order_id = 12;
   //this is for smart order, argument is seperate by ',', like "arg1,arg2,arg3"
   string argument_list = 13;
-  //
+
+  //batch id the is top level
   string batch_id = 14;
+  //
+  string alg_order_id= 15;
 }
 
 enum ResponseMsgType {
@@ -170,3 +174,11 @@ message ResponseMessage {
   //when our agent recv ts
   string recv_timestamp = 14;
 }
+//enum StatusMsgType {
+//  TYPE_SMART_ORDER = 0;
+//}
+//
+//message AppStatusMsg {
+//  StatusMsgType type = 0;
+//  //repeated Map
+//}

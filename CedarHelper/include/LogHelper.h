@@ -38,6 +38,7 @@ public:
     jMsg["open_close"] = EnumToString::toString(req.open_close());
     jMsg["argument_list"] = req.argument_list();
     jMsg["batch_id"] = req.batch_id();
+    jMsg["alg_order_id"] = req.alg_order_id();
 
     toLogFile(jMsg);
     return true;
