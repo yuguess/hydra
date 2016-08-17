@@ -7,6 +7,7 @@ FirstLevelOrder::FirstLevelOrder(OrderRequest &req,
 
   respAddr = CedarHelper::getResponseAddr();
   leftQty = req.trade_quantity();
+  LOG(INFO) << "leftQty " << leftQty;
 }
 
 int FirstLevelOrder::onMsg(MessageBase &msg) {
@@ -36,17 +37,16 @@ int FirstLevelOrder::onMsg(MessageBase &msg) {
       req.set_id(outOrderId);
       req.set_buy_sell(orderRequest.buy_sell());
 
-      if (orderRequest.buy_sell() == LONG_BUY) {
-        if (CedarHelper::isStock(req.code())) {
-          //round up for buying
-          leftQty /= stockMinimumQty;
-          leftQty = leftQty * stockMinimumQty + stockMinimumQty;
-        }
-      } else if (orderRequest.buy_sell() == SHORT_SELL) {
+      if (orderRequest.buy_sell() == LONG_BUY && 
+          CedarHelper::isStock(req.code())) {
+          leftQty = CedarHelper::stockQtyRoundUp(leftQty); 
+      } else if (orderRequest.buy_sell() == SHORT_SELL &&
+          CedarHelper::isStock(req.code())) {
+
         //round  down for selling
         if (CedarHelper::isStock(req.code())) {
-          leftQty /= stockMinimumQty;
-          leftQty *= stockMinimumQty;
+          
+          leftQty = CedarHelper::stockQtyRoundDown(leftQty); 
           if (leftQty == 0) {
             LOG(INFO) << "sell again with qty < 100, just recycle";
             setRecycle();
@@ -54,6 +54,7 @@ int FirstLevelOrder::onMsg(MessageBase &msg) {
           }
         }
       }
+
       req.set_trade_quantity(leftQty);
 
       //usually caused by reaching highlimit or lowlimit

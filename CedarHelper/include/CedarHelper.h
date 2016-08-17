@@ -67,6 +67,22 @@ public:
     return false;
   }
 
+  static int stockQtyRoundUp(int qty) {
+    if (qty % 100 == 0)
+      return qty;
+
+    int integer = ((double)qty / stockMinimumQty);
+    return integer * stockMinimumQty;
+  }
+
+  static int stockQtyRoundDown(int qty) {
+    if (qty % 100 == 0)
+      return qty;
+
+    int integer = ((double)qty / stockMinimumQty);
+    return integer * stockMinimumQty + stockMinimumQty;
+  }
+
 #ifdef __linux
   //this only get IPV4 addr, skip 127.0.0.1
   static std::string getResponseAddr() {
@@ -113,6 +129,7 @@ public:
 #endif
 
 private:
+  const static int stockMinimumQty = 100;
 
 #ifdef __linux
   static int getHostIP(std::string &ip) {

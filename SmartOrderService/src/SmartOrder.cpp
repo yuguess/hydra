@@ -87,6 +87,17 @@ bool SmartOrder::sendNewLimitOrder(MarketUpdate &mkt) {
   req.set_type(TYPE_LIMIT_ORDER_REQUEST);
   req.set_limit_price(limitPrice);
   req.set_id(outOrderId);
+
+  if (orderRequest.buy_sell() == LONG_BUY && 
+    CedarHelper::isStock(req.code())) {
+
+    leftQty = CedarHelper::stockQtyRoundUp(leftQty); 
+  } else if (orderRequest.buy_sell() == SHORT_SELL &&
+    CedarHelper::isStock(req.code())) {
+
+    leftQty = CedarHelper::stockQtyRoundDown(leftQty); 
+  }
+
   req.set_trade_quantity(leftQty);
 
   state = Sending;
