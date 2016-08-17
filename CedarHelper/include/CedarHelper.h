@@ -72,7 +72,7 @@ public:
       return qty;
 
     int integer = ((double)qty / stockMinimumQty);
-    return integer * stockMinimumQty;
+    return integer * stockMinimumQty + stockMinimumQty;
   }
 
   static int stockQtyRoundDown(int qty) {
@@ -80,7 +80,7 @@ public:
       return qty;
 
     int integer = ((double)qty / stockMinimumQty);
-    return integer * stockMinimumQty + stockMinimumQty;
+    return integer * stockMinimumQty;
   }
 
 #ifdef __linux
