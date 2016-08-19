@@ -1,12 +1,45 @@
-#ifndef CEDAR_TIME_HELPER_H 
-#define CEDAR_TIME_HELPER_H 
+#ifndef CEDAR_TIME_HELPER_H
+#define CEDAR_TIME_HELPER_H
 
+#include <iostream>
 #include <fstream>
+#include <iomanip>
+#include <ctime>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 class CedarTimeHelper {
-
 public:
+
+  //seconds since epoch
+  static std::string timestampString() {
+    time_t sec;
+    time(&sec);
+    std::stringstream ss;
+    ss << sec;
+    return ss.str();
+  }
+
+  static std::string timestampFormatString(std::string fmt) {
+    char buf[128];
+    auto t = std::time(nullptr);
+    auto tm = *std::localtime(&t);
+    strftime(buf, 128, fmt.c_str(), &tm);
+    return std::string(buf);
+  }
+
+  //return current local time HHMMSSmmm
+  static std::string getCurTimeStamp(){
+    char currentTime[10];
+    struct timeval curTime;
+    gettimeofday(&curTime, NULL);
+    int milli = curTime.tv_usec / 1000;
+    char buffer [10];
+    strftime(buffer, sizeof(buffer), "%H%M%S", localtime(&curTime.tv_sec));
+    sprintf(currentTime, "%s%d", buffer, milli);
+
+    return currentTime;
+  }
+
   static boost::posix_time::ptime strToPTime(std::string fmt,
       std::string &timeStr) {
     static std::stringstream ss;

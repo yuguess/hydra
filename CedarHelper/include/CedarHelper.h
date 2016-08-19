@@ -47,14 +47,6 @@ public:
     return 0;
   }
 
-  static std::string timestampString() {
-    time_t sec;
-    time(&sec);
-    std::stringstream ss;
-    ss << sec;
-    return ss.str();
-  }
-
   static void getConfigRoot(std::string filepath, Json::Value& root) {
     std::ifstream config(filepath, std::ifstream::binary);
     Json::Reader reader;
@@ -90,19 +82,6 @@ public:
     if ((s = sigwait(&sigSet, &sig)) != 0)
       perror("sigwait error\n");
     return 0;
-  }
-
-  //return current local time HHMMSSmmm
-  static std::string getCurTimeStamp(){
-    char currentTime[10];
-    struct timeval curTime;
-    gettimeofday(&curTime, NULL);
-    int milli = curTime.tv_usec / 1000;
-    char buffer [10];
-    strftime(buffer, sizeof(buffer), "%H%M%S", localtime(&curTime.tv_sec));
-    sprintf(currentTime, "%s%d", buffer, milli);
-
-    return currentTime;
   }
 
   static std::string getOrderId() {

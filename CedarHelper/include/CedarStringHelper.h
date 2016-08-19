@@ -3,7 +3,6 @@
 
 #include <bitset>
 
-
 template<typename C>
 int cedarSplit(std::string const& s, char const* d, C& ret) {
   C output;
@@ -32,6 +31,8 @@ int cedarSplit(std::string const& s, char const* d, C& ret) {
   if (in_token)
     output.push_back(typename C::value_type(beg, s.end()));
   output.swap(ret);
+
+  return 0;
 }
 
 #endif

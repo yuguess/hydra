@@ -5,7 +5,7 @@ class Logger:
     self.logger = logging.getLogger(Program)
     self.logger.setLevel(logging.DEBUG)
 
-    file = "../bin/log/" + Program + ".log"
+    file = "../log/" + Program + ".log"
     fh = logging.FileHandler(file)
     fh.setLevel(logging.DEBUG)
 
@@ -18,6 +18,3 @@ class Logger:
 
     self.logger.addHandler(fh)
     self.logger.addHandler(ch)
-
-# loggertest = Logger("loggingtest")
-# loggertest.logger.info('test')
