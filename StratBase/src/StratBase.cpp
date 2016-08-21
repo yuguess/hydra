@@ -1,22 +1,33 @@
 #include "StratBase.h"
+#include "CedarHelper.h"
+#include "EnumStringMap.h"
 
 int StratBase::run() {
+  std::string modeStr;
   //Backtest, Livetest, LiveTrading
-  CedarJsonConfig::getInstance().getStringByPath("Strategy.Mode", mode);
-  if (mode == "Backtest") {
-    //setup backtester
-    backtester.registerCallback(std::bind(&StratBase::onMsgWrapper,
-          this, std::placeholders::_1));
-    backtester.run();
+  CedarJsonConfig::getInstance().getStringByPath("Strategy.Mode", modeStr);
+  mode = StringToEnum::toStrategyMode(modeStr);
 
-  } else if (mode == "LiveTrading") {
-    //setup msghub and blockon
-    ProtoBufHelper::setupProtoBufMsgHub(msgHub);
-    msgHub.registerCallback(std::bind(&StratBase::onMsgWrapper,
+  switch (mode) {
+    case BACKTEST: {
+      //setup backtester
+      backtester.registerCallback(std::bind(&StratBase::onMsgWrapper,
           this, std::placeholders::_1));
+      backtester.run();
+      break;
+    }
 
-  } else {
-    LOG(FATAL) << "Invalid mode " << mode << "check your config please";
+    case LIVETEST:
+    case LIVE_TRADING: {
+      ProtoBufHelper::setupProtoBufMsgHub(msgHub);
+      msgHub.registerCallback(std::bind(&StratBase::onMsgWrapper,
+            this, std::placeholders::_1));
+
+      CedarHelper::blockSignalAndSuspend();
+    }
+
+    default:
+      LOG(FATAL) << "Invalid mode " << mode << "check your config please";
   }
 
   return 0;
@@ -24,4 +35,5 @@ int StratBase::run() {
 
 int StratBase::onMsgWrapper(MessageBase msgBase) {
   onMsg(msgBase);
+  return 0;
 }

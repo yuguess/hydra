@@ -3,6 +3,7 @@
 #include "LogHelper.h"
 #include "CPlusPlusCode/ProtoBufMsg.pb.h"
 #include "IncludeOnlyInMain.h"
+#include "CedarTimeHelper.h"
 #include <chrono>
 
 bool testLogHelper() {
@@ -14,14 +15,14 @@ bool testLogHelper() {
   rsp.set_error_code(0);
   rsp.set_error_msg("test error msg");
 
-  LogHelper::logObject(rsp);
 
+  LogHelper::logObject(rsp);
   return true;
 }
 
 bool testCedarHelper() {
-  LOG(INFO) << CedarHelper::timestampString();
-  LOG(INFO) << CedarHelper::getCurTimeStamp();
+  LOG(INFO) << CedarTimeHelper::timestampString();
+  LOG(INFO) << CedarTimeHelper::getCurTimeStamp();
   return true;
 }
 
@@ -45,13 +46,13 @@ int main(int argc, char *argv[]) {
   LOG(WARNING) << "WARNING";
   LOG(ERROR) << "ERROR";
 
-  //std::vector<std::string> res;
-  //std::string testStr = "    asdf,asdf,asdf123sdf, asdf,123,   123, sss";
-  //split(testStr, ',', res);
-  //for (unsigned i = 0; i < res.size(); i++)
-  //LOG(INFO) << res[i];
 
-  //testLogHelper();
+  LOG(INFO) << CedarTimeHelper::timestampFormatString("%Y%m%d%H%M%S");
+
+  testLogHelper();
+  CedarHelper::blockSignalAndSuspend();
+  LOG(INFO) << "ready to exit";
+
   //testCedarHelper();
   //testOrderId();
   //testIsStock();

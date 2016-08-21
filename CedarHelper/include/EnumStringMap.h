@@ -4,6 +4,7 @@
 #include <iostream>
 #include <map>
 #include "CPlusPlusCode/ProtoBufMsg.pb.h"
+#include "CedarLogger.h"
 
 class StringToEnum {
 public:
@@ -20,6 +21,18 @@ public:
     if (exchangeStringToEnum.find(exchange) == exchangeStringToEnum.end())
       LOG(FATAL) << " Invalid exchange string " << exchange;
     return exchangeStringToEnum[exchange];
+  }
+
+  static StrategyMode toStrategyMode(std::string &strategyModeStr) {
+    std::map<std::string, StrategyMode> stratToEnum = {
+      {"Backtest", BACKTEST},
+      {"Livetest", LIVETEST},
+      {"LiveTrading", LIVE_TRADING},
+    };
+
+    if (stratToEnum.find(strategyModeStr) == stratToEnum.end())
+      LOG(FATAL) << " Invalid strategyMode string " << strategyModeStr;
+    return stratToEnum[strategyModeStr];
   }
 };
 

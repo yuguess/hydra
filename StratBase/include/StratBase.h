@@ -5,20 +5,29 @@
 #include "CPlusPlusCode/ProtoBufMsg.pb.h"
 #include "ProtoBufMsgHub.h"
 #include "Backtester.h"
+#include "PersistentState.h"
 
 class StratBase {
 public:
+  virtual bool onCreate() = 0;
   virtual int onMsg(MessageBase&) = 0;
+  virtual bool onExit() = 0;
 
   template<typename T>
   int sendRequest(CedarMsgType type, T &obj) {
-    if (mode == "Backtest" || mode == "LiveTest") {
-      //goes to backtester
-      //backtester.sendRequest();
-    } else if (mode == "LiveTrading") {
-      //send through orderAgent
-    } else {
-      LOG(FATAL) << "Invalid mode " << mode << "check your config please";
+    switch (mode) {
+      case BACKTEST:
+        LOG(INFO) << "order to backtester";
+        //goes to backtester
+        //backtester.sendRequest();
+      case LIVETEST:
+        LOG(INFO) << "order to virtual matching engine";
+        //send through orderAgent
+      case LIVE_TRADING:
+        LOG(INFO) << "order to backtester";
+       //send through orderAgent
+      default:
+        LOG(FATAL) << "Invalid Strategy Mode " << mode;
     }
 
     return 0;
@@ -26,9 +35,15 @@ public:
 
   int run();
 
+protected:
+  inline StrategyMode getStrategyMode() const {
+    return mode;
+  }
+
 private:
   int onMsgWrapper(MessageBase);
-  std::string mode;
+
+  StrategyMode mode;
   ProtoBufMsgHub msgHub;
   Backtester backtester;
 };

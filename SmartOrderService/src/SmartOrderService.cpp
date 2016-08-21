@@ -53,7 +53,7 @@ int SmartOrderService::onMktUpdate(MarketUpdate &mkt, MessageBase &msg) {
   return 0;
 }
 
-int SmartOrderService::onOrderRequest(OrderRequest &req, MessageBase &msg) {
+int SmartOrderService::onOrderRequest(OrderRequest &req) {
   LOG(INFO) << "recv order request" << std::endl << req.DebugString();
 
   std::shared_ptr<OrderReactor> reactor;

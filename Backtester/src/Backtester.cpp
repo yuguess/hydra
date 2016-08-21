@@ -28,8 +28,6 @@ int Backtester::run() {
   //CedarJsonConfig::getInstance().getJsonValueByPath("Backtest.IF", val);
   //LOG(INFO) << val["Type"];
 
-  //LOG(INFO) << ;
-
   //  std::string level;
   //  CedarJsonConfig::getInstance().getStringByPath(
   //       adapterTypes[i] + ".Level", level);
@@ -68,6 +66,7 @@ int Backtester::run() {
       LOG(INFO) << "finish stream " << top.streamName;
     }
   }
+
   //TimeSeriesData topMkt = pq.top();
   //boost::posix_time::ptime curTimestamp = toTimestamp(topMkt);
   //boost::posix_time::ptime topTimestamp = curTimestamp;
@@ -115,10 +114,10 @@ int Backtester::run() {
   return 0;
 }
 
-int Backtester::sendRequest(OrderRequest &req) {
+int Backtester::onRequest(OrderRequest &req) {
   if (orderbooks.find(req.code()) == orderbooks.end()) {
     LOG(FATAL) << " send an invalid order, code " << req.code()
-              << " does not have order book ";
+              << " is not in order book ";
     return -1;
   }
 

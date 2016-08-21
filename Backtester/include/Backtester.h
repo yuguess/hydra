@@ -14,7 +14,7 @@ class Backtester {
 
 public:
   int run();
-  int sendRequest(OrderRequest &req);
+  int onRequest(OrderRequest &req);
 
   //register callback
   int registerCallback(ProtoBufMsgHub::MsgCallback callback) {

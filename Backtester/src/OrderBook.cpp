@@ -62,6 +62,8 @@ int OrderBook::sendResp(OrderRequest &tradeOrder) {
   } catch (...) {
     LOG(ERROR) << "Msghub callback function error !";
   }
+
+  return 0;
 }
 
 int OrderBook::screenshotUpdate(MarketUpdate &mktUpdt) {

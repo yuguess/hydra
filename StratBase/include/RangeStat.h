@@ -1,68 +1,88 @@
 #ifndef RANGE_STAT_H
 #define RANGE_STAT_H
 
+#include <algorithm>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include "Backtester.h"
+#include "CedarTimeHelper.h"
+
+namespace pt = boost::posix_time;
 
 struct RangeStatResult {
   double open, high, low, close;
 };
 
+struct TimeInterval {
+  pt::ptime start;
+  pt::ptime end;
+};
+
 class RangeStat {
 public:
-  RangeStat(int rangeSeconds) {
+  RangeStat(int rangeSeconds, std::string startTime, std::string endTime) :
+    marketOpen(CedarTimeHelper::strToPTime("%H:%M:%S", startTime)),
+    marketClose(CedarTimeHelper::strToPTime("%H:%M:%S", endTime)),
+    rangePeriod(pt::seconds(rangeSeconds)) {
 
+    curTimePeriod.start = marketOpen;
+    curTimePeriod.end = marketOpen + rangePeriod;
+
+    rangeStat.open = UNINITIALIZE;
+    rangeStat.low = INT_MAX;
+    rangeStat.high = INT_MIN;
   }
 
-  //rng in seconds
-  //int init(int rng) {
-  //  rangePeriod = boost::posix_time::seconds(rng);
-  //  resetRangeStat();
-  //}
+  bool onTickUpdate(MarketUpdate &mkt, RangeStatResult &res) {
+    std::string tsStr = mkt.exchange_timestamp();
+    pt::ptime ts = CedarTimeHelper::strToPTime("%H%M%S%F", tsStr);
 
-  int onTickUpdate(MarketUpdate &mkt) {
-    //static boost::posix_time::ptime startingTime = Backtester::toTimestamp(mkt);
+    if (ts < marketOpen || ts > marketClose)
+      return false;
 
-    //boost::posix_time::ptime curSt = Backtester::toTimestamp(mkt);
-    //boost::posix_time::time_duration diff;
-    //if (curSt >= startingTime)
-    //  diff = curSt - startingTime;
-    //else {
-    //  LOG(ERROR) << "Recv 2 tick timestamp run backward !";
-    //  return -1;
-    //}
+    LOG(INFO) << "range start " << curTimePeriod.start;
+    LOG(INFO) << "range end " << curTimePeriod.end;
 
-    //if (diff > rangePeriod) {
-    //  RangeStatData rng({open, high, low, close});
+    if (ts >= curTimePeriod.start && ts < curTimePeriod.end) {
+      if (rangeStat.open == UNINITIALIZE)
+        rangeStat.open = mkt.last_price();
 
-    //  rngCallback(rng);
+      rangeStat.close = mkt.last_price();
+      rangeStat.low = std::min(rangeStat.low, mkt.last_price());
+      rangeStat.high = std::max(rangeStat.high, mkt.last_price());
 
-    //  resetRangeStat();
-    //  open = mkt.last_price();
-    //  close = mkt.last_price();
-    //  high = std::max(high, mkt.last_price());
-    //  low = std::min(low, mkt.last_price());
-    //  startingTime = Backtester::toTimestamp(mkt);
-    //} else {
-    //  close = mkt.last_price();
-    //  high = std::max(high, mkt.last_price());
-    //  low = std::min(low, mkt.last_price());
-    //}
+      return false;
+    } else if (ts >= curTimePeriod.end)  {
 
-    return 0;
-  }
+      do  {
+        curTimePeriod.start += rangePeriod;
+        curTimePeriod.end += rangePeriod;
+        if (curTimePeriod.start >= marketClose) {
+          curTimePeriod.start = marketOpen;
+          curTimePeriod.end = marketOpen + rangePeriod;
+        }
+      } while (ts > curTimePeriod.end);
 
-  int resetRangeStat() {
-    open = 0;
-    close = 0;
-    high = 0;
-    low = INT_MAX;
-    return 0;
+      res = rangeStat;
+
+      rangeStat.open = mkt.last_price();
+      rangeStat.high = mkt.last_price();
+      rangeStat.low = mkt.last_price();
+      rangeStat.close = mkt.last_price();
+
+      return true;
+    }
+
+    return false;
   }
 
 private:
-  boost::posix_time::time_duration rangePeriod;
-  double open, close, high, low;
+  const static int UNINITIALIZE = -1;
+
+  RangeStatResult rangeStat;
+  TimeInterval curTimePeriod;
+  pt::ptime marketOpen;
+  pt::ptime marketClose;
+  pt::time_duration rangePeriod;
 };
 
 #endif

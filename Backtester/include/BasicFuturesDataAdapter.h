@@ -116,6 +116,10 @@ private:
     mkt.add_ask_price(std::stof(args[11]));
     mkt.add_ask_volume(std::stoi(args[12]));
 
+    //args[8] is like hh:mm:ss, args[9] is like 500 or 0 milliseconds
+    mkt.set_exchange_timestamp(args[8].substr(0, 2) +
+      args[8].substr(3, 2) + args[8].substr(6, 2) + "." + args[9] + "000");
+
     std::string tsStr = dateStr + " " + args[8];
     tsData.ts = CedarTimeHelper::strToPTime("%Y%m%d %H:%M:%S", tsStr) +
       pt::milliseconds(std::stoi(args[9]));

@@ -17,7 +17,7 @@ namespace fs = boost::filesystem;
 
 class PersistentState {
 public:
-  static bool load(Json::Value &val) {
+  static bool load(Json::Value &jsonState) {
     std::string dir, app;
     CedarJsonConfig::getInstance().getStringByPath("PersistentState.Dir", dir);
     CedarJsonConfig::getInstance().getStringByPath("CedarLogger.AppName", app);
@@ -29,14 +29,14 @@ public:
 
       std::vector<std::string> res;
       CedarHelper::stringSplit(stateStr, '_', res);
-      //fmt should be like XXX_TIMESTAMP
+      //fmt should be like AppName_yyyymmddHHMMSS
       if (res.size() != 2) {
         LOG(FATAL) << "try to recover state from invalid json file"<< stateStr;
       }
 
       std::string ts = res[1];
       latestTS = std::max(latestTS,
-          CedarTimeHelper::strToPTime("%Y%m%d%H%M%S", ts));
+        CedarTimeHelper::strToPTime("%Y%m%d%H%M%S", ts));
     }
 
     std::string latestJson = dir + app + "_" +
@@ -44,7 +44,7 @@ public:
 
     std::ifstream fileStream(latestJson, std::ifstream::binary);
     Json::Reader reader;
-    if (!reader.parse(fileStream, jsonResult)) {
+    if (!reader.parse(fileStream, jsonState)) {
       LOG(FATAL) << "All state file must have app_YYYYmmddHHMMSS format"
         << "Please check your path " << dir << "Load config file "
         << latestJson << " error";
@@ -53,7 +53,7 @@ public:
     return true;
   }
 
-  static bool save(Json::Value &val) {
+  static bool save(Json::Value &jsonState) {
     std::string app, statePath;
     CedarJsonConfig::getInstance().getStringByPath("CedarLogger.AppName", app);
     CedarJsonConfig::getInstance().getStringByPath("PersistentState.Dir",

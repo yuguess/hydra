@@ -16,7 +16,7 @@ private:
   int onMsg(MessageBase msg);
   int addReactorToMktDriver(std::string&, std::shared_ptr<OrderReactor>&);
   int onMktUpdate(MarketUpdate&, MessageBase&);
-  int onOrderRequest(OrderRequest&, MessageBase&);
+  int onOrderRequest(OrderRequest&);
   int onResponseMsg(ResponseMessage&, MessageBase&);
 
   std::string stkDataAddr;

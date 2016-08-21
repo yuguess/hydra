@@ -13,4 +13,4 @@ set(PROTOBUF ../ProtoBufMsg/CPlusPlusCode/ProtoBufMsg.pb.cc)
 
 LINK_DIRECTORIES(../../CedarLib)
 add_executable(CedarHelper src/Main.cpp ${PROTOBUF})
-TARGET_LINK_LIBRARIES(CedarHelper zmq thosttraderapi jsoncpp protobuf pthread)
+TARGET_LINK_LIBRARIES(CedarHelper zmq thosttraderapi jsoncpp protobuf)

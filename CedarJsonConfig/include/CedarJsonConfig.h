@@ -125,9 +125,6 @@ public:
 private:
   Json::Value root;
   Json::FastWriter fastWriter;
-  //const static int BUFFER_MAX = 125536;
-  //rapidjson::Document doc;
-  //std::string filePath;
 };
 
 #endif
