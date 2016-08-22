@@ -181,9 +181,14 @@ enum StrategyMode {
   LIVE_TRADING = 2;
 }
 
+enum AppStatusMsgType {
+  APP_STATUS_MSG = 0;
+}
+
 message AppStatusMsg {
-  string batch_id = 1;
-  string alg_order_id = 2;
-  repeated string keys = 3;
-  repeated string values = 4;
+  AppStatusMsgType type = 1;
+  string batch_id = 2;
+  string alg_order_id = 3;
+  repeated string keys = 4;
+  repeated string values = 5;
 }

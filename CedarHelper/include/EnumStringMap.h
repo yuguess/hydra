@@ -115,5 +115,15 @@ public:
     return posDirToString[posDir];
   }
 
+  static std::string toString(AppStatusMsgType statusMsgType) {
+    static std::map<AppStatusMsgType, std::string> statusToString = {
+      {APP_STATUS_MSG, "APP_STATUS_MSG"},
+    };
+
+    if (statusToString.find(statusMsgType) == statusToString.end())
+      LOG(FATAL) << " Invalid statusMsgType " << statusMsgType;
+    return statusToString[statusMsgType];
+  }
+
 };
 #endif

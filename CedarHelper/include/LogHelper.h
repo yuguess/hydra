@@ -46,6 +46,7 @@ public:
 
   static bool logObject(AppStatusMsg &appMsg) {
     Json::Value jMsg;
+    jMsg["type"] = EnumToString::toString(appMsg.type());
     jMsg["batch_id"] = appMsg.batch_id();
     jMsg["alg_order_id"] = appMsg.alg_order_id();
 

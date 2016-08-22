@@ -27,6 +27,7 @@ protected:
 
   bool logStatusInfo(MarketUpdate &mkt) {
     AppStatusMsg statusMsg;
+    statusMsg.set_type(APP_STATUS_MSG);
     statusMsg.set_batch_id(orderRequest.batch_id());
     statusMsg.set_alg_order_id(orderRequest.alg_order_id());
     statusMsg.add_keys("ReferencePrice");
