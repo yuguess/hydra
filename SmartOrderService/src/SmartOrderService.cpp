@@ -55,6 +55,7 @@ int SmartOrderService::onMktUpdate(MarketUpdate &mkt, MessageBase &msg) {
 
 int SmartOrderService::onOrderRequest(OrderRequest &req) {
   LOG(INFO) << "recv order request" << std::endl << req.DebugString();
+  req.set_alg_order_id(CedarHelper::getOrderId());
 
   std::shared_ptr<OrderReactor> reactor;
   if (req.type() == TYPE_SMART_ORDER_REQUEST) {

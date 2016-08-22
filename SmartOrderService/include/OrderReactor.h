@@ -3,6 +3,7 @@
 
 #include "CPlusPlusCode/ProtoBufMsg.pb.h"
 #include "CedarHelper.h"
+#include "LogHelper.h"
 
 class SmartOrderService;
 
@@ -32,6 +33,7 @@ protected:
     statusMsg.add_values(
         std::to_string(0.5 * mkt.bid_price(0) + 0.5 * mkt.ask_price(0)));
 
+    LogHelper::logObject(statusMsg);
     return true;
   }
 
