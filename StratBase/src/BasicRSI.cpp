@@ -21,3 +21,12 @@ int BasicRSI::onMsg(MessageBase &msg) {
   //check stop profit/loss on every tick
   return 0;
 }
+
+bool BasicRSI::saveState(Json::Value&) {
+  return true;
+}
+
+bool BasicRSI::restoreState(Json::Value&) {
+  return true;
+}
+

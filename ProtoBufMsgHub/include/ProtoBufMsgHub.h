@@ -16,17 +16,20 @@
 class ProtoBufMsgHub {
 
 public:
-  ProtoBufMsgHub() : closeFlag(true) {
-    //Logger::InitLogger(LOGGERTYPE::INFRA, LOGGEROUT::TO_FILE);
+  ProtoBufMsgHub() : zmqCtx(NULL), pubSock(NULL),
+    subSock(NULL), pullSock(NULL), closeFlag(true) {
   }
 
   ~ProtoBufMsgHub() {
     closeFlag = false;
-
-    zmq_close(pubSock);
-    zmq_close(subSock);
-    zmq_close(pullSock);
-    zmq_ctx_destroy(zmqCtx);
+    if (pubSock != NULL)
+      zmq_close(pubSock);
+    if (subSock != NULL)
+      zmq_close(subSock);
+    if (pullSock != NULL)
+      zmq_close(pullSock);
+    if (zmqCtx != NULL)
+      zmq_ctx_destroy(zmqCtx);
 
     for (auto it = pullerAddrs.begin(); it != pullerAddrs.end(); it++)
       zmq_close(it->second.get());
@@ -76,7 +79,7 @@ public:
         != str.size()) {
       //if (errno == EAGAIN)
       //  LOG(ERROR) << "zmq_send EAGAIN" << std::endl;
-       LOG(ERROR) << std::string(zmq_strerror(errno)) << std::endl;
+      LOG(ERROR) << std::string(zmq_strerror(errno)) << std::endl;
       return -1;
     }
     return 0;

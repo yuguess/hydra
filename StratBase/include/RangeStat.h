@@ -39,8 +39,8 @@ public:
     if (ts < marketOpen || ts > marketClose)
       return false;
 
-    LOG(INFO) << "range start " << curTimePeriod.start;
-    LOG(INFO) << "range end " << curTimePeriod.end;
+    //LOG(INFO) << "range start " << curTimePeriod.start;
+    //LOG(INFO) << "range end " << curTimePeriod.end;
 
     if (ts >= curTimePeriod.start && ts < curTimePeriod.end) {
       if (rangeStat.open == UNINITIALIZE)
@@ -53,6 +53,9 @@ public:
       return false;
     } else if (ts >= curTimePeriod.end)  {
 
+      LOG(INFO) << "range begin " << curTimePeriod.start;
+      LOG(INFO) << "range end" << curTimePeriod.end;
+
       do  {
         curTimePeriod.start += rangePeriod;
         curTimePeriod.end += rangePeriod;
@@ -60,7 +63,7 @@ public:
           curTimePeriod.start = marketOpen;
           curTimePeriod.end = marketOpen + rangePeriod;
         }
-      } while (ts > curTimePeriod.end);
+      } while (ts > curTimePeriod.end && ts < marketClose);
 
       res = rangeStat;
 

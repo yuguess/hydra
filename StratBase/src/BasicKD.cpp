@@ -3,19 +3,19 @@
 #include "ProtoBufMsgHub.h"
 #include "BasicKD.h"
 
-BasicKD::BasicKD() : fiveMinStat(10, "09:15:00", "15:00:00") {
+BasicKD::BasicKD() : fiveMinStat(300, "09:15:00", "15:00:00") {
 }
 
 int BasicKD::onMsg(MessageBase &msg) {
   if (msg.type() == TYPE_MARKETUPDATE) {
     RangeStatResult rangeStat;
     MarketUpdate mkt = ProtoBufHelper::unwrapMsg<MarketUpdate>(msg);
-    LOG(INFO) << mkt.DebugString();
-    getchar();
+    //getchar();
     if (!fiveMinStat.onTickUpdate(mkt, rangeStat)) {
       return 0;
     }
 
+    LOG(INFO) << mkt.DebugString();
     LOG(INFO) << "open " << rangeStat.open;
     LOG(INFO) << "high " << rangeStat.high;
     LOG(INFO) << "low " << rangeStat.low;

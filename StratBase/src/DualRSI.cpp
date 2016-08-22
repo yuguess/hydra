@@ -17,3 +17,11 @@ int DualRSI::onMsg(MessageBase &msg) {
 
   return 0;
 }
+
+bool DualRSI::saveState(Json::Value &jsonState) {
+  return true;
+}
+
+bool DualRSI::restoreState(Json::Value &jsonState) {
+  return true;
+}

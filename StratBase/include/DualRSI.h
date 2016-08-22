@@ -8,6 +8,10 @@ public:
   DualRSI() {};
   virtual ~DualRSI() {};
   int onMsg(MessageBase&);
+
+private:
+  bool saveState(Json::Value&);
+  bool restoreState(Json::Value&);
 };
 
 #endif
