@@ -20,9 +20,7 @@ public:
 
 protected:
   OrderReactor(OrderRequest &req, SmartOrderService *srvc) :
-    orderRequest(req), service(srvc), recycleFlag(false) {
-    orderRequest.set_alg_order_id(CedarHelper::getOrderId());
-  }
+    orderRequest(req), service(srvc), recycleFlag(false) {}
 
   inline void setRecycle() {recycleFlag = true;}
 

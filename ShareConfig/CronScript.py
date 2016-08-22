@@ -4,12 +4,30 @@ import getopt
 import os
 
 def start():
-  subprocess.Popen(['/home/infra/logstash-2.3.3/bin/logstash', '-f', '/home/infra/hydra/ShareConfig/receive.conf'])
+  #logStash log collector
+  subprocess.Popen(['/home/infra/logstash-2.3.3/bin/logstash', '-f',
+    '/home/infra/hydra/ShareConfig/receive.conf'])
+
+  #Monitor Server
   subprocess.Popen(['/home/infra/hydra/LogMonitor/MonitorServer.py'])
+
+  subprocess.Popen(['/home/infra/hydra/LogMonitor/MonitorServer.py'])
+
+  cmdPath = '/home/infra/hydra/OrderDispatcher/'
+  subprocess.Popen([cmdPath + 'OrderDispatcher.py', '-f',
+    cmdPath + 'config/OrderDispatcher.json'])
+
+  cmdPath = '/home/infra/hydra/SmartOrderService/'
+  subprocess.Popen([cmdPath + 'build/SmartOrderService', '-f',
+    cmdPath + 'config/SmartOrderService.json'])
 
 def stop():
   subprocess.call('/home/infra/hydra/ShareConfig/stopLogStash.sh')
   subprocess.call(['pkill', 'MonitorServer'])
+
+  subprocess.call(['pkill', 'SmartOrderService'])
+
+  subprocess.call(['pkill', './OrderDispatcher*'])
 
 def service(argv):
   try:

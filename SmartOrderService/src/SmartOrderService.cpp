@@ -76,8 +76,6 @@ int SmartOrderService::onOrderRequest(OrderRequest &req) {
   addReactorToMktDriver(key, reactor);
   subscribeTicker(req.code(), req.exchange());
 
-  LogHelper::logObject(req);
-
   return 0;
 }
 
@@ -108,8 +106,10 @@ int SmartOrderService::onResponseMsg(ResponseMessage &rspMsg, MessageBase &msg) 
     LOG(INFO) << "trade";
     LOG(INFO) << rspMsg.DebugString();
 
-    if (rspDriver.find(rspMsg.ref_id()) == rspDriver.end())
+    if (rspDriver.find(rspMsg.ref_id()) == rspDriver.end()) {
       LOG(WARNING) << "Trade get id without rspDriver";
+      return -1;
+    }
     rspDriver[rspMsg.ref_id()]->onMsg(msg);
 
     if (rspDriver[rspMsg.ref_id()]->isRecycle()) {
@@ -152,7 +152,7 @@ int SmartOrderService::onMsg(MessageBase msg) {
 
     case TYPE_ORDER_REQUEST: {
       OrderRequest req = ProtoBufHelper::unwrapMsg<OrderRequest>(msg);
-      onOrderRequest(req, msg);
+      onOrderRequest(req);
       break;
     }
 
