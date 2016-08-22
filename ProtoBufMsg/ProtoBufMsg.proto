@@ -131,7 +131,7 @@ message OrderRequest {
   //this is for smart order, argument is seperate by ',', like "arg1,arg2,arg3"
   string argument_list = 13;
 
-  //batch id the is top level
+  //batch id the is top level id
   string batch_id = 14;
   //
   string alg_order_id= 15;
@@ -181,11 +181,9 @@ enum StrategyMode {
   LIVE_TRADING = 2;
 }
 
-//enum StatusMsgType {
-//  TYPE_SMART_ORDER = 0;
-//}
-//
-//message AppStatusMsg {
-//  StatusMsgType type = 0;
-//  //repeated Map
-//}
+message AppStatusMsg {
+  string batch_id = 1;
+  string alg_order_id = 2;
+  repeated string keys = 3;
+  repeated string values = 4;
+}

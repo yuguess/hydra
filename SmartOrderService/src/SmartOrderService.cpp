@@ -76,6 +76,8 @@ int SmartOrderService::onOrderRequest(OrderRequest &req) {
   addReactorToMktDriver(key, reactor);
   subscribeTicker(req.code(), req.exchange());
 
+  LogHelper::logObject(req);
+
   return 0;
 }
 

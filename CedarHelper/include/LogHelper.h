@@ -44,6 +44,20 @@ public:
     return true;
   }
 
+  static bool logObject(AppStatusMsg &appMsg) {
+    Json::Value jMsg;
+    jMsg["batch_id"] = appMsg.batch_id();
+    jMsg["alg_order_id"] = appMsg.alg_order_id();
+
+    for (int i = 0; i < appMsg.keys_size(); i++) {
+      jMsg["keys"].append(appMsg.keys(i));
+      jMsg["values"].append(appMsg.values(i));
+    }
+
+    toLogFile(jMsg);
+    return true;
+  }
+
 private:
   static inline bool toLogFile(Json::Value &jMsg) {
     static Json::StreamWriterBuilder builder;

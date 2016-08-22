@@ -1,6 +1,7 @@
 #include "SmartOrder.h"
 #include "CedarHelper.h"
 #include "MarketSpecHelper.h"
+#include "CPlusPlusCode/ProtoBufMsg.pb.h"
 
 SmartOrder::SmartOrder(OrderRequest &req, SmartOrderService *srvc):
   OrderReactor(req, srvc), state(Init) {
@@ -41,6 +42,7 @@ int SmartOrder::onMktUpdate(MarketUpdate &mkt) {
     case SmartOrderState::Init: {
       referencePrice = calReferencePrice(mkt);
       sendNewLimitOrder(mkt);
+      logStatusInfo(mkt);
       break;
     }
 
@@ -88,14 +90,14 @@ bool SmartOrder::sendNewLimitOrder(MarketUpdate &mkt) {
   req.set_limit_price(limitPrice);
   req.set_id(outOrderId);
 
-  if (orderRequest.buy_sell() == LONG_BUY && 
+  if (orderRequest.buy_sell() == LONG_BUY &&
     CedarHelper::isStock(req.code())) {
 
-    leftQty = CedarHelper::stockQtyRoundUp(leftQty); 
+    leftQty = CedarHelper::stockQtyRoundUp(leftQty);
   } else if (orderRequest.buy_sell() == SHORT_SELL &&
     CedarHelper::isStock(req.code())) {
 
-    leftQty = CedarHelper::stockQtyRoundDown(leftQty); 
+    leftQty = CedarHelper::stockQtyRoundDown(leftQty);
   }
 
   req.set_trade_quantity(leftQty);

@@ -24,6 +24,17 @@ protected:
 
   inline void setRecycle() {recycleFlag = true;}
 
+  bool logStatusInfo(MarketUpdate &mkt) {
+    AppStatusMsg statusMsg;
+    statusMsg.set_batch_id(orderRequest.batch_id());
+    statusMsg.set_alg_order_id(orderRequest.alg_order_id());
+    statusMsg.add_keys("ReferencePrice");
+    statusMsg.add_values(
+        std::to_string(0.5 * mkt.bid_price(0) + 0.5 * mkt.ask_price(0)));
+
+    return true;
+  }
+
   OrderRequest orderRequest;
   SmartOrderService *service;
 

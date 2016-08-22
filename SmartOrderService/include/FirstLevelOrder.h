@@ -5,14 +5,7 @@
 #include "ProtoBufMsgHub.h"
 #include "SmartOrderService.h"
 
-enum OrderState {
-  Ready = 0,
-  Sending,
-  Sent,
-  Canceling,
-  CrossChase,
-  TerminateCancel
-};
+
 
 class FirstLevelOrder : public OrderReactor {
 
@@ -24,7 +17,17 @@ private:
   int cancelOrder();
   const static int stockMinimumQty = 100;
 
-  OrderState orderState;
+  enum FirstLevelOrderState {
+    Init = 0,
+    Ready,
+    Sending,
+    Sent,
+    Canceling,
+    CrossChase,
+    TerminateCancel
+  };
+
+  FirstLevelOrderState orderState;
   int leftQty;
   double placePrice;
   std::string respAddr;

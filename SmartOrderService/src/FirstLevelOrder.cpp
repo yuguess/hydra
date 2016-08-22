@@ -3,7 +3,7 @@
 
 FirstLevelOrder::FirstLevelOrder(OrderRequest &req,
     SmartOrderService *srcv):OrderReactor(req, srcv),
-    orderState(OrderState::Ready) {
+    orderState(Init) {
 
   respAddr = CedarHelper::getResponseAddr();
   leftQty = req.trade_quantity();
@@ -25,7 +25,11 @@ int FirstLevelOrder::onMsg(MessageBase &msg) {
       currentLevelVol =mkt.ask_volume(0);
     }
 
-    if (orderState == OrderState::Ready) {
+    if (orderState == Init) {
+      logStatusInfo(mkt);
+      orderState = Ready;
+
+    } else if (orderState == Ready) {
       outOrderId = CedarHelper::getOrderId();
       placePrice = currentLevelPrice;
 
@@ -37,16 +41,16 @@ int FirstLevelOrder::onMsg(MessageBase &msg) {
       req.set_id(outOrderId);
       req.set_buy_sell(orderRequest.buy_sell());
 
-      if (orderRequest.buy_sell() == LONG_BUY && 
+      if (orderRequest.buy_sell() == LONG_BUY &&
           CedarHelper::isStock(req.code())) {
-          leftQty = CedarHelper::stockQtyRoundUp(leftQty); 
+          leftQty = CedarHelper::stockQtyRoundUp(leftQty);
       } else if (orderRequest.buy_sell() == SHORT_SELL &&
           CedarHelper::isStock(req.code())) {
 
         //round  down for selling
         if (CedarHelper::isStock(req.code())) {
-          
-          leftQty = CedarHelper::stockQtyRoundDown(leftQty); 
+
+          leftQty = CedarHelper::stockQtyRoundDown(leftQty);
           if (leftQty == 0) {
             LOG(INFO) << "sell again with qty < 100, just recycle";
             setRecycle();
@@ -69,7 +73,7 @@ int FirstLevelOrder::onMsg(MessageBase &msg) {
 
       LOG(INFO) << "firstLevel send order complete";
       return 0;
-    } else if (orderState == OrderState::Sent) {
+    } else if (orderState == Sent) {
       //seocnd condition, cancel if I am the only one in the front level
       if (placePrice != currentLevelPrice ||(placePrice == currentLevelPrice &&
          orderRequest.trade_quantity() == currentLevelVol)) {
