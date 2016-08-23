@@ -3,6 +3,7 @@
 
 #include "BasicFuturesDataAdapter.h"
 #include "BasicStockDataAdapter.h"
+#include "RangeDataAdapter.h"
 #include "CPlusPlusCode/ProtoBufMsg.pb.h"
 
 class DataAdapterFactory {
@@ -17,6 +18,8 @@ public:
       ptr = std::shared_ptr<DataAdapter>(new BasicFuturesDataAdapter());
     } else if (adapterType == "BasicStockDataAdapter") {
       ptr = std::shared_ptr<DataAdapter>(new BasicStockDataAdapter());
+    } else if (adapterType == "RangeDataAdapter") {
+      ptr = std::shared_ptr<DataAdapter>(new RangeDataAdapter());
     } else {
       LOG(FATAL) << "Unsupport Data Adapter " << adapterType;
       return std::shared_ptr<DataAdapter>(NULL);

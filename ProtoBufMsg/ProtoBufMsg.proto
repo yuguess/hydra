@@ -6,6 +6,7 @@ enum CedarMsgType {
   TYPE_ORDER_REQUEST = 2;
   TYPE_RESPONSE_MSG = 3;
   TYPE_APP_STATUS_MSG = 4;
+  TYPE_RANGE_STAT = 5;
 }
 
 enum ExchangeType {
@@ -191,4 +192,14 @@ message AppStatusMsg {
   string alg_order_id = 3;
   repeated string keys = 4;
   repeated string values = 5;
+}
+
+message RangeStat {
+  string code = 1;
+  double open = 2;
+  double high = 3;
+  double low = 4;
+  double close = 5;
+  uint64 volume = 6;
+  string stream = 7;
 }

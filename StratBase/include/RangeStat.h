@@ -9,7 +9,53 @@
 namespace pt = boost::posix_time;
 
 struct RangeStatResult {
+  RangeStatResult():
+    high(INT_MIN), low(INT_MAX), tickCount(0), state(Uninitialize) {}
+
+  bool init(MarketUpdate &mkt) {
+    open = mkt.last_price();
+    high = mkt.last_price();
+    low = mkt.last_price();
+    close = mkt.last_price();
+    tickCount = 1;
+
+    state = RangeStatResult::Running;
+    return true;
+  }
+
+  bool update(MarketUpdate &mkt) {
+    if (state == CloseOnLast) {
+      return init(mkt);
+    }
+
+    close = mkt.last_price();
+    low = std::min(low, mkt.last_price());
+    high = std::max(high, mkt.last_price());
+    tickCount++;
+
+    return true;
+  }
+
+  bool closeOnLast() {
+    high = INT_MIN;
+    low = INT_MAX;
+    tickCount = 0;
+    state = CloseOnLast;
+
+    return true;
+  }
+
+  enum State {
+    Uninitialize = 0,
+    Running,
+    CloseOnLast,
+  };
+
   double open, high, low, close;
+  int tickCount;
+  State state;
+  pt::ptime start;
+  pt::ptime end;
 };
 
 struct TimeInterval {
@@ -17,74 +63,98 @@ struct TimeInterval {
   pt::ptime end;
 };
 
-class RangeStat {
+class RangeStatCollector {
 public:
-  RangeStat(int rangeSeconds, std::string startTime, std::string endTime) :
-    marketOpen(CedarTimeHelper::strToPTime("%H:%M:%S", startTime)),
-    marketClose(CedarTimeHelper::strToPTime("%H:%M:%S", endTime)),
+  RangeStatCollector(int rangeSeconds, std::string mss, std::string mse,
+    std::string afterStart, std::string afterEnd) :
+    morningSessionStart(mss), morningSessionEnd(mse),
+    afternoonSessionStart(afterStart), afternoonSessionEnd(afterEnd),
     rangePeriod(pt::seconds(rangeSeconds)) {
-
-    curTimePeriod.start = marketOpen;
-    curTimePeriod.end = marketOpen + rangePeriod;
-
-    rangeStat.open = UNINITIALIZE;
-    rangeStat.low = INT_MAX;
-    rangeStat.high = INT_MIN;
   }
 
   bool onTickUpdate(MarketUpdate &mkt, RangeStatResult &res) {
-    std::string tsStr = mkt.exchange_timestamp();
-    pt::ptime ts = CedarTimeHelper::strToPTime("%H%M%S%F", tsStr);
+    std::string tmp;
+    std::string tsStr = mkt.trading_day() + mkt.exchange_timestamp();
+    pt::ptime ts = CedarTimeHelper::strToPTime("%Y%m%d%H%M%S%F", tsStr);
 
-    if (ts < marketOpen || ts > marketClose)
-      return false;
+    tmp = mkt.trading_day() + afternoonSessionStart;
+    afternoonStart = CedarTimeHelper::strToPTime("%Y%m%d%H:%M:%S", tmp);
+    tmp = mkt.trading_day() + afternoonSessionEnd;
+    afternoonEnd = CedarTimeHelper::strToPTime("%Y%m%d%H:%M:%S", tmp);
+    tmp = mkt.trading_day() + morningSessionEnd;
+    morningEnd = CedarTimeHelper::strToPTime("%Y%m%d%H:%M:%S", tmp);
 
-    //LOG(INFO) << "range start " << curTimePeriod.start;
-    //LOG(INFO) << "range end " << curTimePeriod.end;
+    //LOG(INFO) << "curTimePeriod start " << curTimePeriod.start;
+    //LOG(INFO) << "curTimePeriod end " << curTimePeriod.end;
+    //LOG(INFO) << "ts " << ts;
 
-    if (ts >= curTimePeriod.start && ts < curTimePeriod.end) {
-      if (rangeStat.open == UNINITIALIZE)
-        rangeStat.open = mkt.last_price();
+    if (rangeStat.state == RangeStatResult::Uninitialize) {
+      rangeStat.init(mkt);
+      setNewMarketDay(mkt.trading_day());
+    }
 
-      rangeStat.close = mkt.last_price();
-      rangeStat.low = std::min(rangeStat.low, mkt.last_price());
-      rangeStat.high = std::max(rangeStat.high, mkt.last_price());
-
-      return false;
-    } else if (ts >= curTimePeriod.end)  {
-
-      LOG(INFO) << "range begin " << curTimePeriod.start;
-      LOG(INFO) << "range end" << curTimePeriod.end;
-
-      do  {
+    while (ts > curTimePeriod.end) {
+      if (tradingDay != mkt.trading_day()) {
+        setNewMarketDay(mkt.trading_day());
+      } else {
         curTimePeriod.start += rangePeriod;
         curTimePeriod.end += rangePeriod;
-        if (curTimePeriod.start >= marketClose) {
-          curTimePeriod.start = marketOpen;
-          curTimePeriod.end = marketOpen + rangePeriod;
+
+        if (curTimePeriod.start == morningEnd) {
+          //setToAfternoonSession();
+          curTimePeriod.start = afternoonStart;
+          curTimePeriod.end = curTimePeriod.start + rangePeriod;
+        } else if (curTimePeriod.start == afternoonEnd) {
+          //skip to next day
+          setNewMarketDay(addOneDay(mkt.trading_day()));
         }
-      } while (ts > curTimePeriod.end && ts < marketClose);
+      }
 
-      res = rangeStat;
+      if (ts >= curTimePeriod.start && ts <= curTimePeriod.end) {
+        res = rangeStat;
+        rangeStat.init(mkt);
+        LOG(INFO) << "inRange";
+        return true;
+      }
+    }
 
-      rangeStat.open = mkt.last_price();
-      rangeStat.high = mkt.last_price();
-      rangeStat.low = mkt.last_price();
-      rangeStat.close = mkt.last_price();
+    if (ts < curTimePeriod.start)
+      return false;
 
-      return true;
+    if (curTimePeriod.start <= ts && ts <=  curTimePeriod.end) {
+      rangeStat.start = curTimePeriod.start;
+      rangeStat.end = curTimePeriod.end;
+      rangeStat.update(mkt);
     }
 
     return false;
   }
 
 private:
-  const static int UNINITIALIZE = -1;
+  bool setNewMarketDay(std::string dayStr) {
+    std::string tsStr = dayStr + morningSessionStart;
+    curTimePeriod.start = CedarTimeHelper::strToPTime(
+        "%Y%m%d%H:%M:%S", tsStr);
+    curTimePeriod.end = curTimePeriod.start + rangePeriod;
+    tradingDay = dayStr;
+
+    return true;
+  }
+
+  std::string addOneDay(std::string dayStr) {
+    pt::ptime ptm = CedarTimeHelper::strToPTime("%Y%m%d", dayStr);
+    ptm += pt::hours(24);
+    return CedarTimeHelper::ptimeToStr("%Y%m%d", ptm);
+  }
 
   RangeStatResult rangeStat;
   TimeInterval curTimePeriod;
-  pt::ptime marketOpen;
-  pt::ptime marketClose;
+
+  std::string tradingDay;
+  std::string morningSessionStart, morningSessionEnd;
+  std::string afternoonSessionStart, afternoonSessionEnd;
+
+  pt::ptime morningEnd, afternoonStart, afternoonEnd;
   pt::time_duration rangePeriod;
 };
 

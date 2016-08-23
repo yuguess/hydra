@@ -3,7 +3,8 @@
 #include "ProtoBufMsgHub.h"
 #include "BasicKD.h"
 
-BasicKD::BasicKD() : fiveMinStat(300, "09:15:00", "15:00:00") {
+BasicKD::BasicKD() :
+  fiveMinStat(900, "09:15:00", "11:30:00", "13:00:00", "15:15:00") {
 }
 
 int BasicKD::onMsg(MessageBase &msg) {
@@ -11,15 +12,18 @@ int BasicKD::onMsg(MessageBase &msg) {
     RangeStatResult rangeStat;
     MarketUpdate mkt = ProtoBufHelper::unwrapMsg<MarketUpdate>(msg);
     //getchar();
+    //LOG(INFO) << mkt.DebugString();
     if (!fiveMinStat.onTickUpdate(mkt, rangeStat)) {
       return 0;
     }
 
-    LOG(INFO) << mkt.DebugString();
     LOG(INFO) << "open " << rangeStat.open;
     LOG(INFO) << "high " << rangeStat.high;
     LOG(INFO) << "low " << rangeStat.low;
     LOG(INFO) << "close " << rangeStat.close;
+    LOG(INFO) << "count " << rangeStat.tickCount;
+    LOG(INFO) << "begin " << rangeStat.start;
+    LOG(INFO) << "end " << rangeStat.end;
 
     //KD.update(rangeStat.high, rangeStat.low, rangeStat.close, resK, resD);
     //k, d = self.kd.update(data.high, data.low, data.close)
@@ -31,6 +35,10 @@ int BasicKD::onMsg(MessageBase &msg) {
     //update orderDelegate
     //orderDelegate.onOrderResponseUpdate(respMsg);
     //positionManager.onOrderResponseUpdate(respMsg);
+  } else if (msg.type() == TYPE_RANGE_STAT) {
+    RangeStat range = ProtoBufHelper::unwrapMsg<RangeStat>(msg);
+    LOG(INFO) << range.DebugString();
+    getchar();
   }
   //check stop profit/loss on every tick
   return 0;

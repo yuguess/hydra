@@ -15,7 +15,7 @@ private:
   bool onCreate();
   bool onExit();
 
-  RangeStat fiveMinStat;
+  RangeStatCollector fiveMinStat;
   Json::Value jsonState;
 };
 

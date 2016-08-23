@@ -29,7 +29,6 @@ public:
     static boost::posix_time::ptime curDate = startDate;
     static boost::gregorian::days oneDay(1);
     static std::ifstream ifs(getDataFileStr(startDate), std::ifstream::in);
-    static bool processFirstLineFlag = false;
     std::string line;
 
     while (true) {
@@ -90,6 +89,8 @@ private:
     //  ProtoBufHelper::toMessageBase<MarketUpdate>(TYPE_MARKETUPDATE, mkt);
     //tsData.streamName = streamName;
     //tsData.ts = boost::posix_time::time_from_string(args[2]);
+
+    return 0;
   }
 
   std::string getDataFileStr(boost::posix_time::ptime date) {
