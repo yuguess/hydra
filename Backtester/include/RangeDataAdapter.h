@@ -6,6 +6,7 @@
 #include "CedarTimeHelper.h"
 #include "CedarHelper.h"
 #include "CPlusPlusCode/ProtoBufMsg.pb.h"
+#include "ProtoBufMsgHub.h"
 
 namespace pt = boost::posix_time;
 
@@ -21,10 +22,6 @@ class RangeDataAdapter : public DataAdapter {
     homeDir = config["FileAddress"].asString();
     freq = config["Frequency"].asString();
     streamName = stream;
-    //std::string exchangeStr = jsonConfigObj["Exchange"].asString();
-    //exchange = StringToEnum::toExchangeType(exchangeStr);
-
-    //setupDateToFileMap(homeDir + "/" + code);
 
     return 0;
   }
@@ -92,8 +89,8 @@ private:
 
     std::string tsStr = args[0] + args[2];
     tsData.ts = CedarTimeHelper::strToPTime("%Y%m%d%H:%M:%S", tsStr);
-    tsData.msg = ProtoBufHelper::toMessageBase<RangeStat>(
-        TYPE_RANGE_STAT, rangeStat);
+    tsData.msg =
+      ProtoBufHelper::toMessageBase<RangeStat>(TYPE_RANGE_STAT, rangeStat);
     tsData.streamName = streamName;
 
     return true;
@@ -104,4 +101,3 @@ private:
 };
 
 #endif
-
