@@ -1,7 +1,7 @@
 {
   "CedarLogger": {
     "AppName": "SmartOrderService",  
-    "LogDir": "/home/yuguess/CedarLog/"
+    "LogDir": "/home/infra/CedarLog/"
   },
 
   "StockDataServer": {

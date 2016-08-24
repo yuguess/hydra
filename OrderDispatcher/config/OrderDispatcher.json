@@ -1,4 +1,9 @@
 {
+  "CedarLogger": {
+    "AppName": "OrderDispatcher",  
+    "LogDir": "/home/infra/CedarLog/"
+  },
+
   "TradeServer": [
     {"name":"2001_Stock", "address":"192.168.1.102:15230"},
     {"name":"2001_Futures", "address":"192.168.0.66:15224"},
@@ -12,8 +17,5 @@
     {"name":"SmartOrderService", "address":"192.168.0.66:15231"}
   ],
 
-  "MsgHub": {
-    "PublishPort":"15232",
-    "PullPort":"15233"
-  }
+  "BindAddress": "192.168.0.66:15233"
 }
