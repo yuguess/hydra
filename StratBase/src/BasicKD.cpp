@@ -3,9 +3,11 @@
 #include "ProtoBufMsgHub.h"
 #include "BasicKD.h"
 
-BasicKD::BasicKD() :
-  fiveMinStat(900, "09:15:00", "11:30:00", "13:00:00", "15:15:00") {
-}
+//BasicKD::BasicKD() :
+//  fiveMinStat(900, "09:15:00", "11:30:00", "13:00:00", "15:15:00") {
+//}
+
+BasicKD::BasicKD() : kd(14, 3, 3) {}
 
 int BasicKD::onMsg(MessageBase &msg) {
   if (msg.type() == TYPE_MARKETUPDATE) {
@@ -13,9 +15,9 @@ int BasicKD::onMsg(MessageBase &msg) {
     MarketUpdate mkt = ProtoBufHelper::unwrapMsg<MarketUpdate>(msg);
     //getchar();
     //LOG(INFO) << mkt.DebugString();
-    if (!fiveMinStat.onTickUpdate(mkt, rangeStat)) {
-      return 0;
-    }
+    //if (!fiveMinStat.onTickUpdate(mkt, rangeStat)) {
+    //  return 0;
+    //}
 
     LOG(INFO) << "open " << rangeStat.open;
     LOG(INFO) << "high " << rangeStat.high;
@@ -37,10 +39,38 @@ int BasicKD::onMsg(MessageBase &msg) {
     //positionManager.onOrderResponseUpdate(respMsg);
   } else if (msg.type() == TYPE_RANGE_STAT) {
     RangeStat range = ProtoBufHelper::unwrapMsg<RangeStat>(msg);
-    LOG(INFO) << range.DebugString();
-    getchar();
+
+    //LOG(INFO) << "open " << range.open();
+    //LOG(INFO) << "high " << range.high();
+    //LOG(INFO) << "low " << range.low();
+    //LOG(INFO) << "close " << range.close();
+
+    double k = 0.0, d = 0.0;
+    if (!kd.update(range.high(), range.low(), range.close(), k, d))
+      return 0;
+
+    //LOG(INFO) << " K " << k;
+    //getchar();
+
+    if (jsonState.isMember("preK")) {
+      double preK = jsonState["preK"].asDouble();
+      //LOG(INFO) << "preK " << preK << " K " << k;
+
+      if ((preK < 0.3 && 0.3 < k) || (preK < 0.7 && 0.7 < k)) {
+        LOG(INFO) << "long " << range.close();
+        //getchar();
+      } else if ((preK > 0.3 && 0.3 > k) || (preK > 0.7 && 0.7 > k)) {
+        LOG(INFO) << "short " << range.close();
+        //getchar();
+      }
+    }
+
+    jsonState["preK"] = k;
+    jsonState["preD"] = d;
+
+    //LOG(INFO) << range.DebugString();
   }
-  //check stop profit/loss on every tick
+
   return 0;
 }
 

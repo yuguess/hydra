@@ -1,4 +1,9 @@
 {
+  "CedarLogger": {
+    "AppName": "ManualOrder",
+    "LogDir": "/home/yuguess/TestLog/"
+  },
+
   "SendToAddress": "192.168.0.61:15230",
   "PublisherAddress":"192.168.1.102:15227", 
   "DataServer": [
@@ -16,6 +21,7 @@
 
   "TradeServer": [
     {"name":"2001_Stock", "address":"192.168.0.61:15230"},
+    {"name":"SmartOrderService", "address":"192.168.0.66:15231"},
     {"name":"CTPTradeTest", "address":"192.168.0.66:15224"},
     {"name":"0001_Futures", "address":"192.168.0.66:15235"},
     {"name":"1002_Futures", "address":"192.168.0.66:15237"},

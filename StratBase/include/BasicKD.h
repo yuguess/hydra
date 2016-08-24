@@ -4,6 +4,7 @@
 #include "RangeStat.h"
 #include "StratBase.h"
 #include "json/json.h"
+#include "KDJ.h"
 
 class BasicKD: public StratBase {
 public:
@@ -15,7 +16,7 @@ private:
   bool onCreate();
   bool onExit();
 
-  RangeStatCollector fiveMinStat;
+  KD kd;
   Json::Value jsonState;
 };
 

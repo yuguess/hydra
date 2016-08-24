@@ -1,16 +1,13 @@
 {
-  ////H002
-  //"CTP": {
-  //  "BrokerID": "8888",
-  //  "UserID": "2500017",
-  //  "Password": "743052",
-  //  "TradeFront": "tcp://27.115.57.20:41213"
-  //},
+  "CedarLogger": {
+    "AppName": "CTPTrade",
+    "LogDir": "./logs/"
+  },
 
   "CTP": {
     "BrokerID": "8000",
-    "UserID": "91010081",
-    "Password": "805891",
+    "UserID": "91010097",
+    "Password": "018163",
     "TradeFront": "tcp://180.168.212.70:41205"
   },
 

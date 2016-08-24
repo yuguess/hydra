@@ -8,6 +8,7 @@ include_directories(./include
   ../ProtoBufMsgHub/include
   ../CedarJsonConfig/include
   ../Backtester/include
+  ../Indicator/include
   ../ProtoBufMsg)
 
 set(PROTOBUF ../ProtoBufMsg/CPlusPlusCode/ProtoBufMsg.pb.cc)
