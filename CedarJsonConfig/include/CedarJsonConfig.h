@@ -46,6 +46,41 @@ public:
     return 0;
   }
 
+  bool hasMember(std::string pathStr) {
+    if (pathStr.size() == 0)
+      return false;
+
+    std::vector<std::string> sections;
+    boost::split(sections, pathStr, boost::is_any_of("."));
+
+    Json::Value node = root;
+    unsigned i = 0;
+
+    for (;i < sections.size(); i++) {
+      if (node.isMember(sections[i])) {
+        node = node[sections[i]];
+
+        //go into the array object
+        if (node.isArray() && node.isValidIndex(0))
+          node = node[0];
+
+        //reaching the "leaf" node
+        if (!node.isObject()) {
+          i++;
+          break;
+        }
+      } else {
+        return false;
+      }
+    }
+
+    //i is from 0
+    if (i == sections.size())
+      return true;
+
+    return false;
+  }
+
   int getIntByPath(std::string path, int &result) {
     Json::Value val;
     getJsonValueByPath(path, val);
