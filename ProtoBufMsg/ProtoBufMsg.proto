@@ -202,4 +202,5 @@ message RangeStat {
   double close = 5;
   uint64 volume = 6;
   string stream = 7;
+  string timestamp = 8;
 }

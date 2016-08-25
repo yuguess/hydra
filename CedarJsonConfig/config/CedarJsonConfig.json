@@ -1,4 +1,9 @@
 {
+  "CedarLogger": {
+    "AppName": "CTPTrade",
+    "LogDir": "./logs/"
+  },
+
   "Mode":"BackTest",
   "Value":"File",
   "Ticker": [

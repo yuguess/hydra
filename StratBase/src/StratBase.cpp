@@ -3,6 +3,9 @@
 #include "EnumStringMap.h"
 
 int StratBase::run() {
+
+  onCreate();
+
   std::string modeStr;
   //Backtest, Livetest, LiveTrading
   CedarJsonConfig::getInstance().getStringByPath("Strategy.Mode", modeStr);

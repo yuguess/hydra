@@ -19,6 +19,10 @@ int BasicKD::onMsg(MessageBase &msg) {
     //  return 0;
     //}
 
+    //Json::StyledWriter sytledWriter;
+    //out << sytledWriter.write(jsonState);
+    //out.close();
+
     LOG(INFO) << "open " << rangeStat.open;
     LOG(INFO) << "high " << rangeStat.high;
     LOG(INFO) << "low " << rangeStat.low;
@@ -49,19 +53,15 @@ int BasicKD::onMsg(MessageBase &msg) {
     if (!kd.update(range.high(), range.low(), range.close(), k, d))
       return 0;
 
-    //LOG(INFO) << " K " << k;
-    //getchar();
-
     if (jsonState.isMember("preK")) {
       double preK = jsonState["preK"].asDouble();
       //LOG(INFO) << "preK " << preK << " K " << k;
-
       if ((preK < 0.3 && 0.3 < k) || (preK < 0.7 && 0.7 < k)) {
         LOG(INFO) << "long " << range.close();
-        //getchar();
+        transacLogger.enter("Buy", range.close(), range.timestamp());
       } else if ((preK > 0.3 && 0.3 > k) || (preK > 0.7 && 0.7 > k)) {
         LOG(INFO) << "short " << range.close();
-        //getchar();
+        transacLogger.enter("Sell", range.close(), range.timestamp());
       }
     }
 
@@ -85,6 +85,10 @@ bool BasicKD::onCreate() {
 bool BasicKD::onExit() {
   if (getStrategyMode() == LIVETEST || getStrategyMode() == LIVE_TRADING) {
     PersistentState::save(jsonState);
+  }
+
+  if (getStrategyMode() == BACKTEST) {
+    transacLogger.saveToFile();
   }
 
   return true;
