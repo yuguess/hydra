@@ -27,6 +27,11 @@ init_table_finish_flag = 0
 app_line_buf = []
 mddata = mo.MonitorData();
 
+try:
+  fp = open(logFile, 'r')
+except:
+  fp = open(logFile, 'w')
+fp.close()
 fp = open(logFile, 'r')
 
 order_position = {}

@@ -15,7 +15,7 @@
     
     <script src="static/js/bootstrap.min.js"></script>
     <script src="static/js/bootstrap-table.js"></script>
-    
+    <link rel="stylesheet" href="static/css/style.css" type="text/css" />
   </head>
 
   
@@ -24,28 +24,29 @@
     <div class = "container-fluid">
       <div class="row container-fluid">
         <div class="col-md-2 table-responsive">
-          <table class="table table-hover table-bordered" id='batch' width="100" data-url="data.json">
+          <table class="table table-hover table-bordered" id='batch' width="500" data-url="data.json">
             <tr id='batch-title' onclick = "onClickShowAll(this);">
               <td>batch_id</td>
               <td>progress</td>
             </tr>
           </table>
         </div>
-        <div class="col-md-3 table-responsive">
+        <div class="col-md-4 table-responsive">
           <table class="table table-hover table-bordered" id='algo' width="100" data-url="data.json">
             <tr id='algo-title'>
               <td>algo_id</td>
               <td>ref_price</td>
-              <td>trade_price</td>
+              <td style="width:10px">trade_price</td>
               <td>slippage</td>
               <td>progress</td>
             </tr>
           </table>
         </div>
-        <div class="col-md-7 container-fluid table-responsive">
+        <div class="col-md-6 container-fluid table-responsive">
           <table class="table table-hover table-bordered" id='order' width="100" data-url="data.json">
             <tr id='order-title'>
               <td>status</td>
+              <td>time</td>
               <td>code</td>
               <td>price</td>
               <td>progress</td>
@@ -54,7 +55,6 @@
               <td>buy_sell</td>
               <td>argument_list</td>
               <td>id</td>
-              <td>status msg</td>
             </tr>
           </table>
         </div>

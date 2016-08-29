@@ -1,3 +1,25 @@
+//date formating
+Date.prototype.format =function(format) {
+        var o = {
+        "M+" : this.getMonth()+1, //month
+"d+" : this.getDate(),    //day
+"h+" : this.getHours(),   //hour
+"m+" : this.getMinutes(), //minute
+"s+" : this.getSeconds(), //second
+"q+" : Math.floor((this.getMonth()+3)/3),  //quarter
+"S" : this.getMilliseconds() //millisecond
+        }
+        if(/(y+)/.test(format)) format=format.replace(RegExp.$1,
+        (this.getFullYear()+"").substr(4- RegExp.$1.length));
+        for(var k in o)if(new RegExp("("+ k +")").test(format))
+        format = format.replace(RegExp.$1,
+        RegExp.$1.length==1? o[k] :
+        ("00"+ o[k]).substr((""+ o[k]).length));
+        return format;
+}
+
+
+
 //更改第二张表algo的reference price
 //change the reference price for specific algo row
 function updateAppStatus(data) {
@@ -13,6 +35,7 @@ function constructAlgoFromAppStatus(data) {
   mapAlgo[countAlgo.toString()] = data.alg_order_id;
   invMapAlgo[data.alg_order_id] = countAlgo.toString();
   data.alg_order_id = countAlgo.toString();
+
   $("#algo-title").after("<tr id='" + data.alg_order_id + "' data-toggle=\"collapse\" href=\"#" + data.alg_order_id +"_collapse\" onclick = \"onClickAlgo(this);\" > \
                             <td id='" + data.alg_order_id + "_algo_id'>" + mapAlgo[data.alg_order_id] + "</td> \
                             <td id='" + data.alg_order_id + "_ref_price'>" + data.values + "</td> \
@@ -35,9 +58,15 @@ function constructAlgoFromAppStatus(data) {
 //在首次连接时，table信息到来的时候，创建order行
 //when connect first time, and table info comes, create a order row
 function constructOrder(data) {
+  date = new Date(0);
+  s = mapOrder[data.id]
+  date.setUTCSeconds(Number(s.substring(0,s.length-6)));
+  var sdate = date.format("hh:mm:ss");  
+
   var percentage= Number(data.trade_quantity)/Number(data.quantity);
   $("#order-title").after("<tr class='order' id='" + data.id + "' > \
                             <td id='" + data.id + "_status'>" + data.status + "</td> \
+                            <td id='" + data.id + "_time'>" + sdate + "</td> \
                             <td id='" + data.alg_order_id + "_code'>" + data.code + "</td> \
                             <td id='" + data.id + "_price'>" + data.price + "</td> \
                             <td style=\"display:none\" id='" + data.id + "_order_trade_quantity'>" + data.trade_quantity + "</td> \
@@ -57,7 +86,6 @@ function constructOrder(data) {
                             <td id='" + data.id + "_buy_sell'>" + data.buy_sell + "</td> \
                             <td id='" + data.id + "_argument_list'>" + data.argument_list + "</td> \
                             <td id='" + data.id + "_id'>" + mapOrder[countOrder.toString()] + "</td> \
-                            <td id='" + data.id + "_status_msg'>" + data.status_msg + "</td> \
                           </tr>"); 
   $('#'+data.id+"_progress").find('span').css("color","black");
   if (data.buy_sell == "SHORT_SELL") {
@@ -87,11 +115,6 @@ function constructAlgo(data) {
                               </div>\
                             </td> \
                           </tr>"); 
-  if (data.buy_sell == "SHORT_SELL") {
-    $('#'+data.algo_flag+'_buy_sell').attr("class","danger");
-  } else if (data.buy_sell == "LONG_BUY") {
-    $('#'+data.algo_flag+'_buy_sell').attr("class","info");
-  }
 }
 
 //在首次连接时，table信息到来的时候，创建batch行
@@ -297,11 +320,10 @@ function sumAlgoProgress(algo_flag) {
     s_quantity = jQuery(this).children("[id$=_order_quantity]").html();
     s_trade_quantity = jQuery(this).children("[id$=_order_trade_quantity]").html();
     trade_quantity += Number(s_trade_quantity);
-    quantity += Number(s_quantity);
 
     //document.getElementById('debug').insertRow().insertCell().innerHTML = jQuery(this).parent().children("[id$=_order_quantity]").html();
   });
-
+  quantity = algo_quantity_map[algo_flag];
   var tradeString = "" + trade_quantity + "/" + quantity;
   var percentage=100 * trade_quantity/quantity;
 
@@ -316,9 +338,9 @@ function computeTradePrice(algo_flag) {
   var notional=0;
   var quantity = 0;
 
-  $("tr").filter(function(){
+  $("tr").filter(function() {
     var status = jQuery(this).children(":first").html();
-    //document.getElementById('debug').insertRow().insertCell().innerHTML = algo_flag;
+    //document.getElementById('debug').insertRow().insertCell().innerHTML = status;
     return (jQuery(this).children("[id$=_algo_flag]").html() == algo_flag && jQuery(this).hasClass('order') && countable_states.indexOf(status) != -1);
 
   }).each(function() {
@@ -328,16 +350,32 @@ function computeTradePrice(algo_flag) {
     quantity += Number(s_quantity);
     notional += Number(s_notional);
 
-    //document.getElementById('debug').insertRow().insertCell().innerHTML = jQuery(this).parent().children("[id$=_order_quantity]").html();
+    //document.getElementById('debug').insertRow().insertCell().innerHTML = jQuery(this).children("[id$=_order_trade_quantity]").html();
   });
+  
   var trade_price = notional/quantity;
   
   $('#' + invMapAlgo[algo_flag] + "_trade_price").html(trade_price);
   try{
+    var direction = 0;
+    var buy_sell;
+    $('tr').children("[id$=_algo_flag]").filter(function() {
+      if (jQuery(this).html() == algo_flag) {
+        buy_sell = jQuery(this).parent().children('[id$=_buy_sell]').html();
+        //document.getElementById('debug').insertRow().insertCell().innerHTML = buy_sell;
+        if (buy_sell == "LONG_BUY") {
+          direction = -1;
+        } else {
+          direction = 1;
+        }
+      }
+    });
+
     //alert($("#"+invMapAlgo[algo_flag]+"_ref_price").html()+","); 
-    var slippage = Math.abs(trade_price/Number($("#"+invMapAlgo[algo_flag]+"_ref_price").html())-1);
-    slippage = slippage.toFixed(3);
-    $("#"+invMapAlgo[algo_flag]+"_slippage").html(slippage);
+    var slippage = parseInt((trade_price/Number($("#"+invMapAlgo[algo_flag]+"_ref_price").html())-1)*direction*10000);
+    //document.getElementById('debug').insertRow().insertCell().innerHTML = slippage;
+    slippage = slippage.toFixed(5);
+    $("#"+invMapAlgo[algo_flag]+"_slippage").html(parseInt(slippage));
   } catch(e) {
     alert(e.message); 
   }
@@ -426,19 +464,22 @@ function newAlgo(data) {
                               </div>\
                             </td> \
                           </tr>"); 
-  if (data.buy_sell == "SHORT_SELL") {
-    $('#'+data.alg_order_id+'_buy_sell').attr("class","danger");
-  } else if (data.buy_sell == "LONG_BUY") {
-    $('#'+data.alg_order_id+'_buy_sell').attr("class","info");
-  }
 }
 
 //在有新order信息到来时，创建新order
 //create a new order when a order info comes
 function newOrder(data) {
+  date = new Date(0);
+  s = mapOrder[data.id]
+  date.setUTCSeconds(Number(s.substring(0,s.length-6)));
+  var sdate = date.format("hh:mm:ss");  
+
+
+
   //document.getElementById('debug').insertRow().insertCell().innerHTML = data.alg_order_id;
   $("#order-title").after(  "<tr class='order' id='" + data.id + "' hidden=\"hidden\"> \
                             <td id='" + data.id + "_status'>" + "new order" + "</td> \
+                            <td id='" + data.id + "_time'>" + sdate + "</td> \
                             <td id='" + data.alg_order_id + "_code'>" + data.code + "</td> \
                             <td id='" + data.id + "_price'>" + data.limit_price + "</td> \
                             <td style=\"display:none\" id='" + data.id + "_order_trade_quantity'>" + "0" + "</td> \
@@ -458,7 +499,6 @@ function newOrder(data) {
                             <td id='" + data.id + "_buy_sell'>" + data.buy_sell + "</td> \
                             <td id='" + data.id + "_argument_list'>" + data.argument_list + "</td> \
                             <td id='" + data.id + "_id'>" + mapOrder[countOrder.toString()] + "</td> \
-                            <td id='" + data.id + "_status_msg'>" + "" + "</td> \
                           </tr>"); 
   $('#'+data.id+"_progress").find('span').css("color","black");
   if (data.buy_sell == "SHORT_SELL") {
@@ -512,7 +552,6 @@ function updateAlgoTable(data) {
       return;
     }
     updateAlgoRow(data.alg_order_id, data)
-
   }   
 }
 
@@ -573,6 +612,7 @@ var mapAlgo = new Map();
 var invMapAlgo = new Map();
 var mapBatch = new Map();
 var invMapBatch = new Map();
+var algo_quantity_map = new Map()
 
 var countOrder = 0;
 var countAlgo = 0;
@@ -582,7 +622,6 @@ var ws = new WebSocket('ws://192.168.0.66:8000/soc');
 
 //websocket connection
 ws.onmessage = function(event) {
-  
   //first level parsing for incoming info
   //首层json反序列化
   try {
@@ -608,7 +647,7 @@ ws.onmessage = function(event) {
   //当有message类型的信息传入时
   //when info with 'message' type comes in
   else if (jData.hasOwnProperty('message')) {
-    var data = JSON.parse(jData.message);
+    var data = JSON.parse(jData.message.replace(/\\/g,""));
     if (socket_state.indexOf(data.type) != -1) {          //types not coming from TdxTrade like "SMART_ORDER","APP" should be eliminated
       var tmp = $.extend(true, {}, data);
       updateOrderTable(tmp);
@@ -619,17 +658,20 @@ ws.onmessage = function(event) {
       tmp = $.extend(true, {}, data);
       updateBatchTable(tmp);
     } 
+    else if (data.type == "TYPE_SMART_ORDER_REQUEST") {
+      algo_quantity_map[data.alg_order_id] = data.trade_quantity;
+    }
     else {                                                //dealing with algo info updates
       if (data.type != "APP_STATUS_MSG") return;
       //document.getElementById('debug').insertRow().insertCell().innerHTML = event.data;
       if ($('#'+invMapAlgo[data.alg_order_id]).length>0) {        //if this algo has already been in algo_table
-        
-        var data = JSON.parse(jData.message.replace(/\\/g,""));
+        var data = JSON.parse(jData.message);
         updateAppStatus(data);
         $("#algo").children("*").each(function() {
           if (this.id == 'algo-title') return;
           jQuery(this).children("*").each(function() {
             computeTradePrice(jQuery(this).children("*").html());
+            //document.getElementById('debug').insertRow().insertCell().innerHTML = jQuery(this).children("*").html();
           });
         });
       } else{                                                       //if this algo is not in algo_table, create this row
@@ -637,7 +679,7 @@ ws.onmessage = function(event) {
       }
       
     }
-  } 
+  }
   
   //当table信息传输结束时的行为
   //process when table info from backend has finish

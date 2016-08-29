@@ -78,7 +78,7 @@ class MonitorData:
       self.order_table.loc[position, 'status'] = error_code[str(dic['error_code'])]
     else:
       print("reveive response pointing to unvalid order")
-      print(dic)
+      #print(dic)
     return
 
   def updateAlgo(self,dic):
@@ -87,7 +87,7 @@ class MonitorData:
       self.algo_table.loc[position, 'quantity'] += int(dic['trade_quantity'])
       if dic['alg_order_id']=="1471403191520779":
         print("add to quantity")
-        print(dic)
+        #print(dic)
     else:
       try:
         position = self.algo_position[self.algo_id_map[dic['ref_id']]]
@@ -136,12 +136,16 @@ class MonitorData:
     self.updateBatch(dic)
 
   def logUpdate(self,item):
+    item = item.replace("\\","")
+    print item
     dic = ast.literal_eval(item)
     if dic['type']=="TYPE_CANCEL_ORDER_REQUEST":
       return
     elif dic['type'] == "APP_STATUS_MSG":
       self.app_buf.append(item)
-      print(item)
+      #print(item)
+    elif dic['type'] == "TYPE_SMART_ORDER_REQUEST":
+      self.app_buf.append(item)
     elif dic['type'] == "TYPE_SMART_ORDER_REQUEST":
       return
     elif dic['cedar_msg_type'] == "TYPE_ORDER_REQUEST":
@@ -157,7 +161,7 @@ class MonitorData:
     while True:
 
       new = fp.readline()
-      
+
       if new:
         match = self.regex.findall(new);
         for item in match:
@@ -165,16 +169,16 @@ class MonitorData:
           self.logUpdate(item)
           #print(self.order_table)
           #print(self.algo_table)
-          
+
       else:
         break
-    print(self.order_table)
+    #print(self.order_table)
     self.order_table.to_csv('./ss')
     self.algo_table.to_csv('./ssa')
     self.batch_table.to_csv('./ssb')
     #print(self.algo_table)
     print("finish")
     oo.close()
-    return 
+    return
 
 
