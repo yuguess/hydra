@@ -50,6 +50,8 @@ int BasicKD::onMsg(MessageBase &msg) {
     //LOG(INFO) << "close " << range.close();
 
     double k = 0.0, d = 0.0;
+    int qty = 0;
+
     if (!kd.update(range.high(), range.low(), range.close(), k, d))
       return 0;
 
@@ -58,11 +60,44 @@ int BasicKD::onMsg(MessageBase &msg) {
       //LOG(INFO) << "preK " << preK << " K " << k;
       if ((preK < 0.3 && 0.3 < k) || (preK < 0.7 && 0.7 < k)) {
         LOG(INFO) << "long " << range.close();
-        transacLogger.enter("Buy", range.close(), range.timestamp());
+
+        if (!jsonState.isMember("preEnter")) {
+          qty = 1;
+          transacLogger.enter("Buy", range.code(), qty, range.close(),
+              range.timestamp());
+          jsonState["preEnter"] = "Buy";
+          return 0;
+        }
+
+        if (jsonState["preEnter"] != "Buy") {
+          int qty = 2;
+          transacLogger.enter("Buy", range.code(), qty, range.close(),
+              range.timestamp());
+          jsonState["preEnter"] = "Buy";
+        }
+
       } else if ((preK > 0.3 && 0.3 > k) || (preK > 0.7 && 0.7 > k)) {
+
         LOG(INFO) << "short " << range.close();
-        transacLogger.enter("Sell", range.close(), range.timestamp());
+
+        if (!jsonState.isMember("preEnter")) {
+          qty = 1;
+          transacLogger.enter("Sell", range.code(), qty, range.close(),
+            range.timestamp());
+
+          jsonState["preEnter"] = "Sell";
+          return 0;
+        }
+
+        if (jsonState["preEnter"] != "Sell") {
+          qty = 2;
+          transacLogger.enter("Sell", range.code(), qty, range.close(),
+            range.timestamp());
+
+          jsonState["preEnter"] = "Sell";
+        }
       }
+
     }
 
     jsonState["preK"] = k;

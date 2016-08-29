@@ -47,6 +47,9 @@ class DayDataAdapter : public DataAdapter {
         }
 
         getline(ifs, line);
+        if (!ifs.good())
+          return false;
+
         if (lineToMarketUpdate(line, tsData, curDate) && curDate <= endDate) {
           return true;
         }
@@ -80,7 +83,7 @@ private:
     boost::split(args, line, boost::is_any_of(","), boost::token_compress_on);
 
     if (args.size() == 1) {
-      LOG(FATAL) << " there is error data " << line;
+      LOG(INFO) << " there is error data " << line;
       return false;
     }
 

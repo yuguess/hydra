@@ -23,23 +23,16 @@ public:
     }
   }
 
-  int enter(std::string buySell, double refPrice, std::string ts) {
-    if (firstFlag) {
-      trans["enterBuySell"] = buySell;
-      trans["enterTS"] = ts;
-      trans["enterPrice"] = refPrice;
-      firstFlag = false;
-    }
+  int enter(std::string buySell, std::string code, int qty, double refPrice,
+      std::string ts) {
 
-    if (trans["enterBuySell"] != buySell) {
-      trans["leavePrice"] = refPrice;
-      trans["leaveTS"] = ts;
-      root["transactions"].append(trans);
+    trans["Qty"] = qty;
+    trans["Direction"] = buySell;
+    trans["Timestamp"] = ts;
+    trans["Price"] = refPrice;
+    trans["Code"] = code;
 
-      trans["enterBuySell"] = buySell;
-      trans["enterTS"] = ts;
-      trans["enterPrice"] = refPrice;
-    }
+    root["Transactions"].append(trans);
 
     return 0;
   }
