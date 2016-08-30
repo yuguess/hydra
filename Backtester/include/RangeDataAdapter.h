@@ -80,15 +80,20 @@ private:
     if (args.size() == 1)
       return false;
 
+    //change time format from YYYYMMDD to YYYY-MM-DD
+    std::string newDateFormat = args[0].substr(0, 4) + "-" +
+      args[0].substr(4, 2) + "-" + args[0].substr(6, 2);
+    std::string tsStr = newDateFormat + " " + args[2];
+
     rangeStat.set_code(code);
     rangeStat.set_open(std::stod(args[3]));
     rangeStat.set_high(std::stod(args[4]));
     rangeStat.set_low(std::stod(args[5]));
     rangeStat.set_close(std::stod(args[6]));
     rangeStat.set_stream(streamName);
+    rangeStat.set_timestamp(tsStr);
 
-    std::string tsStr = args[0] + args[2];
-    tsData.ts = CedarTimeHelper::strToPTime("%Y%m%d%H:%M:%S", tsStr);
+    tsData.ts = CedarTimeHelper::strToPTime("%Y-%m-%d %H:%M:%S", tsStr);
     tsData.msg =
       ProtoBufHelper::toMessageBase<RangeStat>(TYPE_RANGE_STAT, rangeStat);
     tsData.streamName = streamName;

@@ -10,7 +10,7 @@
 class BasicKD: public StratBase {
 public:
   BasicKD();
-  virtual ~BasicKD() {
+  ~BasicKD() {
     onExit();
   };
 

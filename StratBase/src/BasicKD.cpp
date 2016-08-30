@@ -97,7 +97,6 @@ int BasicKD::onMsg(MessageBase &msg) {
           jsonState["preEnter"] = "Sell";
         }
       }
-
     }
 
     jsonState["preK"] = k;
