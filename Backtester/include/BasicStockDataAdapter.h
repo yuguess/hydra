@@ -8,6 +8,8 @@
 
 class BasicStockDataAdapter : public DataAdapter {
 public:
+  BasicStockDataAdapter() : oneDay(1) {}
+
   int init(std::string &stream, Json::Value &jsonConfigObj) {
     std::string startStr = jsonConfigObj["Range"]["Start"].asString();
     std::string endStr = jsonConfigObj["Range"]["End"].asString();
@@ -22,13 +24,14 @@ public:
     homeDir = jsonConfigObj["FileAddress"].asString();
     streamName = stream;
 
+    curDate = startDate;
+    ifs.open(getDataFileStr(startDate), std::ifstream::in);
+
     return 0;
   }
 
   bool getNextData(TimeSeriesData &tsData) {
-    static boost::posix_time::ptime curDate = startDate;
-    static boost::gregorian::days oneDay(1);
-    static std::ifstream ifs(getDataFileStr(startDate), std::ifstream::in);
+
     std::string line;
 
     while (true) {
@@ -106,12 +109,12 @@ private:
 
   boost::posix_time::ptime startDate;
   boost::posix_time::ptime endDate;
-  std::string homeDir;
-  std::string exchange;
-  std::string code;
-  std::string streamName;
-  std::string freq;
+  std::string homeDir, exchange, code, streamName, freq;
   int backtestDays;
+
+  boost::posix_time::ptime curDate;
+  boost::gregorian::days oneDay;
+  std::ifstream ifs;
 };
 
 #endif

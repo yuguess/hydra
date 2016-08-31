@@ -8,6 +8,10 @@
 namespace pt = boost::posix_time;
 
 class DayDataAdapter : public DataAdapter {
+
+public:
+  DayDataAdapter() : oneDay(1), firstReadFlag(true) {}
+
   int init(std::string &stream, Json::Value &config) {
     std::string startStr = config["Range"]["Start"].asString();
     std::string endStr = config["Range"]["End"].asString();
@@ -20,16 +24,14 @@ class DayDataAdapter : public DataAdapter {
     freq = config["Frequency"].asString();
     streamName = stream;
 
+    curDate = startDate;
+    curDateStr = CedarTimeHelper::ptimeToStr("%Y%m%d", curDate);
+    ifs.open(getDataFileStr(), std::ifstream::in);
     return 0;
   }
 
   bool getNextData(TimeSeriesData &tsData) {
-    static pt::ptime curDate;
-    static std::string curDateStr =
-      CedarTimeHelper::ptimeToStr("%Y%m%d", curDate);
-    static std::ifstream ifs(getDataFileStr(), std::ifstream::in);
     std::string line;
-    static bool firstReadFlag = true;
 
     while (true) {
       pt::ptime date;
@@ -111,6 +113,12 @@ private:
 
   std::string code, homeDir, freq, streamName;
   pt::ptime startDate, endDate;
+
+  boost::gregorian::days oneDay;
+  pt::ptime curDate;
+  std::string curDateStr;
+  std::ifstream ifs;
+  bool firstReadFlag;
 };
 
 #endif

@@ -17,6 +17,7 @@ int onMsg(MessageBase msg) {
   } else if (msg.type() == TYPE_RANGE_STAT) {
     RangeStat rangeStat = ProtoBufHelper::unwrapMsg<RangeStat>(msg);
     LOG(INFO) << rangeStat.DebugString();
+    getchar();
   }
 
   return 0;
