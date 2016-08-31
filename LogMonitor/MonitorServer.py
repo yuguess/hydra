@@ -16,10 +16,10 @@ from threading import Thread
 #######config ###############
 #logFile = "/home/infra/MonitorLog/2016-08-22"
 logFile = "/home/infra/MonitorLog/" + time.strftime("%Y-%m-%d")
-#logFile_app = "/home/mwan/LogMonitor/log"
+#logFile = "/home/mwan/LogMonitor/log"
 #logFile_app = "/home/infra/MonitorLog/ALGO_"+time.strftime("%Y-%m-%d")
 #logFile = "/home/mwan/LogMonitor/log1"
-listenPort = "8000"
+listenPort = "8213"
 #############################
 print logFile
 
@@ -54,23 +54,33 @@ order_table = pd.DataFrame(columns = order_head)
 tailLogExitFlag = True
 regex = re.compile(r'<<<(.*?)>>>')
 
+#a buffer to concat texts in single line while from two read trial, similar to the bluetooth project
+readbuf = ""
+
 class logHandler:
   @staticmethod
   def logTail():
-    #fp = open(logFile, 'r')
+    fp = open(logFile, 'r')
     md = mo.MonitorData();
     md.initTables(fp)
     print("init finish")
     init_table_finish_flag = 2
     while tailLogExitFlag:
-      new =  fp.readline()
+      new = fp.readline()
       if new:
-        match = regex.findall(new);
-        for item in match:
-          print(item)
-          #line_buf.append(item)
-          SocketHandler.send_to_all({'type': 'sys', 'message': item,})
-          mddata.logUpdate(item)
+        global readbuf
+        readbuf = readbuf + new
+        li = readbuf.split('\n')
+        if len(li)<2:
+          continue
+        for i in range(0,len(li)-1):
+          match = regex.findall(li[i]);
+          for item in match:
+            print(item)
+            #line_buf.append(item)
+            SocketHandler.send_to_all({'type': 'sys', 'message': item,})
+            mddata.logUpdate(item)
+        readbuf = li[len(li)-1]
 
 class IndexHandler(tornado.web.RequestHandler):
   def get(self):

@@ -21,7 +21,15 @@
   
   
   <body>
-    <div class = "container-fluid">
+    <nav class="navbar navbar-default navbar-fixed-top"><div class="container"><div><img src="static/img/logo.png" alt=""></div></div></nav>
+    <div class="btn-group" role="group" aria-label="...">
+      <button type="button" class="btn btn-default" onclick="showStock()">Stock</button>
+      <button type="button" class="btn btn-default" onclick="showFuture()">Future</button>
+    </div>
+    <div id="stock_div" class = "container-fluid">
+      <div class="row"  id="acct_stock">
+        <div class="btn btn-info acct-name col-md-1 " disabled>Account:</div><button class="btn btn-success acct col-md-1" onclick="showAllAccount()" >All</button>
+      </div>
       <div class="row container-fluid">
         <div class="col-md-2 table-responsive">
           <table class="table table-hover table-bordered" id='batch' width="500" data-url="data.json">
@@ -61,11 +69,66 @@
         <table id='debug' border='1' width="800"></table>
       </div> <!-- /container -->
     </div>
-    <!-- Le javascript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
 
-  
+    <!--=======================================================-->
+    
+
+    <div id="future_div" style="display:none" class="container-fluid">
+      <div class="row"  id="date">
+        <div class="btn btn-info date-name col-md-1 " disabled>Date:</div><button class="btn btn-success date col-md-1" >All</button>
+      </div>
+      <div class="row"  id="acct">
+        <div class="btn btn-info acct-name col-md-1 " disabled>Account:</div><button class="btn btn-success acct col-md-1" >All</button>
+      </div>
+      <div class="row" id="user">
+        <div class="btn btn-info user-name col-md-1" disabled>Trader:</div><button class="btn btn-success user col-md-1" >All</button>
+      </div>
+      <div class="row">
+        <div class="col-md-6 table-responsive">
+          <table id="batchTable" class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th>BatID</th>
+                <th>Progress</th>
+                <th>Notional</th>
+                <th>Slippage</th>
+                <th>UpdateTime</th>
+                <th>BatchType</th>
+                <th>Info</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              
+            </tbody>
+          </table>
+        </div>
+        <div class="col-md-6  table-responsive">
+          <table id="secTable" class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th>BatchID</th>
+                <th>Ticker</th>
+                <th>Direction</th>
+                <th>Progress</th>
+                <th>Urgency</th>
+                <th>BeginRefPx</th>
+                <th>AvgPrice</th>
+                <th>Slippage</th>
+                <th>UpdateTime</th>
+                <th width="20%" >OrderInfo</th>                
+              </tr>
+            </thead>
+            <tbody>
+              
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <audio id="audio"><source src="" autoplay="autoplay"/></audio>
+
+    <script src="static/js/client.js"></script>
 
   </body>
 </html>

@@ -1,3 +1,15 @@
+function showStock() {
+  $('#future_div').hide();
+  $('#stock_div').show();
+}
+
+function showFuture() {
+  $('#future_div').show();
+  $('#stock_div').hide();
+}
+
+
+
 //date formating
 Date.prototype.format =function(format) {
         var o = {
@@ -64,10 +76,10 @@ function constructOrder(data) {
   var sdate = date.format("hh:mm:ss");  
 
   var percentage= Number(data.trade_quantity)/Number(data.quantity);
-  $("#order-title").after("<tr class='order' id='" + data.id + "' > \
+  $("#order-title").after("<tr class='order' id='" + data.id + "' account='" + data.account + "'> \
                             <td id='" + data.id + "_status'>" + data.status + "</td> \
                             <td id='" + data.id + "_time'>" + sdate + "</td> \
-                            <td id='" + data.alg_order_id + "_code'>" + data.code + "</td> \
+                            <td id='" + data.id + "_code'>" + data.code + "</td> \
                             <td id='" + data.id + "_price'>" + data.price + "</td> \
                             <td style=\"display:none\" id='" + data.id + "_order_trade_quantity'>" + data.trade_quantity + "</td> \
                             <td style=\"display:none\" id='" + data.id + "_order_quantity'>" + data.quantity + "</td> \
@@ -99,7 +111,7 @@ function constructOrder(data) {
 //在首次连接时，table信息到来的时候，创建algo行
 //when connect first time, and table info comes, create a algo row
 function constructAlgo(data) {
-  $("#algo-title").after("<tr id='" + data.algo_flag + "' data-toggle=\"collapse\" href=\"#" + data.algo_flag +"_collapse\" onclick = \"onClickAlgo(this);\" > \
+  $("#algo-title").after("<tr id='" + data.algo_flag + "' data-toggle=\"collapse\" href=\"#" + data.algo_flag +"_collapse\" onclick = \"onClickAlgo(this);\" account='" + data.account + "'> \
                             <td id='" + data.algo_flag + "_algo_id'>" + mapAlgo[data.algo_flag] + "</td> \
                             <td id='" + data.algo_flag + "_ref_price'>" + " " + "</td> \
                             <td id='" + data.algo_flag + "_trade_price'>" + " " + "</td> \
@@ -120,7 +132,7 @@ function constructAlgo(data) {
 //在首次连接时，table信息到来的时候，创建batch行
 //when connect first time, and table info comes, create a batch row
 function constructBatch(data) {
-  $("#batch-title").after("<tr id='" + data.batch_flag + "' onclick = \"onClickBatch(this);\" > \
+  $("#batch-title").after("<tr id='" + data.batch_flag + "' onclick = \"onClickBatch(this);\" account='" + data.account + "'> \
                           <td id='" + data.batch_flag + "_algo_id'>" + mapBatch[data.batch_flag] + "</td> \
                           <td style=\"display:none\" id='" + data.batch_flag + "_batch_trade_quantity'>" + "0" + "</td> \
                           <td style=\"display:none\" id='" + data.batch_flag + "_batch_quantity'>" + data.trade_quantity + "</td> \
@@ -180,6 +192,8 @@ function constructBatchTable(data) {
 //点击batch的标题栏时，显示所有信息
 //show all batch,algo,order info when clicking on the theme of the batch table
 function onClickShowAll(data) {
+    //$('#audio').play();
+  //$("#audio")[0].play();
 
   $("#order tr").each(function() {
     jQuery(this).show();
@@ -248,6 +262,13 @@ function updateOrderRow(id,data) {
   $('#' + id + "_status").html(error_code[data.error_code]);
   $('#' + id + "_order_trade_quantity").html(trade_quantity);
   $('#' + id + "_order_progress").css({'width':"" + percentage + "%"}).find('span').html(tradeString);
+
+  $("#audio source").attr("src","http://tsn.baidu.com/text2audio?tex=" + $('#' + id + "_code").html() + " 已成交" + "\&lan=zh&cuid=" + "94-DE-80-23-E5-A6" + "\&spd=9\&pit=6\&ctp=1&tok="+"24.e175ed83539ebe33d2eb67c61effe559.2592000.1475223151.282335-8572922");
+  $("#audio")[0].pause();
+  $("#audio")[0].load();
+  $("#audio")[0].play();
+
+  //document.getElementById('debug').insertRow().insertCell().innerHTML = $('#' + id + "_code").html();
 
   changecolor(id,data);
 }
@@ -430,7 +451,7 @@ function changeStatusColor(id, error_code) {
 //在有新order信息到来时，创建新batch
 //create a new batch when a order info comes
 function newBatch(data) {
-  $("#batch-title").after("<tr id='" + data.batch_id + "' onclick = \"onClickBatch(this);\" > \
+  $("#batch-title").after("<tr id='" + data.batch_id + "' onclick = \"onClickBatch(this);\" account='" + data.account + "'> \
                           <td id='" + data.batch_id + "_algo_id'>" + mapBatch[data.batch_id] + "</td> \
                           <td style=\"display:none\" id='" + data.batch_id + "_batch_trade_quantity'>" + "0" + "</td> \
                           <td style=\"display:none\" id='" + data.batch_id + "_batch_quantity'>" + data.trade_quantity + "</td> \
@@ -448,7 +469,7 @@ function newBatch(data) {
 //在有新order信息到来时，创建新algo
 //create a new algo when a order info comes
 function newAlgo(data) {
-  $("#algo-title").after(  "<tr id='" + data.alg_order_id + "' data-toggle=\"collapse\" href=\"#" + data.alg_order_id +"_collapse\" onclick = \"onClickAlgo(this);\"  hidden=\"hidden\"> \
+  $("#algo-title").after(  "<tr id='" + data.alg_order_id + "' data-toggle=\"collapse\" href=\"#" + data.alg_order_id +"_collapse\" onclick = \"onClickAlgo(this);\"  hidden=\"hidden\" account='" + data.account + "'> \
                             <td id='" + data.alg_order_id + "_algo_id'>" + mapAlgo[data.alg_order_id] + "</td> \
                             <td id='" + data.alg_order_id + "_ref_price'>" + " " + "</td> \
                             <td id='" + data.alg_order_id + "_trade_price'>" + " " + "</td> \
@@ -477,10 +498,10 @@ function newOrder(data) {
 
 
   //document.getElementById('debug').insertRow().insertCell().innerHTML = data.alg_order_id;
-  $("#order-title").after(  "<tr class='order' id='" + data.id + "' hidden=\"hidden\"> \
+  $("#order-title").after(  "<tr class='order' id='" + data.id + "' hidden=\"hidden\" account='" + data.account + "'> \
                             <td id='" + data.id + "_status'>" + "new order" + "</td> \
                             <td id='" + data.id + "_time'>" + sdate + "</td> \
-                            <td id='" + data.alg_order_id + "_code'>" + data.code + "</td> \
+                            <td id='" + data.id + "_code'>" + data.code + "</td> \
                             <td id='" + data.id + "_price'>" + data.limit_price + "</td> \
                             <td style=\"display:none\" id='" + data.id + "_order_trade_quantity'>" + "0" + "</td> \
                             <td style=\"display:none\" id='" + data.id + "_order_quantity'>" + data.trade_quantity + "</td> \
@@ -537,7 +558,10 @@ function updateOrderTable(data) {
 function updateAlgoTable(data) {
   if (data.cedar_msg_type == "TYPE_ORDER_REQUEST" && data.type != "TYPE_CANCEL_ORDER_REQUEST" ) {
 
-    if (invMapAlgo[data.alg_order_id] != undefined) return;
+    if (invMapAlgo[data.alg_order_id] != undefined) {
+      padAlgoId(data);
+      return;
+    }
     mapAlgo[countAlgo.toString()] = data.alg_order_id;
     invMapAlgo[data.alg_order_id] = countAlgo.toString();
     data.alg_order_id = countAlgo.toString();
@@ -579,6 +603,71 @@ function updateBatchTable(data) {
   }
 }
 
+function padAlgoId(data) {
+  $('#algo tr').each(function() {
+    //document.getElementById('debug').insertRow().insertCell().innerHTML = jQuery(this).children(":first").html()+"*****"+data.alg_order_id;
+    if (jQuery(this).children(":first").html() == data.alg_order_id) {
+      jQuery(this).attr('account',data.account);
+    }
+  });
+} 
+
+
+function showAllAccount() {
+  $("#order tr").each(function() {
+    jQuery(this).show();
+  });
+  $("#algo tr").each(function() {
+    jQuery(this).show();
+  });
+  $("#batch tr").each(function() {
+    jQuery(this).show();
+  });
+}
+
+
+function onAcctClick(obj) {
+  $("#order tr").each(function() {
+    if (jQuery(this).attr('id') == "order-title") return;
+    //document.getElementById('debug').insertRow().insertCell().innerHTML = jQuery(obj).html()+":"+jQuery(this).attr('account');
+    if (jQuery(this).attr('account')!=jQuery(obj).html()) {
+      jQuery(this).hide();
+    } else {
+      jQuery(this).show();
+    }
+  });
+  $("#algo tr").each(function() {
+    if (jQuery(this).attr('id') == "algo-title") return;
+    //document.getElementById('debug').insertRow().insertCell().innerHTML = jQuery(obj).html()+":"+jQuery(this).attr('account');
+    if (jQuery(this).attr('account')!=jQuery(obj).html()) {
+      jQuery(this).hide();
+    } else {
+      jQuery(this).show();
+    }
+  });
+  $("#batch tr").each(function() {
+    if (jQuery(this).attr('id') == "batch-title") return;
+    //document.getElementById('debug').insertRow().insertCell().innerHTML = jQuery(obj).html()+":"+jQuery(this).attr('account');
+    if (jQuery(this).attr('account')!=jQuery(obj).html()) {
+      jQuery(this).hide();
+    } else {
+      jQuery(this).show();
+    }
+  });
+}
+
+function account_check(data) {
+  /*if (!data.hasOwnProperty("account")) {
+    document.getElementById('debug').insertRow().insertCell().innerHTML = data;
+  }*/
+  if (data.account==undefined) return;
+  if (accountMap[data.account]==undefined) {
+    accountMap[data.account] = 1;
+    $('#acct_stock').html($('#acct_stock').html() +"<button class='btn acct col-md-1' onclick=\"onAcctClick(this)\">"+ data.account + "</button>");
+  }
+  
+}
+
 var error_code = {
   '0': "CONFIRM",
   '1': "SEND_ERR",
@@ -617,13 +706,15 @@ var algo_quantity_map = new Map()
 var countOrder = 0;
 var countAlgo = 0;
 var countBatch = 0;
+var accountMap = {};
 
-var ws = new WebSocket('ws://192.168.0.66:8000/soc');
+var ws = new WebSocket('ws://192.168.0.66:8213/soc');
 
 //websocket connection
 ws.onmessage = function(event) {
   //first level parsing for incoming info
   //首层json反序列化
+  //document.getElementById('debug').insertRow().insertCell().innerHTML = event.data;
   try {
     var jData = JSON.parse(event.data);
   } catch (e) {
@@ -633,6 +724,7 @@ ws.onmessage = function(event) {
   //table信息到来时，构建三张表
   //creating rows in batch,algo,order tables, when table info comes from the backend
   if (jData.hasOwnProperty('table')) {
+    jData.table = jData.table.replace(/\\/g,"");
     var data = JSON.parse(jData.table);
     var tmp = $.extend(true, {}, data);
     constructOrderTable(tmp);
@@ -642,12 +734,15 @@ ws.onmessage = function(event) {
 
     tmp = $.extend(true, {}, data);
     constructBatchTable(tmp);
+    account_check(data);
   } 
 
   //当有message类型的信息传入时
   //when info with 'message' type comes in
   else if (jData.hasOwnProperty('message')) {
-    var data = JSON.parse(jData.message.replace(/\\/g,""));
+    jData.message = jData.message.replace(/\\/g,"");
+    var data = JSON.parse(jData.message);
+    account_check(data);
     if (socket_state.indexOf(data.type) != -1) {          //types not coming from TdxTrade like "SMART_ORDER","APP" should be eliminated
       var tmp = $.extend(true, {}, data);
       updateOrderTable(tmp);
@@ -657,11 +752,11 @@ ws.onmessage = function(event) {
 
       tmp = $.extend(true, {}, data);
       updateBatchTable(tmp);
-    } 
+    }
     else if (data.type == "TYPE_SMART_ORDER_REQUEST") {
       algo_quantity_map[data.alg_order_id] = data.trade_quantity;
     }
-    else {                                                //dealing with algo info updates
+    else {                                                        //dealing with algo info updates
       if (data.type != "APP_STATUS_MSG") return;
       //document.getElementById('debug').insertRow().insertCell().innerHTML = event.data;
       if ($('#'+invMapAlgo[data.alg_order_id]).length>0) {        //if this algo has already been in algo_table
@@ -670,21 +765,21 @@ ws.onmessage = function(event) {
         $("#algo").children("*").each(function() {
           if (this.id == 'algo-title') return;
           jQuery(this).children("*").each(function() {
+            if (this.id != invMapAlgo[data.alg_order_id]) return;
             computeTradePrice(jQuery(this).children("*").html());
             //document.getElementById('debug').insertRow().insertCell().innerHTML = jQuery(this).children("*").html();
+            //document.getElementById('debug').insertRow().insertCell().innerHTML = "*************************";
           });
         });
       } else{                                                       //if this algo is not in algo_table, create this row
         constructAlgoFromAppStatus(data);
       }
-      
     }
   }
   
   //当table信息传输结束时的行为
   //process when table info from backend has finish
   else if (jData.hasOwnProperty('init_finish')) {
-    
     $("#algo").children("*").each(function() {
       if (this.id == 'algo-title') return;
       jQuery(this).children("*").each(function() {

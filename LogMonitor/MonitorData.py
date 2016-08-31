@@ -6,6 +6,9 @@ import re
 import pandas as pd
 import ast
 
+from pygtail import Pygtail
+
+
 batch_head = ["batch_id", "trade_quantity", "quantity"]
 algo_head = ["algo_id", "code", "buy/sell", "trade_quantity", "quantity"]
 order_head = ["status", "code", "price", "trade_quantity", "quantity", "open_close", "account", "argument_list", "id", "status_msg", "batch_flag", "algo_flag", "buy_sell"]
@@ -159,9 +162,7 @@ class MonitorData:
     coo = 0
     oo = open('./17','w')
     while True:
-
       new = fp.readline()
-
       if new:
         match = self.regex.findall(new);
         for item in match:
