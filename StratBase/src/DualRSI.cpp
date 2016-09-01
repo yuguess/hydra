@@ -18,9 +18,9 @@ int DualRSI::onMsg(MessageBase &msg) {
   } else if (msg.type() == TYPE_RANGE_STAT) {
     RangeStat range = ProtoBufHelper::unwrapMsg<RangeStat>(msg);
 
-    LOG(INFO) << "ts " << range.timestamp();
-    LOG(INFO) << "close " << range.close();
-    LOG(INFO) << "stream " << range.stream();
+    //LOG(INFO) << "ts " << range.timestamp();
+    //LOG(INFO) << "close " << range.close();
+    //LOG(INFO) << "stream " << range.stream();
 
     if (range.stream() == "5minData") {
       if (!qRSI.update(range.close(), qRSIVal))
@@ -30,6 +30,7 @@ int DualRSI::onMsg(MessageBase &msg) {
     if (range.stream() == "15minData") {
       if (!sRSI.update(range.close(), sRSIVal))
         return 0;
+      sRSIValValidFlag = true;
     }
 
     if (range.stream() == "DayData") {
@@ -38,30 +39,35 @@ int DualRSI::onMsg(MessageBase &msg) {
       return 0;
     }
 
-    
-    LOG(INFO) << "qRSIVal " << qRSIVal;
-    LOG(INFO) << "sRSIVal " << sRSIVal;
-    getchar();
-
-    if (!isOverTimeThre(range.timestamp()))
+    if (!sRSIValValidFlag)
       return 0;
 
+    if (isBelowTimeThre(range.timestamp()))
+      return 0;
+
+    //LOG(INFO) << "ts " << range.timestamp();
+    //LOG(INFO) << "close " << range.close();
+    //LOG(INFO) << "stream " << range.stream();
+    //LOG(INFO) << "qRSIVal " << qRSIVal;
+    //LOG(INFO) << "sRSIVal " << sRSIVal;
+
     if (qRSIVal > quickRSIThre && sRSIVal > slowRSIThre) {
-      LOG(INFO) << "qRSIVal " << qRSIVal;
-      LOG(INFO) << "sRSIVal " << sRSIVal;
-      LOG(INFO) << "quickRSIThre " << quickRSIThre;
-      LOG(INFO) << "slowRSIThre " << slowRSIThre;
-      LOG(INFO) << "Buy " << range.close() << " " << range.timestamp();
-      getchar();
+      //LOG(INFO) << "qRSIVal " << qRSIVal;
+      //LOG(INFO) << "sRSIVal " << sRSIVal;
+      //LOG(INFO) << "quickRSIThre " << quickRSIThre;
+      //LOG(INFO) << "slowRSIThre " << slowRSIThre;
+      //LOG(INFO) << "Buy " << range.close() << " " << range.timestamp();
+      //getchar();
       enterMarket("Buy", range.code(), range.close(), range.timestamp());
     }
 
     if (qRSIVal < (1 - quickRSIThre) && sRSIVal < (1 - slowRSIThre)) {
-      LOG(INFO) << "qRSIVal " << qRSIVal;
-      LOG(INFO) << "sRSIVal " << sRSIVal;
-      LOG(INFO) << "quickRSIThre " << quickRSIThre;
-      LOG(INFO) << "slowRSIThre " << slowRSIThre;
-      LOG(INFO) << "Sell " << range.close() << " " << range.timestamp();
+      //LOG(INFO) << "qRSIVal " << qRSIVal;
+      //LOG(INFO) << "sRSIVal " << sRSIVal;
+      //LOG(INFO) << "quickRSIThre " << quickRSIThre;
+      //LOG(INFO) << "slowRSIThre " << slowRSIThre;
+      //LOG(INFO) << "Sell " << range.close() << " " << range.timestamp();
+      //getchar();
       enterMarket("Sell", range.code(), range.close(), range.timestamp());
     }
 
@@ -83,6 +89,7 @@ bool DualRSI::flatAll(std::string code, double price, std::string ts) {
   else
     transacLogger.enter("Buy", code, -curPosition, price, ts);
 
+  curPosition = 0;
   jsonState.removeMember("preEnter");
 
   return true;
@@ -107,11 +114,11 @@ bool DualRSI::enterMarket(std::string buySell, std::string code,
   return true;
 }
 
-bool DualRSI::isOverTimeThre(std::string ts) {
+bool DualRSI::isBelowTimeThre(std::string ts) {
   std::string hmsThre = "11:15:00";
   //YYYY-mm-dd HH:MM:SS
   std::string timeThreStr = ts.substr(0, 11) + hmsThre;
-  return CedarTimeHelper::strToPTime("%Y-%m-%d %H:%M:%S", ts) >
+  return CedarTimeHelper::strToPTime("%Y-%m-%d %H:%M:%S", ts) <
     CedarTimeHelper::strToPTime("%Y-%m-%d %H:%M:%S", timeThreStr);
 }
 

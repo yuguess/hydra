@@ -9,7 +9,7 @@
 class DualRSI : public StratBase {
 public:
   DualRSI() : slowRSIThre(0.45), quickRSIThre(0.65), qRSI(4), sRSI(6),
-    qRSIVal(0.0), sRSIVal(0.0), curPosition(0) {
+    qRSIVal(0.0), sRSIVal(0.0), curPosition(0), sRSIValValidFlag(false) {
   }
 
   virtual ~DualRSI() {
@@ -23,7 +23,7 @@ private:
 
   bool onCreate();
   bool onExit();
-  bool isOverTimeThre(std::string ts);
+  bool isBelowTimeThre(std::string ts);
   bool enterMarket(std::string, std::string, double, std::string);
   bool flatAll(std::string, double, std::string);
 
@@ -31,8 +31,8 @@ private:
   Json::Value jsonState;
   RSI qRSI, sRSI;
   double qRSIVal, sRSIVal;
-  //
   int curPosition;
+  bool sRSIValValidFlag;
 };
 
 #endif
