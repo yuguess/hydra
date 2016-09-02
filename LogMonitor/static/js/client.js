@@ -14,7 +14,7 @@ var test;
 function init() {
 
   // Connect to Web Socket
-  //ws = new WebSocket("ws://192.168.0.92:9001/");
+//  ws = new WebSocket("ws://192.168.0.92:9001/");
   ws = new WebSocket("ws://192.168.0.92:9527/soc");
   // Set event handlers.
   ws.onopen = function() {

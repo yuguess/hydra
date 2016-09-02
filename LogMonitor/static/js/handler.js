@@ -35,7 +35,7 @@ Date.prototype.format =function(format) {
 //更改第二张表algo的reference price
 //change the reference price for specific algo row
 function updateAppStatus(data) {
-  $("#"+invMapAlgo[data.alg_order_id]+"_ref_price").html(data.values);
+  $("#"+invMapAlgo[data.alg_order_id]+"_ref_price").html(Number(data.values).toFixed(4));
  // document.getElementById('debug').insertRow().insertCell().innerHTML = "#"+data.alg_order_id+"_ref_price";
   //document.getElementById('debug').insertRow().insertCell().innerHTML = data.values;
 }
@@ -50,7 +50,7 @@ function constructAlgoFromAppStatus(data) {
 
   $("#algo-title").after("<tr id='" + data.alg_order_id + "' data-toggle=\"collapse\" href=\"#" + data.alg_order_id +"_collapse\" onclick = \"onClickAlgo(this);\" > \
                             <td id='" + data.alg_order_id + "_algo_id'>" + mapAlgo[data.alg_order_id] + "</td> \
-                            <td id='" + data.alg_order_id + "_ref_price'>" + data.values + "</td> \
+                            <td id='" + data.alg_order_id + "_ref_price'>" + Number(data.values).toFixed(4) + "</td> \
                             <td id='" + data.alg_order_id + "_trade_price'>" + " " + "</td> \
                             <td id='" + data.alg_order_id + "_slippage'>" + " " + "</td> \
                             <td style=\"display:none\" id='" + data.alg_order_id + "_algo_trade_quantity'>" + "0" + "</td> \
@@ -80,7 +80,7 @@ function constructOrder(data) {
                             <td id='" + data.id + "_status'>" + data.status + "</td> \
                             <td id='" + data.id + "_time'>" + sdate + "</td> \
                             <td id='" + data.id + "_code'>" + data.code + "</td> \
-                            <td id='" + data.id + "_price'>" + data.price + "</td> \
+                            <td id='" + data.id + "_price'>" + Number(data.price).toFixed(4) + "</td> \
                             <td style=\"display:none\" id='" + data.id + "_order_trade_quantity'>" + data.trade_quantity + "</td> \
                             <td style=\"display:none\" id='" + data.id + "_order_quantity'>" + data.quantity + "</td> \
                             <td style=\"display:none\" id='" + data.id + "_batch_flag'>" + data.batch_flag + "</td> \
@@ -376,7 +376,7 @@ function computeTradePrice(algo_flag) {
   
   var trade_price = notional/quantity;
   
-  $('#' + invMapAlgo[algo_flag] + "_trade_price").html(trade_price);
+  $('#' + invMapAlgo[algo_flag] + "_trade_price").html(trade_price.toFixed(4));
   try{
     var direction = 0;
     var buy_sell;
@@ -393,10 +393,10 @@ function computeTradePrice(algo_flag) {
     });
 
     //alert($("#"+invMapAlgo[algo_flag]+"_ref_price").html()+","); 
-    var slippage = parseInt((trade_price/Number($("#"+invMapAlgo[algo_flag]+"_ref_price").html())-1)*direction*10000);
+    var slippage = (trade_price/Number($("#"+invMapAlgo[algo_flag]+"_ref_price").html())-1)*direction*10000;
     //document.getElementById('debug').insertRow().insertCell().innerHTML = slippage;
-    slippage = slippage.toFixed(5);
-    $("#"+invMapAlgo[algo_flag]+"_slippage").html(parseInt(slippage));
+    slippage = slippage.toFixed(2);
+    $("#"+invMapAlgo[algo_flag]+"_slippage").html(slippage);
   } catch(e) {
     alert(e.message); 
   }
@@ -502,7 +502,7 @@ function newOrder(data) {
                             <td id='" + data.id + "_status'>" + "new order" + "</td> \
                             <td id='" + data.id + "_time'>" + sdate + "</td> \
                             <td id='" + data.id + "_code'>" + data.code + "</td> \
-                            <td id='" + data.id + "_price'>" + data.limit_price + "</td> \
+                            <td id='" + data.id + "_price'>" + Number(data.limit_price).toFixed(4) + "</td> \
                             <td style=\"display:none\" id='" + data.id + "_order_trade_quantity'>" + "0" + "</td> \
                             <td style=\"display:none\" id='" + data.id + "_order_quantity'>" + data.trade_quantity + "</td> \
                             <td style=\"display:none\" id='" + data.id + "_batch_flag'>" + data.batch_id + "</td> \
@@ -708,7 +708,7 @@ var countAlgo = 0;
 var countBatch = 0;
 var accountMap = {};
 
-var ws = new WebSocket('ws://192.168.0.66:8000/soc');
+var ws = new WebSocket('ws://192.168.0.66:8213/soc');
 
 //websocket connection
 ws.onmessage = function(event) {

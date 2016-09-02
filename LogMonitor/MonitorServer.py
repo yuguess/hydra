@@ -15,11 +15,11 @@ from threading import Thread
 
 #######config ###############
 #logFile = "/home/infra/MonitorLog/2016-08-22"
-logFile = "/home/infra/MonitorLog/" + time.strftime("%Y-%m-%d")
-#logFile = "/home/mwan/LogMonitor/log"
+#logFile = "/home/infra/MonitorLog/" + time.strftime("%Y-%m-%d")
+logFile = "/home/mwan/LogMonitor/log"
 #logFile_app = "/home/infra/MonitorLog/ALGO_"+time.strftime("%Y-%m-%d")
 #logFile = "/home/mwan/LogMonitor/log1"
-listenPort = "8000"
+listenPort = "8213"
 #############################
 print logFile
 
