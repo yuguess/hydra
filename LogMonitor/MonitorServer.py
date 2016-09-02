@@ -19,7 +19,7 @@ logFile = "/home/infra/MonitorLog/" + time.strftime("%Y-%m-%d")
 #logFile = "/home/mwan/LogMonitor/log"
 #logFile_app = "/home/infra/MonitorLog/ALGO_"+time.strftime("%Y-%m-%d")
 #logFile = "/home/mwan/LogMonitor/log1"
-listenPort = "8213"
+listenPort = "8000"
 #############################
 print logFile
 
@@ -60,7 +60,7 @@ readbuf = ""
 class logHandler:
   @staticmethod
   def logTail():
-    fp = open(logFile, 'r')
+    #fp = open(logFile, 'r')
     md = mo.MonitorData();
     md.initTables(fp)
     print("init finish")

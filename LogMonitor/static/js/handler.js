@@ -708,7 +708,7 @@ var countAlgo = 0;
 var countBatch = 0;
 var accountMap = {};
 
-var ws = new WebSocket('ws://192.168.0.66:8213/soc');
+var ws = new WebSocket('ws://192.168.0.66:8000/soc');
 
 //websocket connection
 ws.onmessage = function(event) {

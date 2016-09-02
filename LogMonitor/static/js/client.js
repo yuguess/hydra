@@ -94,7 +94,7 @@ function updateWeb(str)
         }
         //$("#audio source").attr("src","http://tts.baidu.com/text2audio?idx=1&tex="+dataObj["m_ProdID"]+" "+$directionZh+" "+"成交  "+dataObj["m_Volume"]+"股&cuid=baidu speed demo&cod=2&lan=zh&ctp=1&pdt=1&spd=9&per=0&vol=5&pit=5")
 	//$("#audio source").attr("src","http://tts.baidu.com/text2audio?idx=1&tex="+dataObj["m_ProdID"]+" "+$directionZh+"&cuid=baidu speed demo&cod=2&lan=zh&ctp=1&pdt=1&spd=9&per=0&vol=5&pit=5")
-    $("#audio source").attr("src","http://tsn.baidu.com/text2audio?tex=" + dataObj["m_ProdID"] + "成交\&lan=zh&cuid=" + "94-DE-80-23-E5-A6" + "\&ctp=1&tok="+"24.e175ed83539ebe33d2eb67c61effe559.2592000.1475223151.282335-8572922");
+    $("#audio source").attr("src","http://tsn.baidu.com/text2audio?tex=" + dataObj["m_ProdID"] + "成交\&lan=zh&cuid=" + "94-DE-80-23-E5-A6" + "\&spd=8\&ctp=1&tok="+"24.e175ed83539ebe33d2eb67c61effe559.2592000.1475223151.282335-8572922");
 
         // $("#audio source").attr("src","sound/Trade_1Ring.mp3")
 
@@ -278,7 +278,7 @@ function constructBatchFuture(batchObj){
     $batchPrototype.find(".binfo").html(batchObj['batchInfo']);
     $batchPrototype.find(".kill").html("<div class='btn btn-info btn-block btn-xs' style='height:20px' onClick='$(this).attr(\"class\",\"btn btn-danger btn-block btn-xs\");killBatch("+batchObj["batchID"]+")'>    </div>");
     $("#batchTable tbody").prepend($batchPrototype);
-          $("#audio source").attr("src","sound/BatchOrder_2Ring.mp3")
+          $("#audio source").attr("src","static/sound/BatchOrder_2Ring.mp3")
 
           $("#audio")[0].pause();
           $("#audio")[0].load();

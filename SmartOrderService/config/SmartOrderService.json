@@ -15,7 +15,9 @@
 
   "TradeServer": [
     {"name":"2001_Stock", "address":"192.168.0.61:15230"},
-    {"name":"2001_Futures", "address":"192.168.1.102:15230"}
+    {"name":"2001_Futures", "address":"192.168.1.102:15230"},
+    {"name":"3001_Stock", "address":"192.168.0.61:15248"},
+    {"name":"3002_Stock", "address":"192.168.0.61:15250"}
   ],
 
   "MsgHub": {
