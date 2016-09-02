@@ -10,6 +10,7 @@ int DualKD::onMsg(MessageBase &msg) {
 
   } else if (msg.type() == TYPE_RESPONSE_MSG) {
     ResponseMessage rsp = ProtoBufHelper::unwrapMsg<ResponseMessage>(msg);
+
     ////update orderDelegate
     //orderDelegate.onOrderResponseUpdate(respMsg);
     //positionManager.onOrderResponseUpdate(respMsg);
@@ -18,6 +19,8 @@ int DualKD::onMsg(MessageBase &msg) {
 
     //LOG(INFO) << "stream " << range.stream();
     //LOG(INFO) << "ts " << range.timestamp();
+    //LOG(INFO) << "high " << range.high();
+    //LOG(INFO) << "low " << range.low();
     //LOG(INFO) << "close " << range.close();
 
     if (range.stream() == "15minData") {
@@ -26,24 +29,27 @@ int DualKD::onMsg(MessageBase &msg) {
       if (!qKD.update(range.high(), range.low(), range.close(), k, d))
         return 0;
 
+      //LOG(INFO) << " K " << k;
+      //getchar();
+
       if (jsonState.isMember("preQuickK") && jsonState.isMember("slowSignal")) {
         double preQuickK = jsonState["preQuickK"].asDouble();
         int slowSignal = jsonState["slowSignal"].asInt();
 
         //LOG(INFO) << "preK " << preQuickK << " K " << k << " slowSignal "
         //  << slowSignal;
+        //getchar();
 
         if ((preQuickK < 0.3 && 0.3 < k) ||
           ((preQuickK < 0.7 && 0.7 < k) && slowSignal == 1)) {
 
-          enterMarket("Buy", range.code(), range.close(), range.timestamp());
           //LOG(INFO) << "Buy " << range.close() << " " << range.timestamp();
-
+          enterMarket("Buy", range.code(), range.close(), range.timestamp());
         } else if ((preQuickK > 0.3 && 0.3 > k) ||
           ((preQuickK > 0.7 && 0.7 > k) && slowSignal == -1)) {
 
-          enterMarket("Sell", range.code(), range.close(), range.timestamp());
           //LOG(INFO) << "Sell " << range.close() << " " << range.timestamp();
+          enterMarket("Sell", range.code(), range.close(), range.timestamp());
         }
       }
 
@@ -55,8 +61,6 @@ int DualKD::onMsg(MessageBase &msg) {
       double k = 0.0, d = 0.0;
       if (!sKD.update(range.high(), range.low(), range.close(), k, d))
         return 0;
-
-      //LOG(INFO) << "slowK " << k;
 
       if (jsonState.isMember("preSlowK")) {
         double preSlowK = jsonState["preSlowK"].asDouble();

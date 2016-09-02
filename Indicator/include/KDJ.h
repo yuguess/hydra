@@ -30,6 +30,10 @@ private:
   bool calcKD(double close, double &k, double &d) {
     double minLow = *std::min_element(std::begin(lowBuf), std::end(lowBuf));
     double maxHigh = *std::max_element(std::begin(highBuf), std::end(highBuf));
+
+    if (maxHigh - minLow < 1e-8)
+      return false;
+
     double rsv = (close - minLow) / (maxHigh - minLow);
 
     k = kMA.update(rsv);
