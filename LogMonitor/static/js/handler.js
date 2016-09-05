@@ -641,6 +641,7 @@ function updateBatchTable(data) {
   }
 }
 
+//如果新algo到来时，algo行已经被创建，为其添加上account信息
 function padAlgoId(data) {
   $('#algo tr').each(function() {
     //document.getElementById('debug').insertRow().insertCell().innerHTML = jQuery(this).children(":first").html()+"*****"+data.alg_order_id;
@@ -650,6 +651,7 @@ function padAlgoId(data) {
   });
 } 
 
+//如果新algo到来时，algo行已经被创建，为其添加上code信息
 function padticker(data) {
   $('#algo tr').each(function() {
     //document.getElementById('debug').insertRow().insertCell().innerHTML = jQuery(this).children(":first").html()+"*****"+data.alg_order_id;
@@ -755,10 +757,10 @@ var countAlgo = 0;
 var countBatch = 0;
 var accountMap = {};
 
-var ws = new WebSocket('ws://192.168.0.66:8213/soc');
+var ws_stock = new WebSocket('ws://192.168.0.66:8213/soc');
 
 //websocket connection
-ws.onmessage = function(event) {
+ws_stock.onmessage = function(event) {
   //first level parsing for incoming info
   //首层json反序列化
   //document.getElementById('debug').insertRow().insertCell().innerHTML = event.data;
