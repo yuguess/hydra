@@ -2,7 +2,7 @@
 #define BASIC_KD_H
 
 #include "TransacLogger.h"
-#include "RangeStat.h"
+#include "RangeStatCollector.h"
 #include "StratBase.h"
 #include "json/json.h"
 #include "KDJ.h"
@@ -23,6 +23,7 @@ private:
   TransacLogger transacLogger;
   KD kd;
   Json::Value jsonState;
+  RangeCollector fiveMinData;
 };
 
 #endif

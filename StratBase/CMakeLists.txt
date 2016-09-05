@@ -31,7 +31,7 @@ add_executable(DualKD src/DualKD.cpp src/DualKDMain.cpp
 TARGET_LINK_LIBRARIES(DualKD zmq jsoncpp protobuf
   pthread backtester boost_filesystem boost_system boost_date_time)
 
-#add_executable(BasicKD src/BasicKDMain.cpp src/BasicKD.cpp
-#  ${SOURCES} ${PROTOBUF})
-#TARGET_LINK_LIBRARIES(BasicKD zmq jsoncpp protobuf
-#  pthread backtester boost_filesystem boost_system boost_date_time)
+add_executable(BasicKD src/BasicKDMain.cpp src/BasicKD.cpp
+  ${SOURCES} ${PROTOBUF})
+TARGET_LINK_LIBRARIES(BasicKD zmq jsoncpp protobuf
+  pthread backtester boost_filesystem boost_system boost_date_time)

@@ -3,25 +3,15 @@
 #include "ProtoBufMsgHub.h"
 #include "BasicKD.h"
 
-//BasicKD::BasicKD() :
-//  fiveMinStat(900, "09:15:00", "11:30:00", "13:00:00", "15:15:00") {
-//}
-
-BasicKD::BasicKD() : kd(14, 3, 3) {}
+BasicKD::BasicKD() : kd(14, 3, 3),  fiveMinData(300, "SHSE") {}
 
 int BasicKD::onMsg(MessageBase &msg) {
   if (msg.type() == TYPE_MARKETUPDATE) {
-    RangeStatResult rangeStat;
     MarketUpdate mkt = ProtoBufHelper::unwrapMsg<MarketUpdate>(msg);
-    //getchar();
-    //LOG(INFO) << mkt.DebugString();
-    //if (!fiveMinStat.onTickUpdate(mkt, rangeStat)) {
-    //  return 0;
-    //}
-
-    //Json::StyledWriter sytledWriter;
-    //out << sytledWriter.write(jsonState);
-    //out.close();
+    RangeStatResult rangeStat;
+    if (!fiveMinData.onRealTimeDataTickUpdate(mkt, rangeStat)) {
+      return 0;
+    }
 
     LOG(INFO) << "open " << rangeStat.open;
     LOG(INFO) << "high " << rangeStat.high;
@@ -36,6 +26,7 @@ int BasicKD::onMsg(MessageBase &msg) {
     //orderDelegate.onTickUpdate(mktUpdt);
     //twoMin.onTickUpdate(mktUpdt);
     //positionManager.onTickUpdate(mktUpdt);
+
   } else if (msg.type() == TYPE_RESPONSE_MSG) {
     ResponseMessage respMsg = ProtoBufHelper::unwrapMsg<ResponseMessage>(msg);
     //update orderDelegate

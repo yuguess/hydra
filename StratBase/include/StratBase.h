@@ -9,9 +9,11 @@
 
 class StratBase {
 public:
+  int run();
+
   virtual bool onCreate() = 0;
-  virtual int onMsg(MessageBase&) = 0;
   virtual bool onExit() = 0;
+  virtual int onMsg(MessageBase&) = 0;
 
   template<typename T>
   int sendRequest(CedarMsgType type, T &obj) {
@@ -22,6 +24,7 @@ public:
         //backtester.sendRequest();
       case LIVETEST:
         LOG(INFO) << "order to virtual matching engine";
+        break;
         //send through orderAgent
       case LIVE_TRADING:
         LOG(INFO) << "order to backtester";
@@ -33,12 +36,12 @@ public:
     return 0;
   }
 
-  int run();
-
 protected:
   inline StrategyMode getStrategyMode() const {
     return mode;
   }
+
+  //orderAgent
 
 private:
   int onMsgWrapper(MessageBase);

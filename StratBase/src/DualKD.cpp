@@ -4,6 +4,7 @@ int DualKD::onMsg(MessageBase &msg) {
 
   if (msg.type() == TYPE_MARKETUPDATE) {
     MarketUpdate mktUpdt = ProtoBufHelper::unwrapMsg<MarketUpdate>(msg);
+
     //orderDelegate.onTickUpdate(mktUpdt);
     //twoMin.onTickUpdate(mktUpdt);
     //positionManager.onTickUpdate(mktUpdt);
@@ -14,6 +15,7 @@ int DualKD::onMsg(MessageBase &msg) {
     ////update orderDelegate
     //orderDelegate.onOrderResponseUpdate(respMsg);
     //positionManager.onOrderResponseUpdate(respMsg);
+
   } else if (msg.type() == TYPE_RANGE_STAT) {
     RangeStat range = ProtoBufHelper::unwrapMsg<RangeStat>(msg);
 

@@ -14,7 +14,6 @@ public:
     onExit();
   }
   bool onExit();
-
   int onMsg(MessageBase&);
 
 private:
