@@ -269,9 +269,9 @@ function updateOrderRow(id,data) {
   $('#' + id + "_order_progress").css({'width':"" + percentage + "%"}).find('span').html(tradeString);
 
   if (data.error_code == '4') {
-    if ($('#' + id + "_buy_sell") == "LONG_BUY") {
+    if ($('#' + id + "_buy_sell").html() == "LONG_BUY") {
       $("#audio source").attr("src","http://tsn.baidu.com/text2audio?tex=" + $('#' + id + "_code").html() + " 已买入" + "\&lan=zh&cuid=" + "94-DE-80-23-E5-A6" + "\&spd=9\&pit=6\&ctp=1&tok="+"24.e175ed83539ebe33d2eb67c61effe559.2592000.1475223151.282335-8572922");
-    } else if ($('#' + id + "_buy_sell") == "SHORT_SELL") {
+    } else if ($('#' + id + "_buy_sell").html() == "SHORT_SELL") {
       $("#audio source").attr("src","http://tsn.baidu.com/text2audio?tex=" + $('#' + id + "_code").html() + " 已卖出" + "\&lan=zh&cuid=" + "94-DE-80-23-E5-A6" + "\&spd=9\&pit=6\&ctp=1&tok="+"24.e175ed83539ebe33d2eb67c61effe559.2592000.1475223151.282335-8572922");
     }
     $("#audio")[0].pause();
@@ -757,10 +757,10 @@ var countAlgo = 0;
 var countBatch = 0;
 var accountMap = {};
 
-var ws_stock = new WebSocket('ws://192.168.0.66:8213/soc');
+var ws = new WebSocket('ws://192.168.0.66:8213/soc');
 
 //websocket connection
-ws_stock.onmessage = function(event) {
+ws.onmessage = function(event) {
   //first level parsing for incoming info
   //首层json反序列化
   //document.getElementById('debug').insertRow().insertCell().innerHTML = event.data;
