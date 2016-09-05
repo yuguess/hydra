@@ -32,7 +32,6 @@ init_table_finish_flag = 0
 log_buf = []
 
 
-fp = open(logFile, 'r')
 
 tailLogExitFlag = True
 

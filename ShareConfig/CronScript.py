@@ -10,6 +10,8 @@ def start():
     '/home/infra/hydra/ShareConfig/receive.conf'])
 
   #Monitor Server
+  subprocess.Popen(['/home/infra/hydra/LogMonitor/StatusServer.py'])
+
   subprocess.Popen(['/home/infra/hydra/LogMonitor/MonitorServer.py'])
 
   cmdPath = '/home/infra/hydra/OrderDispatcher/'
@@ -27,6 +29,8 @@ def stop():
   subprocess.call(['pkill', '-f', 'SmartOrderService'])
 
   subprocess.call(['pkill', '-f', 'OrderDispatcher'])
+
+  subprocess.call(['pkill', '-f', 'StatusServer'])
 
 def service(argv):
   try:
