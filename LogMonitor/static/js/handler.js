@@ -13,13 +13,13 @@ function showFuture() {
 //date formating
 Date.prototype.format =function(format) {
         var o = {
-        "M+" : this.getMonth()+1, //month
-"d+" : this.getDate(),    //day
-"h+" : this.getHours(),   //hour
-"m+" : this.getMinutes(), //minute
-"s+" : this.getSeconds(), //second
-"q+" : Math.floor((this.getMonth()+3)/3),  //quarter
-"S" : this.getMilliseconds() //millisecond
+          "M+" : this.getMonth()+1, //month
+          "d+" : this.getDate(),    //day
+          "h+" : this.getHours(),   //hour
+          "m+" : this.getMinutes(), //minute
+          "s+" : this.getSeconds(), //second
+          "q+" : Math.floor((this.getMonth()+3)/3),  //quarter
+          "S" : this.getMilliseconds() //millisecond
         }
         if(/(y+)/.test(format)) format=format.replace(RegExp.$1,
         (this.getFullYear()+"").substr(4- RegExp.$1.length));
@@ -48,13 +48,15 @@ function constructAlgoFromAppStatus(data) {
   invMapAlgo[data.alg_order_id] = countAlgo.toString();
   data.alg_order_id = countAlgo.toString();
 
-  $("#algo-title").after("<tr id='" + data.alg_order_id + "' data-toggle=\"collapse\" href=\"#" + data.alg_order_id +"_collapse\" onclick = \"onClickAlgo(this);\" > \
-                            <td id='" + data.alg_order_id + "_algo_id'>" + mapAlgo[data.alg_order_id] + "</td> \
+  $("#algo-title").after("<tr id='" + data.alg_order_id + "' data-toggle=\"collapse\" href=\"#" + data.alg_order_id +"_collapse\" hidden=\"hidden\" onclick = \"onClickAlgo(this);\" > \
+                            <td style=\"display:none\" id='" + data.alg_order_id + "_algo_id'>" + mapAlgo[data.alg_order_id] + "</td> \
+                            <td id='" + data.alg_order_id + "_code'>" + " " + "</td> \
                             <td id='" + data.alg_order_id + "_ref_price'>" + Number(data.values).toFixed(4) + "</td> \
                             <td id='" + data.alg_order_id + "_trade_price'>" + " " + "</td> \
                             <td id='" + data.alg_order_id + "_slippage'>" + " " + "</td> \
                             <td style=\"display:none\" id='" + data.alg_order_id + "_algo_trade_quantity'>" + "0" + "</td> \
                             <td style=\"display:none\" id='" + data.alg_order_id + "_algo_quantity'>" + 0 + "</td> \
+                            <td id='" + data.alg_order_id + "_algo_notional'>" + "" + "</td> \
                             <td> \
                               <div class=\"progress\"> \
                                   <div class=\"progress-bar\" id='" + data.alg_order_id + "_algo_progress' role=\"progressbar\" aria-valuenow=\"0\" aria-valuemin=\"0\"  \
@@ -112,12 +114,14 @@ function constructOrder(data) {
 //when connect first time, and table info comes, create a algo row
 function constructAlgo(data) {
   $("#algo-title").after("<tr id='" + data.algo_flag + "' data-toggle=\"collapse\" href=\"#" + data.algo_flag +"_collapse\" onclick = \"onClickAlgo(this);\" account='" + data.account + "'> \
-                            <td id='" + data.algo_flag + "_algo_id'>" + mapAlgo[data.algo_flag] + "</td> \
+                            <td style=\"display:none\" id='" + data.algo_flag + "_algo_id'>" + mapAlgo[data.algo_flag] + "</td> \
+                            <td id='" + data.algo_flag + "_code'>" + data.code + "</td> \
                             <td id='" + data.algo_flag + "_ref_price'>" + " " + "</td> \
                             <td id='" + data.algo_flag + "_trade_price'>" + " " + "</td> \
                             <td id='" + data.algo_flag + "_slippage'>" + " " + "</td> \
                             <td style=\"display:none\" id='" + data.algo_flag + "_algo_trade_quantity'>" + "0" + "</td> \
                             <td style=\"display:none\" id='" + data.algo_flag + "_algo_quantity'>" + data.trade_quantity + "</td> \
+                            <td id='" + data.algo_flag + "_algo_notional'>" + "" + "</td> \
                             <td> \
                               <div class=\"progress\"> \
                                   <div class=\"progress-bar\" id='" + data.algo_flag + "_algo_progress' role=\"progressbar\" aria-valuenow=\"0\" aria-valuemin=\"0\"  \
@@ -136,6 +140,7 @@ function constructBatch(data) {
                           <td id='" + data.batch_flag + "_algo_id'>" + mapBatch[data.batch_flag] + "</td> \
                           <td style=\"display:none\" id='" + data.batch_flag + "_batch_trade_quantity'>" + "0" + "</td> \
                           <td style=\"display:none\" id='" + data.batch_flag + "_batch_quantity'>" + data.trade_quantity + "</td> \
+                          <td id='" + data.batch_flag + "_batch_notional'>" + "" + "</td> \
                           <td> \
                              <div class=\"progress\"> \
                                 <div class=\"progress-bar\" id='" + data.batch_flag + "_batch_progress' role=\"progressbar\" aria-valuenow=\"0\" aria-valuemin=\"0\"  \
@@ -263,10 +268,17 @@ function updateOrderRow(id,data) {
   $('#' + id + "_order_trade_quantity").html(trade_quantity);
   $('#' + id + "_order_progress").css({'width':"" + percentage + "%"}).find('span').html(tradeString);
 
-  $("#audio source").attr("src","http://tsn.baidu.com/text2audio?tex=" + $('#' + id + "_code").html() + " 已成交" + "\&lan=zh&cuid=" + "94-DE-80-23-E5-A6" + "\&spd=9\&pit=6\&ctp=1&tok="+"24.e175ed83539ebe33d2eb67c61effe559.2592000.1475223151.282335-8572922");
-  $("#audio")[0].pause();
-  $("#audio")[0].load();
-  $("#audio")[0].play();
+  if (data.error_code == '4') {
+    if ($('#' + id + "_buy_sell") == "LONG_BUY") {
+      $("#audio source").attr("src","http://tsn.baidu.com/text2audio?tex=" + $('#' + id + "_code").html() + " 已买入" + "\&lan=zh&cuid=" + "94-DE-80-23-E5-A6" + "\&spd=9\&pit=6\&ctp=1&tok="+"24.e175ed83539ebe33d2eb67c61effe559.2592000.1475223151.282335-8572922");
+    } else if ($('#' + id + "_buy_sell") == "SHORT_SELL") {
+      $("#audio source").attr("src","http://tsn.baidu.com/text2audio?tex=" + $('#' + id + "_code").html() + " 已卖出" + "\&lan=zh&cuid=" + "94-DE-80-23-E5-A6" + "\&spd=9\&pit=6\&ctp=1&tok="+"24.e175ed83539ebe33d2eb67c61effe559.2592000.1475223151.282335-8572922");
+    }
+    $("#audio")[0].pause();
+    $("#audio")[0].load();
+    $("#audio")[0].play();
+  }
+
 
   //document.getElementById('debug').insertRow().insertCell().innerHTML = $('#' + id + "_code").html();
 
@@ -289,6 +301,8 @@ function sumBatchProgress(batch_flag) {
   //document.getElementById('debug').insertRow().insertCell().innerHTML = "exect";
   var trade_quantity=0;
   var quantity = 0;
+  var notional_b = 0;
+  var notional_s = 0;
 
   $("tr").filter(function(){
     var status = jQuery(this).children(":first").html();
@@ -300,15 +314,26 @@ function sumBatchProgress(batch_flag) {
     s_quantity = jQuery(this).children("[id$=_order_quantity]").html();
     s_trade_quantity = jQuery(this).children("[id$=_order_trade_quantity]").html();
     trade_quantity += Number(s_trade_quantity);
-    quantity += Number(s_quantity);
+    if (jQuery(this).children("[id$=_status]").html() == 'PARTIA_CANED') {
+      quantity += Number(s_trade_quantity);
+    } else {
+      quantity += Number(s_quantity);
+    }
+
+    if (jQuery(this).children("[id$=_buy_sell]").html() == 'LONG_BUY') {
+      notional_b += Number(s_trade_quantity)*Number(s_price);
+    } else if (jQuery(this).children("[id$=_buy_sell]").html() == 'SHORT_SELL') {
+      notional_s += Number(s_trade_quantity)*Number(s_price);
+    }
 
     //document.getElementById('debug').insertRow().insertCell().innerHTML = jQuery(this).parent().children("[id$=_order_quantity]").html();
   });
-
   var tradeString = "" + trade_quantity + "/" + quantity;
   var percentage=100 * trade_quantity/quantity;
 
-  $('#' + invMapBatch[batch_flag] + "_batch_progress").css({'width':"" + percentage + "%"}).find('span').html(tradeString);
+  $('#' + invMapBatch[batch_flag] + "_batch_progress").css({'width':"" + percentage + "%"}).find('span').html("" + percentage.toFixed(1) + "%");
+  $('#' + invMapBatch[batch_flag] + "_batch_notional").html("" + notional_b + '/' + notional_s);
+
 
   //document.getElementById('debug').insertRow().insertCell().innerHTML = tradeString;
 
@@ -330,6 +355,8 @@ function updateAlgoRow(algo_id, data) {
 function sumAlgoProgress(algo_flag) {
   var trade_quantity=0;
   var quantity = 0;
+  var notional_b = 0;
+  var notional_s = 0;
 
   $("tr").filter(function(){
     var status = jQuery(this).children(":first").html();
@@ -338,9 +365,17 @@ function sumAlgoProgress(algo_flag) {
 
   }).each(function() {
 
+    s_price = jQuery(this).children("[id$=_price]").html();
     s_quantity = jQuery(this).children("[id$=_order_quantity]").html();
     s_trade_quantity = jQuery(this).children("[id$=_order_trade_quantity]").html();
     trade_quantity += Number(s_trade_quantity);
+
+    if (jQuery(this).children("[id$=_buy_sell]").html() == 'LONG_BUY') {
+      notional_b += Number(s_trade_quantity)*Number(s_price);
+    } else if (jQuery(this).children("[id$=_buy_sell]").html() == 'SHORT_SELL') {
+      notional_s += Number(s_trade_quantity)*Number(s_price);
+    }
+    
 
     //document.getElementById('debug').insertRow().insertCell().innerHTML = jQuery(this).parent().children("[id$=_order_quantity]").html();
   });
@@ -349,6 +384,7 @@ function sumAlgoProgress(algo_flag) {
   var percentage=100 * trade_quantity/quantity;
 
   $('#' + invMapAlgo[algo_flag] + "_algo_progress").css({'width':"" + percentage + "%"}).find('span').html(tradeString);
+  $('#' + invMapAlgo[algo_flag] + "_algo_notional").html("" + notional_b + '/' + notional_s);
 
   //document.getElementById('debug').insertRow().insertCell().innerHTML = tradeString;
 }
@@ -455,6 +491,7 @@ function newBatch(data) {
                           <td id='" + data.batch_id + "_algo_id'>" + mapBatch[data.batch_id] + "</td> \
                           <td style=\"display:none\" id='" + data.batch_id + "_batch_trade_quantity'>" + "0" + "</td> \
                           <td style=\"display:none\" id='" + data.batch_id + "_batch_quantity'>" + data.trade_quantity + "</td> \
+                          <td id='" + data.batch_id + "_batch_notional'>" + "" + "</td> \
                           <td> \
                              <div class=\"progress\"> \
                                 <div class=\"progress-bar\" id='" + data.batch_id + "_batch_progress' role=\"progressbar\" aria-valuenow=\"0\" aria-valuemin=\"0\"  \
@@ -470,12 +507,14 @@ function newBatch(data) {
 //create a new algo when a order info comes
 function newAlgo(data) {
   $("#algo-title").after(  "<tr id='" + data.alg_order_id + "' data-toggle=\"collapse\" href=\"#" + data.alg_order_id +"_collapse\" onclick = \"onClickAlgo(this);\"  hidden=\"hidden\" account='" + data.account + "'> \
-                            <td id='" + data.alg_order_id + "_algo_id'>" + mapAlgo[data.alg_order_id] + "</td> \
+                            <td style=\"display:none\" id='" + data.alg_order_id + "_algo_id'>" + mapAlgo[data.alg_order_id] + "</td> \
+                            <td id='" + data.algo_flag + "_code'>" + data.code + "</td> \
                             <td id='" + data.alg_order_id + "_ref_price'>" + " " + "</td> \
                             <td id='" + data.alg_order_id + "_trade_price'>" + " " + "</td> \
                             <td id='" + data.alg_order_id + "_slippage'>" + " " + "</td> \
                             <td style=\"display:none\" id='" + data.alg_order_id + "_algo_trade_quantity'>" + "0" + "</td> \
                             <td style=\"display:none\" id='" + data.alg_order_id + "_algo_quantity'>" + data.trade_quantity + "</td> \
+                            <td id='" + data.alg_order_id + "_algo_notional'>" + "" + "</td> \
                             <td> \
                                <div class=\"progress\"> \
                                   <div class=\"progress-bar\" id='" + data.alg_order_id + "_algo_progress' role=\"progressbar\" aria-valuenow=\"0\" aria-valuemin=\"0\"  \
@@ -494,8 +533,6 @@ function newOrder(data) {
   s = mapOrder[data.id]
   date.setUTCSeconds(Number(s.substring(0,s.length-6)));
   var sdate = date.format("hh:mm:ss");  
-
-
 
   //document.getElementById('debug').insertRow().insertCell().innerHTML = data.alg_order_id;
   $("#order-title").after(  "<tr class='order' id='" + data.id + "' hidden=\"hidden\" account='" + data.account + "'> \
@@ -560,6 +597,7 @@ function updateAlgoTable(data) {
 
     if (invMapAlgo[data.alg_order_id] != undefined) {
       padAlgoId(data);
+      padticker(data);
       return;
     }
     mapAlgo[countAlgo.toString()] = data.alg_order_id;
@@ -608,6 +646,15 @@ function padAlgoId(data) {
     //document.getElementById('debug').insertRow().insertCell().innerHTML = jQuery(this).children(":first").html()+"*****"+data.alg_order_id;
     if (jQuery(this).children(":first").html() == data.alg_order_id) {
       jQuery(this).attr('account',data.account);
+    }
+  });
+} 
+
+function padticker(data) {
+  $('#algo tr').each(function() {
+    //document.getElementById('debug').insertRow().insertCell().innerHTML = jQuery(this).children(":first").html()+"*****"+data.alg_order_id;
+    if (jQuery(this).children(":first").html() == data.alg_order_id) {
+      jQuery(this).children('[id$=_code]').html(data.code);
     }
   });
 } 
@@ -801,3 +848,33 @@ ws.onmessage = function(event) {
 
 }
 
+var wss = new WebSocket('ws://192.168.0.66:8001/soc');
+
+//websocket connection
+wss.onmessage = function(event) {
+  try {
+    var jData = JSON.parse(event.data);
+  } catch (e) {
+    alert(e.message);
+  }
+//document.getElementById('debug').insertRow().insertCell().innerHTML = event.data;
+  //table信息到来时，构建三张表
+  //creating rows in batch,algo,order tables, when table info comes from the backend
+  if (jData.hasOwnProperty('process_status')) {
+    jData.process_status = jData.process_status.replace(/\\/g,"");
+    var data = JSON.parse(jData.process_status);
+    //document.getElementById('debug').insertRow().insertCell().innerHTML = event.data;
+    for (var key in data) {
+      if (data[key]==true) {
+        var key_tmp = key
+        if (key_tmp == 'MonitorServer.p') key_tmp = 'MonitorServer';
+        $('#'+key_tmp).attr('class', 'btn btn-success').html('o');
+        //document.getElementById('debug').insertRow().insertCell().innerHTML = key;
+      } else if(data[key]==false) {
+        var key_tmp = key
+        if (key_tmp == 'MonitorServer.p') key_tmp = 'MonitorServer';
+        $('#'+key_tmp).attr('class', 'btn btn-danger').html('x');
+      }
+    }
+  }
+}
