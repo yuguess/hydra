@@ -19,7 +19,7 @@ from threading import Thread
 logFile = "/home/mwan/LogMonitor/log"
 #logFile_app = "/home/infra/MonitorLog/ALGO_"+time.strftime("%Y-%m-%d")
 #logFile = "/home/mwan/LogMonitor/log1"
-listenPort = "8214"
+listenPort = "80"
 #############################
 print logFile
 
@@ -90,6 +90,9 @@ class IndexHandler(tornado.web.RequestHandler):
 class SocketHandler(tornado.websocket.WebSocketHandler):
   clients = set()
   initFlag = False
+
+  def check_origin(self, origin):
+    return True
 
  # def __init__(self, application, request, **kwargs):
  #  tornado.websocket.WebSocketHandler.__init__(self, application, request, **kwargs)
