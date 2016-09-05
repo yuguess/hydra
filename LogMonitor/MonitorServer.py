@@ -19,7 +19,7 @@ from threading import Thread
 logFile = "/home/mwan/LogMonitor/log"
 #logFile_app = "/home/infra/MonitorLog/ALGO_"+time.strftime("%Y-%m-%d")
 #logFile = "/home/mwan/LogMonitor/log1"
-listenPort = "80"
+listenPort = "8080"
 #############################
 print logFile
 
