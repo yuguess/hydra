@@ -11,7 +11,7 @@ int Backtester::run() {
   CedarJsonConfig::getInstance().getStringArrayWithTag(streams,
     "Backtest.Streams", "");
 
-  for (int i = 0; i < streams.size(); i++) {
+  for (unsigned i = 0; i < streams.size(); i++) {
     Json::Value jsonConfigObj;
     CedarJsonConfig::getInstance().getJsonValueByPath("Backtest." + streams[i],
       jsonConfigObj);

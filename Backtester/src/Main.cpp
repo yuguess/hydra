@@ -8,12 +8,16 @@ int onMsg(MessageBase msg) {
   if (msg.type() == TYPE_MARKETUPDATE) {
     MarketUpdate mkt = ProtoBufHelper::unwrapMsg<MarketUpdate>(msg);
     LOG(INFO) << mkt.DebugString();
-  } if (msg.type() == TYPE_ORDER_REQUEST) {
+  } else if (msg.type() == TYPE_ORDER_REQUEST) {
     OrderRequest req = ProtoBufHelper::unwrapMsg<OrderRequest>(msg);
     LOG(INFO) << req.DebugString();
-  } if (msg.type() == TYPE_RESPONSE_MSG) {
+  } else if (msg.type() == TYPE_RESPONSE_MSG) {
     ResponseMessage rmsg = ProtoBufHelper::unwrapMsg<ResponseMessage>(msg);
     LOG(INFO) << rmsg.DebugString();
+  } else if (msg.type() == TYPE_RANGE_STAT) {
+    RangeStat rangeStat = ProtoBufHelper::unwrapMsg<RangeStat>(msg);
+    LOG(INFO) << rangeStat.DebugString();
+    getchar();
   }
 
   return 0;

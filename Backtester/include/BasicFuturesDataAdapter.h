@@ -15,6 +15,8 @@ namespace pt = boost::posix_time;
 class BasicFuturesDataAdapter : public DataAdapter {
 
 public:
+  BasicFuturesDataAdapter() : oneDay(1) {}
+
   int init(std::string &stream, Json::Value &jsonConfigObj) {
     std::string startStr = jsonConfigObj["Range"]["Start"].asString();
     std::string endStr = jsonConfigObj["Range"]["End"].asString();
@@ -31,15 +33,14 @@ public:
 
     setupDateToFileMap(homeDir + "/" + code);
 
+    curDate = startDate;
+    curDateStr = CedarTimeHelper::ptimeToStr("%Y%m%d", curDate);
+    ifs.open(getDataFileStr(startDate), std::ifstream::in);
+
     return 0;
   }
 
   bool getNextData(TimeSeriesData &tsData) {
-    static pt::ptime curDate = startDate;
-    static std::string curDateStr =
-      CedarTimeHelper::ptimeToStr("%Y%m%d", curDate);
-    static boost::gregorian::days oneDay(1);
-    static std::ifstream ifs(getDataFileStr(startDate), std::ifstream::in);
     std::string line;
 
     while (true) {
@@ -137,6 +138,11 @@ private:
   std::string streamName;
   std::string code;
   ExchangeType exchange;
+
+  pt::ptime curDate;
+  std::string curDateStr;
+  boost::gregorian::days oneDay;
+  std::ifstream ifs;
 };
 
 #endif

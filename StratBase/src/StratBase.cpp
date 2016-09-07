@@ -3,6 +3,9 @@
 #include "EnumStringMap.h"
 
 int StratBase::run() {
+
+  onCreate();
+
   std::string modeStr;
   //Backtest, Livetest, LiveTrading
   CedarJsonConfig::getInstance().getStringByPath("Strategy.Mode", modeStr);
@@ -23,6 +26,8 @@ int StratBase::run() {
       msgHub.registerCallback(std::bind(&StratBase::onMsgWrapper,
             this, std::placeholders::_1));
 
+      //send data request
+
       CedarHelper::blockSignalAndSuspend();
     }
 
@@ -34,6 +39,7 @@ int StratBase::run() {
 }
 
 int StratBase::onMsgWrapper(MessageBase msgBase) {
+
   onMsg(msgBase);
   return 0;
 }

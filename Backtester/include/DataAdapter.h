@@ -3,6 +3,7 @@
 
 #include "CPlusPlusCode/ProtoBufMsg.pb.h"
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include "json/json.h"
 
 struct TimeSeriesData {
   MessageBase msg;

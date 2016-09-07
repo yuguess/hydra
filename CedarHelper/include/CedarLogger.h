@@ -4,14 +4,13 @@
 #include "easylogging++.h"
 #include <fcntl.h>
 #ifdef __linux
-	#include <unistd.h>
+  #include <unistd.h>
 #else
-	#include <io.h>
+  #include <io.h>
 #endif
 
 #include <sys/stat.h>
 #include <stdio.h>
-#include "CedarHelper.h"
 
 class CedarLogger {
 public:
@@ -22,9 +21,9 @@ public:
 
     el::Configurations defaultConf;
 
-		defaultConf.setToDefault();
+    defaultConf.setToDefault();
     defaultConf.setGlobally(el::ConfigurationType::Format,
-			"%levshort%datetime{%M%d %H:%m:%s.%g} %thread %fbase:%line] %msg");
+      "%levshort%datetime{%M%d %H:%m:%s.%g} %thread %fbase:%line] %msg");
 
 		std::string destDir;
     CedarJsonConfig::getInstance().getStringByPath(
@@ -46,7 +45,6 @@ public:
 			LOG(FATAL) << appName << " symlink set fail!";
 		}
 #else
-
 //put win create file link imple here
 #endif
     return 0;
