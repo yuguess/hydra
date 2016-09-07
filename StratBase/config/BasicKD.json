@@ -1,0 +1,45 @@
+{
+  "CedarLogger": {
+    "AppName": "BasicKD",
+    "LogDir": "/home/yuguess/TestLog/"
+  },
+
+  "PersistentState": {
+    "Dir": "/home/yuguess/TestState/"
+  },
+
+  "Strategy": {
+    //Backtest, LiveTest, LiveTrading
+    "Mode": "Backtest"
+  },
+
+  "Backtest":{
+    "Streams": ["DayData"],
+    "IF": {
+      "Range": {"Start":"20110104", "End": "20111231"},
+      "Type": "BasicFuturesDataAdapter",
+      "Code": "IF",
+      "Exchange": "CFE",
+      "FileAddress": "/home/yuguess/StockTickData/"
+    },
+    "15minData": {
+      "Range": {"Start":"20110104", "End": "20110131"},
+      "Type": "RangeDataAdapter",
+      "Code": "399905.SZ",
+      "Frequency": "15min",
+      "FileAddress": "/home/yuguess/ProcessFile"
+    },
+    "DayData": {
+      "Range": {"Start":"20110104", "End": "20110131"},
+      "Type": "DayDataAdapter",
+      "Code": "399905.SZ",
+      "Frequency": "Day",
+      "FileAddress": "/home/yuguess/ProcessFile"
+    }
+  },
+
+  "MsgHub": {
+    "PublishPort":"15223",
+    "PullPort":"15224"
+  }
+}
