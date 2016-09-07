@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import subprocess
 import sys
 import getopt
@@ -9,7 +10,7 @@ def start():
     '/home/infra/hydra/ShareConfig/receive.conf'])
 
   #Monitor Server
-  subprocess.Popen(['/home/infra/hydra/LogMonitor/MonitorServer.py'])
+  subprocess.Popen(['/home/infra/hydra/LogMonitor/StatusServer.py'])
 
   subprocess.Popen(['/home/infra/hydra/LogMonitor/MonitorServer.py'])
 
@@ -25,9 +26,11 @@ def stop():
   subprocess.call('/home/infra/hydra/ShareConfig/stopLogStash.sh')
   subprocess.call(['pkill', 'MonitorServer'])
 
-  subprocess.call(['pkill', 'SmartOrderService'])
+  subprocess.call(['pkill', '-f', 'SmartOrderService'])
 
-  subprocess.call(['pkill', './OrderDispatcher*'])
+  subprocess.call(['pkill', '-f', 'OrderDispatcher'])
+
+  subprocess.call(['pkill', '-f', 'StatusServer'])
 
 def service(argv):
   try:

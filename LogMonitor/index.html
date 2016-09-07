@@ -7,51 +7,151 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <style>
-      body {
-        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
-      }
-    </style>
-    <script type="text/javascript" src="static/js/jquery.js"></script>>
+    <script type="text/javascript" src="static/js/jquery.js"></script>
     <script type="text/javascript" src="static/js/handler.js"></script>
     
     <link rel="stylesheet" href="static/css/bootstrap.min.css">
     <link rel="stylesheet" href="static/css/bootstrap-table.css">
-	  
+    
     <script src="static/js/bootstrap.min.js"></script>
     <script src="static/js/bootstrap-table.js"></script>
-    <fontbase family="">
+    <link rel="stylesheet" href="static/css/style.css" type="text/css" />
   </head>
 
-  
-  
   <body>
-    <div class="container">
-      <table class="table table-bordered" id='message' width="600" data-url="data.json">
-        <tr id='title'>
-          <td>status</td>
-          <td>code</td>
-          <td>price</td>
-          <td>buy/sell</td>
-          <td>progress</td>
-          <td>open_close</td>
-          <td>account</td>
-          <td>argument_list</td>
-          <td>id</td>
-          <td>status msg</td>
-        </tr>
-      </table>
-      <table id='debug' border='1' width="800"></table>
+    <nav class="navbar navbar-default navbar-fixed-top"><div class="container"><div><img src="static/img/logo.png" alt=""></div></div></nav>
+    <div class="row container-fluid">
+      <div class="col-md-1 table-responsive">
+        <div class="btn-group" role="group" aria-label="...">
+          <button type="button" class="btn btn-default" onclick="showStock()">Stock</button>
+          <button type="button" class="btn btn-default" onclick="showFuture()">Future</button>
+        </div>
+      </div>
+      <div class="col-md-1 table-responsive">
+        <h4 vertical-align='middle'>SmartOrder:</p>
+      </div>
+      <div class="col-md-1 table-responsive">
+        <button id='SmartOrderServi' type="button" class="btn btn-default">I</button>
+      </div>
+      <div class="col-md-1 table-responsive">
+        <h4 vertical-align='middle'>OrderDispatcher:</p>
+      </div>
+      <div class="col-md-1 table-responsive">
+        <button id='OrderDispatcher' type="button" class="btn btn-default">I</button>
+      </div>
+      <div class="col-md-1 table-responsive">
+        <h4 vertical-align='middle'>MonitorServer:</p>
+      </div>
+      <div class="col-md-1 table-responsive">
+        <button id='MonitorServer' type="button" class="btn btn-default">I</button>
+      </div>
+    </div>
 
+    <div id="stock_div" class = "container-fluid">
+      <div class="row"  id="acct_stock">
+        <div class="btn btn-info acct-name col-md-1 " disabled>Account:</div><button class="btn btn-success acct col-md-1" onclick="showAllAccount()" >All</button>
+      </div>
+      <div class="row container-fluid">
+        <div class="col-md-3 table-responsive">
+          <table class="table table-hover table-bordered" id='batch' width="500" data-url="data.json">
+            <tr id='batch-title' onclick = "onClickShowAll(this);">
+              <td>batch_id</td>
+              <td>notional(B/S)</td>
+              <td>progress</td>
+            </tr>
+          </table>
+        </div>
+        <div class="col-md-4 table-responsive">
+          <table class="table table-hover table-bordered" id='algo' width="100" data-url="data.json">
+            <tr id='algo-title'>
+              <td>first_code</td>
+              <td>ref_price</td>
+              <td style="width:10px">trade_price</td>
+              <td>slippage</td>
+              <td>notional(B/S)</td>
+              <td>progress</td>
+            </tr>
+          </table>
+        </div>
+        <div class="col-md-5 container-fluid table-responsive">
+          <table class="table table-hover table-bordered" id='order' width="100" data-url="data.json">
+            <tr id='order-title'>
+              <td>status</td>
+              <td>time</td>
+              <td>code</td>
+              <td>price</td>
+              <td>progress_order</td>
+              <td>open_close</td>
+              <td>account</td>
+              <td>buy_sell</td>
+              <td>argument_list</td>
+              <td>id</td>
+            </tr>
+          </table>
+        </div>
+        <table id='debug' border='1' width="800"></table>
+      </div> <!-- /container -->
+    </div>
 
+    <!--=======================================================-->
+    
 
+    <div id="future_div" style="display:none" class="container-fluid">
+      <div class="row"  id="date">
+        <div class="btn btn-info date-name col-md-1 " disabled>Date:</div><button class="btn btn-success date col-md-1" >All</button>
+      </div>
+      <div class="row"  id="acct">
+        <div class="btn btn-info acct-name col-md-1 " disabled>Account:</div><button class="btn btn-success acct col-md-1" >All</button>
+      </div>
+      <div class="row" id="user">
+        <div class="btn btn-info user-name col-md-1" disabled>Trader:</div><button class="btn btn-success user col-md-1" >All</button>
+      </div>
+      <div class="row">
+        <div class="col-md-6 table-responsive">
+          <table id="batchTable" class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th>BatID</th>
+                <th>Progress</th>
+                <th>Notional</th>
+                <th>Slippage</th>
+                <th>UpdateTime</th>
+                <th>BatchType</th>
+                <th>Info</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              
+            </tbody>
+          </table>
+        </div>
+        <div class="col-md-6  table-responsive">
+          <table id="secTable" class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th>BatchID</th>
+                <th>Ticker</th>
+                <th>Direction</th>
+                <th>Progress</th>
+                <th>Urgency</th>
+                <th>BeginRefPx</th>
+                <th>AvgPrice</th>
+                <th>Slippage</th>
+                <th>UpdateTime</th>
+                <th width="20%" >OrderInfo</th>                
+              </tr>
+            </thead>
+            <tbody>
+              
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <audio id="audio"><source src="" autoplay="autoplay"/></audio>
 
-    </div> <!-- /container -->
+    <script src="static/js/client.js"></script>
 
-    <!-- Le javascript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-
-  
-
-</body></html>
+  </body>
+</html>
