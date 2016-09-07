@@ -201,7 +201,9 @@ message RangeStat {
   double low = 4;
   double close = 5;
   uint64 volume = 6;
-  //strema is for backtest only
+  //stream is for backtest only
   string stream = 7;
   string timestamp = 8;
+  string begin_timestamp = 9;
+  string end_timestamp = 10;
 }

@@ -11,8 +11,7 @@ int DualKD::onMsg(MessageBase &msg) {
 
   } else if (msg.type() == TYPE_RESPONSE_MSG) {
     ResponseMessage rsp = ProtoBufHelper::unwrapMsg<ResponseMessage>(msg);
-
-    ////update orderDelegate
+    //update orderDelegate
     //orderDelegate.onOrderResponseUpdate(respMsg);
     //positionManager.onOrderResponseUpdate(respMsg);
 
@@ -30,9 +29,6 @@ int DualKD::onMsg(MessageBase &msg) {
       double k = 0.0, d = 0.0;
       if (!qKD.update(range.high(), range.low(), range.close(), k, d))
         return 0;
-
-      //LOG(INFO) << " K " << k;
-      //getchar();
 
       if (jsonState.isMember("preQuickK") && jsonState.isMember("slowSignal")) {
         double preQuickK = jsonState["preQuickK"].asDouble();

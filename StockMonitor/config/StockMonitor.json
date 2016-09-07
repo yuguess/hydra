@@ -3,7 +3,7 @@
     {"code":"000001", "exchange":"SZSE", "code_type":"stock"},
     {"code":"000002", "exchange":"SZSE", "code_type":"stock"},
     {"code":"000005", "exchange":"SZSE", "code_type":"stock"},
-    {"code":"000006", "exchange":"SZSE", "code_type":"stock"}, 
+    {"code":"000006", "exchange":"SZSE", "code_type":"stock"},
     {"code":"000009", "exchange":"SZSE", "code_type":"stock"},
     {"code":"000010", "exchange":"SZSE", "code_type":"stock"},
     {"code":"000011", "exchange":"SZSE", "code_type":"stock"},
@@ -14,7 +14,7 @@
     "serverAddr": "192.168.1.102:15228",
     "boardcastAddr": "192.168.1.102:15227"
   },
-  "TradeServer": "192.168.1.102:", 
+  "TradeServer": "192.168.1.102:",
   "MsgHub": {
     "PullPort":"15217",
     "PublishPort":"15218"

@@ -20,10 +20,15 @@ private:
   bool onCreate();
   bool onExit();
 
+  int onRangeStatUpdate(RangeStat&);
+  bool enterMarket(std::string, std::string, int, double, std::string);
+  OrderRequest getInitOrderRequest();
+
   TransacLogger transacLogger;
   KD kd;
   Json::Value jsonState;
   RangeCollector fiveMinData;
+  std::string respAddr;
 };
 
 #endif

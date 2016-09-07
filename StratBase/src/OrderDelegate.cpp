@@ -38,7 +38,5 @@ int OrderDelegate::sendRequest(OrderRequest &req) {
     req.set_limit_price(lastTick.bid_price(0));
   }
 
-  pStratBase->sendRequest<OrderRequest>(TYPE_ORDER_REQUEST, req);
-
   return 0;
 }
