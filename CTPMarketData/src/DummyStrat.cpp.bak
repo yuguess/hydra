@@ -4,7 +4,7 @@
 #include "CPlusPlusCode/ProtoBufMsg.pb.h"
 #include "CedarJsonConfig.h"
 #include "ProtoBufMsgHub.h"
-#include "CedarLogging.h"
+//#include "CedarLogging.h"
 
 class Tester {
 public:

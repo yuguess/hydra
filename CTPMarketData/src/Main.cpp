@@ -1,22 +1,15 @@
 #include <iostream>
 #include "MDHandler.h"
-//#include "CTPMarketData.h"
-//#include "CedarConfig.h"
 #include "CedarHelper.h"
-#include <vector>
-#include "CedarLogging.h"
-#include "ProtoBufMsgHub.h"
+#include "IncludeOnlyInMain.h"
 
-int main() {
-  GOOGLE_PROTOBUF_VERIFY_VERSION;
+int main(int argc, char *argv[]) {
+  CedarHelper::cedarAppInit(argc, argv);
 
-  CedarLogging::init("CTPMarketData");
-  CedarJsonConfig::getInstance().loadConfigFile("./config/CTPMarketData.json");
   MDHandler md;
-
   md.start();
 
-  LOG(INFO) << "CTPMarketData service online!";
+  LOG(INFO) << "Smart Order Service online!";
   CedarHelper::blockSignalAndSuspend();
 
   md.close();

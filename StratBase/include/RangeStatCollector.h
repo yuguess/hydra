@@ -84,9 +84,9 @@ public:
       }
     }
 
-    for (unsigned i = 0; i < periods.size(); i++) {
-      LOG(INFO) << periods[i].first << "---" << periods[i].second;
-    }
+    //for (unsigned i = 0; i < periods.size(); i++) {
+    //  LOG(INFO) << periods[i].first << "---" << periods[i].second;
+    //}
   }
 
   bool onBacktestTickDataUpdate(MarketUpdate &mkt, RangeStat &res) {
@@ -129,6 +129,10 @@ private:
   }
 
   bool onTickUpdate(MarketUpdate &mkt, pt::ptime ts, RangeStat &res) {
+    //LOG(INFO) << "period begin " << periods[periodIdx].first;
+    //LOG(INFO) << "period end " << periods[periodIdx].second;
+    //LOG(INFO) << "ts " << ts;
+
     if (ts < periods[periodIdx].first) {
       return false;
     }
@@ -138,7 +142,12 @@ private:
 
       if (periodIdx >= periods.size()) {
         return false;
-      } else if (ts > periods[periodIdx].first) {
+      } else if (ts >= periods[periodIdx].first &&
+        ts < periods[periodIdx].second) {
+
+        if (rangeStat.state == RangeStatResult::Uninitialize)
+          return false;
+
         res = typeConvert(rangeStat);
         rangeStat.init(mkt);
 

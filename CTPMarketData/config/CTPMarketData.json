@@ -6,7 +6,12 @@
   //  "Password": "596816",
   //  "MDFront": "tcp://front101.ctp.gtjafutures.com:41213"
   //},
-  
+
+  "CedarLogger": {
+    "AppName": "CTPMarketData",
+    "LogDir": "/home/yuguess/CedarLog/"
+  },
+
   "CTP": {
     "BrokerID": "8000",
     "UserID": "01620118",
