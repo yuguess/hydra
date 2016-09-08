@@ -16,8 +16,6 @@ int BasicKD::onMsg(MessageBase &msg) {
       return 0;
     }
 
-    onRangeStatUpdate(rangeStat);
-
     LOG(INFO) << "open " << rangeStat.open();
     LOG(INFO) << "high " << rangeStat.high();
     LOG(INFO) << "low " << rangeStat.low();
@@ -26,11 +24,7 @@ int BasicKD::onMsg(MessageBase &msg) {
     LOG(INFO) << "begin " << rangeStat.begin_timestamp();
     LOG(INFO) << "begin " << rangeStat.end_timestamp();
 
-    //KD.update(rangeStat.high, rangeStat.low, rangeStat.close, resK, resD);
-    //k, d = self.kd.update(data.high, data.low, data.close)
-    //orderDelegate.onTickUpdate(mktUpdt);
-    //twoMin.onTickUpdate(mktUpdt);
-    //positionManager.onTickUpdate(mktUpdt);
+    onRangeStatUpdate(rangeStat);
 
   } else if (msg.type() == TYPE_RESPONSE_MSG) {
     ResponseMessage respMsg = ProtoBufHelper::unwrapMsg<ResponseMessage>(msg);

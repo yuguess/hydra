@@ -47,12 +47,6 @@ public:
     return 0;
   }
 
-  static void getConfigRoot(std::string filepath, Json::Value& root) {
-    std::ifstream config(filepath, std::ifstream::binary);
-    Json::Reader reader;
-    reader.parse(config, root, false);
-  }
-
   static bool isStock(std::string code) {
     if (code.size() == 6 && isdigit(code[0]))
       return true;
@@ -73,6 +67,20 @@ public:
 
     int integer = ((double)qty / stockMinimumQty);
     return integer * stockMinimumQty;
+  }
+
+  static bool setupTradeServerMap(std::map<std::string, std::string> &accMap) {
+    std::vector<std::string> names, addrs;
+    CedarJsonConfig::getInstance().getStringArrayWithTag(names,
+      "OrderAgent.TradeServer", "name");
+    CedarJsonConfig::getInstance().getStringArrayWithTag(addrs,
+      "OrderAgent.TradeServer", "address");
+
+    for (unsigned i = 0; i < names.size(); i++) {
+      accMap[names[i]] = addrs[i];
+    }
+
+    return true;
   }
 
 #ifdef __linux

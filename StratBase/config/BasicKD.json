@@ -23,10 +23,9 @@
     "boardcastAddr": "192.168.1.102:15227"
   },
 
-  "LiveTrading": {
+  "OrderAgent": {
     "TradeServer": [
-      {"name":"2001_Stock", "address":"192.168.0.61:15230"},
-      {"name":"2001_Futures", "address":"192.168.1.102:15230"}
+      {"name":"SmartOrderService", "address":"192.168.0.66:15231"}
     ]
   },
 

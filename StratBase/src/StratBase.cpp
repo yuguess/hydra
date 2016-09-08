@@ -48,6 +48,7 @@ int StratBase::run() {
       for (unsigned i = 0; i < tickers.size(); i++) {
         subscribeTicker(tickers[i], exchanges[i]);
       }
+
       CedarHelper::blockSignalAndSuspend();
     }
 

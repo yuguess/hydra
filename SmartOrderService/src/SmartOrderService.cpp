@@ -18,15 +18,7 @@ SmartOrderService::SmartOrderService() {
   CedarJsonConfig::getInstance().getStringByPath(
     "FuturesDataServer.boardcastAddr", futuresBoardcastAddr);
 
-  std::vector<std::string> names, addrs;
-  CedarJsonConfig::getInstance().getStringArrayWithTag(names, "TradeServer",
-      "name");
-  CedarJsonConfig::getInstance().getStringArrayWithTag(addrs, "TradeServer",
-      "address");
-
-  for (unsigned i = 0; i < names.size(); i++) {
-    accToAddr[names[i]] = addrs[i];
-  }
+  CedarHelper::setupTradeServerMap(accToAddr);
 }
 
 int SmartOrderService::onMktUpdate(MarketUpdate &mkt, MessageBase &msg) {
