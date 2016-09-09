@@ -40,8 +40,9 @@ try:
   fp = open(logFile, 'r')
 except:
   print("open failed, pliz check")
-    #  fp = open(logFile, 'w')
-#fp.close()
+  fp = open(logFile, 'w')
+fp.close()
+>>>>>>> FETCH_HEAD
 fp = open(logFile, 'r')
 
 order_position = {}

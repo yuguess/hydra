@@ -113,7 +113,7 @@ function constructOrder(data) {
 //在首次连接时，table信息到来的时候，创建algo行
 //when connect first time, and table info comes, create a algo row
 function constructAlgo(data) {
-  $("#algo-title").after("<tr id='" + data.algo_flag + "' data-toggle=\"collapse\" href=\"#" + data.algo_flag +"_collapse\" onclick = \"onClickAlgo(this);\" account='" + data.account + "'> \
+  $("#algo-title").after("<tr class = '" + data.account + "' id='" + data.algo_flag + "' data-toggle=\"collapse\" href=\"#" + data.algo_flag +"_collapse\" onclick = \"onClickAlgo(this);\" account='" + data.account + "'> \
                             <td style=\"display:none\" id='" + data.algo_flag + "_algo_id'>" + mapAlgo[data.algo_flag] + "</td> \
                             <td id='" + data.algo_flag + "_code'>" + data.code + "</td> \
                             <td id='" + data.algo_flag + "_ref_price'>" + " " + "</td> \
@@ -136,7 +136,7 @@ function constructAlgo(data) {
 //在首次连接时，table信息到来的时候，创建batch行
 //when connect first time, and table info comes, create a batch row
 function constructBatch(data) {
-  $("#batch-title").after("<tr id='" + data.batch_flag + "' onclick = \"onClickBatch(this);\" account='" + data.account + "'> \
+  $("#batch-title").after("<tr class = '" + data.account + "' id='" + data.batch_flag + "' onclick = \"onClickBatch(this);\" account='" + data.account + "'> \
                           <td id='" + data.batch_flag + "_algo_id'>" + mapBatch[data.batch_flag] + "</td> \
                           <td style=\"display:none\" id='" + data.batch_flag + "_batch_trade_quantity'>" + "0" + "</td> \
                           <td style=\"display:none\" id='" + data.batch_flag + "_batch_quantity'>" + data.trade_quantity + "</td> \
@@ -326,6 +326,10 @@ function sumBatchProgress(batch_flag) {
       notional_s += Number(s_trade_quantity)*Number(s_price);
     }
 
+    $('#' + invMapBatch[batch_flag] + "_batch_notional").parent().addClass(jQuery(this).children("[id$=_accountOrder]").html());
+    //document.getElementById('debug').insertRow().insertCell().innerHTML = jQuery(this).children("[id$=_accountOrder]").html();
+    
+
     //document.getElementById('debug').insertRow().insertCell().innerHTML = jQuery(this).parent().children("[id$=_order_quantity]").html();
   });
   var tradeString = "" + trade_quantity + "/" + quantity;
@@ -375,8 +379,9 @@ function sumAlgoProgress(algo_flag) {
     } else if (jQuery(this).children("[id$=_buy_sell]").html() == 'SHORT_SELL') {
       notional_s += Number(s_trade_quantity)*Number(s_price);
     }
-    
-
+    $('#' + invMapAlgo[algo_flag] + "_algo_notional").parent().addClass(jQuery(this).children("[id$=_accountOrder]").html());
+   //document.getElementById('debug').insertRow().insertCell().innerHTML = jQuery(this).children("[id$=_accountOrder]").html();
+ 
     //document.getElementById('debug').insertRow().insertCell().innerHTML = jQuery(this).parent().children("[id$=_order_quantity]").html();
   });
   quantity = algo_quantity_map[algo_flag];
@@ -487,7 +492,7 @@ function changeStatusColor(id, error_code) {
 //在有新order信息到来时，创建新batch
 //create a new batch when a order info comes
 function newBatch(data) {
-  $("#batch-title").after("<tr id='" + data.batch_id + "' onclick = \"onClickBatch(this);\" account='" + data.account + "'> \
+  $("#batch-title").after("<tr class = '" + data.account + "' id='" + data.batch_id + "' onclick = \"onClickBatch(this);\" account='" + data.account + "'> \
                           <td id='" + data.batch_id + "_algo_id'>" + mapBatch[data.batch_id] + "</td> \
                           <td style=\"display:none\" id='" + data.batch_id + "_batch_trade_quantity'>" + "0" + "</td> \
                           <td style=\"display:none\" id='" + data.batch_id + "_batch_quantity'>" + data.trade_quantity + "</td> \
@@ -506,7 +511,7 @@ function newBatch(data) {
 //在有新order信息到来时，创建新algo
 //create a new algo when a order info comes
 function newAlgo(data) {
-  $("#algo-title").after(  "<tr id='" + data.alg_order_id + "' data-toggle=\"collapse\" href=\"#" + data.alg_order_id +"_collapse\" onclick = \"onClickAlgo(this);\"  hidden=\"hidden\" account='" + data.account + "'> \
+  $("#algo-title").after(  "<tr class = '" + data.account + "' id='" + data.alg_order_id + "' data-toggle=\"collapse\" href=\"#" + data.alg_order_id +"_collapse\" onclick = \"onClickAlgo(this);\"  hidden=\"hidden\" account='" + data.account + "'> \
                             <td style=\"display:none\" id='" + data.alg_order_id + "_algo_id'>" + mapAlgo[data.alg_order_id] + "</td> \
                             <td id='" + data.algo_flag + "_code'>" + data.code + "</td> \
                             <td id='" + data.alg_order_id + "_ref_price'>" + " " + "</td> \
@@ -646,7 +651,7 @@ function padAlgoId(data) {
   $('#algo tr').each(function() {
     //document.getElementById('debug').insertRow().insertCell().innerHTML = jQuery(this).children(":first").html()+"*****"+data.alg_order_id;
     if (jQuery(this).children(":first").html() == data.alg_order_id) {
-      jQuery(this).attr('account',data.account);
+      jQuery(this).attr('account',jQuery(this).attr('account')+data.account);
     }
   });
 } 
@@ -688,7 +693,7 @@ function onAcctClick(obj) {
   $("#algo tr").each(function() {
     if (jQuery(this).attr('id') == "algo-title") return;
     //document.getElementById('debug').insertRow().insertCell().innerHTML = jQuery(obj).html()+":"+jQuery(this).attr('account');
-    if (jQuery(this).attr('account')!=jQuery(obj).html()) {
+    if (!jQuery(this).hasClass(jQuery(obj).html())) {
       jQuery(this).hide();
     } else {
       jQuery(this).show();
@@ -697,7 +702,7 @@ function onAcctClick(obj) {
   $("#batch tr").each(function() {
     if (jQuery(this).attr('id') == "batch-title") return;
     //document.getElementById('debug').insertRow().insertCell().innerHTML = jQuery(obj).html()+":"+jQuery(this).attr('account');
-    if (jQuery(this).attr('account')!=jQuery(obj).html()) {
+    if (!jQuery(this).hasClass(jQuery(obj).html())) {
       jQuery(this).hide();
     } else {
       jQuery(this).show();
