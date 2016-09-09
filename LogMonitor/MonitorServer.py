@@ -6,6 +6,7 @@ import sys
 import re
 import pandas as pd
 import ast
+import datetime
 
 import tornado.web
 import tornado.ioloop
@@ -13,13 +14,21 @@ import tornado.websocket
 import MonitorData as mo
 from threading import Thread
 
+
+today=datetime.date.today()
+oneday=datetime.timedelta(days=1)
+yesterday=today-oneday
+
+
 #######config ###############
 #logFile = "/home/infra/MonitorLog/2016-08-22"
+#logFile = "/home/infra/MonitorLog/" + yesterday.strftime("%Y-%m-%d")
+#logFile = "/home/infra/MonitorLog/2016-09-09"
 logFile = "/home/infra/MonitorLog/" + time.strftime("%Y-%m-%d")
 #logFile = "/home/mwan/LogMonitor/log"
 #logFile_app = "/home/infra/MonitorLog/ALGO_"+time.strftime("%Y-%m-%d")
 #logFile = "/home/mwan/LogMonitor/log1"
-listenPort = "8080"
+listenPort = "8000"
 #############################
 print logFile
 
@@ -32,7 +41,7 @@ try:
 except:
   print("open failed, pliz check")
     #  fp = open(logFile, 'w')
-fp.close()
+#fp.close()
 fp = open(logFile, 'r')
 
 order_position = {}
@@ -76,6 +85,8 @@ class logHandler:
           continue
         for i in range(0,len(li)-1):
           match = regex.findall(li[i]);
+          if len(match) >1:
+              match = match[1:2]
           for item in match:
             print(item)
             #line_buf.append(item)

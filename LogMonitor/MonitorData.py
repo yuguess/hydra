@@ -165,6 +165,8 @@ class MonitorData:
       new = fp.readline()
       if new:
         match = self.regex.findall(new);
+        if len(match)>1:
+            match = match[1:2]
         for item in match:
           #print(item)
           self.logUpdate(item)
