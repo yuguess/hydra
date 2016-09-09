@@ -19,7 +19,7 @@ logFile = "/home/infra/MonitorLog/" + time.strftime("%Y-%m-%d")
 #logFile = "/home/mwan/LogMonitor/log"
 #logFile_app = "/home/infra/MonitorLog/ALGO_"+time.strftime("%Y-%m-%d")
 #logFile = "/home/mwan/LogMonitor/log1"
-listenPort = "8080"
+listenPort = "8000"
 #############################
 print logFile
 
@@ -31,7 +31,7 @@ try:
   fp = open(logFile, 'r')
 except:
   print("open failed, pliz check")
-    #  fp = open(logFile, 'w')
+  fp = open(logFile, 'w')
 fp.close()
 fp = open(logFile, 'r')
 
