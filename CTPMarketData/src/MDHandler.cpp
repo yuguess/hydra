@@ -1,8 +1,7 @@
 #include "MDHandler.h"
-//#include <string.h>
-//#include <stdio.h>
-//#include "NewCedarConfig.h"
 #include "CedarHelper.h"
+#include "EnumStringMap.h"
+#include "CedarTimeHelper.h"
 
 MDHandler::MDHandler() {
   m_pUserMDApi = CThostFtdcMdApi::CreateFtdcMdApi();
@@ -28,10 +27,13 @@ int MDHandler::start() {
 
   //FUTURES MARKET DATA CONNECTION POINT
   m_pUserMDApi->Init();
+
+  return 0;
 }
 
 int MDHandler::close() {
   //m_pUserMDApi->ReqUserLogout();
+  return 0;
 }
 
 // 1: MarketOpen, else: MarketClose
@@ -105,8 +107,7 @@ int MDHandler::onMsg(MessageBase msg) {
     DataRequest dataReq = ProtoBufHelper::unwrapMsg<DataRequest>(msg);
     LOG(INFO) << "recv data request " << dataReq.code() << " into codes";
     subscribeTicker(dataReq.code());
-    codeToEx[dataReq.code()] =
-      CedarHelper::exchangeTypeToString(dataReq.exchange());
+    codeToEx[dataReq.code()] = EnumToString::toString(dataReq.exchange());
   } else {
     LOG(WARNING) << "recv invalid msg type " << msg.type();
   }
@@ -120,22 +121,22 @@ bool MDHandler::ctpMDtoCedarMD(CThostFtdcDepthMarketDataField *pMD,
   md.set_trading_day(pMD->TradingDay);
   md.set_code(pMD->InstrumentID);
   //md.set_exchange(pMD->ExchangeID);
-  md.set_recv_timestamp(CedarHelper::getCurTimeStamp());
+  md.set_recv_timestamp(CedarTimeHelper::getCurTimeStamp());
 
   md.set_last_price(pMD->LastPrice);
-	md.set_pre_settlement_price(pMD->PreSettlementPrice);
-	md.set_pre_close_price(pMD->PreClosePrice);
-	md.set_pre_open_interest(pMD->PreOpenInterest);
-	md.set_open_price(pMD->OpenPrice);
-	md.set_highest_price(pMD->HighestPrice);
-	md.set_lowest_price(pMD->LowestPrice);
-	md.set_volume(pMD->Volume);
-	md.set_turnover(pMD->Turnover);
-	md.set_open_interest(pMD->OpenInterest);
-	md.set_close_price(pMD->ClosePrice);
-	md.set_settlement_price(pMD->SettlementPrice);
-	md.set_high_limit_price(pMD->UpperLimitPrice);
-	md.set_low_limit_price(pMD->LowerLimitPrice);
+  md.set_pre_settlement_price(pMD->PreSettlementPrice);
+  md.set_pre_close_price(pMD->PreClosePrice);
+  md.set_pre_open_interest(pMD->PreOpenInterest);
+  md.set_open_price(pMD->OpenPrice);
+  md.set_highest_price(pMD->HighestPrice);
+  md.set_lowest_price(pMD->LowestPrice);
+  md.set_volume(pMD->Volume);
+  md.set_turnover(pMD->Turnover);
+  md.set_open_interest(pMD->OpenInterest);
+  md.set_close_price(pMD->ClosePrice);
+  md.set_settlement_price(pMD->SettlementPrice);
+  md.set_high_limit_price(pMD->UpperLimitPrice);
+  md.set_low_limit_price(pMD->LowerLimitPrice);
   md.set_average_price(pMD->AveragePrice);
 
   //format like "09:30:00" --> "093000000"
@@ -150,6 +151,8 @@ bool MDHandler::ctpMDtoCedarMD(CThostFtdcDepthMarketDataField *pMD,
   md.add_bid_volume(pMD->BidVolume1);
   md.add_ask_price(pMD->AskPrice1);
   md.add_ask_volume(pMD->AskVolume1);
+
+  return true;
 }
 
 int MDHandler::subscribeTicker(std::string ticker) {
@@ -157,7 +160,7 @@ int MDHandler::subscribeTicker(std::string ticker) {
   static char *tmpTicker[1];
 
   if (subTickers.find(ticker) != subTickers.end()) {
-    LOG(WARNING) << "Subscribe a duplicate ticker " << ticker;
+    LOG(INFO) << "ticker already subscribed" << ticker;
     return -1;
   }
 
@@ -188,9 +191,9 @@ void MDHandler::OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pMD) {
   std::string chan = md.code()+ "." + codeToEx[md.code()];
   msgHub.boardcastMsg(chan, res);
 
-  LOG(INFO) << pMD->ExchangeID;
-  LOG(INFO) << pMD->ExchangeInstID;
-  LOG(INFO) << md.DebugString();
+  //LOG(INFO) << pMD->ExchangeID;
+  //LOG(INFO) << pMD->ExchangeInstID;
+  //LOG(INFO) << md.DebugString();
 }
 
 void MDHandler::OnRspError(CThostFtdcRspInfoField *pRspInfo,
