@@ -21,7 +21,7 @@ public:
       "name");
     CedarJsonConfig::getInstance().getStringArrayWithTag(addrs, "TradeServer",
       "address");
-    for (int i = 0; i < tnames.size(); i++) {
+    for (unsigned i = 0; i < tnames.size(); i++) {
       tradeServerMap[tnames[i]]= addrs[i];
     }
 
@@ -29,8 +29,6 @@ public:
   }
 
   int onMsg(MessageBase msg) {
-    CedarMsgType type = msg.type();
-
     if (msg.type() == TYPE_MARKETUPDATE) {
       MarketUpdate mkt = ProtoBufHelper::unwrapMsg<MarketUpdate>(msg);
       LOG(INFO) << mkt.DebugString();
@@ -99,7 +97,7 @@ public:
       msgHub.pushMsg(sendAddr, ProtoBufHelper::wrapMsg(TYPE_ORDER_REQUEST, req));
     }
 
-    for (int i = 0; i < ids.size(); i++) {
+    for (unsigned i = 0; i < ids.size(); i++) {
       OrderRequest req;
       req.set_type(TYPE_CANCEL_ORDER_REQUEST);
       req.set_id(CedarHelper::getOrderId());
@@ -130,7 +128,7 @@ public:
     req.set_trade_quantity(1);
     req.set_open_close(PositionDirection::OPEN_POSITION);
 
-    for (int i = 0; i < des.size(); i++) {
+    for (unsigned i = 0; i < des.size(); i++) {
       LOG(INFO) << "send order " << tradeServerMap[des[i]];
       msgHub.pushMsg(tradeServerMap[des[i]],
           ProtoBufHelper::wrapMsg(TYPE_ORDER_REQUEST, req));
@@ -143,7 +141,7 @@ public:
     cncl.set_id(CedarHelper::getOrderId());
     cncl.set_cancel_order_id(id);
 
-    for (int i = 0; i < des.size(); i++) {
+    for (unsigned i = 0; i < des.size(); i++) {
       LOG(INFO) << "cancel order " << tradeServerMap[des[i]];
       msgHub.pushMsg(tradeServerMap[des[i]],
         ProtoBufHelper::wrapMsg(TYPE_ORDER_REQUEST, cncl));

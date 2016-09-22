@@ -27,6 +27,9 @@ ManualOrder::ManualOrder() {
   for (unsigned i = 0; i < tnames.size(); i++) {
     TradeServer tmp = {tnames[i], addrs[i]};
     tradeServers.push_back(tmp);
+
+    serverAddrMap[tnames[i]] = addrs[i];
+
     LOG(INFO) << "TradeServer name:" << tnames[i] << "," << addrs[i];
   }
 
@@ -53,14 +56,18 @@ void ManualOrder::run() {
   while (true) {
     char value;
     std::cout << std::endl
-      << "1) Enter OrderRequest NewOrder/FirstLevel/SmartOrder" << std::endl
-      << "2) Enter DataRequest" << std::endl;
+      << "1) Enter OrderRequest Limit/Market/Cancel" << std::endl
+      << "2) Enter OrderRequest FirstLevel/SmartOrder" << std::endl
+      << "3) Enter DataRequest" << std::endl;
     std::cin >> value;
     switch (value) {
       case '1':
         queryEnterOrder();
         break;
       case '2':
+        queryAlgOrder();
+        break;
+      case '3':
         queryDataRequest();
         break;
 
@@ -175,8 +182,6 @@ RequestType ManualOrder::queryOrdType() {
   << "1) Limit" << std::endl
   << "2) Market" << std::endl
   << "3) Cancel" << std::endl
-  << "4) SmartOrder" << std::endl
-  << "5) FirstLevel" << std::endl
   << "OrdType: ";
 
   std::cin >> value;
@@ -184,8 +189,20 @@ RequestType ManualOrder::queryOrdType() {
     case '1': return RequestType::TYPE_LIMIT_ORDER_REQUEST;
     case '2': return RequestType::TYPE_MARKET_ORDER_REQUEST;
     case '3': return RequestType::TYPE_CANCEL_ORDER_REQUEST;
-    case '4': return RequestType::TYPE_SMART_ORDER_REQUEST;
-    case '5': return RequestType::TYPE_FIRST_LEVEL_ORDER_REQUEST;
+    default: throw std::exception();
+  }
+}
+
+RequestType ManualOrder::queryAlgOrdType() {
+  char value;
+  std::cout << std::endl
+  << "1) FirstLevel" << std::endl
+  << "2) SmartOrder" << std::endl;
+
+  std::cin >> value;
+  switch (value) {
+    case '1': return RequestType::TYPE_FIRST_LEVEL_ORDER_REQUEST;
+    case '2': return RequestType::TYPE_SMART_ORDER_REQUEST;
     default: throw std::exception();
   }
 }
@@ -196,6 +213,26 @@ double ManualOrder::queryPrice() {
       "Price (only valid for certain order like limit): ";
   std::cin >> value;
   return value;
+}
+
+int ManualOrder::queryAlgOrder() {
+  static std::string respAddr = CedarHelper::getResponseAddr();
+
+  OrderRequest order;
+  order.set_response_address(respAddr);
+  order.set_id(CedarHelper::getOrderId());
+  order.set_alg_order_id(CedarHelper::getOrderId());
+  order.set_batch_id(CedarHelper::getOrderId());
+  order.set_type(queryAlgOrdType());
+
+  order.set_code(queryCode());
+  order.set_exchange(queryExchange());
+  order.set_buy_sell(querySide());
+  order.set_trade_quantity(queryOrderQty());
+
+  msgHub.pushMsg(serverAddrMap["SmartOrderService"],
+      ProtoBufHelper::wrapMsg(TYPE_ORDER_REQUEST, order));
+  return 0;
 }
 
 int ManualOrder::queryEnterOrder() {
@@ -235,14 +272,6 @@ int ManualOrder::queryEnterOrder() {
 
     case TYPE_CANCEL_ORDER_REQUEST:
       order.set_cancel_order_id(queryCancelID());
-      break;
-
-    case TYPE_SMART_ORDER_REQUEST:
-    case TYPE_FIRST_LEVEL_ORDER_REQUEST:
-      order.set_code(queryCode());
-      order.set_exchange(queryExchange());
-      order.set_buy_sell(querySide());
-      order.set_trade_quantity(queryOrderQty());
       break;
 
     default:
