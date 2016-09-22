@@ -36,7 +36,11 @@ private:
   std::string queryCode();
   std::string queryChan();
   std::string queryCancelID();
+
+  int queryAlgOrder();
   RequestType queryOrdType();
+  RequestType queryAlgOrdType();
+
   PositionDirection queryOrdPosition();
   ExchangeType queryExchange();
   int queryDataRequest();
@@ -50,6 +54,7 @@ private:
   std::string pubAddr;
   std::vector<DataServer> dataServers;
   std::vector<TradeServer> tradeServers;
+  std::map<std::string, std::string> serverAddrMap;
 };
 
 #endif
