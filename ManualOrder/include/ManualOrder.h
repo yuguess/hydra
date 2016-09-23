@@ -45,6 +45,8 @@ private:
   ExchangeType queryExchange();
   int queryDataRequest();
 
+  int setOrderReqAccount(OrderRequest&);
+
   int onMsg(MessageBase);
   int onUpdateMsg(MessageBase);
   int onMsgTest(MessageBase);

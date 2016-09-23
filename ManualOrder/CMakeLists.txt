@@ -15,7 +15,7 @@ set(MANUAL_ORDER_SRC src/Main.cpp src/ManualOrder.cpp)
 LINK_DIRECTORIES(../../CedarLib)
 
 add_executable(Testcase src/Testcase.cpp ${PROTOBUF})
-TARGET_LINK_LIBRARIES(Testcase  zmq thosttraderapi jsoncpp protobuf pthread)
+TARGET_LINK_LIBRARIES(Testcase  zmq jsoncpp protobuf pthread)
 
 add_executable(ManualOrder ${MANUAL_ORDER_SRC} ${PROTOBUF})
-TARGET_LINK_LIBRARIES(ManualOrder zmq thosttraderapi jsoncpp protobuf pthread)
+TARGET_LINK_LIBRARIES(ManualOrder zmq jsoncpp protobuf pthread)
