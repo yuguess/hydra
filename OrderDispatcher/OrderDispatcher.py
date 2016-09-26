@@ -14,8 +14,8 @@ import getopt
 posDirectionDict = {
   "Open" : protoMsg.OPEN_POSITION,
   "Close" : protoMsg.CLOSE_POSITION,
-  "Close_Today" : protoMsg.CLOSE_TODAY_POSITION,
-  "Close_Yesterday" : protoMsg.CLOSE_YESTERDAY_POSITION
+  "CloseToday" : protoMsg.CLOSE_TODAY_POSITION,
+  "CloseYesterday" : protoMsg.CLOSE_YESTERDAY_POSITION
 }
 
 requestTypeDict = {
@@ -37,12 +37,14 @@ def setOrderRequest(orderRequest, req):
   orderRequest.code = req["Code"]
   orderRequest.batch_id = req["BatchId"]
 
-  if req["Qty"] >= 0:
+  qty = int(req["Qty"])
+
+  if qty >= 0:
     orderRequest.buy_sell = protoMsg.LONG_BUY
-    orderRequest.trade_quantity = req["Qty"]
+    orderRequest.trade_quantity = qty
   else:
     orderRequest.buy_sell = protoMsg.SHORT_SELL
-    orderRequest.trade_quantity = -req["Qty"]
+    orderRequest.trade_quantity = -qty
   orderRequest.argument_list = str(req["Args"])
   orderRequest.open_close = posDirectionDict[req["OpenClose"]]
 
@@ -102,7 +104,7 @@ if __name__ == '__main__':
   tradeServer = {}
 
   pullAddr = "tcp://" + jsonConfig["BindAddress"]
-  dispatcherServer = jsonConfig["TradeServer"]
+  dispatcherServer = jsonConfig["OrderAgent"]["TradeServer"]
 
   context = zmq.Context()
   orderRecv = context.socket(zmq.PULL)
@@ -116,6 +118,7 @@ if __name__ == '__main__':
   logger.info("OrderDispatcher service online")
   while True:
     actions = orderRecv.recv_json()
+    logger.info(actions)
     for act in actions:
       if (act["ActionType"] != "BatchTrade"):
         continue

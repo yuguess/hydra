@@ -42,7 +42,6 @@ except:
   print("open failed, pliz check")
   fp = open(logFile, 'w')
 fp.close()
->>>>>>> FETCH_HEAD
 fp = open(logFile, 'r')
 
 order_position = {}
