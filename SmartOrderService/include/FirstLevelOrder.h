@@ -4,8 +4,8 @@
 #include "OrderReactor.h"
 #include "ProtoBufMsgHub.h"
 #include "SmartOrderService.h"
-
-
+#include <boost/date_time/posix_time/posix_time.hpp>
+#include "CedarTimeHelper.h"
 
 class FirstLevelOrder : public OrderReactor {
 
@@ -14,8 +14,16 @@ public:
   virtual int onMsg(MessageBase &);
 
 private:
-  int cancelOrder();
   const static int stockMinimumQty = 100;
+  const static int volMulti = 2.5;
+  const static int topVolMulti = 2;
+
+  boost::posix_time::ptime getTimeThre() const {
+    boost::posix_time::time_duration hms(14, 55, 30);
+    boost::posix_time::ptime ptmDate(CedarTimeHelper::getCurPTime().date());
+
+    return ptmDate + hms;
+  }
 
   enum FirstLevelOrderState {
     Init = 0,
@@ -23,15 +31,24 @@ private:
     Sending,
     Sent,
     Canceling,
-    CrossChase,
-    TerminateCancel
+    TerminateCancel,
+    ChaseCanceling,
+    ChaseReady
   };
+
+  int cancelOrder();
+  bool isInActiveMode(MarketUpdate&, TradeDirection);
+  bool isBreakActiveMode(double , double , TradeDirection);
+  bool sendLimitOrder(double);
 
   FirstLevelOrderState orderState;
   int leftQty;
-  double placePrice;
+  double placePrice, oneTick;
   std::string respAddr;
   std::string outOrderId;
+
+  bool activeMode;
+  boost::posix_time::ptime ptimeThre;
 };
 
 #endif

@@ -18,4 +18,4 @@ file(GLOB SOURCES "src/*.cpp")
 
 LINK_DIRECTORIES(../../CedarLib)
 add_executable(${APP} ${SOURCES} ${PROTOBUF})
-TARGET_LINK_LIBRARIES(${APP} zmq thosttraderapi jsoncpp protobuf pthread)
+TARGET_LINK_LIBRARIES(${APP} zmq jsoncpp protobuf pthread)

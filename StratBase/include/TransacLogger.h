@@ -32,6 +32,8 @@ public:
     trans["Price"] = refPrice;
     trans["Code"] = code;
 
+    LOG(INFO) << trans;
+
     root["Transactions"].append(trans);
 
     return 0;
