@@ -19,14 +19,13 @@ StratBase::StratBase(): orderAgent(backtester, msgHub) {
       "FuturesDataServer.boardcastAddr", futuresBoardcastAddr);
 
     CedarJsonConfig::getInstance().getStringArrayWithTag(tickers,
-      "TradeServer", "name");
+      "Livetest.DataRequest", "code");
     CedarJsonConfig::getInstance().getStringArrayWithTag(exchanges,
-      "TradeServer", "address");
+      "Livetest.DataRequest", "exchange");
   }
 }
 
 int StratBase::run() {
-
   onCreate();
 
   switch (mode) {
@@ -35,6 +34,7 @@ int StratBase::run() {
       backtester.registerCallback(std::bind(&StratBase::onMsgWrapper,
           this, std::placeholders::_1));
       backtester.run();
+      LOG(INFO) << "run complete";
       break;
     }
 
@@ -50,12 +50,14 @@ int StratBase::run() {
       }
 
       CedarHelper::blockSignalAndSuspend();
+      break;
     }
 
     default:
       LOG(FATAL) << "Invalid mode " << mode << "check your config please";
   }
 
+  onExit();
   return 0;
 }
 
@@ -81,12 +83,13 @@ int StratBase::subscribeTicker(std::string code, std::string xchg) {
     targetBoardcastAddr = futuresBoardcastAddr;
   }
 
-  LOG(INFO) << "send data request " << targetAddr;
-  LOG(INFO) << mdReq.DebugString();
-
   msgHub.pushMsg(targetAddr,
     ProtoBufHelper::wrapMsg(TYPE_DATAREQUEST, mdReq));
+
   std::string chan = code + "." + xchg;
+
+  LOG(INFO) << "send data request to [" << targetAddr << "]";
+  LOG(INFO) << mdReq.DebugString();
 
   msgHub.addSubscription(targetBoardcastAddr, chan);
 

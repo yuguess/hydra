@@ -77,6 +77,8 @@ private:
     TimeSeriesData &tsData, std::string &dateStr) {
     RangeStat rangeStat;
 
+    //LOG(INFO) << "processing " << dateStr << line;
+
     std::vector<std::string> args;
     boost::split(args, line, boost::is_any_of(","), boost::token_compress_on);
 

@@ -129,9 +129,6 @@ private:
   }
 
   bool onTickUpdate(MarketUpdate &mkt, pt::ptime ts, RangeStat &res) {
-    //LOG(INFO) << "period begin " << periods[periodIdx].first;
-    //LOG(INFO) << "period end " << periods[periodIdx].second;
-    //LOG(INFO) << "ts " << ts;
 
     if (ts < periods[periodIdx].first) {
       return false;
@@ -141,9 +138,21 @@ private:
       periodIdx++;
 
       if (periodIdx >= periods.size()) {
+        //pop out the last range
+        if (periodIdx == periods.size()) {
+          if (rangeStat.state == RangeStatResult::Uninitialize)
+            return false;
+
+          res = typeConvert(rangeStat);
+          return true;
+        }
+
         return false;
       } else if (ts >= periods[periodIdx].first &&
         ts < periods[periodIdx].second) {
+
+        LOG(INFO) << "locate to period [" << periods[periodIdx].first
+          << "] -- [" <<  periods[periodIdx].second << "]";
 
         if (rangeStat.state == RangeStatResult::Uninitialize)
           return false;

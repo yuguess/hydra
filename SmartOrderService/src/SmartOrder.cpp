@@ -2,6 +2,7 @@
 #include "CedarHelper.h"
 #include "MarketSpecHelper.h"
 #include "CPlusPlusCode/ProtoBufMsg.pb.h"
+#include "MarketUpdateHelper.h"
 
 SmartOrder::SmartOrder(OrderRequest &req, SmartOrderService *srvc):
   OrderReactor(req, srvc), state(Init) {
@@ -67,8 +68,7 @@ int SmartOrder::onMktUpdate(MarketUpdate &mkt) {
     }
 
     case TerminateCancel:
-    default:
-      return 0;
+    default: break;
   }
   return 0;
 }
@@ -173,8 +173,8 @@ double SmartOrder::calReferencePrice(MarketUpdate &mkt) {
 double SmartOrder::calWeightPrice(MarketUpdate &mkt) {
   double bidAvgPrice = avgBidPrice(mkt);
   double askAvgPrice = avgAskPrice(mkt);
-  int bidVol = totalBidVol(mkt);
-  int askVol = totalAskVol(mkt);
+  int bidVol = MarketUpdateHelper::totalBidVol(mkt);
+  int askVol = MarketUpdateHelper::totalAskVol(mkt);
   double weightPrice =
     (bidAvgPrice * askVol + askAvgPrice * bidVol) / (bidVol + askVol);
 

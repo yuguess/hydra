@@ -83,6 +83,19 @@ public:
     return true;
   }
 
+  static OrderRequest getInitOrderRequest(std::string respAddr,
+    RequestType reqType) {
+
+    OrderRequest req;
+    std::string outOrderId = CedarHelper::getOrderId();
+
+    req.set_response_address(respAddr);
+    req.set_type(reqType);
+    req.set_id(outOrderId);
+
+    return req;
+  }
+
 #ifdef __linux
   //this only get IPV4 addr, skip 127.0.0.1
   static std::string getResponseAddr() {

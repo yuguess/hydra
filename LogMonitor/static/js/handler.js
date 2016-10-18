@@ -311,6 +311,7 @@ function sumBatchProgress(batch_flag) {
 
   }).each(function() {
 
+    s_price = jQuery(this).children("[id$=_price]").html();
     s_quantity = jQuery(this).children("[id$=_order_quantity]").html();
     s_trade_quantity = jQuery(this).children("[id$=_order_trade_quantity]").html();
     trade_quantity += Number(s_trade_quantity);
@@ -796,6 +797,8 @@ ws.onmessage = function(event) {
   else if (jData.hasOwnProperty('message')) {
     jData.message = jData.message.replace(/\\/g,"");
     var data = JSON.parse(jData.message);
+
+    document.getElementById('debug').insertRow().insertCell().innerHTML = jData.message;
     account_check(data);
     if (socket_state.indexOf(data.type) != -1) {          //types not coming from TdxTrade like "SMART_ORDER","APP" should be eliminated
       var tmp = $.extend(true, {}, data);
@@ -807,8 +810,10 @@ ws.onmessage = function(event) {
       tmp = $.extend(true, {}, data);
       updateBatchTable(tmp);
     }
-    else if (data.type == "TYPE_SMART_ORDER_REQUEST") {
+    else if (data.type == "TYPE_SMART_ORDER_REQUEST"||data.type=="TYPE_FIRST_LEVEL_ORDER_REQUEST") {
       algo_quantity_map[data.alg_order_id] = data.trade_quantity;
+      
+    
     }
     else {                                                        //dealing with algo info updates
       if (data.type != "APP_STATUS_MSG") return;
@@ -855,7 +860,7 @@ ws.onmessage = function(event) {
 
 }
 
-var wss = new WebSocket('ws://192.168.0.66:8001/soc');
+var wss = new WebSocket('ws://192.168.0.66:8099/soc');
 
 //websocket connection
 wss.onmessage = function(event) {
