@@ -48,6 +48,9 @@ public:
       LOG(FATAL) << "All state file must have app_YYYYmmddHHMMSS format"
         << "Please check your path " << dir << "Load config file "
         << latestJson << " error";
+    } else {
+      LOG(INFO) << "Successfully restore state file " << latestJson;
+      LOG(INFO) << jsonState;
     }
 
     return true;
@@ -68,6 +71,9 @@ public:
     Json::StyledWriter sytledWriter;
     out << sytledWriter.write(jsonState);
     out.close();
+
+    LOG(INFO) << "Successfully save state file " << stateFileStr;
+    LOG(INFO) << jsonState;
     return true;
   }
 };

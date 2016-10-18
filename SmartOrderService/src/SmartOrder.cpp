@@ -68,8 +68,7 @@ int SmartOrder::onMktUpdate(MarketUpdate &mkt) {
     }
 
     case TerminateCancel:
-    default:
-      return 0;
+    default: break;
   }
   return 0;
 }

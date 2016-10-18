@@ -72,7 +72,8 @@ void MDHandler::OnFrontConnected() {
 }
 
 void MDHandler::OnFrontDisconnected(int nReason) {
-  LOG(WARNING) <<"Futures Market disconnected, OnFrontDisconnected!";
+  LOG(WARNING) <<"Futures Market disconnected, OnFrontDisconnected, program quit!";
+  exit(0);
 }
 
 void MDHandler::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin,
@@ -89,16 +90,6 @@ void MDHandler::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin,
   }
 
   LOG(INFO) << "MarketData API login successfully";
-  //m_pUserMDApi->SubscribeMarketData(pSubscriber, subscriber.size());
-  //m_TradingDay = pRspUserLogin->TradingDay;
-  //for (int i = 0; i < subscriber.size(); i++) {
-  //  std::string dataPath = m_dataPath + subscriber[i] + '/' +
-  //  m_TradingDay + '_' + subscriber[i]  ;
-  //  symbolFile[subscriber[i]] = new std::ofstream(dataPath,
-  //  std::ios::out|std::ios::binary|std::ios::app);
-  //  if(!symbolFile[subscriber[i]] | !*symbolFile[subscriber[i]])
-  //    LOG(FATAL)<<"cannot open file to write";
-  //}
 }
 
 int MDHandler::onMsg(MessageBase msg) {
@@ -185,15 +176,16 @@ void MDHandler::OnRspSubMarketData(CThostFtdcSpecificInstrumentField *pInst,
 }
 
 void MDHandler::OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pMD) {
+  //LOG(INFO) << std::string(pMD->ExchangeInstID) << "."
+    //<< std::string(LOG(INFO)) << pMD->ExchangeID << " new update";
+
   MarketUpdate md;
   ctpMDtoCedarMD(pMD, md);
   std::string res = ProtoBufHelper::wrapMsg<MarketUpdate>(TYPE_MARKETUPDATE,md);
   std::string chan = md.code()+ "." + codeToEx[md.code()];
   msgHub.boardcastMsg(chan, res);
 
-  //LOG(INFO) << pMD->ExchangeID;
-  //LOG(INFO) << pMD->ExchangeInstID;
-  //LOG(INFO) << md.DebugString();
+  LOG(INFO) << "onMarketUpdate";
 }
 
 void MDHandler::OnRspError(CThostFtdcRspInfoField *pRspInfo,

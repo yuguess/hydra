@@ -40,6 +40,10 @@ public:
     return currentTime;
   }
 
+  static boost::posix_time::ptime getCurPTime() {
+    return boost::posix_time::second_clock::local_time();
+  }
+
   static boost::posix_time::ptime strToPTime(std::string fmt,
       std::string &timeStr) {
     static std::stringstream ss;

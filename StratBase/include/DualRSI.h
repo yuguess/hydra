@@ -23,6 +23,8 @@ private:
 
   bool onCreate();
   bool onExit();
+  bool onRangeStatUpdate(RangeStat&);
+
   bool isBelowTimeThre(std::string ts);
   bool enterMarket(std::string, std::string, double, std::string);
   bool flatAll(std::string, double, std::string);

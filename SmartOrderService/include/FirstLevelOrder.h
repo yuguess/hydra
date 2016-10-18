@@ -15,13 +15,12 @@ public:
 
 private:
   const static int stockMinimumQty = 100;
-  const static int volMulti = 2.5;
+  const static int volMulti = 2;
   const static int topVolMulti = 2;
 
   boost::posix_time::ptime getTimeThre() const {
     boost::posix_time::time_duration hms(14, 55, 30);
     boost::posix_time::ptime ptmDate(CedarTimeHelper::getCurPTime().date());
-
     return ptmDate + hms;
   }
 

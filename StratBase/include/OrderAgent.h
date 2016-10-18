@@ -15,7 +15,9 @@ public:
     CedarJsonConfig::getInstance().getStringByPath("Strategy.Mode", modeStr);
     mode = StringToEnum::toStrategyMode(modeStr);
 
-    CedarHelper::setupTradeServerMap(accToAddr);
+    if (mode == LIVE_TRADING) {
+      CedarHelper::setupTradeServerMap(accToAddr);
+    }
   }
 
   int sendRequest(OrderRequest &req) {

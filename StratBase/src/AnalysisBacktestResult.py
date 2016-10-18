@@ -56,7 +56,6 @@ if __name__ == '__main__':
   stratStat["longRet"] = 0
   stratStat["shortRet"] = 0
 
-
   helper = {}
   helper["longWinRet"] = 0
   helper["longWinCount"] = 0
@@ -73,7 +72,7 @@ if __name__ == '__main__':
 
       code = dayTran.loc[idx]["Code"]
       qty = dayTran.loc[idx]["Qty"]
-      price =dayTran.loc[idx]["Price"]
+      price = float(dayTran.loc[idx]["Price"])
       direction =dayTran.loc[idx]["Direction"]
 
       stratStat["tradeCount"] += 1
@@ -91,32 +90,79 @@ if __name__ == '__main__':
         positions[code]["LastPrice"] = price
         continue
 
-      tranRet = ((price - positions[code]["LastPrice"]) /
-        positions[code]["LastPrice"]) * positions[code]["Qty"]
+      posQty = positions[code]["Qty"]
+      posAvg = positions[code]["LastPrice"]
+      tranRet = 0.0
 
-      print "date:", date, "ret:", tranRet
-      dayRet += tranRet
+      if (posQty > 0 and direction == "Buy"):
+        positions[code]["LastPrice"] = ((posQty * posAvg + qty * price) /
+          (qty + posQty))
+        positions[code]["Qty"] += qty
 
-      if (positions[code]["Qty"] > 0):
+      elif (posQty < 0 and direction == "Buy"):
+        if (posQty + qty > 0):
+          tranRet = ((posAvg - price) / posAvg) * abs(posQty)
+          positions[code]["Qty"] += qty
+          positions[code]["LastPrice"] = price
+        elif (posQty + qty < 0):
+          tranRet = ((posAvg - price) / posAvg) * qty
+          positions[code]["Qty"] += qty
+        else:
+          tranRet = ((posAvg - price) / posAvg) * abs(posQty)
+          positions.pop(code, None)
+
         stratStat["longRet"] += tranRet
         if (tranRet > 0):
           helper["longWinRet"] += tranRet
           helper["longWinCount"] += 1
-      else:
+
+      elif (posQty > 0 and direction == "Sell"):
+        if (posQty - qty > 0):
+          tranRet = ((price - posAvg) / posAvg) * qty
+          positions[code]["Qty"] -= qty
+
+        elif (posQty - qty < 0):
+          tranRet = ((price - posAvg) / posAvg) * posQty
+          positions[code]["Qty"] -= qty
+          positions[code]["LastPrice"] = price
+        else:
+          tranRet = ((price - posAvg) / posAvg) * qty
+          positions.pop(code, None)
+
         stratStat["shortRet"] += tranRet
         if (tranRet > 0):
           helper["shortWinRet"] += tranRet
           helper["shortWinCount"] += 1
 
-      positions[code]["LastPrice"] = price
-
-      if (direction == "Buy"):
-        positions[code]["Qty"] += qty
-      else:
+      elif (posQty < 0 and direction == "Sell"):
+        positions[code]["LastPrice"] = ((-posQty * posAvg + qty * price) /
+          (qty - posQty))
         positions[code]["Qty"] -= qty
 
-      if (positions[code]["Qty"] == 0):
-        positions.pop(code, None)
+      print "date:", date, "ret:", tranRet
+      dayRet += tranRet
+      #raw_input()
+
+      #if (positions[code]["Qty"] > 0):
+      #  stratStat["longRet"] += tranRet
+      #  if (tranRet > 0):
+      #    helper["longWinRet"] += tranRet
+      #    helper["longWinCount"] += 1
+      #else:
+      #  stratStat["shortRet"] += tranRet
+      #  if (tranRet > 0):
+      #    helper["shortWinRet"] += tranRet
+      #    helper["shortWinCount"] += 1
+
+      #positions[code]["LastPrice"] = price
+
+      #if (direction == "Buy"):
+      #  positions[code]["Qty"] += qty
+      #else:
+      #  positions[code]["Qty"] -= qty
+
+      #if (positions[code]["Qty"] == 0):
+      #  positions.pop(code, None)
 
     #for code in positions.iteritems():
     #  dayRet += (closePrice[code][date] - positions[code]["LastPrice"]) /
@@ -141,11 +187,17 @@ if __name__ == '__main__':
   stratStat["longWinProb"] = (float(helper["longWinCount"]) /
     stratStat["longCount"])
 
-  stratStat["longWinLoseRatio"] = (helper["longWinRet"] /
-    abs(stratStat["longRet"] - helper["longWinRet"]))
+  if stratStat["longRet"] != helper["longWinRet"]:
+    stratStat["longWinLoseRatio"] = (helper["longWinRet"] /
+      abs(stratStat["longRet"] - helper["longWinRet"]))
+  else:
+    print "WARNING:longRet == longWinRet"
 
-  stratStat["shortWinLoseRatio"] = (helper["shortWinRet"] /
-    abs(stratStat["shortRet"] - helper["shortWinRet"]))
+  if stratStat["shortRet"] != helper["shortWinRet"]:
+    stratStat["shortWinLoseRatio"] = (helper["shortWinRet"] /
+        abs(stratStat["shortRet"] - helper["shortWinRet"]))
+  else:
+    print "WARNING:shortRet == shortWinRet"
 
   stratStat["shortWinProb"] = 1 - stratStat["longWinProb"]
 
