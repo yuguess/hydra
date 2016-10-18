@@ -3,11 +3,15 @@
 
 #include "CedarJsonConfig.h"
 #include "CedarHelper.h"
+#include "JsonHelper.h"
+#include "CedarTimeHelper.h"
 #include "CedarLogger.h"
+#include "EnumStringMap.h"
 #include "CPlusPlusCode/ProtoBufMsg.pb.h"
 #include "ProtoBufMsgHub.h"
-#include "CedarHelper.h"
 #include "IncludeOnlyInMain.h"
+
+namespace pt = boost::posix_time;
 
 class Tester {
 public:
@@ -26,6 +30,23 @@ public:
     }
 
     respAddr = CedarHelper::getResponseAddr();
+
+    //hacky: assume all exchanges open/close at the same time as SHSE
+    Json::Value root;
+    JsonHelper::loadJsonFile(
+      "../../ShareConfig/MarketSpecification.json", root);
+
+    JsonHelper::getStringArrayWithTag(root, "TradingSession.SHSE",
+      "start", venueStarts);
+    JsonHelper::getStringArrayWithTag(root, "TradingSession.SHSE",
+      "end", venueEnds);
+    mktSpecFormat= "%H:%M:%S";
+
+    Json::Value ATickRoot;
+    JsonHelper::loadJsonFile("../../ShareConfig/AShare.json", ATickRoot);
+
+    for (unsigned i = 0; i < ATickRoot.size(); i++)
+      ATickList.push_back(ATickRoot[i]["code"].asString());
   }
 
   int onMsg(MessageBase msg) {
@@ -68,6 +89,8 @@ public:
       LOG(INFO) << "order " << i << std::endl;
       msgHub.pushMsg(sendAddr, ProtoBufHelper::wrapMsg(TYPE_ORDER_REQUEST, req));
     }
+
+    return 0;
   }
 
   int testcase2() {
@@ -110,8 +133,68 @@ public:
     return 0;
   }
 
+  int testSmallOrder() {
+    int numOrder = 10;
+    std::string account = "3003_Stock";
+    RequestType orderType = TYPE_SMALL_ORDER_REQUEST;
+    std::string sendAddr = tradeServerMap["SmartOrderService"];
+    std::vector<std::string> ids;
+
+    OrderRequest req;
+    req.set_response_address(respAddr);
+    req.set_account(account);
+    req.set_type(orderType);
+
+    srand(time(NULL));
+    int batch = 0;
+    while (inMktSession()) {
+      LOG(INFO) << "batch id: " << batch << std::endl;
+
+      for (int i = 0; i < numOrder; i++) {
+        ids.push_back(CedarHelper::getOrderId());
+        req.set_id(ids[i]);
+        req.set_alg_order_id(CedarHelper::getOrderId());
+        req.set_batch_id(CedarHelper::getOrderId());
+
+        int codeIndex = rand() % ATickList.size();
+        std::string codeStr = ATickList[codeIndex];
+        std::string name = codeStr.substr(0, 6);
+        std::string venue = codeStr.substr(7, 2) + "SE";
+        ExchangeType exchange = StringToEnum::toExchangeType(venue);
+
+        req.set_code(name);
+        req.set_exchange(exchange);
+        req.set_buy_sell(LONG_BUY);
+        int qty = 100 * ((rand() % 5) + 1);
+        req.set_trade_quantity(qty);
+
+        LOG(INFO) << "order " << i;
+        LOG(INFO) << "name: " << codeStr;
+        LOG(INFO) << "with qty: " << qty << std::endl;
+        msgHub.pushMsg(sendAddr, ProtoBufHelper::wrapMsg(TYPE_ORDER_REQUEST, req));
+      }
+    batch++;
+    sleep(300);
+    }
+    getchar();
+    return 0;
+  }
+
+  bool inMktSession(){
+    std::string now = CedarTimeHelper::getCurTimeStamp();
+    pt::ptime ts = CedarTimeHelper::strToPTime("%H%M%S%F", now);
+    now = CedarTimeHelper::ptimeToStr(mktSpecFormat, ts);
+
+    for (unsigned i = 0; i < venueStarts.size(); i++) {
+      if (now < venueStarts[i] && now > venueEnds[i]) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   int testFuturesToMultiAccount() {
-    int numOrder = 1;
     int limitPrice = 3799;
     std::string code = "jd1609";
     std::vector<std::string> des ={"1002_Futures",
@@ -156,6 +239,7 @@ public:
 
   int run() {
     //testcase1();
+    testSmallOrder();
 
     LOG(INFO) << "all sent" << std::endl;
     return 0;
@@ -165,6 +249,9 @@ private:
   ProtoBufMsgHub msgHub;
   std::map<std::string, std::string> tradeServerMap;
   std::string respAddr;
+  std::vector<std::string> venueStarts, venueEnds;
+  std::string mktSpecFormat;
+  std::vector<std::string> ATickList;
 };
 
 int main(int argc, char *argv[]) {
