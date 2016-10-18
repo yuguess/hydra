@@ -52,7 +52,7 @@ int FirstLevelOrder::onMsg(MessageBase &msg) {
           }
         }
 
-        sendLimitOrder(currentLevelPrice);
+        sendLimitOrder(placePrice);
         LOG(INFO) << "firstLevel send order complete";
         break;
       }
@@ -132,10 +132,10 @@ int FirstLevelOrder::onMsg(MessageBase &msg) {
           return 0;
         }
 
-        cancelOrder();
-
-        orderState = TerminateCancel;
+        //cancelOrder();
+        //orderState = TerminateCancel;
       }
+
     } else if (rsp.type() == TYPE_ERROR) {
       //Enter terminate process
     }
