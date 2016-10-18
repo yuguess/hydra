@@ -147,7 +147,7 @@ class MonitorData:
     elif dic['type'] == "APP_STATUS_MSG":
       self.app_buf.append(item)
       #print(item)
-    elif dic['type'] == "TYPE_SMART_ORDER_REQUEST":
+    elif dic['type'] == "TYPE_SMART_ORDER_REQUEST" or dic['type'] == "TYPE_FIRST_LEVEL_ORDER_REQUEST":
       self.app_buf.append(item)
     elif dic['type'] == "TYPE_SMART_ORDER_REQUEST":
       return
@@ -165,6 +165,8 @@ class MonitorData:
       new = fp.readline()
       if new:
         match = self.regex.findall(new);
+        if len(match)>1:
+            match = match[1:2]
         for item in match:
           #print(item)
           self.logUpdate(item)

@@ -19,7 +19,7 @@
       {"name":"ManualOrder", "address":"192.168.0.66:15213"},
       {"name":"SmartOrderService", "address":"192.168.0.66:15231"}
     ]
-  }
+  },
 
   "BindAddress": "192.168.0.66:15233"
 }

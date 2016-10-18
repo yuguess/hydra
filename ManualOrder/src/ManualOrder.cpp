@@ -32,12 +32,9 @@ ManualOrder::ManualOrder() {
 
     LOG(INFO) << "TradeServer name:" << tnames[i] << "," << addrs[i];
   }
-
 }
 
 int ManualOrder::onMsg(MessageBase msg) {
-  CedarMsgType type = msg.type();
-
   if (msg.type() == TYPE_MARKETUPDATE) {
     MarketUpdate mkt = ProtoBufHelper::unwrapMsg<MarketUpdate>(msg);
     LOG(INFO) << mkt.DebugString();
@@ -88,7 +85,7 @@ int ManualOrder::queryDataRequest() {
 
   int value;
   std::cout << std::endl;
-  for (int i = 0; i < dataServers.size(); i++)
+  for (unsigned i = 0; i < dataServers.size(); i++)
     std::cout << i <<") Enter dataServer " << dataServers[i].name << std::endl;
 
   std::cin >> value;
@@ -230,8 +227,29 @@ int ManualOrder::queryAlgOrder() {
   order.set_buy_sell(querySide());
   order.set_trade_quantity(queryOrderQty());
 
+  setOrderReqAccount(order);
+
   msgHub.pushMsg(serverAddrMap["SmartOrderService"],
       ProtoBufHelper::wrapMsg(TYPE_ORDER_REQUEST, order));
+  return 0;
+}
+
+int ManualOrder::setOrderReqAccount(OrderRequest &order) {
+  int value;
+  std::cout << std::endl;
+  for (unsigned i = 0; i < tradeServers.size(); i++) {
+    if (tradeServers[i].name.find("Stock") == std::string::npos)
+      continue;
+    std::cout << i <<") for " << tradeServers[i].name << std::endl;
+  }
+  std::cin >> value;
+
+  if (value < 0 || value >= tradeServers.size()) {
+    std::cout << "input index out of range" << std::endl;
+    return -1;
+  }
+  order.set_account(tradeServers[value].name);
+
   return 0;
 }
 
@@ -246,7 +264,7 @@ int ManualOrder::queryEnterOrder() {
 
   int value;
   std::cout << std::endl;
-  for (int i = 0; i < tradeServers.size(); i++) {
+  for (unsigned i = 0; i < tradeServers.size(); i++) {
     std::cout << i <<") for "
       << tradeServers[i].name << std::endl;
   }
