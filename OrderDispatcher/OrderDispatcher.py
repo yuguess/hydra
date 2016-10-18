@@ -46,6 +46,7 @@ def setOrderRequest(orderRequest, req):
     orderRequest.buy_sell = protoMsg.SHORT_SELL
     orderRequest.trade_quantity = -qty
   orderRequest.argument_list = str(req["Args"])
+
   orderRequest.open_close = posDirectionDict[req["OpenClose"]]
 
   if (orderRequest.code[0].isdigit()):
@@ -118,7 +119,7 @@ if __name__ == '__main__':
   logger.info("OrderDispatcher service online")
   while True:
     actions = orderRecv.recv_json()
-    logger.info(actions)
+    logger.info("<<<" + json.dumps(actions) + ">>>")
     for act in actions:
       if (act["ActionType"] != "BatchTrade"):
         continue
