@@ -4,7 +4,7 @@
 #include "CPlusPlusCode/ProtoBufMsg.pb.h"
 #include "BasicKD.h"
 
-BasicKD::BasicKD() : kd(14, 3, 3),  fiveMinData(300, "SHSE") {
+BasicKD::BasicKD() : kd(14, 3, 3),  fiveMinData(60, "SHSE") {
   respAddr = CedarHelper::getResponseAddr();
 }
 
@@ -20,9 +20,9 @@ int BasicKD::onMsg(MessageBase &msg) {
     LOG(INFO) << "high " << rangeStat.high();
     LOG(INFO) << "low " << rangeStat.low();
     LOG(INFO) << "close " << rangeStat.close();
-    LOG(INFO) << "count " << rangeStat.timestamp();
+    LOG(INFO) << "ts " << rangeStat.timestamp();
     LOG(INFO) << "begin " << rangeStat.begin_timestamp();
-    LOG(INFO) << "begin " << rangeStat.end_timestamp();
+    LOG(INFO) << "end" << rangeStat.end_timestamp();
 
     onRangeStatUpdate(rangeStat);
 
@@ -108,6 +108,8 @@ bool BasicKD::onCreate() {
 
 bool BasicKD::onExit() {
   if (getStrategyMode() == LIVETEST || getStrategyMode() == LIVE_TRADING) {
+    //update day data
+
     PersistentState::save(jsonState);
   }
 

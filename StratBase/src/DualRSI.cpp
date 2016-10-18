@@ -17,68 +17,70 @@ int DualRSI::onMsg(MessageBase &msg) {
     //positionManager.onOrderResponseUpdate(respMsg);
   } else if (msg.type() == TYPE_RANGE_STAT) {
     RangeStat range = ProtoBufHelper::unwrapMsg<RangeStat>(msg);
-
-    //LOG(INFO) << "ts " << range.timestamp();
-    //LOG(INFO) << "close " << range.close();
-    //LOG(INFO) << "stream " << range.stream();
-
-    if (range.stream() == "5minData") {
-      if (!qRSI.update(range.close(), qRSIVal))
-        return 0;
-    }
-
-    if (range.stream() == "15minData") {
-      if (!sRSI.update(range.close(), sRSIVal))
-        return 0;
-      sRSIValValidFlag = true;
-    }
-
-    if (range.stream() == "DayData") {
-      //close out all position when day end
-      flatAll(range.code(), range.close(), range.timestamp());
-      return 0;
-    }
-
-    if (!sRSIValValidFlag)
-      return 0;
-
-    if (isBelowTimeThre(range.timestamp()))
-      return 0;
-
-    //LOG(INFO) << "ts " << range.timestamp();
-    //LOG(INFO) << "close " << range.close();
-    //LOG(INFO) << "stream " << range.stream();
-    //LOG(INFO) << "qRSIVal " << qRSIVal;
-    //LOG(INFO) << "sRSIVal " << sRSIVal;
-
-    if (qRSIVal > quickRSIThre && sRSIVal > slowRSIThre) {
-      //LOG(INFO) << "qRSIVal " << qRSIVal;
-      //LOG(INFO) << "sRSIVal " << sRSIVal;
-      //LOG(INFO) << "quickRSIThre " << quickRSIThre;
-      //LOG(INFO) << "slowRSIThre " << slowRSIThre;
-      //LOG(INFO) << "Buy " << range.close() << " " << range.timestamp();
-      //getchar();
-      enterMarket("Buy", range.code(), range.close(), range.timestamp());
-    }
-
-    if (qRSIVal < (1 - quickRSIThre) && sRSIVal < (1 - slowRSIThre)) {
-      //LOG(INFO) << "qRSIVal " << qRSIVal;
-      //LOG(INFO) << "sRSIVal " << sRSIVal;
-      //LOG(INFO) << "quickRSIThre " << quickRSIThre;
-      //LOG(INFO) << "slowRSIThre " << slowRSIThre;
-      //LOG(INFO) << "Sell " << range.close() << " " << range.timestamp();
-      //getchar();
-      enterMarket("Sell", range.code(), range.close(), range.timestamp());
-    }
-
-    //if data.dataStream == "5Min":
-      //self.myBook.updatePNL(data.close, ts)
-
-    //if (!qKD.update(range.high(), range.low(), range.close(), k, d))
-        //return 0;
+    onRangeStatUpdate(range);
   }
 
   return 0;
+}
+
+bool DualRSI::onRangeStatUpdate(RangeStat &range) {
+  if (range.stream() == "5minData") {
+    if (!qRSI.update(range.close(), qRSIVal)) {
+      return 0;
+    }
+  }
+
+  if (range.stream() == "15minData") {
+    if (!sRSI.update(range.close(), sRSIVal)) {
+      return 0;
+    }
+    sRSIValValidFlag = true;
+  }
+
+  if (range.stream() == "DayData") {
+    //close out all position when day end
+    flatAll(range.code(), range.close(), range.timestamp());
+    return 0;
+  }
+
+  if (!sRSIValValidFlag)
+    return 0;
+
+  if (isBelowTimeThre(range.timestamp()))
+    return 0;
+
+  //LOG(INFO) << "ts " << range.timestamp();
+  //LOG(INFO) << "close " << range.close();
+  //LOG(INFO) << "stream " << range.stream();
+  LOG(INFO) << "qRSIVal " << qRSIVal;
+  LOG(INFO) << "sRSIVal " << sRSIVal;
+
+  if (qRSIVal > quickRSIThre && sRSIVal > slowRSIThre) {
+    //LOG(INFO) << "qRSIVal " << qRSIVal;
+    //LOG(INFO) << "sRSIVal " << sRSIVal;
+    //LOG(INFO) << "quickRSIThre " << quickRSIThre;
+    //LOG(INFO) << "slowRSIThre " << slowRSIThre;
+    //LOG(INFO) << "Buy " << range.close() << " " << range.timestamp();
+    //getchar();
+    enterMarket("Buy", range.code(), range.close(), range.timestamp());
+  }
+
+  if (qRSIVal < (1 - quickRSIThre) && sRSIVal < (1 - slowRSIThre)) {
+    //LOG(INFO) << "qRSIVal " << qRSIVal;
+    //LOG(INFO) << "sRSIVal " << sRSIVal;
+    //LOG(INFO) << "quickRSIThre " << quickRSIThre;
+    //LOG(INFO) << "slowRSIThre " << slowRSIThre;
+    //LOG(INFO) << "Sell " << range.close() << " " << range.timestamp();
+    //getchar();
+    enterMarket("Sell", range.code(), range.close(), range.timestamp());
+  }
+
+  //if data.dataStream == "5Min":
+    //self.myBook.updatePNL(data.close, ts)
+
+  //if (!qKD.update(range.high(), range.low(), range.close(), k, d))
+      //return 0;
+  return true;
 }
 
 bool DualRSI::flatAll(std::string code, double price, std::string ts) {
