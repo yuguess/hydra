@@ -68,6 +68,7 @@ private:
   int placeQty;
   int numOrder;
   int numCancel;
+  int lotSize;
   OrderState state;
   OrderLeg activeLeg;
 

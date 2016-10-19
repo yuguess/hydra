@@ -1,5 +1,6 @@
 #include "SmallOrder.h"
 #include "CedarHelper.h"
+#include "CedarTimeHelper.h"
 #include "MarketSpecHelper.h"
 #include "CPlusPlusCode/ProtoBufMsg.pb.h"
 #include "SmartOrderService.h"
@@ -10,6 +11,13 @@ SmallOrder::SmallOrder(OrderRequest &req, SmartOrderService *srvc):
   leftQty = req.trade_quantity();
   numOrder = 0;
   numCancel = 0;
+
+  if (CedarHelper::isStock(req.code())) {
+    lotSize = 100;
+  } else {
+    lotSize = 1;
+  }
+
 }
 
 // entry functions driven by mkt update and response msg
@@ -160,6 +168,12 @@ int SmallOrder::placeOrder(MarketUpdate &mkt) {
   LOG(INFO) << "current mid: " << (mkt.bid_price(0) + mkt.ask_price(0)) * 0.5;
   LOG(INFO) << "last mid: " << lastLegMid; 
 
+  if (activeLeg != lastLeg) {
+    lastLegTs = std::chrono::system_clock::now();
+    lastLegMid = (mkt.bid_price(0) + mkt.ask_price(0)) * 0.5;
+  }
+  lastLeg = activeLeg;
+
   if (!isValidOrder(child)) {
     LOG(INFO) << "invalid order fields";
     return 0;
@@ -168,19 +182,18 @@ int SmallOrder::placeOrder(MarketUpdate &mkt) {
   state = Sending;
   service->sendRequest(getOrderReactorID(), child);
 
-  // update algo states after placing orders
   numOrder++;
   LOG(INFO) << "number of placed orders: " << numOrder;
-  if (activeLeg != lastLeg) {
-    lastLegTs = std::chrono::system_clock::now();
-    lastLegMid = (mkt.bid_price(0) + mkt.ask_price(0)) * 0.5; 
-  }
-  lastLeg = activeLeg;
 
   return 0;
 }
 
 int SmallOrder::cancelOrder(bool lastCancel) {
+  if (state == Canceling) {
+    LOG(INFO) << "In canceling process, no need to cancel again";
+    return -1;
+  }
+
   OrderRequest child= orderRequest;
   child.set_id(CedarHelper::getOrderId());
   child.set_response_address(respAddr);
@@ -209,7 +222,7 @@ bool SmallOrder::isValidMkt(MarketUpdate &mkt) {
 bool SmallOrder::isValidOrder(OrderRequest &req) { 
   if (req.limit_price() <= 0.0 ||
       req.trade_quantity() <= 0 ||
-      req.trade_quantity() % 100) {
+      req.trade_quantity() % lotSize) {
     return false;
   }
 
@@ -232,13 +245,22 @@ bool SmallOrder::isMktMoved(double currentMid) {
 }
 
 bool SmallOrder::isTimeExpired() {
+  std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
+
   std::chrono::seconds elapse = std::chrono::duration_cast<
-    std::chrono::seconds>(std::chrono::system_clock::now()- lastLegTs);
-  
+    std::chrono::seconds>(now - lastLegTs);
+  int elapseSeconds = elapse.count();
+
+  // take out the lunch break time if necessary
+  /*std::string nowStr = CedarTimeHelper::timePointToStr("%H%M%S", now);
+  std::string lastLegTsStr = CedarTimeHelper::timePointToStr("%H%M%S", lastLegTs);
+  if (nowStr >= "13:00:00" && lastLegTsStr <= "11:30:00")
+    elapseSeconds -= 90 * 60;*/
+
   srand(time(NULL));
   int delta = rand() % (2 * refreshTimeDelta) - refreshTimeDelta; 
   LOG(INFO) << "delta time of this iteration is(sec): " << delta;
-  return elapse.count() > (refreshTimePeriod + delta);
+  return elapseSeconds > (refreshTimePeriod + delta);
 }
 
 // functions for calculating order placement qty and price
@@ -256,22 +278,21 @@ double SmallOrder::calPlacePrice(MarketUpdate &mkt) {
 
 int SmallOrder::calPlaceQty(MarketUpdate &mkt) {
   int qty = 0;
+  int minPlaceQty = 1 * lotSize;
 
-  double bidVol = mkt.bid_volume(0);
-  double askVol = mkt.ask_volume(0);
+  int bidVol = mkt.bid_volume(0);
+  int askVol = mkt.ask_volume(0);
 
-  if (CedarHelper::isStock(orderRequest.code())) { 
-    bidVol *= 100;
-    askVol *= 100;
-  }
+  bidVol *= lotSize;
+  askVol *= lotSize;
 
   if ((orderRequest.buy_sell() == LONG_BUY && activeLeg == OrderLeg::Passive) || 
      (orderRequest.buy_sell() == SHORT_SELL && activeLeg == OrderLeg::Aggressive)) {
-    qty = std::min(bidVol * touchSizePercent / 100.0,
-      static_cast<double>(leftQty));
+    qty = std::max(bidVol * touchSizePercent / 100, minPlaceQty);
+    qty = std::min(qty, leftQty);
   } else {
-    qty = std::min(askVol * touchSizePercent / 100.0,
-      static_cast<double>(leftQty));
+    qty = std::max(askVol * touchSizePercent / 100, minPlaceQty);
+    qty = std::min(qty, leftQty);
   }  
   
   if (CedarHelper::isStock(orderRequest.code())) {
