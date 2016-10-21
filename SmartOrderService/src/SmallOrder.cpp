@@ -41,7 +41,7 @@ int SmallOrder::onMktUpdate(MarketUpdate &mkt) {
   switch (state) {
     case OrderState::Init: {
       halfSpread = calHalfSpread(mkt);
-      arrivalOrderTs = std::chrono::system_clock::now();
+      arrivalOrderPT = CedarTimeHelper::getCurPTime();
       activeLeg = Starting;
 
       updateLeg(SwitchSignal::Initial);
@@ -169,7 +169,7 @@ int SmallOrder::placeOrder(MarketUpdate &mkt) {
   LOG(INFO) << "last mid: " << lastLegMid; 
 
   if (activeLeg != lastLeg) {
-    lastLegTs = std::chrono::system_clock::now();
+    lastLegPT = CedarTimeHelper::getCurPTime();
     lastLegMid = (mkt.bid_price(0) + mkt.ask_price(0)) * 0.5;
   }
   lastLeg = activeLeg;
@@ -230,10 +230,15 @@ bool SmallOrder::isValidOrder(OrderRequest &req) {
 }
 
 bool SmallOrder::isMaxTimeExpired() {
-  std::chrono::seconds elapse = std::chrono::duration_cast<
-    std::chrono::seconds>(std::chrono::system_clock::now()- arrivalOrderTs);
-  
-  return (elapse.count() > maxTimePeriod); 
+  boost::posix_time::ptime nowPT = CedarTimeHelper::getCurPTime();
+  boost::posix_time::time_duration elapse = nowPT - arrivalOrderPT;
+  int elapseSeconds = elapse.total_seconds();
+
+  // take out the break session if order life stretchs over it
+  if (nowPT >= getAfternoonStart() && arrivalOrderPT <= getMorningEnd())
+    elapseSeconds -= breakSessionPeriod;
+
+  return (elapseSeconds > maxTimePeriod);
 }
 
 bool SmallOrder::isMktMoved(double currentMid) {
@@ -245,17 +250,13 @@ bool SmallOrder::isMktMoved(double currentMid) {
 }
 
 bool SmallOrder::isTimeExpired() {
-  std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
+  boost::posix_time::ptime nowPT = CedarTimeHelper::getCurPTime();
+  boost::posix_time::time_duration elapse = nowPT - lastLegPT;
+  int elapseSeconds = elapse.total_seconds();
 
-  std::chrono::seconds elapse = std::chrono::duration_cast<
-    std::chrono::seconds>(now - lastLegTs);
-  int elapseSeconds = elapse.count();
-
-  // take out the lunch break time if necessary
-  /*std::string nowStr = CedarTimeHelper::timePointToStr("%H%M%S", now);
-  std::string lastLegTsStr = CedarTimeHelper::timePointToStr("%H%M%S", lastLegTs);
-  if (nowStr >= "13:00:00" && lastLegTsStr <= "11:30:00")
-    elapseSeconds -= 90 * 60;*/
+  // take out the break session if order life stretchs over it
+  if (nowPT >= getAfternoonStart() && lastLegPT <= getMorningEnd())
+    elapseSeconds -= breakSessionPeriod;
 
   srand(time(NULL));
   int delta = rand() % (2 * refreshTimeDelta) - refreshTimeDelta; 
