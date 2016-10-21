@@ -1,9 +1,10 @@
 #ifndef SMALL_ORDER_H
 #define SMALL_ORDER_H
 
-#include <chrono>
 #include "OrderReactor.h"
+#include "CedarTimeHelper.h"
 #include "CPlusPlusCode/ProtoBufMsg.pb.h"
+#include <boost/date_time/posix_time/posix_time.hpp>
 #include "ProtoBufMsgHub.h"
 #include "SmallOrder.h"
 
@@ -14,7 +15,7 @@ public:
   int onMsg(MessageBase &);
 
 private:
-  //recalculate fair price every 5 mins 
+  //recalculate fair price every 7 mins
   const static int refreshTimePeriod = 7 * 60;
   const static int refreshTimeDelta = 70;
   const static int maxTimePeriod = 90 * 60;
@@ -22,6 +23,22 @@ private:
   const static int touchSizePercent = 80;
   const static int maxNumOrder = 100;
   const static int mmHSpreadMultiple = 2.5;
+  const static int breakSessionPeriod = 90 * 60;
+
+  //TODO: read out session boundary from market specification config
+  boost::posix_time::ptime getMorningEnd() const {
+    boost::posix_time::time_duration hms(11, 30, 0);
+    boost::posix_time::ptime ptmDate(CedarTimeHelper::getCurPTime().date());
+
+    return ptmDate + hms;
+  }
+
+  boost::posix_time::ptime getAfternoonStart() const {
+    boost::posix_time::time_duration hms(13, 0, 0);
+    boost::posix_time::ptime ptmDate(CedarTimeHelper::getCurPTime().date());
+
+    return ptmDate + hms;
+  }
 
   enum OrderState {
     Init = 0,
@@ -74,8 +91,10 @@ private:
 
   std::string outOrderId;
   std::string respAddr;
-  std::chrono::system_clock::time_point arrivalOrderTs;
-  std::chrono::system_clock::time_point lastLegTs;
+  boost::posix_time::ptime arrivalOrderPT;
+  boost::posix_time::ptime lastLegPT;
+  boost::posix_time::ptime morningEnd;
+  boost::posix_time::ptime afternoonStart;
   double lastLegMid;
   OrderLeg lastLeg;
 };
