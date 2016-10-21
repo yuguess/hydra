@@ -98,6 +98,8 @@ enum PositionDirection {
   //below 2 only for SH futures Market
   CLOSE_TODAY_POSITION = 2;
   CLOSE_YESTERDAY_POSITION = 3;
+  //let interface handle
+  AUTO = 4;
 }
 
 enum RequestType {

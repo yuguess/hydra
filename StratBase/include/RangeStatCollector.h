@@ -84,9 +84,9 @@ public:
       }
     }
 
-    //for (unsigned i = 0; i < periods.size(); i++) {
-    //  LOG(INFO) << periods[i].first << "---" << periods[i].second;
-    //}
+    for (unsigned i = 0; i < periods.size(); i++) {
+      LOG(INFO) << periods[i].first << "---" << periods[i].second;
+    }
   }
 
   bool onBacktestTickDataUpdate(MarketUpdate &mkt, RangeStat &res) {
@@ -129,7 +129,6 @@ private:
   }
 
   bool onTickUpdate(MarketUpdate &mkt, pt::ptime ts, RangeStat &res) {
-
     if (ts < periods[periodIdx].first) {
       return false;
     }

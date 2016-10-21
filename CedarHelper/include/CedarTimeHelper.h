@@ -28,7 +28,7 @@ public:
   }
 
   //return current local time HHMMSSmmm
-  static std::string getCurTimeStamp(){
+  static std::string getCurTimeStamp() {
     char currentTime[10];
     struct timeval curTime;
     gettimeofday(&curTime, NULL);

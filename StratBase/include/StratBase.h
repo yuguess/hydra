@@ -27,6 +27,8 @@ protected:
 private:
   int subscribeTicker(std::string, std::string);
   int onMsgWrapper(MessageBase);
+  bool setupLiveTestConfig(Json::Value&);
+  bool getBacktestRangeDateStr(int, std::string&, std::string&);
 
   std::string stkDataAddr, stkBoardcastAddr;
   std::string futuresDataAddr, futuresBoardcastAddr;

@@ -2,21 +2,20 @@
 #include "CedarJsonConfig.h"
 #include "DataAdapter.h"
 #include "DataAdapterFactory.h"
+#include "JsonHelper.h"
 
 #include <iostream>
 #include <vector>
 
-int Backtester::run() {
+int Backtester::run(Json::Value &jsonConf) {
   std::vector<std::string> streams;
-  CedarJsonConfig::getInstance().getStringArrayWithTag(streams,
-    "Backtest.Streams", "");
+  JsonHelper::getStringArrayWithTag(jsonConf, "Streams", "", streams);
 
   for (unsigned i = 0; i < streams.size(); i++) {
-    Json::Value jsonConfigObj;
-    CedarJsonConfig::getInstance().getJsonValueByPath("Backtest." + streams[i],
-      jsonConfigObj);
+    Json::Value adapterJsonConfig;
+    JsonHelper::getJsonValueByPath(jsonConf, streams[i], adapterJsonConfig);
     nameToAdapter[streams[i]] =
-      DataAdapterFactory::createAdapter(streams[i], jsonConfigObj);
+      DataAdapterFactory::createAdapter(streams[i], adapterJsonConfig);
   }
 
   //std::map<std::string, std::shared_ptr<DataAdapter>> streams;

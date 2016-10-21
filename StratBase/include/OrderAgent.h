@@ -26,6 +26,7 @@ public:
         LOG(INFO) << "order to backtester";
         //goes to backtester
         //backtester.sendRequest();
+        break;
       case LIVETEST:
         LOG(INFO) << "order to virtual matching engine";
         break;

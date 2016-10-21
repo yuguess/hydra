@@ -49,6 +49,8 @@ int FirstLevelOrder::onMsg(MessageBase &msg) {
           else {
             placePrice -= oneTick;
           }
+
+          LOG(INFO) << "first level switch to active mode";
         }
 
         sendLimitOrder(placePrice);

@@ -4,10 +4,11 @@ import datetime
 
 
 #codeList = "RB.SHF,M.DCE,I.DCE,RM.CZC,FG.CZC,P.DCE,MA.CZC,BU.SHF,C.DCE"
-codeList = "JD.DCE"
-resultPath = "~/WinShare/Data/";
+codeList = "JD1701.DCE"
+resultPath = "~/WinShare/";
 #in minutes
 freq = "15"
+dataRepoPath = "/home/yuguess/ProcessFile/"
 
 #########################
 
@@ -36,11 +37,10 @@ def dispatchCodeData(code):
     fstream = None
 
     if len(dayTran.index) != 0:
-      fileName = "/home/yuguess/ProcessFile/" + freqStr + "/" + dateStr + "/" + code
+      fileName = dataRepoPath + freqStr + "/" + dateStr + "/" + code
 
-      if (not os.path.isdir("/home/yuguess/ProcessFile/"
-        + freqStr + "/" + dateStr)):
-        continue
+      #if (not os.path.isdir(dataRepoPath + freqStr + "/" + dateStr)):
+      #  continue
 
       if (not os.path.exists(os.path.dirname(fileName))):
         os.makedirs(os.path.dirname(fileName))

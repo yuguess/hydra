@@ -42,6 +42,12 @@ public:
     std::string latestJson = dir + app + "_" +
       CedarTimeHelper::ptimeToStr("%Y%m%d%H%M%S", latestTS);
 
+    if (!boost::filesystem::exists(latestJson)) {
+      LOG(ERROR) << "file " << latestJson << " does not exist or dir is empty";
+      return false;
+    }
+    LOG(INFO) << "load json state file" << latestJson;
+
     std::ifstream fileStream(latestJson, std::ifstream::binary);
     Json::Reader reader;
     if (!reader.parse(fileStream, jsonState)) {
