@@ -1,7 +1,8 @@
 #include "DualKD.h"
 
 DualKD::DualKD() :
-  qKD(13, 3, 3), sKD(13, 3, 3), rangeCollector(15 * 60, "SHSE") {
+  qKD(13, 3, 3), sKD(13, 3, 3), rangeCollector(15 * 60, "DCE"),
+  slowSignal(UNINITIALIZE), preSlowK(UNINITIALIZE), preQuickK(UNINITIALIZE) {
 
   respAddr = CedarHelper::getResponseAddr();
 }
@@ -9,8 +10,6 @@ DualKD::DualKD() :
 int DualKD::onMsg(MessageBase &msg) {
 
   if (msg.type() == TYPE_MARKETUPDATE) {
-    LOG(INFO) << "onMarketUpdate";
-
     MarketUpdate mkt = ProtoBufHelper::unwrapMsg<MarketUpdate>(msg);
     RangeStat rangeStat;
     if (!rangeCollector.onRealTimeDataTickUpdate(mkt, rangeStat)) {
@@ -23,18 +22,18 @@ int DualKD::onMsg(MessageBase &msg) {
 
   } else if (msg.type() == TYPE_RESPONSE_MSG) {
     ResponseMessage rsp = ProtoBufHelper::unwrapMsg<ResponseMessage>(msg);
-    //update orderDelegate
-    //orderDelegate.onOrderResponseUpdate(respMsg);
-    //positionManager.onOrderResponseUpdate(respMsg);
+
+    jsonState["position"]["code"] = rsp.code();
+    jsonState["position"]["price"] = rsp.price();
+    jsonState["position"]["qty"] = jsonState["position"]["qty"].asInt() +
+      (rsp.buy_sell() == LONG_BUY ?
+      rsp.trade_quantity() : -(rsp.trade_quantity()));
+    jsonState["position"]["ts"] = CedarTimeHelper::getCurTimeStamp();
 
   } else if (msg.type() == TYPE_RANGE_STAT) {
     RangeStat rangeStat = ProtoBufHelper::unwrapMsg<RangeStat>(msg);
     onRangeStatUpdate(rangeStat);
-    //LOG(INFO) << "stream " << range.stream();
-    //LOG(INFO) << "ts " << range.timestamp();
-    //LOG(INFO) << "high " << range.high();
-    //LOG(INFO) << "low " << range.low();
-    //LOG(INFO) << "close " << range.close();
+    LOG(INFO) << rangeStat.DebugString();
   }
 
   return 0;
@@ -48,29 +47,25 @@ bool DualKD::onRangeStatUpdate(RangeStat &range) {
       return 0;
     }
 
-    if (jsonState.isMember("preQuickK") && jsonState.isMember("slowSignal")) {
-      double preQuickK = jsonState["preQuickK"].asDouble();
-      int slowSignal = jsonState["slowSignal"].asInt();
-
-      LOG(INFO) << "preK " << preQuickK << " K " << k
-        << " slowSignal " << slowSignal;
+    if (preQuickK != UNINITIALIZE && slowSignal != UNINITIALIZE) {
+      //LOG(INFO) << "preK " << preQuickK << " K " << k
+        //<< " slowSignal " << slowSignal;
       //getchar();
 
       if ((preQuickK < 0.3 && 0.3 < k) ||
         ((preQuickK < 0.7 && 0.7 < k) && slowSignal == 1)) {
 
         //LOG(INFO) << "Buy " << range.close() << " " << range.timestamp();
-        enterMarket("Buy", range.code(), range.close(), range.timestamp());
+        enterMarket(LONG_BUY, range.code(), range.close(), range.timestamp());
       } else if ((preQuickK > 0.3 && 0.3 > k) ||
         ((preQuickK > 0.7 && 0.7 > k) && slowSignal == -1)) {
 
         //LOG(INFO) << "Sell " << range.close() << " " << range.timestamp();
-        enterMarket("Sell", range.code(), range.close(), range.timestamp());
+        enterMarket(SHORT_SELL, range.code(), range.close(), range.timestamp());
       }
     }
 
-    jsonState["preQuickK"] = k;
-    jsonState["preQuickD"] = d;
+    preQuickK = k;
 
   } else if (range.stream() == "DayData") {
     onDayUpdate(range);
@@ -86,103 +81,100 @@ bool DualKD::onDayUpdate(RangeStat &range) {
     return 0;
   }
 
-  if (jsonState.isMember("preSlowK")) {
-    double preSlowK = jsonState["preSlowK"].asDouble();
-
+  if (preSlowK != UNINITIALIZE) {
     if ((preSlowK < 0.3 && 0.3 < k) || (preSlowK < 0.7 && 0.7 < k))
-      jsonState["slowSignal"] = 1;
+      slowSignal = SLOW_BUY;
     else if ((preSlowK > 0.3 && 0.3 > k) || (preSlowK > 0.7 && 0.7 > k))
-      jsonState["slowSignal"] = -1;
+      slowSignal = SLOW_SELL;
   }
 
-  jsonState["preSlowK"] = k;
-  jsonState["preSlowD"] = d;
+  preSlowK = k;
 
   return true;
 }
 
-bool DualKD::enterMarket(std::string buySell, std::string code,
+bool DualKD::enterMarket(TradeDirection buySell, std::string code,
   double price, std::string ts) {
   switch (getStrategyMode()) {
     case BACKTEST: {
-      if (!jsonState.isMember("preEnter")) {
+      if (!jsonState.isMember("position") ||
+        (jsonState.isMember("position") &&
+         jsonState["position"]["qty"].asInt() == 0)) {
+
         transacLogger.enter(buySell, code, 1, price, ts);
-        jsonState["preEnter"] = buySell;
         return true;
       }
 
-      if (jsonState["preEnter"] != buySell) {
+      if (jsonState["position"]["qty"] == 1 && buySell == SHORT_SELL) {
         transacLogger.enter(buySell, code, 2, price, ts);
-        jsonState["preEnter"] = buySell;
+      } else if (jsonState["position"]["qty"] == -1 && buySell == LONG_BUY) {
+        transacLogger.enter(buySell, code, 2, price, ts);
       }
+
       break;
     }
 
     case LIVETEST: {
-      if (jsonState.isMember("position") && jsonState["position"].size() != 0) {
-        if (buySell == "Buy" && jsonState["position"]["qty"] < 0) {
-          transacLogger.enter(buySell, code, 2, price, ts);
-        } else if (buySell == "Sell" && jsonState["position"]["qty"] > 0) {
-          transacLogger.enter(buySell, code, 2, price, ts);
-        }
-
-        jsonState["position"]["timestamp"] = ts;
-        jsonState["position"]["targetPrice"] = price;
-
-        if (buySell == "Buy") {
-          jsonState["position"]["qty"] = 1;
-        } else if (buySell == "Sell") {
-          jsonState["position"]["qty"] = -1;
-        }
-
-      } else {
+      int qty = jsonState["position"]["qty"].asInt();
+      if (!jsonState.isMember("position") ||
+        (jsonState.isMember("position") && qty == 0)) {
 
         transacLogger.enter(buySell, code, 1, price, ts);
 
-        jsonState["position"]["timestamp"] = ts;
         jsonState["position"]["code"] = code;
-        jsonState["position"]["targetPrice"] = price;
+        jsonState["position"]["price"] = price;
+        jsonState["position"]["qty"] = (buySell == LONG_BUY ? 1 : -1);
+        jsonState["position"]["ts"] = ts;
+        return true;
+      }
 
-        if (buySell == "Buy")
-          jsonState["position"]["qty"] = 1;
-        else
-          jsonState["position"]["qty"] = -1;
+      if ((qty == 1 && buySell == SHORT_SELL) ||
+        (qty == -1 && buySell == LONG_BUY)) {
+
+        transacLogger.enter(buySell, code, 2, price, ts);
+
+        jsonState["position"]["code"] = code;
+        jsonState["position"]["price"] = price;
+        jsonState["position"]["qty"] = (buySell == LONG_BUY ? 1 : -1);
+        jsonState["position"]["ts"] = ts;
       }
 
       break;
     }
 
     case LIVE_TRADING: {
-      OrderRequest req =
-        CedarHelper::getInitOrderRequest(respAddr, TYPE_SMART_ORDER_REQUEST);
+      int qty = jsonState["position"]["qty"].asInt();
 
-      if (jsonState.isMember("position") && jsonState["position"].size() != 0) {
-        //if (buySell == "Buy" && jsonState["position"]["qty"] < 0) {
-        //  transacLogger.enter(buySell, code, 2, price, ts);
-        //} else if (buySell == "Sell" && jsonState["position"]["qty"] > 0) {
-        //  transacLogger.enter(buySell, code, 2, price, ts);
-        //}
+      if (!jsonState.isMember("position") ||
+        (jsonState.isMember("position") && qty == 0)) {
 
-        //jsonState["position"]["timestamp"] = ts;
-        //jsonState["position"]["targetPrice"] = price;
+        OrderRequest req = CedarHelper::getInitOrderRequest(
+          respAddr, TYPE_SMART_ORDER_REQUEST);
 
-        //if (buySell == "Buy") {
-        //  jsonState["position"]["qty"] = 1;
-        //} else if (buySell == "Sell") {
-        //  jsonState["position"]["qty"] = -1;
-        //}
-      } else {
-        //transacLogger.enter(buySell, code, 1, price, ts);
+        //req.set_account();
+        req.set_buy_sell(buySell);
+        req.set_code(code);
+        req.set_trade_quantity(1);
 
-        //jsonState["position"]["timestamp"] = ts;
-        //jsonState["position"]["code"] = code;
-        //jsonState["position"]["targetPrice"] = price;
+        orderAgent.sendRequest(req);
 
-        //if (buySell == "Buy")
-        //  jsonState["position"]["qty"] = 1;
-        //else
-        //  jsonState["position"]["qty"] = -1;
+        return true;
       }
+
+      if ((qty == 1 && buySell == SHORT_SELL) ||
+        (qty == -1 && buySell == LONG_BUY)) {
+
+        OrderRequest req = CedarHelper::getInitOrderRequest(
+          respAddr, TYPE_SMART_ORDER_REQUEST);
+
+        req.set_buy_sell(buySell);
+        req.set_code(code);
+        req.set_trade_quantity(2);
+
+        //transacLogger.enter(buySell, code, 2, price, ts);
+        orderAgent.sendRequest(req);
+      }
+
       break;
     }
 

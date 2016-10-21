@@ -40,7 +40,6 @@ int FirstLevelOrder::onMsg(MessageBase &msg) {
       }
 
       case Ready: {
-        outOrderId = CedarHelper::getOrderId();
         placePrice = currentLevelPrice;
 
         if (isInActiveMode(mkt, orderRequest.buy_sell())) {
@@ -50,6 +49,8 @@ int FirstLevelOrder::onMsg(MessageBase &msg) {
           else {
             placePrice -= oneTick;
           }
+
+          LOG(INFO) << "first level switch to active mode";
         }
 
         sendLimitOrder(placePrice);
@@ -191,6 +192,8 @@ bool FirstLevelOrder::isBreakActiveMode(
 }
 
 bool FirstLevelOrder::sendLimitOrder(double limitPrice) {
+  outOrderId = CedarHelper::getOrderId();
+
   //orderRequest is from original orderRequest
   OrderRequest req = orderRequest;
   req.set_response_address(respAddr);

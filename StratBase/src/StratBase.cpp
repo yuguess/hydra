@@ -1,6 +1,7 @@
 #include "StratBase.h"
 #include "CedarHelper.h"
 #include "EnumStringMap.h"
+#include "JsonHelper.h"
 
 StratBase::StratBase(): orderAgent(backtester, msgHub) {
   std::string modeStr;
@@ -25,20 +26,71 @@ StratBase::StratBase(): orderAgent(backtester, msgHub) {
   }
 }
 
+bool StratBase::getBacktestRangeDateStr(int replayLength,
+  std::string &rangeBeg, std::string &rangeEnd) {
+  boost::posix_time::ptime ptimeNow = CedarTimeHelper::getCurPTime();
+
+  boost::posix_time::ptime ptimeEnd = ptimeNow -
+    boost::gregorian::days(1);
+  boost::posix_time::ptime ptimeBeg= ptimeNow -
+    boost::gregorian::days(1 + replayLength);
+
+  rangeBeg = CedarTimeHelper::ptimeToStr("%Y%m%d", ptimeBeg);
+  rangeEnd = CedarTimeHelper::ptimeToStr("%Y%m%d", ptimeEnd);
+  return true;
+}
+
+bool StratBase::setupLiveTestConfig(Json::Value &livetestJsonConf) {
+  CedarJsonConfig::getInstance().getJsonValueByPath("Livetest.Setup",
+    livetestJsonConf);
+
+  int replayLength = livetestJsonConf["ReplayLength"].asInt();
+  std::string rangeBeg, rangeEnd;
+
+  getBacktestRangeDateStr(replayLength, rangeBeg, rangeEnd);
+
+  LOG(INFO) << "Replay " << rangeBeg << " -- " << rangeEnd;
+
+  std::vector<std::string> streams;
+  JsonHelper::getStringArrayWithTag(livetestJsonConf, "Streams", "", streams);
+  for (unsigned i = 0; i < streams.size(); i++) {
+    livetestJsonConf[streams[i]]["Range"]["Start"] = rangeBeg;
+    livetestJsonConf[streams[i]]["Range"]["End"] = rangeEnd;
+  }
+
+  return true;
+}
+
 int StratBase::run() {
   onCreate();
 
   switch (mode) {
     case BACKTEST: {
-      //setup backtester
+      Json::Value btJsonConf;
+      CedarJsonConfig::getInstance().getJsonValueByPath("Backtest",
+        btJsonConf);
       backtester.registerCallback(std::bind(&StratBase::onMsgWrapper,
           this, std::placeholders::_1));
-      backtester.run();
-      LOG(INFO) << "run complete";
+      backtester.run(btJsonConf);
+      LOG(INFO) << "backtester replay complete";
       break;
     }
 
-    case LIVETEST:
+    case LIVETEST: {
+      if (CedarJsonConfig::getInstance().hasMember("Livetest.Setup")) {
+        mode = BACKTEST;
+
+        Json::Value livetestJsonConf;
+        setupLiveTestConfig(livetestJsonConf);
+        backtester.registerCallback(std::bind(&StratBase::onMsgWrapper,
+          this, std::placeholders::_1));
+        backtester.run(livetestJsonConf);
+        LOG(INFO) << "Livetest replay complete";
+
+        mode = LIVETEST;
+      }
+    }
+
     case LIVE_TRADING: {
       ProtoBufHelper::setupProtoBufMsgHub(msgHub);
       msgHub.registerCallback(std::bind(&StratBase::onMsgWrapper,

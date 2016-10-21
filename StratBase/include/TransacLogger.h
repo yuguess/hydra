@@ -23,11 +23,11 @@ public:
     }
   }
 
-  int enter(std::string buySell, std::string code, int qty, double refPrice,
+  int enter(TradeDirection buySell, std::string code, int qty, double refPrice,
       std::string ts) {
 
     trans["Qty"] = qty;
-    trans["Direction"] = buySell;
+    trans["Direction"] = EnumToString::toString(buySell);
     trans["Timestamp"] = ts;
     trans["Price"] = refPrice;
     trans["Code"] = code;
@@ -40,7 +40,7 @@ public:
   }
 
   bool saveToFile() {
-    std::string fileName = "Backtest_" + app + "_" +
+    std::string fileName = app + "_" +
       CedarTimeHelper::timestampFormatString("%Y%m%d%H%M%S");
     std::ofstream out;
     out.open(fileName);

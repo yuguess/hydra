@@ -76,14 +76,14 @@ if __name__ == '__main__':
       direction =dayTran.loc[idx]["Direction"]
 
       stratStat["tradeCount"] += 1
-      if direction == "Buy":
+      if direction == "LONG_BUY":
         stratStat["longCount"] += 1
       else:
         stratStat["shortCount"] += 1
 
       if not (code in positions):
         positions[code] = {}
-        if (direction == "Buy"):
+        if (direction == "LONG_BUY"):
           positions[code]["Qty"] = qty
         else:
           positions[code]["Qty"] = -qty
@@ -94,12 +94,12 @@ if __name__ == '__main__':
       posAvg = positions[code]["LastPrice"]
       tranRet = 0.0
 
-      if (posQty > 0 and direction == "Buy"):
+      if (posQty > 0 and direction == "LONG_BUY"):
         positions[code]["LastPrice"] = ((posQty * posAvg + qty * price) /
           (qty + posQty))
         positions[code]["Qty"] += qty
 
-      elif (posQty < 0 and direction == "Buy"):
+      elif (posQty < 0 and direction == "LONG_BUY"):
         if (posQty + qty > 0):
           tranRet = ((posAvg - price) / posAvg) * abs(posQty)
           positions[code]["Qty"] += qty
@@ -116,7 +116,7 @@ if __name__ == '__main__':
           helper["longWinRet"] += tranRet
           helper["longWinCount"] += 1
 
-      elif (posQty > 0 and direction == "Sell"):
+      elif (posQty > 0 and direction == "SHORT_SELL"):
         if (posQty - qty > 0):
           tranRet = ((price - posAvg) / posAvg) * qty
           positions[code]["Qty"] -= qty
@@ -134,7 +134,7 @@ if __name__ == '__main__':
           helper["shortWinRet"] += tranRet
           helper["shortWinCount"] += 1
 
-      elif (posQty < 0 and direction == "Sell"):
+      elif (posQty < 0 and direction == "SHORT_SELL"):
         positions[code]["LastPrice"] = ((-posQty * posAvg + qty * price) /
           (qty - posQty))
         positions[code]["Qty"] -= qty
@@ -156,7 +156,7 @@ if __name__ == '__main__':
 
       #positions[code]["LastPrice"] = price
 
-      #if (direction == "Buy"):
+      #if (direction == "LONG_BUY"):
       #  positions[code]["Qty"] += qty
       #else:
       #  positions[code]["Qty"] -= qty

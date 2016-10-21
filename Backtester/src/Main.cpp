@@ -28,7 +28,10 @@ int main(int argc, char *argv[]) {
 
   Backtester bt;
   bt.registerCallback(std::bind(&onMsg, std::placeholders::_1));
-  bt.run();
+
+  Json::Value jsonConf;
+  CedarJsonConfig::getInstance().getJsonValueByPath("Backtest", jsonConf);
+  bt.run(jsonConf);
 
   LOG(INFO) << "init quiting procedures now!";
   google::protobuf::ShutdownProtobufLibrary();

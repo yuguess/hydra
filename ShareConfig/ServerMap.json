@@ -1,0 +1,20 @@
+{
+  "StockDataServer": {
+    "serverAddr": "192.168.0.61:15228",
+    "boardcastAddr": "192.168.0.61:15227"
+  },
+  "FuturesDataServer": {
+    "serverAddr": "192.168.1.102:15228",
+    "boardcastAddr": "192.168.1.102:15227"
+  },
+  "TradeServer": [
+    {"name":"2001_Stock", "address":"192.168.0.61:15230"},
+    {"name":"2001_Futures", "address":"192.168.1.102:15230"},
+    {"name":"3001_Stock", "address":"192.168.0.61:15248"},
+    {"name":"3002_Stock", "address":"192.168.0.61:15250"},
+    {"name":"3027_Stock", "address":"192.168.0.61:15252"},
+    {"name":"3028_Stock", "address":"192.168.0.61:15254"},
+    {"name":"3032_Stock", "address":"192.168.0.61:15256"},
+    {"name":"3031_Stock", "address":"192.168.0.61:15258"}
+  ]
+}

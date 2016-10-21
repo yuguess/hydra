@@ -15,7 +15,11 @@ public:
   int onMsg(MessageBase&);
 
 private:
-  bool enterMarket(std::string, std::string, double, std::string);
+  const static int UNINITIALIZE = -100;
+  const static int SLOW_BUY = 1;
+  const static int SLOW_SELL = -1;
+
+  bool enterMarket(TradeDirection, std::string, double, std::string);
   bool onCreate();
   bool onRangeStatUpdate(RangeStat&);
   bool onDayUpdate(RangeStat&);
@@ -27,6 +31,9 @@ private:
   Json::Value jsonState;
 
   std::string respAddr;
+
+  int slowSignal;
+  double preSlowK, preQuickK;
 };
 
 #endif

@@ -13,17 +13,13 @@
 class Backtester {
 
 public:
-  int run();
+  int run(Json::Value&);
   int onRequest(OrderRequest &req);
 
   //register callback
   int registerCallback(ProtoBufMsgHub::MsgCallback callback) {
     msgCallback = callback;
     return 0;
-  }
-
-  static boost::posix_time::ptime toTimestamp(std::string tsStr) {
-    return boost::posix_time::time_from_string(tsStr);
   }
 
 private:

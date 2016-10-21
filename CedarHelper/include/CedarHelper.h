@@ -22,6 +22,7 @@
 #include "CPlusPlusCode/ProtoBufMsg.pb.h"
 #include "CmdLineParser.h"
 #include "CedarLogger.h"
+#include "JsonHelper.h"
 
 class CedarHelper {
 
@@ -70,11 +71,14 @@ public:
   }
 
   static bool setupTradeServerMap(std::map<std::string, std::string> &accMap) {
+    std::string configPath = "../../ShareConfig/ServerMap.json";
+
+    Json::Value root;
+    JsonHelper::loadJsonFile(configPath, root);
+
     std::vector<std::string> names, addrs;
-    CedarJsonConfig::getInstance().getStringArrayWithTag(names,
-      "OrderAgent.TradeServer", "name");
-    CedarJsonConfig::getInstance().getStringArrayWithTag(addrs,
-      "OrderAgent.TradeServer", "address");
+    JsonHelper::getStringArrayWithTag(root, "TradeServer", "name", names);
+    JsonHelper::getStringArrayWithTag(root, "TradeServer", "address", addrs);
 
     for (unsigned i = 0; i < names.size(); i++) {
       accMap[names[i]] = addrs[i];
