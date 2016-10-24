@@ -6,12 +6,13 @@
 #include "RangeDataAdapter.h"
 #include "DayDataAdapter.h"
 #include "CPlusPlusCode/ProtoBufMsg.pb.h"
+#include "GTAAdapter.h"
 
 class DataAdapterFactory {
 
-public:
+  public:
   static std::shared_ptr<DataAdapter> createAdapter(std::string stream,
-      Json::Value &jsonConfigObj) {
+                                                    Json::Value &jsonConfigObj) {
 
     std::shared_ptr<DataAdapter> ptr;
     std::string adapterType = jsonConfigObj["Type"].asString();
@@ -23,7 +24,29 @@ public:
       ptr = std::shared_ptr<DataAdapter>(new RangeDataAdapter());
     } else if (adapterType == "DayDataAdapter") {
       ptr = std::shared_ptr<DataAdapter>(new DayDataAdapter());
-    }  else {
+    } else if (adapterType == "GTATaqAdapter") {
+      ptr = std::shared_ptr<DataAdapter>(new GTAAdapter<TaqData>());
+    } else if (adapterType == "GTAIndexAdapter") {
+      ptr = std::shared_ptr<DataAdapter>(new GTAAdapter<IndexData>());
+    } else if (adapterType == "GTATrdMinAdapter") {
+      ptr = std::shared_ptr<DataAdapter>(new GTAAdapter<TrdMinData>());
+    } else if (adapterType == "GTAOrderqueueAdapter") {
+      ptr = std::shared_ptr<DataAdapter>(new GTAAdapter<OrderqueueData>());
+    } else if (adapterType == "GTATransactionAdapter") {
+      ptr = std::shared_ptr<DataAdapter>(new GTAAdapter<TransactionData>());
+    } else if (adapterType == "GTAVirtualauctionAdapter") {
+      ptr = std::shared_ptr<DataAdapter>(new GTAAdapter<VirtualauctionData>());
+    } else if (adapterType == "GTABulletinAdapter") {
+      ptr = std::shared_ptr<DataAdapter>(new GTAAdapter<BulletinData>());
+    } else if (adapterType == "GTAOrderAdapter") {
+      ptr = std::shared_ptr<DataAdapter>(new GTAAdapter<OrderData>());
+    } else if (adapterType == "GTAStockinfoAdapter") {
+      ptr = std::shared_ptr<DataAdapter>(new GTAAdapter<StockinfoData>());
+    } else if (adapterType == "GTAStockstatusAdapter") {
+      ptr = std::shared_ptr<DataAdapter>(new GTAAdapter<StockstatusData>());
+    } else if (adapterType == "GTATradeAdapter") {
+      ptr = std::shared_ptr<DataAdapter>(new GTAAdapter<TradeData>());
+    } else {
       LOG(FATAL) << "Unsupport Data Adapter " << adapterType;
       return std::shared_ptr<DataAdapter>(NULL);
     }
