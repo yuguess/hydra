@@ -1,0 +1,1 @@
+start C:\TdxInterface\Debug\TdxMarketData.exe -f C:\TdxInterface\Debug\TdxMarketData_ZX.json
