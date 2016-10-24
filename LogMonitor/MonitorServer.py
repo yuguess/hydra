@@ -42,25 +42,6 @@ except:
 fp.close()
 fp = open(logFile, 'r')
 
-order_position = {}
-order_num_count = 0
-algo_position = {}
-algo_num_count = 0
-batch_position = {}
-batch_num_count = 0
-
-algo_id_map = {}
-batch_id_map = {}
-
-batch_head = ["batch_id", "trade_quantity", "quantity"]
-algo_head = ["algo_id", "code", "buy/sell", "trade_quantity", "quantity"]
-order_head = ["status", "code", "price", "trade_quantity", "quantity",
-              "open_close", "account", "argument_list", "id", "status_msg",
-              "batch_flag", "algo_flag"]
-batch_table = pd.DataFrame(columns=batch_head)
-algo_table = pd.DataFrame(columns=algo_head)
-order_table = pd.DataFrame(columns=order_head)
-
 tailLogExitFlag = True
 regex = re.compile(r'<<<(.*?)>>>')
 
@@ -72,17 +53,23 @@ def process_result(result_in):
     if result==None:
         return
     if result[0] != "" and result[0] != None:
-        print(result[0])
-        SocketHandler.send_to_all(
-            {'type': 'batch', 'key': result[0][0], 'value': result[0][1]})
+        try:
+            SocketHandler.send_to_all(
+                {'type': 'batch', 'key': result[0][0], 'value': result[0][1]})
+        except:
+            print result
     if result[1] != "" and result[1] != None:
-        print(result[1])
-        SocketHandler.send_to_all(
-            {'type': 'algo', 'key': result[1][0], 'value': result[1][1]})
+        try:
+            SocketHandler.send_to_all(
+                {'type': 'algo', 'key': result[1][0], 'value': result[1][1]})
+        except:
+            print result
     if result[2] != "" and result[2] != None:
-        print(result[2])
-        SocketHandler.send_to_all(
-            {'type': 'order', 'key': result[2][0], 'value': result[2][1]})
+        try:
+            SocketHandler.send_to_all(
+                {'type': 'order', 'key': result[2][0], 'value': result[2][1]})
+        except:
+            print result
 
 class logHandler:
     @staticmethod

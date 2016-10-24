@@ -1,5 +1,3 @@
-//indexedDB.deleteDatabase("cedar")
-
 window.onload = function () {
     $('#order-div').css({
         "position": "fixed",
@@ -28,105 +26,6 @@ $(document).ready(function()
     } 
 ); 
 
-/*var myDB={
-    name:'test',
-    version:3,
-    db:null
-};
-
-openDB("cedar",3)
-
-function openDB (name,version) {
-    var version=version || 1;
-    var request=window.indexedDB.open(name,version);
-    request.onerror=function(e){
-        console.log(e.currentTarget.error.message);
-    };
-    request.onsuccess=function(e){
-        myDB.db=e.target.result;
-    };
-    request.onupgradeneeded=function(e){
-        var db=e.target.result;
-        if(!db.objectStoreNames.contains('order')){
-            db.createObjectStore('order',{keyPath:"id"});
-            console.log('order table created');
-        }
-        if(!db.objectStoreNames.contains('algo')){
-            db.createObjectStore('algo',{keyPath:"alg_order_id"});
-            console.log('algo table created');
-        }
-        if(!db.objectStoreNames.contains('batch')){
-            db.createObjectStore('batch',{keyPath:"batch_id"});
-            console.log('batch table created');
-        }
-        console.log('DB version changed to '+version);
-    };
-}
-
-
-var students=[{ 
-            id:1001, 
-            name:"Byron", 
-            age:24 
-        },{ 
-            id:1002, 
-            name:"Frank", 
-            age:30 
-        },{ 
-            id:1003, 
-            name:"Aaron", 
-            age:26 
-        }];
-
-function addData(db,storeName,data_in){
-    var transaction=db.transaction(storeName,'readwrite'); 
-    var store=transaction.objectStore(storeName); 
-    console.log(data_in)
-    obj = { 
-            id:1004, 
-            name:"Byron", 
-            age:24 
-        }
-    var request = store.add(obj);
-    console.log(request);
-    for(var i=0;i<students.length;i++){
-                store.add(students[i]);
-            }
-}
-
-function getDataByKey(db,storeName,value,result){
-    ready = 0;
-    var transaction=db.transaction(storeName,'readwrite'); 
-    var store=transaction.objectStore(storeName); 
-    var request=store.get(value); 
-    request.onsuccess=function(e){ 
-        var student=e.target.result; 
-        console.log(student); 
-        result.push(student)
-        ready = 1;
-    };
-
-    return request
-}
-
-function updateDataByKey(db,storeName,value,data){
-            var transaction=db.transaction(storeName,'readwrite'); 
-            var store=transaction.objectStore(storeName); 
-            var request=store.get(value); 
-            request.onsuccess=function(e){ 
-                var student=e.target.result; 
-                student=data;
-                store.put(student); 
-            };
-}
-
-
-
-
-setTimeout(function(){
-    addData(myDB.db,'order',students[0]);
-},1000);*/
-
 function showStock() {
     $('#future_div').hide();
     $('#stock_div').show();
@@ -137,7 +36,7 @@ function showFuture() {
     $('#stock_div').hide();
 }
 
-//date formating
+//this is a function copied from web, don't edit
 Date.prototype.format = function (format) {
     var o = {
         "M+": this.getMonth() + 1, //month
@@ -203,14 +102,7 @@ function onClickShowAll(data) {
 //show proper rows, when clicking on batch row
 function onClickBatch(data) {
     var batch_value = jQuery(data).children(":first").html();
-   // alert("."+batch_value+"_batch");
-    /*$("#order-table-body tr").each(function () {
-        jQuery(this).hide();
-    });
 
-    $("#algo-table-body tr").each(function () {
-        jQuery(this).hide();
-    });*/
     $("."+batch_value+"_batch").show()
     $(".title").show()
     current_batch = batch_value;
@@ -222,8 +114,8 @@ function onClickBatch(data) {
         if (!jQuery(this).hasClass("title")) {
             document.getElementById("algo-table-body").deleteRow(this);
         }
-        
     });
+
     $("#order-table-body  tr").each(function () {
         if (jQuery(this).hasClass("title")) {
             return;
@@ -255,37 +147,6 @@ function onClickAlgo(data) {
     click_sig = 1;
 }
 
-//当有新的order update到来时，更改对应order行内容
-//update order info when new order update comes
-/*function updateOrderRow(id, data) {
-    var trade_quantity = trade_quantity_order_db[mapOrder[id]] + Number(data.trade_quantity);
-    trade_quantity_order_db[mapOrder[id]] = trade_quantity;
-    var tradeString = "" + trade_quantity + "/" + total_quantity_order_db[mapOrder[id]];
-    var percentage = 100 * trade_quantity / Number($('#' + id + "_order_quantity").text());
-
-    $('#' + id + "_status").html(error_code[data.error_code]);
-    $('#' + id + "_order_trade_quantity").html(trade_quantity);
-    $('#' + id + "_order_progress").css({'width': "" + percentage + "%"}).find('span').html(tradeString);
-
-    if (data.error_code == '4') {
-        if ($('#' + id + "_buy_sell").html() == "LONG_BUY") {
-            $("#audio source").attr("src", "http://tsn.baidu.com/text2audio?tex=" + $('#' + id + "_code").html() + " 已买入" + "\&lan=zh&cuid=" + "94-DE-80-23-E5-A6" + "\&spd=9\&pit=6\&ctp=1&tok=" + "24.e175ed83539ebe33d2eb67c61effe559.2592000.1475223151.282335-8572922");
-        } else if ($('#' + id + "_buy_sell").html() == "SHORT_SELL") {
-            $("#audio source").attr("src", "http://tsn.baidu.com/text2audio?tex=" + $('#' + id + "_code").html() + " 已卖出" + "\&lan=zh&cuid=" + "94-DE-80-23-E5-A6" + "\&spd=9\&pit=6\&ctp=1&tok=" + "24.e175ed83539ebe33d2eb67c61effe559.2592000.1475223151.282335-8572922");
-        }
-        $("#audio")[0].pause();
-        $("#audio")[0].load();
-        $("#audio")[0].play();
-    }
-
-
-    //document.getElementById('debug').insertRow().insertCell().innerHTML = $('#' + id + "_code").html();
-
-    changecolor(id, data);
-}*/
-
-//当有新的order update到来时，更改对应batch行内容
-//update batch info when new order update comes
 function updateBatchRow(batch_id, data) {
     var batch_flag;
     $("td[id$='" + data.ref_id + "_batch_flag']").each(function () {
@@ -294,13 +155,6 @@ function updateBatchRow(batch_id, data) {
     sumBatchProgress(batch_flag);
 }
 
-//计算batch进度
-//compute batch progress
-
-
-
-//当有新的order update到来时，更改对应algo行内容
-//update algo info when new order update comes
 function updateAlgoRow(algo_id, data) {
     var algo_flag;
     $("td[id$='" + data.ref_id + "_algo_flag']").each(function () {
@@ -309,9 +163,6 @@ function updateAlgoRow(algo_id, data) {
     sumAlgoProgress(algo_flag);
     computeTradePrice(algo_flag);
 }
-
-//计算algo进度
-//compute algo progress
 
 //改变颜色
 function changecolor(id, data) {
@@ -359,8 +210,6 @@ function changeStatusColor(id, error_code) {
     }
 }
 
-//在有新order信息到来时，创建新batch
-//create a new batch when a order info comes
 function newBatch(data) {
     $("#batch-title").after("<tr class = '" + data.account + "' id='" + data.batch_id + "' onclick = \"onClickBatch(this);\" account='" + data.account + "'> \
                           <td id='" + data.batch_id + "_algo_id'>" + mapBatch[data.batch_id] + "</td> \
@@ -388,6 +237,7 @@ function showAllAccount() {
     $("#batch tr").each(function () {
         jQuery(this).show();
     });
+    current_account = undefined;
 }
 
 function onAcctClick(obj) {
@@ -418,7 +268,12 @@ function onAcctClick(obj) {
             jQuery(this).show();
         }
     });
-    current_account = jQuery(obj).html();
+    var acc = jQuery(obj).html();
+    if (inv_stock_account_map[acc]==undefined) {
+        current_account = acc;
+    } else {
+        current_account = inv_stock_account_map[acc];
+    }
 }
 
 function account_check(data) {
@@ -428,13 +283,50 @@ function account_check(data) {
     if (data.account == undefined) return;
     if (accountMap[data.account] == undefined) {
         accountMap[data.account] = 1;
-        $('#acct_stock').html($('#acct_stock').html() + "<button class='btn acct col-md-1' onclick=\"onAcctClick(this)\">" + data.account + "</button>");
+        if (stock_account_map[data.account]!=undefined) {
+            $('#acct_stock').html($('#acct_stock').html() + "<button class='btn acct col-md-1' onclick=\"onAcctClick(this)\">" + stock_account_map[data.account] + "</button>");
+        }
+        else {
+            $('#acct_stock').html($('#acct_stock').html() + "<button class='btn acct col-md-1' onclick=\"onAcctClick(this)\">" + data.account + "</button>");
+        }
+        
     }
 }
 
+
+function changeOrder(data) {
+    debug_count_order += 1;
+    
+    order_data_db[data.id] = data;
+
+    if (!(data.id in refresh_order_list)) {
+        refresh_order_list[data.id] = 1;
+    } 
+
+    if (Number(data.trade_quantity)>=Number(data.quantity)) {
+        //document.getElementById('debug').insertRow().insertCell().innerHTML = data.buy_sell;
+        if (data.buy_sell == "LONG_BUY") {
+            $("#audio source").attr("src","http://tsn.baidu.com/text2audio?tex=" + data.code + " 已买入" + "\&lan=zh&cuid=" + "94-DE-80-23-E5-A6" + "\&spd=9\&pit=6\&ctp=1&tok="+"24.90689ceccd1622d4679f82e1e630f7ce.2592000.1478668346.282335-8572922");
+            //document.getElementById('debug').insertRow().insertCell().innerHTML = "" +data.code + " 已买入";
+        } else if (data.buy_sell == "SHORT_SELL") {
+            $("#audio source").attr("src","http://tsn.baidu.com/text2audio?tex=" + data.code + " 已卖出" + "\&lan=zh&cuid=" + "94-DE-80-23-E5-A6" + "\&spd=9\&pit=6\&ctp=1&tok="+"24.90689ceccd1622d4679f82e1e630f7ce.2592000.1478668346.282335-8572922");
+            //document.getElementById('debug').insertRow().insertCell().innerHTML = "" +data.code + " 已卖出";
+        }
+        $("#audio")[0].pause();
+        $("#audio")[0].load();
+        $("#audio")[0].play();
+    }
+
+
+}
 function constructOrder(data) {
     if (data.account!=undefined && accountMap[data.account]==undefined) {
-        $('#acct_stock').html($('#acct_stock').html() + "<button class='btn acct col-md-1' onclick=\"onAcctClick(this)\">" + data.account + "</button>");
+        if (stock_account_map[data.account]!=undefined) {
+            $('#acct_stock').html($('#acct_stock').html() + "<button class='btn acct col-md-1' onclick=\"onAcctClick(this)\">" + stock_account_map[data.account] + "</button>");
+        }
+        else {
+            $('#acct_stock').html($('#acct_stock').html() + "<button class='btn acct col-md-1' onclick=\"onAcctClick(this)\">" + data.account + "</button>");
+        }
         accountMap[data.account] = 1;
     }
 
@@ -452,69 +344,32 @@ function constructOrder(data) {
         algo_order_db[data.alg_order_id].push(data.id);
     }
 
-    /*date = new Date(0);
-    s = data.id;
-    date.setUTCSeconds(Number(s.substring(0, 10)));
-    var sdate = date.format("hh:mm:ss");
-
-    var percentage = Number(data.trade_quantity) / Number(data.quantity);
-    $("#order-table-body").prepend("<tr style=\"display:none\" class='order " + data.alg_order_id +"_algo "+data.batch_id+"_batch' id='" + data.id + "' account='" + data.account+"'> \
-                            <td id='" + data.id + "_status'>" + data.status + "</td> \
-                            <td id='" + data.id + "_time'>" + sdate + "</td> \
-                            <td id='" + data.id + "_code'>" + data.code + "</td> \
-                            <td id='" + data.id + "_price'>" + Number(data.price).toFixed(4) + "</td> \
-                            <td style=\"display:none\" id='" + data.id + "_order_trade_quantity'>" + data.trade_quantity + "</td> \
-                            <td style=\"display:none\" id='" + data.id + "_order_quantity'>" + data.quantity + "</td> \
-                            <td style=\"display:none\" id='" + data.id + "_batch_flag'>" + data.batch_id + "</td> \
-                            <td style=\"display:none\" id='" + data.id + "_algo_flag'>" + data.alg_order_id + "</td> \
-                            <td> \
-                               <div class=\"progress\"> \
-                                  <div class=\"progress-bar\" id='" + data.id + "_order_progress' role=\"progressbar\" aria-valuenow=\"0\" aria-valuemin=\"0\"  \
-                                  aria-valuemax=\"100\" style=\"width:" + 100 * percentage + "%\"> \
-                                      <span style=\"color:black\">" + data.trade_quantity + '/' + data.quantity + "</span>\
-                                  </div> \
-                              </div>\
-                            </td> \
-                            <td id='" + data.id + "_open_close'>" + data.open_close + "</td> \
-                            <td id='" + data.id + "_accountOrder'>" + data.account + "</td> \
-                            <td id='" + data.id + "_buy_sell'>" + data.buy_sell + "</td> \
-                            <td id='" + data.id + "_argument_list'>" + data.argument_list + "</td> \
-                            <td id='" + data.id + "_id'>" + data.id + "</td> \
-                          </tr>");
-    $('#' + data.id + "_progress").find('span').css("color", "black");
-    if (data.buy_sell == "SHORT_SELL") {
-        $('#' + data.id + '_buy_sell').attr("class", "danger");
-    } else if (data.buy_sell == "LONG_BUY") {
-        $('#' + data.id + '_buy_sell').attr("class", "info");
+  //  document.getElementById('debug').insertRow().insertCell().innerHTML = ""+data.trade_quantity+","+data.quantity;
+    if (Number(data.trade_quantity)>=Number(data.quantity)) {
+        //document.getElementById('debug').insertRow().insertCell().innerHTML = data.buy_sell;
+        if (data.buy_sell == "LONG_BUY") {
+            $("#audio source").attr("src","http://tsn.baidu.com/text2audio?tex=" + data.code + " 已买入" + "\&lan=zh&cuid=" + "94-DE-80-23-E5-A6" + "\&spd=9\&pit=6\&ctp=1&tok="+"24.90689ceccd1622d4679f82e1e630f7ce.2592000.1478668346.282335-8572922");
+            //document.getElementById('debug').insertRow().insertCell().innerHTML = data.code + " 已买入";
+        } else if (data.buy_sell == "SHORT_SELL") {
+            $("#audio source").attr("src","http://tsn.baidu.com/text2audio?tex=" + data.code + " 已卖出" + "\&lan=zh&cuid=" + "94-DE-80-23-E5-A6" + "\&spd=9\&pit=6\&ctp=1&tok="+"24.90689ceccd1622d4679f82e1e630f7ce.2592000.1478668346.282335-8572922");
+            //document.getElementById('debug').insertRow().insertCell().innerHTML = data.code + " 已买入";
+        }
+        $("#audio")[0].pause();
+        $("#audio")[0].load();
+        $("#audio")[0].play();
     }
-    changeStatusColor(data.id, data.status)
-    if (current_account!=undefined && current_account!= data.account) {
-        $('#' + data.id).hide();
-    }
-    if (current_algo!=undefined && current_algo!= data.alg_order_id) {
-        $('#' + data.id).hide();
-    }
-    if (current_batch!=undefined && current_batch!= data.batch_id) {
-        $('#' + data.id).hide();
-    }
-
-    if (data.trade_quantity>=data.quantity) {
-    if ($('#' + data.id + "_buy_sell").html() == "LONG_BUY") {
-      $("#audio source").attr("src","http://tsn.baidu.com/text2audio?tex=" + $('#' + data.id + "_code").html() + " 已买入" + "\&lan=zh&cuid=" + "94-DE-80-23-E5-A6" + "\&spd=9\&pit=6\&ctp=1&tok="+"24.90689ceccd1622d4679f82e1e630f7ce.2592000.1478668346.282335-8572922");
-    } else if ($('#' + data.id + "_buy_sell").html() == "SHORT_SELL") {
-      $("#audio source").attr("src","http://tsn.baidu.com/text2audio?tex=" + $('#' + data.id + "_code").html() + " 已卖出" + "\&lan=zh&cuid=" + "94-DE-80-23-E5-A6" + "\&spd=9\&pit=6\&ctp=1&tok="+"24.90689ceccd1622d4679f82e1e630f7ce.2592000.1478668346.282335-8572922");
-    }
-    $("#audio")[0].pause();
-    $("#audio")[0].load();
-    $("#audio")[0].play();
-  }*/
 }
 
 //在首次连接时，table信息到来的时候，创建algo行
 //when connect first time, and table info comes, create a algo row
 function constructAlgo(data) {
     if (data.account!=undefined && accountMap[data.account]==undefined) {
-        $('#acct_stock').html($('#acct_stock').html() + "<button class='btn acct col-md-1' onclick=\"onAcctClick(this)\">" + data.account + "</button>");
+        if (stock_account_map[data.account]!=undefined) {
+            $('#acct_stock').html($('#acct_stock').html() + "<button class='btn acct col-md-1' onclick=\"onAcctClick(this)\">" + stock_account_map[data.account] + "</button>");
+        }
+        else {
+            $('#acct_stock').html($('#acct_stock').html() + "<button class='btn acct col-md-1' onclick=\"onAcctClick(this)\">" + data.account + "</button>");
+        }
         accountMap[data.account] = 1;
     }
     algo_data_db[data.alg_order_id] = data;
@@ -525,52 +380,26 @@ function constructAlgo(data) {
         batch_algo_db[data.batch_id].push(data.alg_order_id);
     }
 
-
-    /*var percentage = Number(data.trade_quantity) / Number(data.quantity);
-
-    if (data.ref_price!='') {
-        data.ref_price = Number(data.ref_price).toFixed(3)
+    if (Number(data.trade_quantity)>=Number(data.quantity)) {
+        if (data.buy_sell == "LONG_BUY") {
+          $("#audio source").attr("src","http://tsn.baidu.com/text2audio?tex=" + data.id + " 已买入" + "\&lan=zh&cuid=" + "94-DE-80-23-E5-A6" + "\&spd=9\&pit=6\&ctp=1&tok="+"24.90689ceccd1622d4679f82e1e630f7ce.2592000.1478668346.282335-8572922");
+        } else if (data.buy_sell == "SHORT_SELL") {
+        $("#audio source").attr("src","http://tsn.baidu.com/text2audio?tex=" + data.id + " 已卖出" + "\&lan=zh&cuid=" + "94-DE-80-23-E5-A6" + "\&spd=9\&pit=6\&ctp=1&tok="+"24.90689ceccd1622d4679f82e1e630f7ce.2592000.1478668346.282335-8572922");
+            $("#audio")[0].pause();
+        $("#audio")[0].load();
+        $("#audio")[0].play();
+        }
     }
-    if (data.trade_price!='') {
-        data.trade_price = Number(data.trade_price).toFixed(3)
-    }
-    if (data.slippage!='') {
-        data.slippage = Number(data.slippage).toFixed(3)
-    }
-    if (data.notional=='') {
-        data.notional = {"buy":0, "sell":0}
-    }
-
-    $("#algo-table-body").prepend("<tr style=\"display:none\" class = '" + data.batch_id + "_batch' id='" + data.alg_order_id + "' data-toggle=\"collapse\" href=\"#" + data.alg_order_id + "_collapse\" onclick = \"onClickAlgo(this);\" account='" + data.account + "'> \
-                            <td style=\"display:none\" id='" + data.alg_order_id + "'>" + data.alg_order_id + "</td> \
-                            <td id='" + data.alg_order_id + "_code'>" + data.code + "</td> \
-                            <td width=15% id='" + data.alg_order_id + "_name'>" + stockMap[data.code] + "</td> \
-                            <td id='" + data.alg_order_id + "_ref_price'>" + data.ref_price + "</td> \
-                            <td id='" + data.alg_order_id + "_trade_price'>" + Number(data.trade_price) + "</td> \
-                            <td id='" + data.alg_order_id + "_slippage'>" + Number(data.slippage) + "</td> \
-                            <td style=\"display:none\" id='" + data.alg_order_id + "_algo_trade_quantity'>" + "0" + "</td> \
-                            <td style=\"display:none\" id='" + data.alg_order_id + "_algo_quantity'>" + data.trade_quantity + "</td> \
-                            <td id='" + data.alg_order_id + "_algo_notional'>" + data.notional.buy.toFixed(1)+"/"+data.notional.sell.toFixed(1) + "</td> \
-                            <td width=20%> \
-                              <div class=\"progress\"> \
-                                  <div class=\"progress-bar\" id='" + data.alg_order_id + "_algo_progress' role=\"progressbar\" aria-valuenow=\"0\" aria-valuemin=\"0\"  \
-                                  aria-valuemax=\"100\" style=\"width:" + 100 * percentage + "%\"> \
-                                      <span style=\"color:black\">" + data.trade_quantity + '/' + data.quantity + "</span>\
-                                  </div> \
-                              </div>\
-                            </td> \
-                          </tr>");
-    if (current_account!=undefined && current_account!= data.account) {
-        $('#' + data.alg_order_id).hide();
-    }
-    if (current_batch!=undefined && current_batch!= data.batch_id) {
-        $('#' + data.alg_order_id).hide();
-    }*/
 }
 
 function constructBatch(data) {
     if (data.account!=undefined && accountMap[data.account]==undefined) {
-        $('#acct_stock').html($('#acct_stock').html() + "<button class='btn acct col-md-1' onclick=\"onAcctClick(this)\">" + data.account + "</button>");
+        if (stock_account_map[data.account]!=undefined) {
+            $('#acct_stock').html($('#acct_stock').html() + "<button class='btn acct col-md-1' onclick=\"onAcctClick(this)\">" + stock_account_map[data.account] + "</button>");
+        }
+        else {
+            $('#acct_stock').html($('#acct_stock').html() + "<button class='btn acct col-md-1' onclick=\"onAcctClick(this)\">" + data.account + "</button>");
+        }
         accountMap[data.account] = 1;
     }
 
@@ -599,80 +428,6 @@ function constructBatch(data) {
     }
 }
 
-function changeOrder(data) {
-
-    debug_count_order += 1;
-    
-    order_data_db[data.id] = data;
-
-    if (!(data.id in refresh_order_list)) {
-        refresh_order_list[data.id] = 1;
-    } 
-
-    /*orderObj = mapOrder[obj.id];
-    var data = obj;
-
-    date = new Date(0);
-    s = data.id;
-    date.setUTCSeconds(Number(s.substring(0, 10)));
-    var sdate = date.format("hh:mm:ss");
-
-    var percentage = Number(data.trade_quantity) / Number(data.quantity);
-    $("#"+data.id).replaceWith("<tr class='order " + data.alg_order_id +"_algo "+data.batch_id+"_batch' id='" + data.id + "' account='" + data.account+"'> \
-                            <td id='" + data.id + "_status'>" + data.status + "</td> \
-                            <td id='" + data.id + "_time'>" + sdate + "</td> \
-                            <td id='" + data.id + "_code'>" + data.code + "</td> \
-                            <td id='" + data.id + "_price'>" + Number(data.price).toFixed(4) + "</td> \
-                            <td style=\"display:none\" id='" + data.id + "_order_trade_quantity'>" + data.trade_quantity + "</td> \
-                            <td style=\"display:none\" id='" + data.id + "_order_quantity'>" + data.quantity + "</td> \
-                            <td style=\"display:none\" id='" + data.id + "_batch_flag'>" + data.batch_id + "</td> \
-                            <td style=\"display:none\" id='" + data.id + "_algo_flag'>" + data.alg_order_id + "</td> \
-                            <td> \
-                               <div class=\"progress\"> \
-                                  <div class=\"progress-bar\" id='" + data.id + "_order_progress' role=\"progressbar\" aria-valuenow=\"0\" aria-valuemin=\"0\"  \
-                                  aria-valuemax=\"100\" style=\"width:" + 100 * percentage + "%\"> \
-                                      <span style=\"color:black\">" + data.trade_quantity + '/' + data.quantity + "</span>\
-                                  </div> \
-                              </div>\
-                            </td> \
-                            <td id='" + data.id + "_open_close'>" + data.open_close + "</td> \
-                            <td id='" + data.id + "_accountOrder'>" + data.account + "</td> \
-                            <td id='" + data.id + "_buy_sell'>" + data.buy_sell + "</td> \
-                            <td id='" + data.id + "_argument_list'>" + data.argument_list + "</td> \
-                            <td id='" + data.id + "_id'>" + data.id + "</td> \
-                          </tr>");
-    $('#' + data.id + "_progress").find('span').css("color", "black");
-    if (data.buy_sell == "SHORT_SELL") {
-        $('#' + data.id + '_buy_sell').attr("class", "danger");
-    } else if (data.buy_sell == "LONG_BUY") {
-        $('#' + data.id + '_buy_sell').attr("class", "info");
-    }
-    changeStatusColor(data.id, data.status)
-    //document.getElementById('debug').insertRow().insertCell().innerHTML = orderObj;
-  if (data.trade_quantity>=data.quantity) {
-    if ($('#' + data.id + "_buy_sell").html() == "LONG_BUY") {
-      $("#audio source").attr("src","http://tsn.baidu.com/text2audio?tex=" + $('#' + data.id + "_code").html() + " 已买入" + "\&lan=zh&cuid=" + "94-DE-80-23-E5-A6" + "\&spd=9\&pit=6\&ctp=1&tok="+"24.90689ceccd1622d4679f82e1e630f7ce.2592000.1478668346.282335-8572922");
-    } else if ($('#' + data.id + "_buy_sell").html() == "SHORT_SELL") {
-      $("#audio source").attr("src","http://tsn.baidu.com/text2audio?tex=" + $('#' + data.id + "_code").html() + " 已卖出" + "\&lan=zh&cuid=" + "94-DE-80-23-E5-A6" + "\&spd=9\&pit=6\&ctp=1&tok="+"24.90689ceccd1622d4679f82e1e630f7ce.2592000.1478668346.282335-8572922");
-    }
-    $("#audio")[0].pause();
-    $("#audio")[0].load();
-    $("#audio")[0].play();
-  }
-
-    if (current_account!=undefined && current_account!= data.account) {
-        $('#' + data.id).hide();
-    }
-    if (current_algo!=undefined && current_algo!= data.alg_order_id) {
-        $('#' + data.id).hide();
-    }
-    if (current_batch!=undefined && current_batch!= data.batch_id) {
-        $('#' + data.id).hide();
-    }*/
-}
-
-
-
 
 function changeAlgo(data) {
     debug_count_algo += 1;
@@ -681,43 +436,7 @@ function changeAlgo(data) {
     if (!(data.alg_order_id in refresh_algo_list)) {
         refresh_algo_list[data.alg_order_id] = 1;
     } 
-    /*data = obj;
-    var percentage = Number(data.trade_quantity) / Number(data.quantity);
 
-    if (data.ref_price!='') {
-        data.ref_price = Number(data.ref_price).toFixed(3)
-    }
-    if (data.trade_price!='') {
-        data.trade_price = Number(data.trade_price).toFixed(3)
-    }
-    if (data.slippage!='') {
-        data.slippage = Number(data.slippage).toFixed(3)
-    }
-    if (data.notional=='') {
-        data.notional = {"buy":0, "sell":0}
-    }
-
-    $('#' + data.alg_order_id + "_ref_price")
-
-    $("#"+data.alg_order_id).replaceWith("<tr class = '" + data.batch_id + "_batch' id='" + data.alg_order_id + "' data-toggle=\"collapse\" href=\"#" + data.alg_order_id + "_collapse\" onclick = \"onClickAlgo(this);\" account='" + data.account + "'> \
-                            <td style=\"display:none\" id='" + data.alg_order_id + "'>" + data.alg_order_id + "</td> \
-                            <td id='" + data.alg_order_id + "_code'>" + data.code + "</td> \
-                            <td width=15% id='" + data.alg_order_id + "_name'>" + "stockMap[data.code]" + "</td> \
-                            <td id='" + data.alg_order_id + "_ref_price'>" + data.ref_price + "</td> \
-                            <td id='" + data.alg_order_id + "_trade_price'>" + "Number(data.trade_price)" + "</td> \
-                            <td id='" + data.alg_order_id + "_slippage'>" + "Number(data.slippage)" + "</td> \
-                            <td style=\"display:none\" id='" + data.alg_order_id + "_algo_trade_quantity'>" + "0" + "</td> \
-                            <td style=\"display:none\" id='" + data.alg_order_id + "_algo_quantity'>" + data.trade_quantity + "</td> \
-                            <td id='" + data.alg_order_id + "_algo_notional'>" + data.notional.buy.toFixed(1)+"/"+data.notional.sell.toFixed(1) + "</td> \
-                            <td width=20%> \
-                              <div class=\"progress\"> \
-                                  <div class=\"progress-bar\" id='" + data.alg_order_id + "_algo_progress' role=\"progressbar\" aria-valuenow=\"0\" aria-valuemin=\"0\"  \
-                                  aria-valuemax=\"100\" style=\"width:" + 100 * percentage + "%\"> \
-                                      <span style=\"color:black\">" + data.trade_quantity + '/' + data.quantity + "</span>\
-                                  </div> \
-                              </div>\
-                            </td> \
-                          </tr>");*/
     if (current_account!=undefined && current_account!= data.account) {
         $('#' + data.alg_order_id).hide();
     }
@@ -726,40 +445,12 @@ function changeAlgo(data) {
     }
 }
 
-
-
 function changeBatch(data) {
     batch_data_db[data.batch_id] = data;
 
     if (!(data.batch_id in refresh_batch_list)) {
         refresh_batch_list[data.batch_id] = 1;
     } 
-    /*debug_count_batch += 1;
-    data= obj
-    var percentage = Number(data.trade_quantity) / Number(data.quantity);
-    if (data.notional=='') {
-        data.notional = {"buy":0, "sell":0}
-    }
-    $("#"+data.batch_id).replaceWith("<tr class = '" + data.account + "' id='" + data.batch_id + "' onclick = \"onClickBatch(this);\" account='" + data.account + "'> \
-                          <td id='" + data.batch_id + "'>" + data.batch_id + "</td> \
-                          <td style=\"display:none\" id='" + data.batch_id + "_batch_trade_quantity'>" + data.trade_quantity + "</td> \
-                          <td style=\"display:none\" id='" + data.batch_id + "_batch_quantity'>" + data.quantity + "</td> \
-                          <td id='" + data.batch_id + "_batch_notional'>" + data.notional.buy.toFixed(1)+"/"+data.notional.sell.toFixed(1) + "</td> \
-                          <td> \
-                             <div class=\"progress\"> \
-                                <div class=\"progress-bar\" id='" + data.batch_id + "_batch_progress' role=\"progressbar\" aria-valuenow=\"0\" aria-valuemin=\"0\"  \
-                                aria-valuemax=\"100\" style=\"width:" + 100 * percentage + "%\"> \
-                                    <span style=\"color:black\">" + (100 * percentage).toFixed(2) + '%'  + "</span>\
-                                </div> \
-                            </div>\
-                          </td> \
-                        </tr>");
-    $('#' + data.batch_id + "_batch_progress").css({'width': "" + percentage + "%"});
-
-
-    if (current_account!=undefined && current_account!= data.account) {
-        $('#' + data.batch_id).hide();
-    }*/
 }
 
 function updateOrderTable(id, data) {
@@ -831,6 +522,35 @@ var socket_state = [
     "TYPE_LIMIT_ORDER_REQUEST"
 ]
 
+var stock_account_map = {
+    "3001_Stock":"杉树向荣",
+    "3002_Stock":"杉树欣欣",
+    "3037_Stock":"清源杉树",
+    "3035_Stock":"涌津3号",
+    "3034_Stock":"珠池2号",
+    "3033_Stock":"涌津1号",
+    "3032_Stock":"涌津2号",
+    "3027_Stock":"涌津6号",
+    "3028_Stock":"涌津8号",
+    "3031_Stock":"天目杉树",
+    "3038_Stock":"杉树2期",
+    "3040_Stock":"杉树5期"
+}
+
+var inv_stock_account_map = {
+    "杉树向荣":"3001_Stock",
+    "杉树欣欣":"3002_Stock",
+    "清源杉树":"3037_Stock",
+    "涌津3号":"3035_Stock",
+    "珠池2号":"3034_Stock",
+    "涌津1号":"3033_Stock",
+    "涌津2号":"3032_Stock",
+    "涌津6号":"3027_Stock",
+    "涌津8号":"3028_Stock",
+    "天目杉树":"3031_Stock",
+    "杉树2期":"3038_Stock",
+    "杉树5期":"3040_Stock"
+}
 
 var debug_count_algo = 0;
 var debug_count_order = 0;
@@ -874,14 +594,10 @@ var current_account = undefined;
 var click_sig_batch = 0;
 var click_sig_algo = 0;
 
-var ws1 = new WebSocket('ws://192.168.0.66:8082/soc');
+var ws1 = new WebSocket('ws://192.168.0.64:8082/soc');
 
 //websocket connection
 ws1.onmessage = function (event) {
-    //first level parsing for incoming info
-    //首层json反序列化
-    //document.getElementById('debug').insertRow().insertCell().innerHTML = event.data;
-
     try {
         var jData = JSON.parse(event.data);
     } catch (e) {

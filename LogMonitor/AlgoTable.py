@@ -32,12 +32,16 @@ class AlgoTable:
     def on_create(self, data, orderTable):
         order = data
         if not data["alg_order_id"] in self.algo_table:
-            row = {"alg_order_id": order["alg_order_id"], "code": order["code"],
-                   "buy_sell": order["buy_sell"], "trade_quantity": 0,
-                   "quantity": "",
-                   "account": order["account"], "ref_price": "",
-                   "trade_price": "", "slippage": " ", "notional": "",
-                   "batch_id": order["batch_id"]}
+            row = {"alg_order_id": order["alg_order_id"], 
+                    "code": order["code"],
+                    "buy_sell": order["buy_sell"], "trade_quantity": 0,
+                    "quantity": "",
+                    "account": order["account"], 
+                    "ref_price": "",
+                    "trade_price": "", 
+                    "slippage": " ", 
+                    "notional": "",
+                    "batch_id": order["batch_id"]}
             self.algo_table[data["alg_order_id"]] = row
         else:
             row = self.algo_table[data["alg_order_id"]]
@@ -64,18 +68,15 @@ class AlgoTable:
                         row["notional"]["buy"]+=float(data["trade_quantity"])*float(ord["price"])
                         row["trade_price"] = row["notional"]["buy"] / float(
                             row['trade_quantity'])
+
                     elif ord["buy_sell"] == "SHORT_SELL":
                         direction = -1
                         row["notional"]["sell"] += float(data["trade_quantity"]) * \
                                                    float(ord["price"])
+                                                   
                         row["trade_price"] = row["notional"]["sell"]/float(row['trade_quantity'])
                     if row["ref_price"]!="" and abs(direction)==1:
                         row["slippage"] = -((row["trade_price"]/float(row["ref_price"]))-1) * direction * 10000
-
-
-
-
-
             return [row["alg_order_id"], json.dumps(row)]
         else:
             # print data
@@ -84,10 +85,16 @@ class AlgoTable:
     def on_appstatus(self, data, orderTable):
         order = data
         if not data["alg_order_id"] in self.algo_table:
-            row = {"alg_order_id": order["alg_order_id"], "code": "",
-                   "buy_sell": "", "trade_quantity": 0,
-                   "quantity": "", "account": "", "ref_price": "",
-                   "trade_price": "", "slippage": " ", "notional": ""}
+            row = {"alg_order_id": order["alg_order_id"], 
+                    "code": "",
+                   "buy_sell": "", 
+                   "trade_quantity": 0,
+                   "quantity": "", 
+                   "account": "", 
+                   "ref_price": "",
+                   "trade_price": "", 
+                   "slippage": " ", 
+                   "notional": ""}
             self.algo_table[data["alg_order_id"]] = row
             return [data["alg_order_id"], json.dumps(
                 self.algo_table[data["alg_order_id"]])]
@@ -100,14 +107,22 @@ class AlgoTable:
     def on_smartorder(self, data, orderTable):
         order = data
         if not data["alg_order_id"] in self.algo_table:
-            row = {"alg_order_id": order["alg_order_id"], "code": order["code"],
-                   "buy_sell": order["buy_sell"], "trade_quantity": 0,
-                   "quantity": order["trade_quantity"], "account": "",
-                   "ref_price": "",
-                   "trade_price": "", "slippage": " ", "notional": "", "batch_id":data["batch_id"]}
+            row = {"alg_order_id": order["alg_order_id"],
+                    "code": order["code"],
+                    "buy_sell": order["buy_sell"], 
+                    "trade_quantity": 0,
+                    "quantity": order["trade_quantity"], 
+                    "account": "",
+                    "ref_price": "",
+                    "trade_price": "", 
+                    "slippage": " ", 
+                    "notional": "", 
+                    "batch_id":data["batch_id"]}
             self.algo_table[data["alg_order_id"]] = row
+
             return [data["alg_order_id"], json.dumps(
                 self.algo_table[data["alg_order_id"]])]
+
         else:
             row = self.algo_table[data["alg_order_id"]]
             row["quantity"] = order["trade_quantity"]
@@ -119,11 +134,17 @@ class AlgoTable:
 
         order = data
         if not data["alg_order_id"] in self.algo_table:
-            row = {"alg_order_id": order["alg_order_id"], "code": order["code"],
-                   "buy_sell": order["buy_sell"], "trade_quantity": 0,
-                   "quantity": order["trade_quantity"], "account": "",
-                   "ref_price": "",
-                   "trade_price": "", "slippage": " ", "notional": "", "batch_id":data["batch_id"]}
+            row = {"alg_order_id": order["alg_order_id"], 
+                    "code": order["code"],
+                    "buy_sell": order["buy_sell"], 
+                    "trade_quantity": 0,
+                    "quantity": order["trade_quantity"], 
+                    "account": "",
+                    "ref_price": "",
+                    "trade_price": "", 
+                    "slippage": " ", 
+                    "notional": "", 
+                    "batch_id":data["batch_id"]}
             self.algo_table[data["alg_order_id"]] = row
             return [data["alg_order_id"], json.dumps(
                 self.algo_table[data["alg_order_id"]])]

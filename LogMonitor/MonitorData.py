@@ -37,117 +37,6 @@ class MonitorData:
     def __init__(self):
         print("Data Structure Creating!")
 
-    def insertOrder(self, dic):
-        try:
-            # error_code is used to represent status of the order
-            self.order_table.loc[self.order_num_count] = ["new_order",
-                                                          dic['code'],
-                                                          dic['limit_price'], 0,
-                                                          int(dic[
-                                                                  'trade_quantity']),
-                                                          dic['open_close'],
-                                                          dic['account'],
-                                                          dic['argument_list'],
-                                                          dic['id'], " ",
-                                                          dic['batch_id'],
-                                                          dic['alg_order_id'],
-                                                          dic['buy_sell']]
-            self.algo_id_map[dic['id']] = dic['alg_order_id']
-            self.batch_id_map[dic['id']] = dic['batch_id']
-        except Exception as e:
-            print("order json resolve failed:")
-            print(e)
-        return
-
-    def insertAlgo(self, dic):
-        try:
-            # error_code is used to represent status of the order
-            self.algo_table.loc[self.algo_num_count] = [dic['alg_order_id'],
-                                                        dic['code'],
-                                                        dic['buy_sell'], 0,
-                                                        int(dic[
-                                                                'trade_quantity'])]
-        except Exception as e:
-            print("algo json resolve failed\n")
-            print(e)
-        return
-
-    def insertBatch(self, dic):
-        try:
-            # error_code is used to represent status of the order
-            self.batch_table.loc[self.batch_num_count] = [dic['batch_id'], 0,
-                                                          int(dic[
-                                                                  'trade_quantity'])]
-        except Exception as e:
-            print("batch json resolve failed\n")
-            print(e)
-        return
-
-    def updateOrder(self, dic):
-        if self.order_position.has_key(dic['ref_id']) == True:
-            position = self.order_position[dic['ref_id']]
-            self.order_table.loc[position, 'trade_quantity'] = int(
-                dic['trade_quantity']) + \
-                                                               self.order_table.loc[
-                                                                   position][
-                                                                   'trade_quantity']
-            self.order_table.loc[position, 'status'] = error_code[
-                str(dic['error_code'])]
-        else:
-            print("reveive response pointing to unvalid order")
-            print(dic)
-        return
-
-    def updateAlgo(self, dic):
-        if dic['cedar_msg_type'] == "TYPE_ORDER_REQUEST":
-            position = self.algo_position[dic['alg_order_id']]
-            self.algo_table.loc[position, 'quantity'] += int(
-                dic['trade_quantity'])
-        else:
-            try:
-                position = self.algo_position[self.algo_id_map[dic['ref_id']]]
-                self.algo_table.loc[position, 'trade_quantity'] += int(
-                    dic['trade_quantity'])
-            except:
-                return
-
-    def updateBatch(self, dic):
-        if dic['cedar_msg_type'] == "TYPE_ORDER_REQUEST":
-            position = self.batch_position[dic['batch_id']]
-            self.batch_table.loc[position, 'quantity'] += int(
-                dic['trade_quantity'])
-        else:
-            try:
-                position = self.batch_position[self.batch_id_map[dic['ref_id']]]
-                self.batch_table.loc[position, 'trade_quantity'] += int(
-                    dic['trade_quantity'])
-            except:
-                return
-
-    def onNewOrder(self, dic):
-        if self.order_position.has_key(dic['id']) == False:
-            self.order_position[dic['id']] = self.order_num_count
-            self.insertOrder(dic)
-            self.order_num_count += 1
-        else:
-            print("order request received twice, please check your log file\n")
-
-        if self.algo_position.has_key(dic['alg_order_id']) == False:
-            self.algo_position[dic['alg_order_id']] = self.algo_num_count
-            self.insertAlgo(dic)
-            self.algo_num_count += 1
-        else:
-            self.updateAlgo(dic)
-
-        if self.batch_position.has_key(dic['batch_id']) == False:
-            self.batch_position[dic['batch_id']] = self.batch_num_count
-            self.insertBatch(dic)
-            self.batch_num_count += 1
-        else:
-            self.updateBatch(dic)
-
-        return
-
     def onUpdate(self, dic):
         self.updateOrder(dic)
         self.updateAlgo(dic)
@@ -171,22 +60,6 @@ class MonitorData:
                                                      self.ord_table.order_table)
         return [result_batch, result_algo, result_ord]
 
-        """if dic['type'] == "TYPE_CANCEL_ORDER_REQUEST":
-            return
-        elif dic['type'] == "APP_STATUS_MSG":
-            self.app_buf.append(item)
-            # print(item)
-        elif dic['type'] == "TYPE_SMART_ORDER_REQUEST" or dic['type'] == "TYPE_SMALL_ORDER_REQUEST":
-            self.app_buf.append(item)
-        elif dic['type'] == "TYPE_FIRST_LEVEL_ORDER_REQUEST":
-            self.app_buf.append(item)
-            return
-        elif dic['cedar_msg_type'] == "TYPE_ORDER_REQUEST":
-            self.onNewOrder(dic)
-        elif dic['cedar_msg_type'] == "TYPE_RESPONSE_MSG":
-            self.onUpdate(dic)"""
-        return
-
     def initTables(self, fp):
         # print("init")
         coo = 0
@@ -197,11 +70,7 @@ class MonitorData:
                 if len(match) > 1:
                     match = match[1:2]
                 for item in match:
-                    # print(item)
                     self.logUpdate(item)
-                    # print(self.order_table)
-                    # print(self.algo_table)
-
             else:
                 break
 
