@@ -1,0 +1,47 @@
+body {
+  padding-top: 50px;
+}
+
+.progress {
+    position: relative;
+    margin-bottom: 0;
+}
+
+.progress span {
+    position: absolute;
+    display: block;
+    width: 100%;
+    color: black;
+    text-align: center;
+ }
+
+.batchOda div#btn
+{
+	margin:4px;
+}
+
+.tradeTable table,.tradeTable table tr,.tradeTable table td,.tradeTable table th
+{
+	text-align: center;
+	border: 1px solid #CCCCCC;
+	width: 100%;
+	table-layout: fixed;
+}
+
+.acct,.user,.date,.acct-name,.user-name,.date-name
+{
+    margin: 5px;
+}
+
+
+#acct, #user, #date
+{
+    margin:0px;
+}
+
+.navbar img
+{
+    height:25px;
+    margin-top: 12px;
+    margin-left: -50px;
+}
