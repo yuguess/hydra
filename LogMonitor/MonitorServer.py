@@ -16,12 +16,12 @@ oneday = datetime.timedelta(days=1)
 yesterday = today - oneday
 
 ########config ###############
-#logFile = "/home/ironman/MonitorLog/test"
+logFile = "/home/ironman/MonitorLog/test"
 #logFile = "C:/monitor_dev/test"
 # logFile = "/home/infra/MonitorLog/" + yesterday.strftime("%Y-%m-%d")
 #logFile = "C:/monitor_dev/2016-10-11"
 #logFile = "C:/Users/hawk/Desktop/LogMonitor/2016-10-18"
-logFile = "/home/infra/MonitorLog/" + time.strftime("%Y-%m-%d")
+#logFile = "/home/infra/MonitorLog/" + time.strftime("%Y-%m-%d")
 #$logFile = "/home/infra/MonitorLog/2016-10-18"
 # logFile = "/home/mwan/LogMonitor/log"
 # logFile_app = "/home/infra/MonitorLog/ALGO_"+time.strftime("%Y-%m-%d")
