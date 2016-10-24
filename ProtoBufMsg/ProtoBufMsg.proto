@@ -210,3 +210,342 @@ message RangeStat {
   string begin_timestamp = 9;
   string end_timestamp = 10;
 }
+
+
+message TaqData {
+  string MSGSEQID = 1;
+  string SECURITYID = 2;
+  string TRDDATE = 3;
+  string DATATIMESTAMP = 4;
+  double PRECLOSEPX = 5;
+  double OPENPX = 6;
+  double HIGHPX = 7;
+  double LOWPX = 8;
+  double LASTPX = 9;
+  string INSTRUSTATUS = 10;
+  double NOOFFERLVL = 11;
+  double S10 = 12;
+  double S09 = 13;
+  double S08 = 14;
+  double S07 = 15;
+  double S06 = 16;
+  double S05 = 17;
+  double S04 = 18;
+  double S03 = 19;
+  double S02 = 20;
+  double S01 = 21;
+  double B01 = 22;
+  double B02 = 23;
+  double B03 = 24;
+  double B04 = 25;
+  double B05 = 26;
+  double B06 = 27;
+  double B07 = 28;
+  double B08 = 29;
+  double B09 = 30;
+  double B10 = 31;
+  double NOBIDDLVL = 32;
+  double SV10 = 33;
+  double SV09 = 34;
+  double SV08 = 35;
+  double SV07 = 36;
+  double SV06 = 37;
+  double SV05 = 38;
+  double SV04 = 39;
+  double SV03 = 40;
+  double SV02 = 41;
+  double SV01 = 42;
+  double BV01 = 43;
+  double BV02 = 44;
+  double BV03 = 45;
+  double BV04 = 46;
+  double BV05 = 47;
+  double BV06 = 48;
+  double BV07 = 49;
+  double BV08 = 50;
+  double BV09 = 51;
+  double BV10 = 52;
+  double NUMTRADES = 53;
+  double TOTALVOLUME = 54;
+  double TURNOVER = 55;
+  double TOTALBIDQTY = 56;
+  double WAVGBIDPX = 57;
+  double ALTWAVGBIDPX = 58;
+  double TOTALOFFERQTY = 59;
+  double WAVGOFFERPX = 60;
+  double ALTWAVGOFFERPX = 61;
+  double IOPV = 62;
+  double YTM = 63;
+  double WARNTEXECQTY = 64;
+  double WARLOWERPX = 65;
+  double WARUPPERPX = 66;
+  string TIMESTAMP = 67;
+  string UNIX = 68;
+  string MARKET = 69;
+}
+
+message IndexData {
+  string MSGSEQID = 1;
+  string SECURITYID = 2;
+  string TRDDATE = 3;
+  string DATATIMESTAMP = 4;
+  double CLOSEINDEX = 5;
+  double OPENINDEX = 6;
+  double HIGHINDEX = 7;
+  double LOWINDEX = 8;
+  double LASTINDEX = 9;
+  double TOTALVOLUME = 10;
+  double TURNOVER =11;
+  string TIMESTAMP = 12;
+  string UNIX = 13;
+  string MARKET = 14;
+}
+
+message TrdMinData {
+  string IFCD = 1;
+  string TDATE = 2;
+  string TTIME = 3;
+  double OPNPRC = 4;
+  double CLSPRC = 5;
+  double HIPRC = 6;
+  double LOPRC = 7;
+  double CHG = 8;
+  double CHGPCT = 9;
+  double OPNINTRST = 10;
+  double MINTQ = 11;
+  double MINTM = 12;
+  string IFLXID = 13;
+  string IFLXNAME = 14;
+  string UNIX = 15;
+  string MARKET = 16;
+}
+
+message OrderqueueData {
+  string MSGSEQID = 1;
+  string SECURITYID = 2;
+  string TRDDATE = 3;
+  string DATATIMESTAMP = 4;
+  string SIDE = 5;
+  string IMAGESTATUS = 6;
+  double NOPRCLEVEL = 7;
+  double PRCLVLOPERATOR = 8;
+  double PRICE = 9;
+  double NUMORDERS = 10;
+  double NOORDERS = 11;
+  double ORDERQTY01 = 12;
+  double ORDERQTY02 = 13;
+  double ORDERQTY03 = 14;
+  double ORDERQTY04 = 15;
+  double ORDERQTY05 = 16;
+  double ORDERQTY06 = 17;
+  double ORDERQTY07 = 18;
+  double ORDERQTY08 = 19;
+  double ORDERQTY09 = 20;
+  double ORDERQTY10 = 21;
+  double ORDERQTY11 = 22;
+  double ORDERQTY12 = 23;
+  double ORDERQTY13 = 24;
+  double ORDERQTY14 = 25;
+  double ORDERQTY15 = 26;
+  double ORDERQTY16 = 27;
+  double ORDERQTY17 = 28;
+  double ORDERQTY18 = 29;
+  double ORDERQTY19 = 30;
+  double ORDERQTY20 = 31;
+  double ORDERQTY21 = 32;
+  double ORDERQTY22 = 33;
+  double ORDERQTY23 = 34;
+  double ORDERQTY24 = 35;
+  double ORDERQTY25 = 36;
+  double ORDERQTY26 = 37;
+  double ORDERQTY27 = 38;
+  double ORDERQTY28 = 39;
+  double ORDERQTY29 = 40;
+  double ORDERQTY30 = 41;
+  double ORDERQTY31 = 42;
+  double ORDERQTY32 = 43;
+  double ORDERQTY33 = 44;
+  double ORDERQTY34 = 45;
+  double ORDERQTY35 = 46;
+  double ORDERQTY36 = 47;
+  double ORDERQTY37 = 48;
+  double ORDERQTY38 = 49;
+  double ORDERQTY39 = 50;
+  double ORDERQTY40 = 51;
+  double ORDERQTY41 = 52;
+  double ORDERQTY42 = 53;
+  double ORDERQTY43 = 54;
+  double ORDERQTY44 = 55;
+  double ORDERQTY45 = 56;
+  double ORDERQTY46 = 57;
+  double ORDERQTY47 = 58;
+  double ORDERQTY48 = 59;
+  double ORDERQTY49 = 60;
+  double ORDERQTY50 = 61;
+  string TIMESTAMP = 62;
+  string UNIX = 63;
+  string MARKET = 64;
+}
+
+message TransactionData {
+  string MSGSEQID = 1;
+  string SECURITYID = 2;
+  string TRDDATE = 3;
+  string TRADETIME = 4;
+  double TRADEINDEX = 5;
+  double TRADECHANNEL = 6;
+  double TRADEPRICE = 7;
+  double TRADEQTY = 8;
+  double TURNOVER = 9;
+  string TIMESTAMP = 10;
+  double TRADEBUYNO = 11;
+  double TRADESELLNO = 12;
+  string TRADEBSFLAG = 13;
+  string UNIX = 14;
+  string MARKET = 15;
+}
+
+message VirtualauctionData {
+  string MSGSEQID = 1;
+  string SECURITYID = 2;
+  string TRDDATE = 3;
+  string DATATIMESTAMP = 4;
+  double PRICE = 5;
+  double VTLAUCTQTY = 6;
+  double LEAVEQTY = 7;
+  string SIDE = 8;
+  string TIMESTAMP = 9;
+  string UNIX = 10;
+  string MARKET = 11;
+}
+
+message BulletinData {
+  string BULLETINID = 1;
+  string TRDDATE = 2;
+  string BULLETINTIME = 3;
+  string BULLETINNAME = 4;
+  string RAWDATALENGTH = 5;
+  string RAWDATA = 6;
+  string RECDATETIME = 7;
+  string UNIX = 8;
+  string MARKET = 9;
+}
+
+message OrderData {
+  string SECURITYID = 1;
+  string TRDDATE = 2;
+  string ORDERENTRYTIME = 3;
+  double SETNO = 4;
+  double RECNO = 5;
+  double PRICE = 6;
+  double ORDERQTY = 7;
+  string ORDERKIND = 8;
+  string FUNCTIONCODE = 9;
+  string RECDATETIME = 10;
+  string UNIX = 11;
+  string MARKET = 12;
+}
+
+message StockinfoData {
+  string SECURITYID = 1;
+  string TRDDATE = 2;
+  string RECNO = 3;
+  string SYMBOL = 4;
+  string SECURITYDESC = 5;
+  string UNDERLYINGSECURITYID = 6;
+  string SECURITYIDSOURCE = 7;
+  string NOSECURITYALTID = 8;
+  string SECURITYALTID = 9;
+  string SECURITYALTIDSOURCE = 10;
+  string INDUSTRYCLASSIFICATION = 11;
+  string CURRENCY = 12;
+  string SZAREFACEVALUE = 13;
+  string OUTSTANDINGSZARES = 14;
+  string PUBLICFLOATSZAREQUANTITY = 15;
+  string PREVIOUSYEARPROFITPERSZARE = 16;
+  string CURRENTYEARPROFITPERSZARE = 17;
+  string NAV = 18;
+  string NOMISCFEES = 19;
+  string MISCFEETYPE = 20;
+  string MISCFEEBASIS = 21;
+  string MISCFEEAMT = 22;
+  string ISSUEDATE = 23;
+  string BONDTYPE = 24;
+  string COUPONRATE = 25;
+  string CONVERSIONPRICE = 26;
+  string AMERICANEUROPEAN = 27;
+  string CALLORPUT = 28;
+  string WARRANTCLEARINGTYPE = 29;
+  string CVRATIO = 30;
+  string CONVERSIONBEGINDATE = 31;
+  string CONVERSIONENDDATE = 32;
+  string INTERESTACCRUALDATE = 33;
+  string MATURITYDATE = 34;
+  string ROUNDLOT = 35;
+  string BIDLOTSIZE = 36;
+  string ASKLOTSIZE = 37;
+  string MAXFLOOR = 38;
+  string TRADEMETHOD = 39;
+  string PRICETICKSIZE = 40;
+  string PRICELIMITTYPE = 41;
+  string AUCTIONPRICELIMIT = 42;
+  string CONTINUOUSTRADEPRICELIMIT = 43;
+  string DAILYPRICEUPLIMIT = 44;
+  string DAILYPRICEDOWNLIMIT = 45;
+  string DAILYPRICEUPLIMIT2 = 46;
+  string DAILYPRICEDOWNLIMIT2 = 47;
+  string CONTRACTMULTIPLIER = 48;
+  string GAGERATE = 49;
+  string CRDBUYUNDERLYING = 50;
+  string CRDSELLUNDERLYING = 51;
+  string NOINDICESPARTICIPATED = 52;
+  string PARTICIPATINGINDEXID = 53;
+  string MARKETMAKERFLAG = 54;
+  string SECURITYEXCHANGE = 55;
+  string CFICODE = 56;
+  string SECURITYSUBTYPE = 57;
+  string SECURITYPROPERTIES = 58;
+  string SECURITYTRADINGSTATUS = 59;
+  string CORPORATEACTION = 60;
+  string TRADINGMECHANISM = 61;
+  string CRDPRICECHECKTYPE = 62;
+  string NETVOTINGFLAG = 63;
+  string SZRSTRUREFMFLAG = 64;
+  string OFFERINGFLAG = 65;
+  string RECDATETIME = 66;
+  string UNIX = 67;
+  string MARKET = 68;
+}
+
+message StockstatusData {
+  string SECURITYID = 1;
+  string TRDDATE = 2;
+  string SECURITYPRENAME = 3;
+  string TRADINGPHASECODE = 4;
+  string CRDBUYSTATUS = 5;
+  string CRDSELLSTATUS = 6;
+  string SUBSCRIBESTATUS = 7;
+  string REDEMPTIONSTATUS = 8;
+  string WARRANTCREATED = 9;
+  string WARRANTDROPPED = 10;
+  string RECDATETIME = 11;
+  string UNIX = 12;
+  string MARKET = 13;
+}
+
+message TradeData {
+  string SECURITYID = 1;
+  string TRDDATE = 2;
+  string TRADETIME = 3;
+  string SETNO = 4;
+  string RECNO = 5;
+  string BUYORDERRECNO = 6;
+  string SELLORDERRECNO = 7;
+  double TRADEPRICE = 8;
+  double TRADEQTY = 9;
+  string ORDERKIND = 10;
+  string FUNCTIONCODE = 11;
+  string RECDATETIME = 12;
+  string UNIX = 13;
+  string MARKET = 14;
+}
