@@ -133,7 +133,8 @@ if __name__ == '__main__':
       setOrderRequest(req, act)
 
       execType = act["ExecutionType"]
-      if (execType == "FirstLevel" or execType == "SmartOrder"):
+      if (execType == "FirstLevel" or execType == "SmartOrder"
+          or execType == "SmallOrder"):
         tradeServer["SmartOrderService"].send(
             wrapMsg(protoMsg.TYPE_ORDER_REQUEST, req))
       elif (execType  == "Limit"):
