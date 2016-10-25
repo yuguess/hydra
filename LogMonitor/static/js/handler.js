@@ -331,6 +331,10 @@ function constructOrder(data) {
     }
 
     order_data_db[data.id] = data;
+    
+    if (!(data.id in refresh_order_list)) {
+        refresh_order_list[data.id] = 1;
+    } 
 
     if (batch_order_db[data.batch_id] == undefined) {
         batch_order_db[data.batch_id] = [data.id];
