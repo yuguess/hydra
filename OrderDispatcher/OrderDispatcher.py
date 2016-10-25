@@ -23,6 +23,7 @@ requestTypeDict = {
   "Market":protoMsg.TYPE_MARKET_ORDER_REQUEST,
   "Cancel":protoMsg.TYPE_CANCEL_ORDER_REQUEST,
   "SmartOrder":protoMsg.TYPE_SMART_ORDER_REQUEST,
+  "SmallOrder":protoMsg.TYPE_SMALL_ORDER_REQUEST,
   "FirstLevel":protoMsg.TYPE_FIRST_LEVEL_ORDER_REQUEST
 }
 
@@ -132,7 +133,8 @@ if __name__ == '__main__':
       setOrderRequest(req, act)
 
       execType = act["ExecutionType"]
-      if (execType == "FirstLevel" or execType == "SmartOrder"):
+      if (execType == "FirstLevel" or execType == "SmartOrder"
+          or execType == "SmallOrder"):
         tradeServer["SmartOrderService"].send(
             wrapMsg(protoMsg.TYPE_ORDER_REQUEST, req))
       elif (execType  == "Limit"):

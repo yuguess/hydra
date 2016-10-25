@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D262F24B-D1F4-44A4-9563-554038CF7F0A}"
+	ProjectSection(SolutionItems) = preProject
+		Performance1.psess = Performance1.psess
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TdxMarketData", "TdxMarketData\TdxMarketData.vcxproj", "{F74DD06F-4F53-4088-BF40-42C7013E19EE}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TdxTrade", "TdxTrade\TdxTrade.vcxproj", "{05E07462-DFB3-4EB1-B41E-E683CADE84C4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GetPosition", "GetPosition\GetPosition.vcxproj", "{E007C2D8-953B-4E93-ABFA-7D8F6632B9BB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F74DD06F-4F53-4088-BF40-42C7013E19EE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F74DD06F-4F53-4088-BF40-42C7013E19EE}.Debug|Win32.Build.0 = Debug|Win32
+		{F74DD06F-4F53-4088-BF40-42C7013E19EE}.Release|Win32.ActiveCfg = Release|Win32
+		{F74DD06F-4F53-4088-BF40-42C7013E19EE}.Release|Win32.Build.0 = Release|Win32
+		{05E07462-DFB3-4EB1-B41E-E683CADE84C4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{05E07462-DFB3-4EB1-B41E-E683CADE84C4}.Debug|Win32.Build.0 = Debug|Win32
+		{05E07462-DFB3-4EB1-B41E-E683CADE84C4}.Release|Win32.ActiveCfg = Release|Win32
+		{05E07462-DFB3-4EB1-B41E-E683CADE84C4}.Release|Win32.Build.0 = Release|Win32
+		{E007C2D8-953B-4E93-ABFA-7D8F6632B9BB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E007C2D8-953B-4E93-ABFA-7D8F6632B9BB}.Debug|Win32.Build.0 = Debug|Win32
+		{E007C2D8-953B-4E93-ABFA-7D8F6632B9BB}.Release|Win32.ActiveCfg = Release|Win32
+		{E007C2D8-953B-4E93-ABFA-7D8F6632B9BB}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+EndGlobal

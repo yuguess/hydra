@@ -1,5 +1,6 @@
 #include "SmartOrderService.h"
 #include "SmartOrder.h"
+#include "SmallOrder.h"
 #include "FirstLevelOrder.h"
 #include "EnumStringMap.h"
 #include "LogHelper.h"
@@ -52,6 +53,8 @@ int SmartOrderService::onOrderRequest(OrderRequest &req) {
   std::shared_ptr<OrderReactor> reactor;
   if (req.type() == TYPE_SMART_ORDER_REQUEST) {
     reactor = std::shared_ptr<OrderReactor>(new SmartOrder(req, this));
+  } else if (req.type() == TYPE_SMALL_ORDER_REQUEST) {
+    reactor = std::shared_ptr<OrderReactor>(new SmallOrder(req, this));
   } else if (req.type() == TYPE_FIRST_LEVEL_ORDER_REQUEST) {
     reactor = std::shared_ptr<OrderReactor>(new FirstLevelOrder(req, this));
   } else {

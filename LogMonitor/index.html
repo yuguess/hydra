@@ -7,7 +7,9 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
+    <script type="text/javascript" src="static/js/stockmap.js"></script>
     <script type="text/javascript" src="static/js/jquery.js"></script>
+    <script type="text/javascript" src="static/js/jquery.tablesorter.js"></script>
     <script type="text/javascript" src="static/js/handler.js"></script>
     
     <link rel="stylesheet" href="static/css/bootstrap.min.css">
@@ -45,6 +47,9 @@
       <div class="col-md-1 table-responsive">
         <button id='MonitorServer' type="button" class="btn btn-default">I</button>
       </div>
+      <div class="col-md-1 table-responsive">
+        <button id='Showall' type="button" class="btn btn-default" onclick="onClickShowAll(this);">Show All</button>
+      </div>
     </div>
 
     <div id="stock_div" class = "container-fluid">
@@ -52,41 +57,58 @@
         <div class="btn btn-info acct-name col-md-1 " disabled>Account:</div><button class="btn btn-success acct col-md-1" onclick="showAllAccount()" >All</button>
       </div>
       <div class="row container-fluid">
-        <div class="col-md-3 table-responsive">
-          <table class="table table-hover table-bordered" id='batch' width="500" data-url="data.json">
-            <tr id='batch-title' onclick = "onClickShowAll(this);">
-              <td>batch_id</td>
-              <td>notional(B/S)</td>
-              <td>progress</td>
-            </tr>
+        <div id="batch-div" class="col-md-3 table-responsive">
+          <table class="table table-hover table-bordered tablesorter" id='batch' width="500" data-url="data.json">
+            <thead id='batch-title' onclick = "onClickShowAll(this);">
+              <tr class="title">
+              <th>batch_id</th>
+              <th>notional(B/S)</th>
+              <th>progress</th>
+              </tr>
+            </thead>
+            <tbody id='batch-table-body'>
+
+            </tbody>
           </table>
         </div>
-        <div class="col-md-4 table-responsive">
-          <table class="table table-hover table-bordered" id='algo' width="100" data-url="data.json">
-            <tr id='algo-title'>
-              <td>first_code</td>
-              <td>ref_price</td>
-              <td style="width:10px">trade_price</td>
-              <td>slippage</td>
-              <td>notional(B/S)</td>
-              <td>progress</td>
-            </tr>
+        <div id="algo-div" class="col-md-4 table-responsive">
+          <table class="table table-hover table-bordered tablesorter" id='algo' width="100" data-url="data.json">
+            <thead id='algo-title'>
+              <tr class="title">
+              <th style="display:none">dummy</th>
+              <th>code</th>
+              <th>stk_Name</th>
+              <th>ref_price</th>
+              <th style="width:10px">trade_price</th>
+              <th>slippage</th>
+              <th>notional(B/S)</th>
+              <th width=10%>progress</th>
+              </tr>
+            </thead>
+            <tbody id='algo-table-body'>
+
+            </tbody>
           </table>
         </div>
-        <div class="col-md-5 container-fluid table-responsive">
-          <table class="table table-hover table-bordered" id='order' width="100" data-url="data.json">
-            <tr id='order-title'>
-              <td>status</td>
-              <td>time</td>
-              <td>code</td>
-              <td>price</td>
-              <td>progress_order</td>
-              <td>open_close</td>
-              <td>account</td>
-              <td>buy_sell</td>
-              <td>argument_list</td>
-              <td>id</td>
-            </tr>
+        <div id="order-div" class="col-md-5 container-fluid table-responsive">
+          <table class="table table-hover table-bordered tablesorter" id='order' width="100" data-url="data.json">
+            <thead id='order-title'>
+            <tr class="title">
+              <th>status</th>
+              <th>time</th>
+              <th>code</th>
+              <th>price</th>
+              <th>progress_order</th>
+              <th>open_close</th>
+              <th>account</th>
+              <th>buy_sell</th>
+              <th>argument_list</th>
+              <th>id</th>
+              </tr>
+            </thead>
+            <tbody id='order-table-body'>
+
+            </tbody>
           </table>
         </div>
         <table id='debug' border='1' width="800"></table>

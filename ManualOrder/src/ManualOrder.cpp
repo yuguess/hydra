@@ -15,7 +15,7 @@ ManualOrder::ManualOrder() {
       "serverAddr");
   CedarJsonConfig::getInstance().getStringArrayWithTag(bcstAddrs, "DataServer",
       "boardcastAddr");
-  for (int i = 0; i < names.size(); i++) {
+  for (unsigned int i = 0; i < names.size(); i++) {
     dataServers.push_back({names[i], srvAddrs[i], bcstAddrs[i]});
   }
 
@@ -54,7 +54,7 @@ void ManualOrder::run() {
     char value;
     std::cout << std::endl
       << "1) Enter OrderRequest Limit/Market/Cancel" << std::endl
-      << "2) Enter OrderRequest FirstLevel/SmartOrder" << std::endl
+      << "2) Enter OrderRequest FirstLevel/SmartOrder/SmallOrder" << std::endl
       << "3) Enter DataRequest" << std::endl;
     std::cin >> value;
     switch (value) {
@@ -106,12 +106,10 @@ int ManualOrder::queryDataRequest() {
 
 
 std::string ManualOrder::queryCancelID() {
-  static std::string respAddr = CedarHelper::getResponseAddr();
-
   std::string ID;
   std::cout << "CancelID:" << std::endl;
   std::cin >> ID;
-  return respAddr + "_" + ID;
+  return ID;
 }
 
 std::string ManualOrder::queryCode() {
@@ -194,12 +192,14 @@ RequestType ManualOrder::queryAlgOrdType() {
   char value;
   std::cout << std::endl
   << "1) FirstLevel" << std::endl
-  << "2) SmartOrder" << std::endl;
+  << "2) SmartOrder" << std::endl
+  << "3) SmallOrder" << std::endl;
 
   std::cin >> value;
   switch (value) {
     case '1': return RequestType::TYPE_FIRST_LEVEL_ORDER_REQUEST;
     case '2': return RequestType::TYPE_SMART_ORDER_REQUEST;
+    case '3': return RequestType::TYPE_SMALL_ORDER_REQUEST;
     default: throw std::exception();
   }
 }
