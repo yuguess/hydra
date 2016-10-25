@@ -86,7 +86,7 @@ int ManualOrder::queryDataRequest() {
   int value;
   std::cout << std::endl;
   for (unsigned i = 0; i < dataServers.size(); i++)
-    std::cout << i <<") Enter dataServer " << dataServers[i].name << std::endl;
+    std::cout << i <<" for dataServer " << dataServers[i].name << std::endl;
 
   std::cin >> value;
   std::string sendAddr = dataServers[value].serverAddr;

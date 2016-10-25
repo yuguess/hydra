@@ -10,6 +10,8 @@ DualKD::DualKD() :
 int DualKD::onMsg(MessageBase &msg) {
 
   if (msg.type() == TYPE_MARKETUPDATE) {
+    LOG(INFO) << "on md update";
+
     MarketUpdate mkt = ProtoBufHelper::unwrapMsg<MarketUpdate>(msg);
     RangeStat rangeStat;
     if (!rangeCollector.onRealTimeDataTickUpdate(mkt, rangeStat)) {
