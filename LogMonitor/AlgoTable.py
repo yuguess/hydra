@@ -53,6 +53,8 @@ class AlgoTable:
         return [data["alg_order_id"], json.dumps(row)]
 
     def on_update(self, data, order_table):
+        if data["error_code"] != 4 and data["error_code"] != 7:
+            return ""
         if data["ref_id"] in order_table:
             algo_id = order_table[data["ref_id"]]["alg_order_id"]
             row = self.algo_table[algo_id]

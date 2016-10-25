@@ -6,6 +6,7 @@ batch_head = ["batch_id", "trade_quantity", "quantity", "notional", "account"]
 
 class BatchTable:
     batch_table = {}
+    algo_record = {}
 
     def __init__(self):
         return
@@ -42,6 +43,8 @@ class BatchTable:
             return [row["batch_id"], json.dumps(row)]
 
     def on_update(self, data, order_table):
+        if data["error_code"] != 4 and data["error_code"] != 7:
+            return;
         if data["ref_id"] in order_table:
             batch_id = order_table[data["ref_id"]]["batch_id"]
             row = self.batch_table[batch_id]
@@ -78,10 +81,9 @@ class BatchTable:
         return ""
 
     def on_smartorder(self, data, order_table, alg_table):
-        if data["alg_order_id"] in alg_table:
+        if data["alg_order_id"] in self.algo_record:
             return ""
-        if data["batch_id"]=="20161021_104747":
-            print data
+        self.algo_record[data["alg_order_id"]] = 1
         order = data
         if not data["batch_id"] in self.batch_table:
             row = {"batch_id": order["batch_id"], "trade_quantity": 0,
@@ -104,9 +106,6 @@ class BatchTable:
             row = {"batch_id": order["batch_id"], "trade_quantity": 0,
                    "quantity": data["trade_quantity"], "notional": "", "account": data["account"]}
             self.batch_table[data["batch_id"]] = row
-            if data["batch_id"] == "20161011_140142":
-                #print str(row["quantity"]) + "," + str(data['trade_quantity'])
-                print(str(data['trade_quantity']) + "," + str(data['id']))
             return [row["batch_id"], json.dumps(row)]
         else:
             row = self.batch_table[data["batch_id"]]
