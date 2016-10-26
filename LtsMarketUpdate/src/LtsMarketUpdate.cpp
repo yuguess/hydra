@@ -110,6 +110,7 @@ void LtsMarketUpdate::OnRtnDepthMarketData(
   std::string chan;
 
   //hard code here
+  LOG(INFO) << pMD->InstrumentID << " " << pMD->ExchangeID;
   if (strcmp(pMD->ExchangeID, "SSE") == 0) {
     chan = std::string(pMD->InstrumentID) + ".SHSE";
   } else {
@@ -142,6 +143,13 @@ bool LtsMarketUpdate::ltsMDToCedarMD(
   md.set_turnover(pMD->Turnover);
   md.set_high_limit_price(pMD->UpperLimitPrice);
   md.set_low_limit_price(pMD->LowerLimitPrice);
+
+  if (strcmp(pMD->ExchangeID, "SSE") == 0) {
+    md.set_exchange(SHSE);
+  } else {
+    md.set_exchange(SZSE);
+  }
+  
 
   md.add_bid_price(pMD->BidPrice1);
   md.add_bid_price(pMD->BidPrice2);
