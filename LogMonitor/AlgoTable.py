@@ -64,18 +64,18 @@ class AlgoTable:
                     row["notional"] = {"buy": 0, "sell": 0}
                 ord = order_table[data["ref_id"]]
                 direction=0
-                if data["trade_quantity"]!=0:
+                if data["trade_quantity"]!=0 and data["error_code"] == 4:
                     if ord["buy_sell"] == "LONG_BUY":
                         direction = 1
-                        row["notional"]["buy"]+=float(data["trade_quantity"])*float(ord["price"])
+                        row["notional"]["buy"]+=float(data["trade_quantity"])*float(ord["trade_price"])
                         row["trade_price"] = row["notional"]["buy"] / float(
                             row['trade_quantity'])
 
                     elif ord["buy_sell"] == "SHORT_SELL":
                         direction = -1
                         row["notional"]["sell"] += float(data["trade_quantity"]) * \
-                                                   float(ord["price"])
-                                                   
+                                                   float(ord["trade_price"])
+
                         row["trade_price"] = row["notional"]["sell"]/float(row['trade_quantity'])
                     if row["ref_price"]!="" and abs(direction)==1:
                         row["slippage"] = -((row["trade_price"]/float(row["ref_price"]))-1) * direction * 10000
@@ -124,7 +124,6 @@ class AlgoTable:
 
             return [data["alg_order_id"], json.dumps(
                 self.algo_table[data["alg_order_id"]])]
-
         else:
             row = self.algo_table[data["alg_order_id"]]
             row["quantity"] = order["trade_quantity"]

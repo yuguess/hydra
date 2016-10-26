@@ -15,8 +15,8 @@ today = datetime.date.today()
 oneday = datetime.timedelta(days=1)
 yesterday = today - oneday
 
-########config ###############
-logFile = "/home/ironman/MonitorLog/test"
+########config ##############
+logFile = "/home/ironman/MonitorLog/log"
 #logFile = "C:/monitor_dev/test"
 # logFile = "/home/infra/MonitorLog/" + yesterday.strftime("%Y-%m-%d")
 #logFile = "C:/monitor_dev/2016-10-11"

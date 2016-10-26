@@ -26,6 +26,35 @@ $(document).ready(function()
     } 
 ); 
 
+function getState() {
+    $.ajax({  
+        type : "GET",  //提交方式  
+        url : "http://192.168.0.61:8012/soc",//路径  
+        data : { 
+        },//数据，这里使用的是Json格式进行传输  
+        success : function(result) {//返回数据根据结果进行相应的处理  
+            changeAccountState(result);
+        }  
+    });  
+}
+
+function changeAccountState(result) {
+    var jData = JSON.parse(result);
+    for (acc in accountList) {
+        if (jData["TdxTrade_"+accountList[acc]]==true) {
+            $("#"+accountList[acc]+"_State").attr('class', 'btn btn-success').html('o');
+            //document.getElementById('debug').insertRow().insertCell().innerHTML = "suc"+jData["TdxTrade_"+accountList[acc]];
+        } else {
+            $("#"+accountList[acc]+"_State").attr('class', 'btn btn-danger').html('x');
+            //document.getElementById('debug').insertRow().insertCell().innerHTML = "fail"+jData["TdxTrade_"+accountList[acc]];
+        }
+    }
+    //document.getElementById('debug').insertRow().insertCell().innerHTML = jData["TdxTrade_J003"];
+    //document.getElementById('debug').insertRow().insertCell().innerHTML = result;
+}
+
+setInterval("getState()",2000);
+
 function showStock() {
     $('#future_div').hide();
     $('#stock_div').show();
@@ -79,8 +108,6 @@ function constructAlgoTable(data) {
 
     countAlgo += 1;
 }
-
-
 
 //点击batch的标题栏时，显示所有信息
 //show all batch,algo,order info when clicking on the theme of the batch table
@@ -497,8 +524,7 @@ function updateBatchTable(id, data) {
     }
 }
 
-
-
+var accountList = ['XX',"XR","HW","J008","J006","J002","J003","H002","P002","P005",,"TM","J001","Z002","3044","3042"]
 var error_code = {
     '0': "CONFIRM",
     '1': "SEND_ERR",

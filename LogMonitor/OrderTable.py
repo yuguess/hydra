@@ -56,7 +56,7 @@ class OrderTable:
                    "argument_list": order["argument_list"],
                    "id": order["id"], "batch_id": order["batch_id"],
                    "alg_order_id": order["alg_order_id"],
-                   "buy_sell": order["buy_sell"]}
+                   "buy_sell": order["buy_sell"], "trade_price":-1}
             self.order_table[data["id"]] = row
             return [data["id"], json.dumps(row)]
         else:
@@ -72,6 +72,8 @@ class OrderTable:
             row["status"] = self.error_code[str(data['error_code'])]
             if data["error_code"] == 4 or data["error_code"] == 7:
                 row["trade_quantity"] += int(data['trade_quantity'])
+            if data["error_code"] == 4:
+                row["trade_price"] = data["price"]
             return [data["ref_id"], json.dumps(row)]
 
     def on_appstatus(self, data):

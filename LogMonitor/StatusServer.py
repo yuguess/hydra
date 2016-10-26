@@ -10,7 +10,6 @@ import time
 import signal
 import sys
 import re
-import pandas as pd
 import ast
 
 import tornado.web
