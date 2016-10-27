@@ -654,7 +654,6 @@ ws1.onmessage = function (event) {
 }
 
 var wss = new WebSocket('ws://192.168.0.66:8001/soc');
-
 //websocket connection
 wss.onmessage = function (event) {
     try {
@@ -682,6 +681,21 @@ wss.onmessage = function (event) {
             }
         }
     }
+}
+
+var ws_err = new WebSocket('ws://192.168.0.64:8011/err');
+ws_err.onmessage = function (event) {
+    try {
+        var jData = JSON.parse(event.data);
+        var data = JSON.parse(jData);
+    } catch (e) {
+        alert(e.message);
+    }
+
+    $("#err_list_title").attr("class","btn-danger btn dropdown-toggle")
+    var append =   "<li><a href=\"#\">"+ getCharFromUtf8(data.id) + ":  " + getCharFromUtf8(data.error_msg) +"</a></li>"
+    $("#err_list").prepend(append);
+
 }
 
 function refresh_data() {
@@ -808,8 +822,7 @@ function refresh_order_data(item) {
     date = new Date(0);
     s = data.id;
     date.setUTCSeconds(Number(s.substring(0, 10)));
-    //var sdate = date.format("hh:mm:ss");
-    sdate = 0;
+    var sdate = date.format("hh:mm:ss");
 
     var percentage = Number(data.trade_quantity) / Number(data.quantity);
 
@@ -877,3 +890,34 @@ function refresh_order_data(item) {
     changeStatusColor(data.id, data.status)
     //document.getElementById('debug').insertRow().insertCell().innerHTML = orderObj;
 }
+
+
+function getCharFromUtf8(str) {  
+    var cstr = "";  
+    var nOffset = 0;  
+    if (str == "")  
+        return "";  
+    str = str.toLowerCase();  
+    nOffset = str.indexOf("%e");  
+    if (nOffset == -1)  
+        return str;  
+    while (nOffset != -1) {  
+        cstr += str.substr(0, nOffset);  
+        str = str.substr(nOffset, str.length - nOffset);  
+        if (str == "" || str.length < 9)  
+            return cstr;  
+        cstr += utf8ToChar(str.substr(0, 9));  
+        str = str.substr(9, str.length - 9);  
+        nOffset = str.indexOf("%e");  
+    }  
+    return cstr + str;  
+}  
+  
+//将编码转换成字符  
+function utf8ToChar(str) {  
+    var iCode, iCode1, iCode2;  
+    iCode = parseInt("0x" + str.substr(1, 2));  
+    iCode1 = parseInt("0x" + str.substr(4, 2));  
+    iCode2 = parseInt("0x" + str.substr(7, 2));  
+    return String.fromCharCode(((iCode & 0x0F) << 12) | ((iCode1 & 0x3F) << 6) | (iCode2 & 0x3F));  
+}  

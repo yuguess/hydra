@@ -16,12 +16,12 @@ oneday = datetime.timedelta(days=1)
 yesterday = today - oneday
 
 ########config ##############
-logFile = "/home/ironman/MonitorLog/log"
+#logFile = "/home/ironman/MonitorLog/log"
 #logFile = "C:/monitor_dev/test"
 # logFile = "/home/infra/MonitorLog/" + yesterday.strftime("%Y-%m-%d")
 #logFile = "C:/monitor_dev/2016-10-11"
 #logFile = "C:/Users/hawk/Desktop/LogMonitor/2016-10-18"
-#logFile = "/home/infra/MonitorLog/" + time.strftime("%Y-%m-%d")
+logFile = "/home/ironman/MonitorLog/" + time.strftime("%Y-%m-%d")
 #$logFile = "/home/infra/MonitorLog/2016-10-18"
 # logFile = "/home/mwan/LogMonitor/log"
 # logFile_app = "/home/infra/MonitorLog/ALGO_"+time.strftime("%Y-%m-%d")
@@ -52,6 +52,7 @@ def process_result(result_in):
     result = copy.deepcopy(result_in)
     if result==None:
         return
+
     if result[0] != "" and result[0] != None:
         try:
             SocketHandler.send_to_all(

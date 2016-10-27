@@ -52,6 +52,9 @@ class MonitorData:
         if type(dic) == list:
             #print dic
             return
+        #if dic["cedar_msg_type"] == "TYPE_ERROR_MSG":
+            #print dic
+        #    return ["","","",dic]
         result_ord = self.ord_table.process_message(dic)
         result_batch = self.ba_table.process_message(dic,
                                                      self.ord_table.order_table,

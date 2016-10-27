@@ -64,17 +64,17 @@ class AlgoTable:
                     row["notional"] = {"buy": 0, "sell": 0}
                 ord = order_table[data["ref_id"]]
                 direction=0
-                if data["trade_quantity"]!=0 and data["error_code"] == 4:
+                if data["trade_quantity"]!=0:
                     if ord["buy_sell"] == "LONG_BUY":
                         direction = 1
-                        row["notional"]["buy"]+=float(data["trade_quantity"])*float(ord["trade_price"])
+                        row["notional"]["buy"]+=float(data["trade_quantity"])*float(ord["price"])
                         row["trade_price"] = row["notional"]["buy"] / float(
                             row['trade_quantity'])
 
                     elif ord["buy_sell"] == "SHORT_SELL":
                         direction = -1
                         row["notional"]["sell"] += float(data["trade_quantity"]) * \
-                                                   float(ord["trade_price"])
+                                                   float(ord["price"])
 
                         row["trade_price"] = row["notional"]["sell"]/float(row['trade_quantity'])
                     if row["ref_price"]!="" and abs(direction)==1:
