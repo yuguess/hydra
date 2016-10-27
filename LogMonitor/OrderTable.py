@@ -72,8 +72,6 @@ class OrderTable:
             row["status"] = self.error_code[str(data['error_code'])]
             if data["error_code"] == 4 or data["error_code"] == 7:
                 row["trade_quantity"] += int(data['trade_quantity'])
-            if data["error_code"] == 4:
-                row["trade_price"] = data["price"]
             return [data["ref_id"], json.dumps(row)]
 
     def on_appstatus(self, data):
