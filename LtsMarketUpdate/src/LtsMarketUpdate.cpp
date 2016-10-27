@@ -110,7 +110,7 @@ void LtsMarketUpdate::OnRtnDepthMarketData(
   std::string chan;
 
   //hard code here
-  LOG(INFO) << pMD->InstrumentID << " " << pMD->ExchangeID;
+  //LOG(INFO) << pMD->InstrumentID << " " << pMD->ExchangeID;
   if (strcmp(pMD->ExchangeID, "SSE") == 0) {
     chan = std::string(pMD->InstrumentID) + ".SHSE";
   } else {
@@ -123,7 +123,6 @@ void LtsMarketUpdate::OnRtnDepthMarketData(
   std::string res = ProtoBufHelper::wrapMsg<MarketUpdate>(
     TYPE_MARKETUPDATE, md);
 
-  LOG(INFO) << "boardcast msg in chan " << chan;
   msgHub.boardcastMsg(chan, res);
 }
 
@@ -149,7 +148,6 @@ bool LtsMarketUpdate::ltsMDToCedarMD(
   } else {
     md.set_exchange(SZSE);
   }
-  
 
   md.add_bid_price(pMD->BidPrice1);
   md.add_bid_price(pMD->BidPrice2);

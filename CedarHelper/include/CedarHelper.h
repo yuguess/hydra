@@ -71,7 +71,7 @@ public:
   }
 
   static bool setupTradeServerMap(std::map<std::string, std::string> &accMap) {
-    std::string configPath = "../../ShareConfig/ServerMap.json";
+    std::string configPath = "/home/infra/hydra/ShareConfig/ServerMap.json";
 
     Json::Value root;
     JsonHelper::loadJsonFile(configPath, root);
