@@ -1,18 +1,20 @@
 window.onload = function () {
     $('#order-div').css({
         "position": "fixed",
-        "right": "1em",
+        "left": "56%",
         "height": "850px"
     });
     $('#algo-div').css({
         "position": "fixed",
-        "right": "42%",
-        "height": "850px"
+        "left": "21%",
+        "height": "850px",
+        "width": "35%"
     });
     $('#batch-div').css({
         "position": "fixed",
         "left": "1em",
-        "height": "850px"
+        "height": "850px",
+        "width": "20%"
     });
     setInterval("refresh_data();",500);
 }
@@ -42,7 +44,7 @@ function changeAccountState(result) {
     var jData = JSON.parse(result);
     for (acc in accountList) {
         if (jData["TdxTrade_"+accountList[acc]]==true) {
-            $("#"+accountList[acc]+"_State").attr('class', 'btn btn-success').html('o');
+            $("#"+accountListMap[accountList[acc]]+"_State").attr('class', 'btn btn-success').html('o');
             //document.getElementById('debug').insertRow().insertCell().innerHTML = "suc"+jData["TdxTrade_"+accountList[acc]];
         } else {
             $("#"+accountList[acc]+"_State").attr('class', 'btn btn-danger').html('x');
@@ -524,7 +526,26 @@ function updateBatchTable(id, data) {
     }
 }
 
-var accountList = ['XX',"XR","HW","J008","J006","J002","J003","H002","P002","P005",,"TM","J001","Z002","3044","3042"]
+var accountList = ["3001","3002","2001","3028","3027","3032","3035","3039","3038","3040","3031","3033","3034","3044","3042"]
+var accountListMap = {
+    "3001":"XR",
+    "3002":"XX",
+    "2001":"HW",
+    "3028":"J008",
+    "3027":"J006",
+    "3032":"J002",
+    "3035":"J003",
+    "3039":"H002",
+    "3038":"P002",
+    "3040":"P005",
+    "3031":"TM",
+    "3033":"J001",
+    "3034":"Z002",
+    "3044":"3044",
+    "3042":"3042"
+}
+
+
 var error_code = {
     '0': "CONFIRM",
     '1': "SEND_ERR",
@@ -564,7 +585,11 @@ var stock_account_map = {
     "3028_Stock":"涌津8号",
     "3031_Stock":"天目杉树",
     "3038_Stock":"杉树2期",
-    "3040_Stock":"杉树5期"
+    "3040_Stock":"杉树5期",
+    "3039_Stock":"华闻2期",
+    "2001_Stock":"华闻1期",
+    "3042_Stock":"双动力1期",
+    "3044_Stock":"双动力2期"
 }
 
 var inv_stock_account_map = {
@@ -579,7 +604,11 @@ var inv_stock_account_map = {
     "涌津8号":"3028_Stock",
     "天目杉树":"3031_Stock",
     "杉树2期":"3038_Stock",
-    "杉树5期":"3040_Stock"
+    "杉树5期":"3040_Stock",
+    "华闻2期":"3039_Stock",
+    "华闻1期":"2001_Stock",
+    "双动力1期":"3042_Stock",
+    "双动力2期":"3044_Stock"
 }
 
 var debug_count_algo = 0;
@@ -624,7 +653,7 @@ var current_account = undefined;
 var click_sig_batch = 0;
 var click_sig_algo = 0;
 
-var ws1 = new WebSocket('ws://192.168.0.64:8082/soc');
+var ws1 = new WebSocket('ws://192.168.0.66:8000/soc');
 
 //websocket connection
 ws1.onmessage = function (event) {
@@ -683,7 +712,7 @@ wss.onmessage = function (event) {
     }
 }
 
-var ws_err = new WebSocket('ws://192.168.0.64:8011/err');
+var ws_err = new WebSocket('ws://192.168.0.66:8011/err');
 ws_err.onmessage = function (event) {
     try {
         var jData = JSON.parse(event.data);
@@ -783,6 +812,7 @@ function refresh_algo_data(item) {
                       </div> \
                   </div>\
                 </td> \
+                <td id='" + data.alg_order_id + "_buy_sell'>" + data.buy_sell + "</td> \
               </tr>");
     } else {
         if (!(item in refresh_algo_list)  && click_sig_batch == 0) {

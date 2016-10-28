@@ -64,6 +64,8 @@ class OrderTable:
             return ""
 
     def on_update(self, data):
+        if data["ref_id"]=="1477551452622990":
+            print data
         if not data["ref_id"] in self.order_table:
             return ""
         else:
