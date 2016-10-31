@@ -52,6 +52,50 @@
       </div>
     </div>
 
+
+
+    <div class="row container-fluid">
+      <h4 class="div-inline" vertical-align='middle'>XX:</h4>
+      <button id='XX_State' type="button" class="btn btn-default div-inline">I</button>
+      <h4 class="div-inline" vertical-align='middle'>XR:</h4>
+      <button id='XR_State' type="button" class="btn btn-default div-inline">I</button>
+      <h4 class="div-inline" vertical-align='middle'>HW:</h4>
+      <button id='HW_State' type="button" class="btn btn-default div-inline">I</button>
+      <h4 class="div-inline" vertical-align='middle'>J008:</h4>
+      <button id='J008_State' type="button" class="btn btn-default div-inline">I</button>
+      <h4 class="div-inline" vertical-align='middle'>J006:</h4>
+      <button id='J006_State' type="button" class="btn btn-default div-inline">I</button>
+      <h4 class="div-inline" vertical-align='middle'>J002:</h4>
+      <button id='J002_State' type="button" class="btn btn-default div-inline">I</button>
+      <h4 class="div-inline" vertical-align='middle'>J003:</h4>
+      <button id='J003_State' type="button" class="btn btn-default div-inline">I</button>
+      <h4 class="div-inline" vertical-align='middle'>H002:</h4>
+      <button id='H002_State' type="button" class="btn btn-default div-inline">I</button>
+      <h4 class="div-inline" vertical-align='middle'>P002:</h4>
+      <button id='P002_State' type="button" class="btn btn-default div-inline">I</button>
+      <h4 class="div-inline" vertical-align='middle'>P005:</h4>
+      <button id='P005_State' type="button" class="btn btn-default div-inline">I</button>
+      <h4 class="div-inline" vertical-align='middle'>TM:</h4>
+      <button id='TM_State' type="button" class="btn btn-default div-inline">I</button>
+      <h4 class="div-inline" vertical-align='middle'>J001:</h4>
+      <button id='J001_State' type="button" class="btn btn-default div-inline">I</button>
+      <h4 class="div-inline" vertical-align='middle'>Z002:</h4>
+      <button id='Z002_State' type="button" class="btn btn-default div-inline">I</button>
+      <h4 class="div-inline" vertical-align='middle'>3044:</h4>
+      <button id='3044_State' type="button" class="btn btn-default div-inline">I</button>
+      <h4 class="div-inline" vertical-align='middle'>3042:</h4>
+      <button id='3042_State' type="button" class="btn btn-default div-inline">I</button>
+      <div class="btn-group">
+        <button id="err_list_title" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+          ErrorList <span class="caret"></span>
+        </button>
+        <ul id="err_list" class="dropdown-menu" role="menu">
+        </ul>
+      </div>
+    </div>
+
+
+
     <div id="stock_div" class = "container-fluid">
       <div class="row"  id="acct_stock">
         <div class="btn btn-info acct-name col-md-1 " disabled>Account:</div><button class="btn btn-success acct col-md-1" onclick="showAllAccount()" >All</button>
@@ -79,10 +123,11 @@
               <th>code</th>
               <th>stk_Name</th>
               <th>ref_price</th>
-              <th style="width:10px">trade_price</th>
+              <th style="width:10px">trd_price</th>
               <th>slippage</th>
               <th>notional(B/S)</th>
-              <th width=10%>progress</th>
+              <th>B/S</th>
+	      <th width=10%>progress</th>
               </tr>
             </thead>
             <tbody id='algo-table-body'>
@@ -101,7 +146,7 @@
               <th>progress_order</th>
               <th>open_close</th>
               <th>account</th>
-              <th>buy_sell</th>
+              <th>b/s</th>
               <th>argument_list</th>
               <th>id</th>
               </tr>

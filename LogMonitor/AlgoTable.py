@@ -53,6 +53,8 @@ class AlgoTable:
         return [data["alg_order_id"], json.dumps(row)]
 
     def on_update(self, data, order_table):
+        if data["error_code"] != 4 and data["error_code"] != 7:
+            return ""
         if data["ref_id"] in order_table:
             algo_id = order_table[data["ref_id"]]["alg_order_id"]
             row = self.algo_table[algo_id]
@@ -73,7 +75,7 @@ class AlgoTable:
                         direction = -1
                         row["notional"]["sell"] += float(data["trade_quantity"]) * \
                                                    float(ord["price"])
-                                                   
+
                         row["trade_price"] = row["notional"]["sell"]/float(row['trade_quantity'])
                     if row["ref_price"]!="" and abs(direction)==1:
                         row["slippage"] = -((row["trade_price"]/float(row["ref_price"]))-1) * direction * 10000
@@ -122,7 +124,6 @@ class AlgoTable:
 
             return [data["alg_order_id"], json.dumps(
                 self.algo_table[data["alg_order_id"]])]
-
         else:
             row = self.algo_table[data["alg_order_id"]]
             row["quantity"] = order["trade_quantity"]

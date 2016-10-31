@@ -22,14 +22,17 @@ def start():
   subprocess.Popen([cmdPath + 'build/SmartOrderService', '-f',
     cmdPath + 'config/SmartOrderService.json'])
 
+  cmdPath = '/home/infra/hydra/LtsMarketUpdate/'
+  subprocess.Popen([cmdPath + 'build/LtsMarketUpdate', '-f',
+    cmdPath + 'config/LtsMarketUpdate.json'])
+
 def stop():
   subprocess.call('/home/infra/hydra/ShareConfig/stopLogStash.sh')
   subprocess.call(['pkill', 'MonitorServer'])
 
+  subprocess.call(['pkill', '-f', 'LtsMarketUpdate'])
   subprocess.call(['pkill', '-f', 'SmartOrderService'])
-
   subprocess.call(['pkill', '-f', 'OrderDispatcher'])
-
   subprocess.call(['pkill', '-f', 'StatusServer'])
 
 def service(argv):

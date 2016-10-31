@@ -56,7 +56,7 @@ class OrderTable:
                    "argument_list": order["argument_list"],
                    "id": order["id"], "batch_id": order["batch_id"],
                    "alg_order_id": order["alg_order_id"],
-                   "buy_sell": order["buy_sell"]}
+                   "buy_sell": order["buy_sell"], "trade_price":-1}
             self.order_table[data["id"]] = row
             return [data["id"], json.dumps(row)]
         else:
@@ -64,13 +64,16 @@ class OrderTable:
             return ""
 
     def on_update(self, data):
+        if data["ref_id"]=="1477551452622990":
+            print data
         if not data["ref_id"] in self.order_table:
             return ""
         else:
             # print "hit"
             row = self.order_table[data["ref_id"]]
             row["status"] = self.error_code[str(data['error_code'])]
-            row["trade_quantity"] += int(data['trade_quantity'])
+            if data["error_code"] == 4 or data["error_code"] == 7:
+                row["trade_quantity"] += int(data['trade_quantity'])
             return [data["ref_id"], json.dumps(row)]
 
     def on_appstatus(self, data):

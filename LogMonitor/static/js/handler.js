@@ -1,18 +1,20 @@
 window.onload = function () {
     $('#order-div').css({
         "position": "fixed",
-        "right": "1em",
+        "left": "56%",
         "height": "850px"
     });
     $('#algo-div').css({
         "position": "fixed",
-        "right": "42%",
-        "height": "850px"
+        "left": "21%",
+        "height": "850px",
+        "width": "35%"
     });
     $('#batch-div').css({
         "position": "fixed",
         "left": "1em",
-        "height": "850px"
+        "height": "850px",
+        "width": "20%"
     });
     setInterval("refresh_data();",500);
 }
@@ -20,11 +22,70 @@ window.onload = function () {
 $(document).ready(function() 
     { 
         $("#batch").tablesorter(); 
-        $("#algo").tablesorter(); 
+        $("#algo").tablesorter({
+            headers :{
+                0:{
+                    sorter : "integer"
+                },
+                1:{
+                    sorter : "integer"
+                },
+                2:{
+                    sorter : "text"
+                },
+                3:{
+                    sorter : "numeric"
+                },
+                4:{
+                    sorter : "numeric"
+                },
+                5:{
+                    sorter : "numeric"
+                },
+                6:{
+                    sorter : "numeric"
+                },
+                7:{
+                    sorter : "text"
+                },
+                8:{
+                    sorter : "numeric"
+                }
+            }
+        }); 
         $("#order").tablesorter(); 
         $(".tablesorter").trigger("update"); 
     } 
 ); 
+
+function getState() {
+    $.ajax({  
+        type : "GET",  //提交方式  
+        url : "http://192.168.0.61:8012/soc",//路径  
+        data : { 
+        },//数据，这里使用的是Json格式进行传输  
+        success : function(result) {//返回数据根据结果进行相应的处理  
+            changeAccountState(result);
+        }  
+    });  
+}
+
+function changeAccountState(result) {
+    var jData = JSON.parse(result);
+    for (acc in accountList) {
+        if (jData["TdxTrade_"+accountList[acc]]==true) {
+            $("#"+accountListMap[accountList[acc]]+"_State").attr('class', 'btn btn-success').html('o');
+            //document.getElementById('debug').insertRow().insertCell().innerHTML = "suc"+jData["TdxTrade_"+accountList[acc]];
+        } else {
+            $("#"+accountList[acc]+"_State").attr('class', 'btn btn-danger').html('x');
+            //document.getElementById('debug').insertRow().insertCell().innerHTML = "fail"+jData["TdxTrade_"+accountList[acc]];
+        }
+    }
+    //document.getElementById('debug').insertRow().insertCell().innerHTML = jData["TdxTrade_J003"];
+    //document.getElementById('debug').insertRow().insertCell().innerHTML = result;
+}
+
+setInterval("getState()",2000);
 
 function showStock() {
     $('#future_div').hide();
@@ -79,8 +140,6 @@ function constructAlgoTable(data) {
 
     countAlgo += 1;
 }
-
-
 
 //点击batch的标题栏时，显示所有信息
 //show all batch,algo,order info when clicking on the theme of the batch table
@@ -331,6 +390,10 @@ function constructOrder(data) {
     }
 
     order_data_db[data.id] = data;
+    
+    if (!(data.id in refresh_order_list)) {
+        refresh_order_list[data.id] = 1;
+    } 
 
     if (batch_order_db[data.batch_id] == undefined) {
         batch_order_db[data.batch_id] = [data.id];
@@ -493,6 +556,24 @@ function updateBatchTable(id, data) {
     }
 }
 
+var accountList = ["3001","3002","2001","3028","3027","3032","3035","3039","3038","3040","3031","3033","3034","3044","3042"]
+var accountListMap = {
+    "3001":"XR",
+    "3002":"XX",
+    "2001":"HW",
+    "3028":"J008",
+    "3027":"J006",
+    "3032":"J002",
+    "3035":"J003",
+    "3039":"H002",
+    "3038":"P002",
+    "3040":"P005",
+    "3031":"TM",
+    "3033":"J001",
+    "3034":"Z002",
+    "3044":"3044",
+    "3042":"3042"
+}
 
 
 var error_code = {
@@ -534,7 +615,11 @@ var stock_account_map = {
     "3028_Stock":"涌津8号",
     "3031_Stock":"天目杉树",
     "3038_Stock":"杉树2期",
-    "3040_Stock":"杉树5期"
+    "3040_Stock":"杉树5期",
+    "3039_Stock":"华闻2期",
+    "2001_Stock":"华闻1期",
+    "3042_Stock":"双动力1期",
+    "3044_Stock":"双动力2期"
 }
 
 var inv_stock_account_map = {
@@ -549,7 +634,17 @@ var inv_stock_account_map = {
     "涌津8号":"3028_Stock",
     "天目杉树":"3031_Stock",
     "杉树2期":"3038_Stock",
-    "杉树5期":"3040_Stock"
+    "杉树5期":"3040_Stock",
+    "华闻2期":"3039_Stock",
+    "华闻1期":"2001_Stock",
+    "双动力1期":"3042_Stock",
+    "双动力2期":"3044_Stock"
+}
+
+var bs_map = {
+    "LONG_BUY":"B",
+    "SHORT_SELL":"S",
+    "":""
 }
 
 var debug_count_algo = 0;
@@ -624,7 +719,6 @@ ws1.onmessage = function (event) {
 }
 
 var wss = new WebSocket('ws://192.168.0.66:8001/soc');
-
 //websocket connection
 wss.onmessage = function (event) {
     try {
@@ -652,6 +746,21 @@ wss.onmessage = function (event) {
             }
         }
     }
+}
+
+var ws_err = new WebSocket('ws://192.168.0.66:8011/err');
+ws_err.onmessage = function (event) {
+    try {
+        var jData = JSON.parse(event.data);
+        var data = JSON.parse(jData);
+    } catch (e) {
+        alert(e.message);
+    }
+
+    $("#err_list_title").attr("class","btn-danger btn dropdown-toggle")
+    var append =   "<li><a href=\"#\">"+ getCharFromUtf8(data.id) + ":  " + getCharFromUtf8(data.error_msg) +"</a></li>"
+    $("#err_list").prepend(append);
+
 }
 
 function refresh_data() {
@@ -728,9 +837,9 @@ function refresh_algo_data(item) {
                 <td id='" + data.alg_order_id + "_ref_price'>" + data.ref_price + "</td> \
                 <td id='" + data.alg_order_id + "_trade_price'>" + Number(data.trade_price) + "</td> \
                 <td id='" + data.alg_order_id + "_slippage'>" + Number(data.slippage) + "</td> \
-                <td style=\"display:none\" id='" + data.alg_order_id + "_algo_trade_quantity'>" + "0" + "</td> \
-                <td style=\"display:none\" id='" + data.alg_order_id + "_algo_quantity'>" + data.trade_quantity + "</td> \
                 <td id='" + data.alg_order_id + "_algo_notional'>" + data.notional.buy.toFixed(1)+"/"+data.notional.sell.toFixed(1) + "</td> \
+                <td id='" + data.alg_order_id + "_buy_sell'>" + bs_map[data.buy_sell] + "</td> \
+                <td style=\"display:none\" id='" + data.alg_order_id + "_precentage'>" + percentage + "</td> \
                 <td width=20%> \
                   <div class=\"progress\"> \
                       <div class=\"progress-bar\" id='" + data.alg_order_id + "_algo_progress' role=\"progressbar\" aria-valuenow=\"0\" aria-valuemin=\"0\"  \
@@ -739,6 +848,8 @@ function refresh_algo_data(item) {
                       </div> \
                   </div>\
                 </td> \
+                <td style=\"display:none\" id='" + data.alg_order_id + "_algo_trade_quantity'>" + "0" + "</td> \
+                <td style=\"display:none\" id='" + data.alg_order_id + "_algo_quantity'>" + data.trade_quantity + "</td> \
               </tr>");
     } else {
         if (!(item in refresh_algo_list)  && click_sig_batch == 0) {
@@ -752,9 +863,9 @@ function refresh_algo_data(item) {
                         <td id='" + data.alg_order_id + "_ref_price'>" + data.ref_price + "</td> \
                         <td id='" + data.alg_order_id + "_trade_price'>" + Number(data.trade_price) + "</td> \
                         <td id='" + data.alg_order_id + "_slippage'>" + Number(data.slippage) + "</td> \
-                        <td style=\"display:none\" id='" + data.alg_order_id + "_algo_trade_quantity'>" + "0" + "</td> \
-                        <td style=\"display:none\" id='" + data.alg_order_id + "_algo_quantity'>" + data.trade_quantity + "</td> \
                         <td id='" + data.alg_order_id + "_algo_notional'>" + data.notional.buy.toFixed(1)+"/"+data.notional.sell.toFixed(1) + "</td> \
+                        <td id='" + data.alg_order_id + "_buy_sell'>" + bs_map[data.buy_sell] + "</td> \
+                        <td style=\"display:none\" id='" + data.alg_order_id + "_precentage'>" + percentage + "</td> \
                         <td width=20%> \
                           <div class=\"progress\"> \
                               <div class=\"progress-bar\" id='" + data.alg_order_id + "_algo_progress' role=\"progressbar\" aria-valuenow=\"0\" aria-valuemin=\"0\"  \
@@ -763,6 +874,8 @@ function refresh_algo_data(item) {
                               </div> \
                           </div>\
                         </td> \
+                        <td style=\"display:none\" id='" + data.alg_order_id + "_algo_trade_quantity'>" + "0" + "</td> \
+                        <td style=\"display:none\" id='" + data.alg_order_id + "_algo_quantity'>" + data.trade_quantity + "</td> \
                       </tr>");
     }
 
@@ -778,8 +891,7 @@ function refresh_order_data(item) {
     date = new Date(0);
     s = data.id;
     date.setUTCSeconds(Number(s.substring(0, 10)));
-    //var sdate = date.format("hh:mm:ss");
-    sdate = 0;
+    var sdate = date.format("hh:mm:ss");
 
     var percentage = Number(data.trade_quantity) / Number(data.quantity);
 
@@ -803,7 +915,7 @@ function refresh_order_data(item) {
                                         </td> \
                                         <td id='" + data.id + "_open_close'>" + data.open_close + "</td> \
                                         <td id='" + data.id + "_accountOrder'>" + data.account + "</td> \
-                                        <td id='" + data.id + "_buy_sell'>" + data.buy_sell + "</td> \
+                                        <td id='" + data.id + "_buy_sell'>" + bs_map[data.buy_sell] + "</td> \
                                         <td id='" + data.id + "_argument_list'>" + data.argument_list + "</td> \
                                         <td id='" + data.id + "_id'>" + data.id + "</td> \
                                     </tr>");
@@ -833,7 +945,7 @@ function refresh_order_data(item) {
                                         </td> \
                                         <td id='" + data.id + "_open_close'>" + data.open_close + "</td> \
                                         <td id='" + data.id + "_accountOrder'>" + data.account + "</td> \
-                                        <td id='" + data.id + "_buy_sell'>" + data.buy_sell + "</td> \
+                                        <td id='" + data.id + "_buy_sell'>" + bs_map[data.buy_sell] + "</td> \
                                         <td id='" + data.id + "_argument_list'>" + data.argument_list + "</td> \
                                         <td id='" + data.id + "_id'>" + data.id + "</td> \
                                     </tr>");
@@ -847,3 +959,34 @@ function refresh_order_data(item) {
     changeStatusColor(data.id, data.status)
     //document.getElementById('debug').insertRow().insertCell().innerHTML = orderObj;
 }
+
+
+function getCharFromUtf8(str) {  
+    var cstr = "";  
+    var nOffset = 0;  
+    if (str == "")  
+        return "";  
+    str = str.toLowerCase();  
+    nOffset = str.indexOf("%e");  
+    if (nOffset == -1)  
+        return str;  
+    while (nOffset != -1) {  
+        cstr += str.substr(0, nOffset);  
+        str = str.substr(nOffset, str.length - nOffset);  
+        if (str == "" || str.length < 9)  
+            return cstr;  
+        cstr += utf8ToChar(str.substr(0, 9));  
+        str = str.substr(9, str.length - 9);  
+        nOffset = str.indexOf("%e");  
+    }  
+    return cstr + str;  
+}  
+  
+//将编码转换成字符  
+function utf8ToChar(str) {  
+    var iCode, iCode1, iCode2;  
+    iCode = parseInt("0x" + str.substr(1, 2));  
+    iCode1 = parseInt("0x" + str.substr(4, 2));  
+    iCode2 = parseInt("0x" + str.substr(7, 2));  
+    return String.fromCharCode(((iCode & 0x0F) << 12) | ((iCode1 & 0x3F) << 6) | (iCode2 & 0x3F));  
+}  

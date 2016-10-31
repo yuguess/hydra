@@ -1,7 +1,7 @@
 {
   "CedarLogger": {
     "AppName": "LtsMarketUpdate",
-    "LogDir": "/home/yuguess/CedarLog/"
+    "LogDir": "/home/infra/CedarLog/"
   },
 
   "LTS": {
