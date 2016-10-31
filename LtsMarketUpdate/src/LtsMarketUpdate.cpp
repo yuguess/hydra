@@ -43,10 +43,12 @@ bool LtsMarketUpdate::onMDReq(DataRequest &mdReq) {
   }
 
   if (mdReq.exchange() == SHSE) {
+    LOG(INFO) << "subscribe SH stock market data";
     registerTickers[reqStr] = mdReq.code();
     char *str = const_cast<char*>(registerTickers[reqStr].c_str());
     pMdFrontMdApi->SubscribeMarketData(&str, 1, const_cast<char*>("SSE"));
   } else if (mdReq.exchange() == SZSE) {
+    LOG(INFO) << "subscribe SZ stock market data";
     registerTickers[reqStr] = mdReq.code();
     char *str = const_cast<char*>(registerTickers[reqStr].c_str());
     pMdFrontMdApi->SubscribeMarketData(&str, 1, const_cast<char*>("SZE"));
@@ -102,7 +104,10 @@ void LtsMarketUpdate::OnRspSubMarketData(
   CSecurityFtdcSpecificInstrumentField *pSpecificInstrument,
   CSecurityFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
 
-  LOG(INFO) << "Successfully subscribe " << pSpecificInstrument;
+  LOG(INFO) << "subscribe status " << pRspInfo->ErrorID
+    << " " << pRspInfo->ErrorMsg;
+  LOG(INFO) << "Successfully subscribe " << pSpecificInstrument->InstrumentID
+    << " " << pSpecificInstrument->ExchangeID;
 }
 
 void LtsMarketUpdate::OnRtnDepthMarketData(
@@ -127,7 +132,7 @@ void LtsMarketUpdate::OnRtnDepthMarketData(
 }
 
 bool LtsMarketUpdate::ltsMDToCedarMD(
-    CSecurityFtdcDepthMarketDataField *pMD, MarketUpdate &md) {
+  CSecurityFtdcDepthMarketDataField *pMD, MarketUpdate &md) {
 
   //printMDStruct(pMD);
 
