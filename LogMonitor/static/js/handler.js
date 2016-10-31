@@ -22,7 +22,37 @@ window.onload = function () {
 $(document).ready(function() 
     { 
         $("#batch").tablesorter(); 
-        $("#algo").tablesorter(); 
+        $("#algo").tablesorter({
+            headers :{
+                0:{
+                    sorter : "integer"
+                },
+                1:{
+                    sorter : "integer"
+                },
+                2:{
+                    sorter : "text"
+                },
+                3:{
+                    sorter : "numeric"
+                },
+                4:{
+                    sorter : "numeric"
+                },
+                5:{
+                    sorter : "numeric"
+                },
+                6:{
+                    sorter : "numeric"
+                },
+                7:{
+                    sorter : "text"
+                },
+                8:{
+                    sorter : "numeric"
+                }
+            }
+        }); 
         $("#order").tablesorter(); 
         $(".tablesorter").trigger("update"); 
     } 
@@ -611,6 +641,12 @@ var inv_stock_account_map = {
     "双动力2期":"3044_Stock"
 }
 
+var bs_map = {
+    "LONG_BUY":"B",
+    "SHORT_SELL":"S",
+    "":""
+}
+
 var debug_count_algo = 0;
 var debug_count_order = 0;
 var debug_count_batch = 0;
@@ -653,7 +689,7 @@ var current_account = undefined;
 var click_sig_batch = 0;
 var click_sig_algo = 0;
 
-var ws1 = new WebSocket('ws://192.168.0.66:8000/soc');
+var ws1 = new WebSocket('ws://192.168.0.64:8082/soc');
 
 //websocket connection
 ws1.onmessage = function (event) {
@@ -801,9 +837,9 @@ function refresh_algo_data(item) {
                 <td id='" + data.alg_order_id + "_ref_price'>" + data.ref_price + "</td> \
                 <td id='" + data.alg_order_id + "_trade_price'>" + Number(data.trade_price) + "</td> \
                 <td id='" + data.alg_order_id + "_slippage'>" + Number(data.slippage) + "</td> \
-                <td style=\"display:none\" id='" + data.alg_order_id + "_algo_trade_quantity'>" + "0" + "</td> \
-                <td style=\"display:none\" id='" + data.alg_order_id + "_algo_quantity'>" + data.trade_quantity + "</td> \
                 <td id='" + data.alg_order_id + "_algo_notional'>" + data.notional.buy.toFixed(1)+"/"+data.notional.sell.toFixed(1) + "</td> \
+                <td id='" + data.alg_order_id + "_buy_sell'>" + bs_map[data.buy_sell] + "</td> \
+                <td style=\"display:none\" id='" + data.alg_order_id + "_precentage'>" + percentage + "</td> \
                 <td width=20%> \
                   <div class=\"progress\"> \
                       <div class=\"progress-bar\" id='" + data.alg_order_id + "_algo_progress' role=\"progressbar\" aria-valuenow=\"0\" aria-valuemin=\"0\"  \
@@ -812,7 +848,8 @@ function refresh_algo_data(item) {
                       </div> \
                   </div>\
                 </td> \
-                <td id='" + data.alg_order_id + "_buy_sell'>" + data.buy_sell + "</td> \
+                <td style=\"display:none\" id='" + data.alg_order_id + "_algo_trade_quantity'>" + "0" + "</td> \
+                <td style=\"display:none\" id='" + data.alg_order_id + "_algo_quantity'>" + data.trade_quantity + "</td> \
               </tr>");
     } else {
         if (!(item in refresh_algo_list)  && click_sig_batch == 0) {
@@ -826,9 +863,9 @@ function refresh_algo_data(item) {
                         <td id='" + data.alg_order_id + "_ref_price'>" + data.ref_price + "</td> \
                         <td id='" + data.alg_order_id + "_trade_price'>" + Number(data.trade_price) + "</td> \
                         <td id='" + data.alg_order_id + "_slippage'>" + Number(data.slippage) + "</td> \
-                        <td style=\"display:none\" id='" + data.alg_order_id + "_algo_trade_quantity'>" + "0" + "</td> \
-                        <td style=\"display:none\" id='" + data.alg_order_id + "_algo_quantity'>" + data.trade_quantity + "</td> \
                         <td id='" + data.alg_order_id + "_algo_notional'>" + data.notional.buy.toFixed(1)+"/"+data.notional.sell.toFixed(1) + "</td> \
+                        <td id='" + data.alg_order_id + "_buy_sell'>" + bs_map[data.buy_sell] + "</td> \
+                        <td style=\"display:none\" id='" + data.alg_order_id + "_precentage'>" + percentage + "</td> \
                         <td width=20%> \
                           <div class=\"progress\"> \
                               <div class=\"progress-bar\" id='" + data.alg_order_id + "_algo_progress' role=\"progressbar\" aria-valuenow=\"0\" aria-valuemin=\"0\"  \
@@ -837,6 +874,8 @@ function refresh_algo_data(item) {
                               </div> \
                           </div>\
                         </td> \
+                        <td style=\"display:none\" id='" + data.alg_order_id + "_algo_trade_quantity'>" + "0" + "</td> \
+                        <td style=\"display:none\" id='" + data.alg_order_id + "_algo_quantity'>" + data.trade_quantity + "</td> \
                       </tr>");
     }
 
@@ -876,7 +915,7 @@ function refresh_order_data(item) {
                                         </td> \
                                         <td id='" + data.id + "_open_close'>" + data.open_close + "</td> \
                                         <td id='" + data.id + "_accountOrder'>" + data.account + "</td> \
-                                        <td id='" + data.id + "_buy_sell'>" + data.buy_sell + "</td> \
+                                        <td id='" + data.id + "_buy_sell'>" + bs_map[data.buy_sell] + "</td> \
                                         <td id='" + data.id + "_argument_list'>" + data.argument_list + "</td> \
                                         <td id='" + data.id + "_id'>" + data.id + "</td> \
                                     </tr>");
@@ -906,7 +945,7 @@ function refresh_order_data(item) {
                                         </td> \
                                         <td id='" + data.id + "_open_close'>" + data.open_close + "</td> \
                                         <td id='" + data.id + "_accountOrder'>" + data.account + "</td> \
-                                        <td id='" + data.id + "_buy_sell'>" + data.buy_sell + "</td> \
+                                        <td id='" + data.id + "_buy_sell'>" + bs_map[data.buy_sell] + "</td> \
                                         <td id='" + data.id + "_argument_list'>" + data.argument_list + "</td> \
                                         <td id='" + data.id + "_id'>" + data.id + "</td> \
                                     </tr>");
