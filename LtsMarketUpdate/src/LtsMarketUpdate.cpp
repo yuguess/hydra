@@ -155,11 +155,11 @@ bool LtsMarketUpdate::ltsMDToCedarMD(
   md.add_bid_price(pMD->BidPrice4);
   md.add_bid_price(pMD->BidPrice5);
 
-  md.add_bid_volume(pMD->BidVolume1);
-  md.add_bid_volume(pMD->BidVolume2);
-  md.add_bid_volume(pMD->BidVolume3);
-  md.add_bid_volume(pMD->BidVolume4);
-  md.add_bid_volume(pMD->BidVolume5);
+  md.add_bid_volume(pMD->BidVolume1 / 100);
+  md.add_bid_volume(pMD->BidVolume2 / 100);
+  md.add_bid_volume(pMD->BidVolume3 / 100);
+  md.add_bid_volume(pMD->BidVolume4 / 100);
+  md.add_bid_volume(pMD->BidVolume5 / 100);
 
   md.add_ask_price(pMD->AskPrice1);
   md.add_ask_price(pMD->AskPrice2);
@@ -167,11 +167,11 @@ bool LtsMarketUpdate::ltsMDToCedarMD(
   md.add_ask_price(pMD->AskPrice4);
   md.add_ask_price(pMD->AskPrice5);
 
-  md.add_ask_volume(pMD->AskVolume1);
-  md.add_ask_volume(pMD->AskVolume2);
-  md.add_ask_volume(pMD->AskVolume3);
-  md.add_ask_volume(pMD->AskVolume4);
-  md.add_ask_volume(pMD->AskVolume5);
+  md.add_ask_volume(pMD->AskVolume1 / 100);
+  md.add_ask_volume(pMD->AskVolume2 / 100);
+  md.add_ask_volume(pMD->AskVolume3 / 100);
+  md.add_ask_volume(pMD->AskVolume4 / 100);
+  md.add_ask_volume(pMD->AskVolume5 / 100);
 
   return true;
 }
