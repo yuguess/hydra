@@ -1,0 +1,162 @@
+{
+  "bb": [
+    {
+      "SessionBegin": "09:00:00", 
+      "SessionEnd": "10:15:00"
+    }, 
+    {
+      "SessionBegin": "10:30:00", 
+      "SessionEnd": "11:30:00"
+    }, 
+    {
+      "SessionBegin": "13:30:00", 
+      "SessionEnd": "15:00:00"
+    }
+  ], 
+  "c": [
+    {
+      "SessionBegin": "09:00:00", 
+      "SessionEnd": "10:15:00"
+    }, 
+    {
+      "SessionBegin": "10:30:00", 
+      "SessionEnd": "11:30:00"
+    }, 
+    {
+      "SessionBegin": "13:30:00", 
+      "SessionEnd": "15:00:00"
+    }
+  ], 
+  "cs": [
+    {
+      "SessionBegin": "09:00:00", 
+      "SessionEnd": "10:15:00"
+    }, 
+    {
+      "SessionBegin": "10:30:00", 
+      "SessionEnd": "11:30:00"
+    }, 
+    {
+      "SessionBegin": "13:30:00", 
+      "SessionEnd": "15:00:00"
+    }
+  ], 
+  "ic": [
+    {
+      "SessionBegin": "09:00:00", 
+      "SessionEnd": "10:15:00"
+    }, 
+    {
+      "SessionBegin": "10:30:00", 
+      "SessionEnd": "11:30:00"
+    }, 
+    {
+      "SessionBegin": "13:30:00", 
+      "SessionEnd": "15:00:00"
+    }
+  ], 
+  "if": [
+    {
+      "SessionBegin": "09:00:00", 
+      "SessionEnd": "10:15:00"
+    }, 
+    {
+      "SessionBegin": "10:30:00", 
+      "SessionEnd": "11:30:00"
+    }, 
+    {
+      "SessionBegin": "13:30:00", 
+      "SessionEnd": "15:00:00"
+    }
+  ], 
+  "ih": [
+    {
+      "SessionBegin": "09:00:00", 
+      "SessionEnd": "10:15:00"
+    }, 
+    {
+      "SessionBegin": "10:30:00", 
+      "SessionEnd": "11:30:00"
+    }, 
+    {
+      "SessionBegin": "13:30:00", 
+      "SessionEnd": "15:00:00"
+    }
+  ], 
+  "jd": [
+    {
+      "SessionBegin": "09:00:00", 
+      "SessionEnd": "10:15:00"
+    }, 
+    {
+      "SessionBegin": "10:30:00", 
+      "SessionEnd": "11:30:00"
+    }, 
+    {
+      "SessionBegin": "13:30:00", 
+      "SessionEnd": "15:00:00"
+    }
+  ],  
+  "l": [
+    {
+      "SessionBegin": "09:00:00", 
+      "SessionEnd": "10:15:00"
+    }, 
+    {
+      "SessionBegin": "10:30:00", 
+      "SessionEnd": "11:30:00"
+    }, 
+    {
+      "SessionBegin": "13:30:00", 
+      "SessionEnd": "15:00:00"
+    }
+  ],  
+  "pp": [
+    {
+      "SessionBegin": "09:00:00", 
+      "SessionEnd": "10:15:00"
+    }, 
+    {
+      "SessionBegin": "10:30:00", 
+      "SessionEnd": "11:30:00"
+    }, 
+    {
+      "SessionBegin": "13:30:00", 
+      "SessionEnd": "15:00:00"
+    }
+  ], 
+  "t": [
+    {
+      "SessionBegin": "09:15:00", 
+      "SessionEnd": "11:30:00"
+    }, 
+    {
+      "SessionBegin": "13:00:00", 
+      "SessionEnd": "15:15:00"
+    }
+  ], 
+  "tf": [
+    {
+      "SessionBegin": "09:15:00", 
+      "SessionEnd": "11:30:00"
+    }, 
+    {
+      "SessionBegin": "13:00:00", 
+      "SessionEnd": "15:15:00"
+    }
+  ], 
+  "v": [
+    {
+      "SessionBegin": "09:00:00", 
+      "SessionEnd": "10:15:00"
+    }, 
+    {
+      "SessionBegin": "10:30:00", 
+      "SessionEnd": "11:30:00"
+    }, 
+    {
+      "SessionBegin": "13:30:00", 
+      "SessionEnd": "15:00:00"
+    }
+  ]
+}
